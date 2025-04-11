@@ -5,13 +5,15 @@ import { useOffer } from '@/context/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SavedProduct } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
-import SavedProductsDialog from './products/SavedProductsDialog';
-import SavedProductsList from './products/SavedProductsList';
-import ProductSearch from './products/ProductSearch';
-import CurrentProductsList from './products/CurrentProductsList';
-import { fetchSavedProducts, saveProduct, deleteProduct, convertToOfferProduct } from './products/productsService';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import ProductSearch from '@/components/management/products/ProductSearch';
+import CurrentProductsList from '@/components/management/products/CurrentProductsList';
+import SavedProductsList from '@/components/management/products/SavedProductsList';
+import { fetchSavedProducts, saveProduct, deleteProduct, convertToOfferProduct } from '@/components/management/products/productsService';
 
-const SavedProductsManager = () => {
+const SavedProductsPage = () => {
   const { user } = useAuth();
   const { offer, addProduct } = useOffer();
   const { toast } = useToast();
@@ -21,13 +23,12 @@ const SavedProductsManager = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'name' | 'partNumber'>('name');
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (user && open) {
+    if (user) {
       fetchProducts();
     }
-  }, [user, open]);
+  }, [user]);
 
   const fetchProducts = async () => {
     if (!user) return;
@@ -99,7 +100,6 @@ const SavedProductsManager = () => {
   const handleSelectProduct = (savedProduct: SavedProduct) => {
     const product = convertToOfferProduct(savedProduct);
     addProduct(product);
-    setOpen(false);
     
     toast({
       title: t.common.success,
@@ -116,36 +116,43 @@ const SavedProductsManager = () => {
   });
 
   return (
-    <SavedProductsDialog
-      open={open}
-      setOpen={setOpen}
-      title={t.savedProducts.title}
-      closeLabel={t.common.close}
-    >
-      <div className="mb-4">
-        <ProductSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          searchType={searchType}
-          setSearchType={setSearchType}
-        />
-        
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <Link to="/">
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <h1 className="text-2xl font-bold">{t.savedProducts.title}</h1>
+        </div>
+      </div>
+      
+      <ProductSearch
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchType={searchType}
+        setSearchType={setSearchType}
+      />
+      
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-2">Current Products</h2>
         <CurrentProductsList
           products={offer.products}
           onSaveProduct={handleSaveProduct}
           isSaving={isSaving}
         />
-        
-        <SavedProductsList
-          products={products}
-          filteredProducts={filteredProducts}
-          isLoading={isLoading}
-          onSelectProduct={handleSelectProduct}
-          onDeleteProduct={handleDeleteProduct}
-        />
       </div>
-    </SavedProductsDialog>
+      
+      <SavedProductsList
+        products={products}
+        filteredProducts={filteredProducts}
+        isLoading={isLoading}
+        onSelectProduct={handleSelectProduct}
+        onDeleteProduct={handleDeleteProduct}
+      />
+    </div>
   );
 };
 
-export default SavedProductsManager;
+export default SavedProductsPage;

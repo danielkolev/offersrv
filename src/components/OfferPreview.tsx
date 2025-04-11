@@ -1,17 +1,23 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOffer } from '@/context/OfferContext';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Printer, Copy } from 'lucide-react';
+import { Printer, Copy, Save } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/context/LanguageContext';
+import SaveOfferDialog from './SaveOfferDialog';
+import { useAuth } from '@/context/AuthContext';
+import { saveOfferToDatabase } from './management/offers/savedOffersService';
 
 const OfferPreview = () => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
   const { language, currency, t } = useLanguage();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handlePrint = () => {
     window.print();
@@ -34,11 +40,52 @@ const OfferPreview = () => {
     }
   };
 
+  const handleSaveOffer = async (offerName: string) => {
+    if (!user) {
+      toast({
+        title: t.common.error,
+        description: t.auth.notAuthenticated,
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      // Create a copy of the offer with the custom name
+      const offerToSave = {
+        ...offer,
+        name: offerName,
+      };
+      
+      await saveOfferToDatabase(user.id, offerToSave);
+      
+      toast({
+        title: t.common.success,
+        description: t.savedOffers.offerSaved,
+      });
+      
+      setIsSaveDialogOpen(false);
+    } catch (error: any) {
+      console.error('Error saving offer:', error);
+      toast({
+        title: t.common.error,
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Card className="mb-6">
       <div className="p-4 flex justify-end gap-2 no-print">
         <Button variant="outline" onClick={handleCopy} className="gap-2">
           <Copy size={16} /> Copy
+        </Button>
+        <Button variant="outline" onClick={() => setIsSaveDialogOpen(true)} className="gap-2">
+          <Save size={16} /> {t.savedOffers.saveOffer}
         </Button>
         <Button onClick={handlePrint} className="gap-2">
           <Printer size={16} /> Print
@@ -208,6 +255,24 @@ const OfferPreview = () => {
           </div>
         </div>
       </CardContent>
+      
+      <div className="p-4 flex justify-center no-print mt-4">
+        <Button 
+          onClick={() => setIsSaveDialogOpen(true)} 
+          className="gap-2"
+          size="lg"
+        >
+          <Save className="h-4 w-4" /> {t.savedOffers.saveOffer}
+        </Button>
+      </div>
+      
+      <SaveOfferDialog
+        open={isSaveDialogOpen}
+        onClose={() => setIsSaveDialogOpen(false)}
+        onSave={handleSaveOffer}
+        isLoading={isSaving}
+        defaultName={`${offer.client.name} - ${new Date().toLocaleDateString()}`}
+      />
     </Card>
   );
 };

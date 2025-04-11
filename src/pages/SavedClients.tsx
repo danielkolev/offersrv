@@ -6,14 +6,14 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Client } from '@/types/database';
 import { ClientInfo } from '@/types/offer';
 import { Button } from '@/components/ui/button';
-import { UserPlus, Loader2 } from 'lucide-react';
+import { UserPlus, Loader2, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { fetchClients, saveClient, updateClient, deleteClient as deleteClientService } from './clients/clientsService';
-import SavedClientsList from './clients/SavedClientsList';
-import SavedClientDialog from './clients/SavedClientDialog';
-import ClientSearch from './clients/ClientSearch';
+import { Link } from 'react-router-dom';
+import { fetchClients, saveClient, updateClient, deleteClient as deleteClientService } from '@/components/management/clients/clientsService';
+import SavedClientsList from '@/components/management/clients/SavedClientsList';
+import ClientSearch from '@/components/management/clients/ClientSearch';
 
-const SavedClientsManager = () => {
+const SavedClientsPage = () => {
   const { user } = useAuth();
   const { offer, updateClientInfo } = useOffer();
   const { toast } = useToast();
@@ -23,13 +23,12 @@ const SavedClientsManager = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'name' | 'vat'>('name');
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (user && open) {
+    if (user) {
       fetchClientsList();
     }
-  }, [user, open]);
+  }, [user]);
 
   const fetchClientsList = async () => {
     if (!user) return;
@@ -163,7 +162,6 @@ const SavedClientsManager = () => {
     };
     
     updateClientInfo(clientInfo);
-    setOpen(false);
     
     toast({
       title: t.common.success,
@@ -180,43 +178,45 @@ const SavedClientsManager = () => {
   });
 
   return (
-    <SavedClientDialog 
-      open={open} 
-      setOpen={setOpen} 
-      title={t.savedClients.title}
-      closeLabel={t.common.close}
-    >
-      <div className="mb-4">
-        <div className="flex gap-2 my-4">
-          <Button 
-            onClick={handleSaveClient} 
-            className="gap-2"
-            disabled={isSaving}
-          >
-            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
-            {t.savedClients.addClient}
-          </Button>
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <Link to="/">
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <h1 className="text-2xl font-bold">{t.savedClients.title}</h1>
         </div>
         
-        <ClientSearch 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          searchType={searchType}
-          setSearchType={setSearchType}
-          t={t}
-        />
-        
-        <SavedClientsList 
-          clients={clients}
-          filteredClients={filteredClients}
-          isLoading={isLoading}
-          selectClient={selectClient}
-          deleteClient={deleteClient}
-          t={t}
-        />
+        <Button 
+          onClick={handleSaveClient} 
+          className="gap-2"
+          disabled={isSaving}
+        >
+          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
+          {t.savedClients.addClient}
+        </Button>
       </div>
-    </SavedClientDialog>
+      
+      <ClientSearch 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchType={searchType}
+        setSearchType={setSearchType}
+        t={t}
+      />
+      
+      <SavedClientsList 
+        clients={clients}
+        filteredClients={filteredClients}
+        isLoading={isLoading}
+        selectClient={selectClient}
+        deleteClient={deleteClient}
+        t={t}
+      />
+    </div>
   );
 };
 
-export default SavedClientsManager;
+export default SavedClientsPage;

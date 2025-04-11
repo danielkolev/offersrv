@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import SavedOffersPage from "./pages/SavedOffers";
+import SavedClientsPage from "./pages/SavedClients";
+import SavedProductsPage from "./pages/SavedProducts";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -30,8 +33,31 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/saved-offers"
+                element={
+                  <ProtectedRoute>
+                    <SavedOffersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/saved-clients"
+                element={
+                  <ProtectedRoute>
+                    <SavedClientsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/saved-products"
+                element={
+                  <ProtectedRoute>
+                    <SavedProductsPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/auth" element={<Auth />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -4,19 +4,15 @@ import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SavedOffer } from '@/types/database';
-import { 
-  Dialog,
-  DialogTrigger 
-} from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Save, Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import SavedOffersList from './offers/SavedOffersList';
-import SavedOfferDialog from './offers/SavedOfferDialog';
-import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from './offers/savedOffersService';
+import { Search, Save, Loader2, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import SavedOffersList from '@/components/management/offers/SavedOffersList';
+import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
 
-const SavedOffersManager = () => {
+const SavedOffersPage = () => {
   const { user } = useAuth();
   const { offer } = useOffer();
   const { toast } = useToast();
@@ -25,13 +21,12 @@ const SavedOffersManager = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (user && open) {
+    if (user) {
       handleFetchSavedOffers();
     }
-  }, [user, open]);
+  }, [user]);
 
   const handleFetchSavedOffers = async () => {
     if (!user) return;
@@ -127,8 +122,6 @@ const SavedOffersManager = () => {
       }
     }
     
-    setOpen(false);
-    
     toast({
       title: t.common.success,
       description: 'Offer loaded successfully',
@@ -136,52 +129,49 @@ const SavedOffersManager = () => {
   };
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" className="w-full">
-            {t.savedOffers.title}
-          </Button>
-        </DialogTrigger>
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <Link to="/">
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+        </div>
         
-        <SavedOfferDialog open={open} setOpen={setOpen}>
-          <div className="mb-4">
-            <div className="flex gap-2 my-4">
-              <Button 
-                onClick={handleSaveOffer} 
-                className="gap-2"
-                disabled={isSaving}
-              >
-                {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                {t.savedOffers.saveOffer}
-              </Button>
-            </div>
-            
-            <div className="relative mb-4">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t.savedOffers.searchPlaceholder}
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            
-            <SavedOffersList
-              savedOffers={savedOffers}
-              isLoading={isLoading}
-              searchTerm={searchTerm}
-              loadOffer={handleLoadOffer}
-              deleteOffer={handleDeleteOffer}
-              language={language}
-              currency={currency}
-              t={t}
-            />
-          </div>
-        </SavedOfferDialog>
-      </Dialog>
-    </>
+        <Button 
+          onClick={handleSaveOffer} 
+          className="gap-2"
+          disabled={isSaving}
+        >
+          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {t.savedOffers.saveOffer}
+        </Button>
+      </div>
+      
+      <div className="relative mb-4">
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder={t.savedOffers.searchPlaceholder}
+          className="pl-8"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      
+      <SavedOffersList
+        savedOffers={savedOffers}
+        isLoading={isLoading}
+        searchTerm={searchTerm}
+        loadOffer={handleLoadOffer}
+        deleteOffer={handleDeleteOffer}
+        language={language}
+        currency={currency}
+        t={t}
+      />
+    </div>
   );
 };
 
-export default SavedOffersManager;
+export default SavedOffersPage;
