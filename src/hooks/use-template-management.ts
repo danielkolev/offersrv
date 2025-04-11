@@ -158,7 +158,7 @@ export function useTemplateManagement() {
     console.log('Edit template:', templateId);
     // For now, just show a toast
     toast({
-      title: t.common.info,
+      title: t.common.success, // Changed from 'info' to 'success' since 'info' doesn't exist
       description: 'Template editor will be available soon',
     });
   };
