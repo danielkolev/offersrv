@@ -12,6 +12,8 @@ import {
   updateClient, 
   deleteClient as deleteClientService 
 } from '../clientsService';
+import { useClientSearch } from './useClientSearch';
+import { useClientDialog } from './useClientDialog';
 import { Translations } from '@/types/language';
 
 export const useClientsManagement = (t: Translations) => {
@@ -21,11 +23,24 @@ export const useClientsManagement = (t: Translations) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState<'name' | 'vat'>('name');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentClient, setCurrentClient] = useState<Client | undefined>(undefined);
-  const [isEditMode, setIsEditMode] = useState(false);
+  
+  // Use the smaller hooks
+  const { 
+    searchTerm, 
+    setSearchTerm, 
+    searchType, 
+    setSearchType,
+    filteredClients
+  } = useClientSearch({ clients });
+  
+  const {
+    isDialogOpen,
+    setIsDialogOpen,
+    currentClient,
+    isEditMode,
+    handleOpenAddDialog,
+    handleEditClient
+  } = useClientDialog();
 
   useEffect(() => {
     if (user) {
@@ -50,18 +65,6 @@ export const useClientsManagement = (t: Translations) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleOpenAddDialog = () => {
-    setCurrentClient(undefined);
-    setIsEditMode(false);
-    setIsDialogOpen(true);
-  };
-
-  const handleEditClient = (client: Client) => {
-    setCurrentClient(client);
-    setIsEditMode(true);
-    setIsDialogOpen(true);
   };
 
   const handleSaveClient = async (formData: ClientFormData) => {
@@ -171,9 +174,7 @@ export const useClientsManagement = (t: Translations) => {
       handleEditClient(existingClient);
     } else {
       // Prepare a new client from offer data
-      setCurrentClient(undefined);
-      setIsEditMode(false);
-      setIsDialogOpen(true);
+      handleOpenAddDialog();
     }
   };
 
@@ -214,14 +215,6 @@ export const useClientsManagement = (t: Translations) => {
       description: 'Client loaded successfully',
     });
   };
-
-  const filteredClients = clients.filter(client => {
-    if (searchType === 'name') {
-      return client.name.toLowerCase().includes(searchTerm.toLowerCase());
-    } else {
-      return client.vat_number?.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-  });
 
   return {
     clients,
