@@ -6,19 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/context/LanguageContext';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails } = useOffer();
+  const { t } = useLanguage();
 
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Offer Details</CardTitle>
+        <CardTitle>{t.offerDetails.title}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="offerNumber">Offer Number</Label>
+            <Label htmlFor="offerNumber">{t.offerDetails.offerNumber}</Label>
             <Input
               id="offerNumber"
               value={offer.details.offerNumber}
@@ -27,7 +29,7 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="offerDate">Date</Label>
+            <Label htmlFor="offerDate">{t.offerDetails.date}</Label>
             <Input
               id="offerDate"
               type="date"
@@ -37,7 +39,7 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="offerValidUntil">Valid Until</Label>
+            <Label htmlFor="offerValidUntil">{t.offerDetails.validUntil}</Label>
             <Input
               id="offerValidUntil"
               type="date"
@@ -52,7 +54,7 @@ const OfferDetailsForm = () => {
               checked={offer.details.showPartNumber}
               onCheckedChange={(checked) => updateOfferDetails({ showPartNumber: checked })}
             />
-            <Label htmlFor="showPartNumber">Show Part Number</Label>
+            <Label htmlFor="showPartNumber">{t.offerDetails.showPartNumber}</Label>
           </div>
           
           <div className="flex items-center space-x-2">
@@ -61,11 +63,11 @@ const OfferDetailsForm = () => {
               checked={offer.details.includeVat}
               onCheckedChange={(checked) => updateOfferDetails({ includeVat: checked })}
             />
-            <Label htmlFor="includeVat">Include VAT</Label>
+            <Label htmlFor="includeVat">{t.offerDetails.includeVat}</Label>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="vatRate">VAT Rate (%)</Label>
+            <Label htmlFor="vatRate">{t.offerDetails.vatRate}</Label>
             <Input
               id="vatRate"
               type="number"
@@ -78,7 +80,7 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="transportCost">Transport Cost</Label>
+            <Label htmlFor="transportCost">{t.offerDetails.transportCost}</Label>
             <Input
               id="transportCost"
               type="number"
@@ -89,7 +91,7 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="otherCosts">Other Costs</Label>
+            <Label htmlFor="otherCosts">{t.offerDetails.otherCosts}</Label>
             <Input
               id="otherCosts"
               type="number"
@@ -101,13 +103,13 @@ const OfferDetailsForm = () => {
         </div>
         
         <div className="mt-4 space-y-2">
-          <Label htmlFor="notes">Notes</Label>
+          <Label htmlFor="notes">{t.offerDetails.notes}</Label>
           <Textarea
             id="notes"
             rows={3}
             value={offer.details.notes}
             onChange={(e) => updateOfferDetails({ notes: e.target.value })}
-            placeholder="Delivery time, payment terms, etc."
+            placeholder={t.offerDetails.notesPlaceholder}
           />
         </div>
       </CardContent>

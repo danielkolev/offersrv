@@ -8,9 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { XIcon, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 const ProductsForm = () => {
   const { offer, addProduct, updateProduct, removeProduct } = useOffer();
+  const { t } = useLanguage();
 
   const handleAddProduct = () => {
     addProduct({
@@ -25,9 +27,9 @@ const ProductsForm = () => {
   return (
     <Card className="mb-6">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Products</CardTitle>
+        <CardTitle>{t.products.title}</CardTitle>
         <Button onClick={handleAddProduct} variant="outline" className="gap-2">
-          <Plus size={16} /> Add Product
+          <Plus size={16} /> {t.products.addProduct}
         </Button>
       </CardHeader>
       <CardContent>
@@ -46,7 +48,7 @@ const ProductsForm = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
               <div className="space-y-2">
-                <Label htmlFor={`product-name-${index}`}>Product Name</Label>
+                <Label htmlFor={`product-name-${index}`}>{t.products.productName}</Label>
                 <Input
                   id={`product-name-${index}`}
                   value={product.name}
@@ -56,7 +58,7 @@ const ProductsForm = () => {
               
               {offer.details.showPartNumber && (
                 <div className="space-y-2">
-                  <Label htmlFor={`product-part-${index}`}>Part Number</Label>
+                  <Label htmlFor={`product-part-${index}`}>{t.products.partNumber}</Label>
                   <Input
                     id={`product-part-${index}`}
                     value={product.partNumber || ''}
@@ -66,7 +68,7 @@ const ProductsForm = () => {
               )}
               
               <div className={`space-y-2 ${offer.details.showPartNumber ? 'md:col-span-2' : 'md:col-span-1'}`}>
-                <Label htmlFor={`product-desc-${index}`}>Description</Label>
+                <Label htmlFor={`product-desc-${index}`}>{t.products.description}</Label>
                 <Textarea
                   id={`product-desc-${index}`}
                   value={product.description}
@@ -76,7 +78,7 @@ const ProductsForm = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`product-quantity-${index}`}>Quantity</Label>
+                <Label htmlFor={`product-quantity-${index}`}>{t.products.quantity}</Label>
                 <Input
                   id={`product-quantity-${index}`}
                   type="number"
@@ -87,7 +89,7 @@ const ProductsForm = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`product-price-${index}`}>Unit Price</Label>
+                <Label htmlFor={`product-price-${index}`}>{t.products.unitPrice}</Label>
                 <Input
                   id={`product-price-${index}`}
                   type="number"
@@ -100,14 +102,14 @@ const ProductsForm = () => {
             </div>
             
             <div className="text-right text-sm text-muted-foreground mt-2">
-              Total: {formatCurrency(product.quantity * product.unitPrice)}
+              {t.products.total}: {formatCurrency(product.quantity * product.unitPrice)}
             </div>
           </div>
         ))}
         
         {offer.products.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
-            No products added. Click "Add Product" to start.
+            {t.products.noProducts}
           </div>
         )}
       </CardContent>

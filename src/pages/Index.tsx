@@ -7,22 +7,28 @@ import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
 import ProductsForm from '@/components/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
+import { useLanguage } from '@/context/LanguageContext';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
+  const { t } = useLanguage();
 
   return (
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8 text-center text-offer-gray">
-          Professional Offer Template
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.offerTitle}
+          </h1>
+          <LanguageSwitcher />
+        </div>
         
         <Tabs defaultValue="edit" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex justify-center mb-6">
             <TabsList>
-              <TabsTrigger value="edit">Edit Offer</TabsTrigger>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
+              <TabsTrigger value="edit">{t.common.edit}</TabsTrigger>
+              <TabsTrigger value="preview">{t.common.preview}</TabsTrigger>
             </TabsList>
           </div>
           
@@ -37,7 +43,7 @@ const Index = () => {
                 onClick={() => setActiveTab('preview')}
                 className="px-6 py-2 bg-offer-blue text-white rounded-md hover:bg-blue-600 transition-colors"
               >
-                Preview Offer
+                {t.common.previewOffer}
               </button>
             </div>
           </TabsContent>
@@ -50,7 +56,7 @@ const Index = () => {
                 onClick={() => setActiveTab('edit')}
                 className="px-6 py-2 border border-offer-gray text-offer-gray rounded-md hover:bg-gray-100 transition-colors"
               >
-                Back to Edit
+                {t.common.backToEdit}
               </button>
             </div>
           </TabsContent>

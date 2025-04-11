@@ -4,19 +4,21 @@ import { useOffer } from '@/context/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLanguage } from '@/context/LanguageContext';
 
 const ClientInfoForm = () => {
   const { offer, updateClientInfo } = useOffer();
+  const { t } = useLanguage();
 
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Client Information</CardTitle>
+        <CardTitle>{t.clientInfo.title}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="clientName">Client Company</Label>
+            <Label htmlFor="clientName">{t.clientInfo.name}</Label>
             <Input
               id="clientName"
               value={offer.client.name}
@@ -25,7 +27,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientContactPerson">Contact Person</Label>
+            <Label htmlFor="clientContactPerson">{t.clientInfo.contactPerson}</Label>
             <Input
               id="clientContactPerson"
               value={offer.client.contactPerson}
@@ -34,7 +36,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientAddress">Address</Label>
+            <Label htmlFor="clientAddress">{t.clientInfo.address}</Label>
             <Input
               id="clientAddress"
               value={offer.client.address}
@@ -43,7 +45,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientCity">City</Label>
+            <Label htmlFor="clientCity">{t.clientInfo.city}</Label>
             <Input
               id="clientCity"
               value={offer.client.city}
@@ -52,7 +54,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientCountry">Country</Label>
+            <Label htmlFor="clientCountry">{t.clientInfo.country}</Label>
             <Input
               id="clientCountry"
               value={offer.client.country}
@@ -61,7 +63,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientVat">VAT Number</Label>
+            <Label htmlFor="clientVat">{t.clientInfo.vatNumber}</Label>
             <Input
               id="clientVat"
               value={offer.client.vatNumber}
@@ -70,7 +72,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientEmail">Email</Label>
+            <Label htmlFor="clientEmail">{t.clientInfo.email}</Label>
             <Input
               id="clientEmail"
               value={offer.client.email}
@@ -79,7 +81,7 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="clientPhone">Phone</Label>
+            <Label htmlFor="clientPhone">{t.clientInfo.phone}</Label>
             <Input
               id="clientPhone"
               value={offer.client.phone}
