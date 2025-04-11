@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OfferProvider } from '@/context/OfferContext';
 import CompanyInfoForm from '@/components/CompanyInfoForm';
@@ -10,21 +10,69 @@ import OfferPreview from '@/components/OfferPreview';
 import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
+import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
+import CompanyManager from '@/components/company/CompanyManager';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const { t } = useLanguage();
+  const { signOut, user } = useAuth();
+
+  const handleSelectCompany = async (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    if (companyId) {
+      setIsLoadingCompanyData(true);
+      try {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('*')
+          .eq('id', companyId)
+          .single();
+          
+        if (error) throw error;
+        
+        // Update the company info in the context
+        if (data && window.updateCompanyInfo) {
+          window.updateCompanyInfo({
+            name: data.name,
+            vatNumber: data.vat_number,
+            address: data.address,
+            city: data.city,
+            country: data.country,
+            phone: data.phone,
+            email: data.email,
+            website: data.website,
+            logo: data.logo
+          });
+        }
+      } catch (error) {
+        console.error('Error loading company data:', error);
+      } finally {
+        setIsLoadingCompanyData(false);
+      }
+    }
+  };
 
   return (
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
           <h1 className="text-3xl font-bold text-offer-gray">
             {t.offerTitle}
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            <CompanyManager onSelectCompany={handleSelectCompany} />
             <CurrencySwitcher />
             <LanguageSwitcher />
+            <Button variant="outline" size="sm" onClick={signOut}>
+              <LogOut size={16} className="mr-1" />
+              {t.auth.signOut}
+            </Button>
           </div>
         </div>
         
@@ -37,19 +85,31 @@ const Index = () => {
           </div>
           
           <TabsContent value="edit" className="space-y-6">
-            <CompanyInfoForm />
-            <ClientInfoForm />
-            <OfferDetailsForm />
-            <ProductsForm />
-            
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={() => setActiveTab('preview')}
-                className="px-6 py-2 bg-offer-blue text-white rounded-md hover:bg-blue-600 transition-colors"
-              >
-                {t.common.previewOffer}
-              </button>
-            </div>
+            {selectedCompanyId ? (
+              isLoadingCompanyData ? (
+                <div className="text-center py-4">{t.common.loading}</div>
+              ) : (
+                <>
+                  <CompanyInfoForm />
+                  <ClientInfoForm />
+                  <OfferDetailsForm />
+                  <ProductsForm />
+                  
+                  <div className="flex justify-center mt-8">
+                    <button
+                      onClick={() => setActiveTab('preview')}
+                      className="px-6 py-2 bg-offer-blue text-white rounded-md hover:bg-blue-600 transition-colors"
+                    >
+                      {t.common.previewOffer}
+                    </button>
+                  </div>
+                </>
+              )
+            ) : (
+              <div className="text-center py-8">
+                {t.company.selectFirst}
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="preview">

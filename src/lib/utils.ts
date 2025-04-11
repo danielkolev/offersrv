@@ -31,3 +31,22 @@ export function formatDate(dateString: string, language: SupportedLanguage = 'en
     day: '2-digit'
   }).format(date);
 }
+
+export function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+export function truncateString(str: string, maxLength: number = 30): string {
+  if (!str) return '';
+  
+  if (str.length <= maxLength) return str;
+  return str.substring(0, maxLength) + '...';
+}
+
+export function isEmpty(obj: any): boolean {
+  return obj === null || obj === undefined || (typeof obj === 'object' && Object.keys(obj).length === 0);
+}

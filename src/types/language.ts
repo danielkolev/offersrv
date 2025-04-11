@@ -12,6 +12,8 @@ export interface Translations {
     print: string;
     add: string;
     currency: string;
+    loading: string;
+    processing: string;
   };
   offerTitle: string;
   companyInfo: {
@@ -85,5 +87,49 @@ export interface Translations {
     unitPrice: string;
     total: string;
     notes: string;
+  };
+  auth: {
+    welcomeTitle: string;
+    welcomeSubtitle: string;
+    loginTitle: string;
+    loginDescription: string;
+    registerTitle: string;
+    registerDescription: string;
+    name: string;
+    namePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    password: string;
+    passwordPlaceholder: string;
+    loginButton: string;
+    registerButton: string;
+    needAccount: string;
+    haveAccount: string;
+    loginSuccess: string;
+    registerSuccess: string;
+    checkEmail: string;
+    error: string;
+    signOut: string;
+    processing: string;
+  };
+  company: {
+    create: string;
+    createButton: string;
+    createNew: string;
+    createFirst: string;
+    selectPlaceholder: string;
+    namePlaceholder: string;
+    vatPlaceholder: string;
+    addressPlaceholder: string;
+    cityPlaceholder: string;
+    countryPlaceholder: string;
+    phonePlaceholder: string;
+    emailPlaceholder: string;
+    websitePlaceholder: string;
+    error: string;
+    nameRequired: string;
+    success: string;
+    createdSuccessfully: string;
+    selectFirst: string;
   };
 }

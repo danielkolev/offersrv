@@ -136,6 +136,11 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     setOffer(defaultOffer);
   };
 
+  // Add updateCompanyInfo to window for global access
+  if (typeof window !== 'undefined') {
+    window.updateCompanyInfo = updateCompanyInfo;
+  }
+
   return (
     <OfferContext.Provider
       value={{
@@ -163,4 +168,11 @@ export function useOffer() {
     throw new Error('useOffer must be used within an OfferProvider');
   }
   return context;
+}
+
+// Extend Window interface
+declare global {
+  interface Window {
+    updateCompanyInfo?: (info: Partial<CompanyInfo>) => void;
+  }
 }

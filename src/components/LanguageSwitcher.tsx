@@ -1,26 +1,42 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useLanguage } from '@/context/LanguageContext';
 import { SupportedLanguage } from '@/types/language';
 
 const LanguageSwitcher = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
-  const toggleLanguage = () => {
-    const newLang: SupportedLanguage = language === 'bg' ? 'en' : 'bg';
-    setLanguage(newLang);
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value as SupportedLanguage);
   };
 
   return (
-    <Button 
-      variant="outline" 
-      onClick={toggleLanguage}
-      className="w-24 flex items-center justify-center gap-2"
-      size="sm"
-    >
-      {language === 'bg' ? '🇧🇬 BG' : '🇬🇧 EN'}
-    </Button>
+    <div className="flex items-center gap-2">
+      <Select value={language} onValueChange={handleLanguageChange}>
+        <SelectTrigger className="w-[100px]">
+          <SelectValue placeholder="Language" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="bg">
+            <div className="flex items-center gap-2">
+              <span>🇧🇬</span> Български
+            </div>
+          </SelectItem>
+          <SelectItem value="en">
+            <div className="flex items-center gap-2">
+              <span>🇬🇧</span> English
+            </div>
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
 
