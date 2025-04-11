@@ -1,6 +1,3 @@
-// Only updating the common section that's missing the required fields. The rest of the file should remain unchanged.
-// This is a partial update to fix the TS errors while preserving the existing translations.
-
 import { Translations } from '../types/language';
 
 export const translations: Record<string, Translations> = {

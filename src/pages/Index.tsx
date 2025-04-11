@@ -30,7 +30,7 @@ const Index = () => {
       setIsLoadingCompanyData(true);
       try {
         const { data, error } = await supabase
-          .from('companies')
+          .from('organizations')
           .select('*')
           .eq('id', companyId)
           .single();
@@ -39,17 +39,16 @@ const Index = () => {
         
         // Update the company info in the context
         if (data && window.updateCompanyInfo) {
-          const company = data as Company;
           window.updateCompanyInfo({
-            name: company.name,
-            vatNumber: company.vat_number,
-            address: company.address,
-            city: company.city,
-            country: company.country,
-            phone: company.phone,
-            email: company.email,
-            website: company.website,
-            logo: company.logo
+            name: data.name,
+            vatNumber: data.vat_number,
+            address: data.address,
+            city: data.city,
+            country: data.country,
+            phone: data.phone,
+            email: data.email,
+            website: data.website,
+            logo: data.logo_url
           });
         }
       } catch (error) {

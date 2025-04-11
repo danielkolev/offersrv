@@ -32,31 +32,38 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     
     const fetchCompanies = async () => {
       try {
-        // Get companies the user is a member of through the company_members table
+        // Get companies the user is a member of through the organization_members table
         const { data: memberData, error: memberError } = await supabase
-          .from('company_members')
-          .select('company_id')
+          .from('organization_members')
+          .select('organization_id')
           .eq('user_id', user.id);
           
         if (memberError) throw memberError;
         
         if (memberData && memberData.length > 0) {
-          const companyIds = memberData.map(member => member.company_id);
+          const companyIds = memberData.map(member => member.organization_id);
           
           // Get company details
           const { data: companiesData, error: companiesError } = await supabase
-            .from('companies')
-            .select('id, name, logo')
+            .from('organizations')
+            .select('id, name, logo_url')
             .in('id', companyIds)
             .order('name');
             
           if (companiesError) throw companiesError;
           
           if (companiesData) {
-            setCompanies(companiesData);
-            if (companiesData.length > 0) {
-              setSelectedCompany(companiesData[0].id);
-              onSelectCompany(companiesData[0].id);
+            // Map the data to our Company interface
+            const formattedCompanies: Company[] = companiesData.map(org => ({
+              id: org.id,
+              name: org.name,
+              logo: org.logo_url
+            }));
+            
+            setCompanies(formattedCompanies);
+            if (formattedCompanies.length > 0) {
+              setSelectedCompany(formattedCompanies[0].id);
+              onSelectCompany(formattedCompanies[0].id);
             }
           }
         } else {

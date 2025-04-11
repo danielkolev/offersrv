@@ -9,6 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
+import { useAuth } from '@/context/AuthContext';
 
 interface CompanyFormProps {
   onSuccess?: (companyId: string) => void;
@@ -29,6 +30,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
   
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -48,6 +50,15 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
       toast({
         title: t.company.error,
         description: t.company.nameRequired,
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    if (!user) {
+      toast({
+        title: t.company.error,
+        description: "You must be logged in to create a company",
         variant: 'destructive'
       });
       return;
@@ -77,17 +88,17 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
       
       // Create company record
       const { data: company, error: companyError } = await supabase
-        .from('companies')
+        .from('organizations')
         .insert({
           name,
           vat_number: vatNumber,
           address,
-          city,
-          country,
+          city: city,
           phone,
           email,
           website,
-          logo: logoUrl
+          logo_url: logoUrl,
+          owner_id: user.id
         })
         .select('id')
         .single();
