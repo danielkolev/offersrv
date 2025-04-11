@@ -106,4 +106,5 @@ export interface SavedProductsTranslations {
   searchByPartNumber: string;
   selectProduct: string;
   cancel: string;
+  saveFromOffer: string;
 }

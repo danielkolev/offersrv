@@ -114,5 +114,6 @@ export const bgSavedProductsTranslations: SavedProductsTranslations = {
   searchByName: 'Търсене по име',
   searchByPartNumber: 'Търсене по артикулен номер',
   selectProduct: 'Избери',
-  cancel: 'Отказ'
+  cancel: 'Отказ',
+  saveFromOffer: 'Запази от офертата'
 };

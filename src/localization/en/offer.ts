@@ -114,5 +114,6 @@ export const enSavedProductsTranslations: SavedProductsTranslations = {
   searchByName: 'Search by name',
   searchByPartNumber: 'Search by part number',
   selectProduct: 'Select',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  saveFromOffer: 'Save from offer'
 };

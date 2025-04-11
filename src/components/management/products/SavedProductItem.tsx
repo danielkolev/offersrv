@@ -2,7 +2,7 @@
 import React from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Edit, Plus } from 'lucide-react';
 import { SavedProduct } from '@/types/database';
 import { formatCurrency } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
@@ -22,9 +22,10 @@ interface SavedProductItemProps {
   product: SavedProduct;
   onSelect: (product: SavedProduct) => void;
   onDelete: (id: string) => void;
+  onEdit: (product: SavedProduct) => void;
 }
 
-const SavedProductItem = ({ product, onSelect, onDelete }: SavedProductItemProps) => {
+const SavedProductItem = ({ product, onSelect, onDelete, onEdit }: SavedProductItemProps) => {
   const { t, language, currency } = useLanguage();
 
   return (
@@ -43,8 +44,19 @@ const SavedProductItem = ({ product, onSelect, onDelete }: SavedProductItemProps
             variant="outline" 
             size="sm"
             onClick={() => onSelect(product)}
+            className="gap-1"
           >
+            <Plus className="h-3 w-3" />
             {t.savedProducts.selectProduct}
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => onEdit(product)}
+          >
+            <Edit className="h-4 w-4" />
           </Button>
           
           <AlertDialog>

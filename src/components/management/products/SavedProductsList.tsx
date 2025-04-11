@@ -12,6 +12,7 @@ interface SavedProductsListProps {
   isLoading: boolean;
   onSelectProduct: (product: SavedProduct) => void;
   onDeleteProduct: (id: string) => void;
+  onEditProduct: (product: SavedProduct) => void;
 }
 
 const SavedProductsList = ({ 
@@ -19,7 +20,8 @@ const SavedProductsList = ({
   filteredProducts, 
   isLoading, 
   onSelectProduct, 
-  onDeleteProduct 
+  onDeleteProduct,
+  onEditProduct
 }: SavedProductsListProps) => {
   const { t } = useLanguage();
 
@@ -56,6 +58,7 @@ const SavedProductsList = ({
             product={product}
             onSelect={onSelectProduct}
             onDelete={onDeleteProduct}
+            onEdit={onEditProduct}
           />
         ))}
       </TableBody>
