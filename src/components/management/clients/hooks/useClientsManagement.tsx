@@ -1,25 +1,23 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
-import { useLanguage } from '@/context/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 import { Client } from '@/types/database';
 import { ClientInfo } from '@/types/offer';
-import { Button } from '@/components/ui/button';
-import { UserPlus, Loader2, ArrowLeft } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
-import { fetchClients, saveClient, updateClient, deleteClient as deleteClientService } from '@/components/management/clients/clientsService';
-import SavedClientsList from '@/components/management/clients/SavedClientsList';
-import ClientSearch from '@/components/management/clients/ClientSearch';
-import ClientFormDialog from '@/components/management/clients/ClientFormDialog';
-import { ClientFormData } from '@/components/management/clients/ClientFormDialog';
+import { ClientFormData } from '../ClientFormDialog';
+import { 
+  fetchClients, 
+  saveClient, 
+  updateClient, 
+  deleteClient as deleteClientService 
+} from '../clientsService';
+import { Translations } from '@/types/language';
 
-const SavedClientsPage = () => {
+export const useClientsManagement = (t: Translations) => {
   const { user } = useAuth();
   const { offer, updateClientInfo } = useOffer();
   const { toast } = useToast();
-  const { t } = useLanguage();
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -172,7 +170,7 @@ const SavedClientsPage = () => {
       // Update existing client
       handleEditClient(existingClient);
     } else {
-      // Prepare a new client from offer
+      // Prepare a new client from offer data
       setCurrentClient(undefined);
       setIsEditMode(false);
       setIsDialogOpen(true);
@@ -225,65 +223,24 @@ const SavedClientsPage = () => {
     }
   });
 
-  return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-2">
-          <Link to="/">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold">{t.savedClients.title}</h1>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button 
-            onClick={handleImportFromOffer} 
-            variant="outline"
-          >
-            {t.savedClients.importFromOffer}
-          </Button>
-          
-          <Button 
-            onClick={handleOpenAddDialog} 
-            className="gap-2"
-          >
-            <UserPlus className="h-4 w-4" />
-            {t.savedClients.addNewClient}
-          </Button>
-        </div>
-      </div>
-      
-      <ClientSearch 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        searchType={searchType}
-        setSearchType={setSearchType}
-        t={t}
-      />
-      
-      <SavedClientsList 
-        clients={clients}
-        filteredClients={filteredClients}
-        isLoading={isLoading}
-        selectClient={selectClient}
-        deleteClient={deleteClient}
-        editClient={handleEditClient}
-        t={t}
-      />
-      
-      <ClientFormDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onSubmit={handleSaveClient}
-        client={currentClient}
-        isSubmitting={isSaving}
-        isEditMode={isEditMode}
-        t={t}
-      />
-    </div>
-  );
+  return {
+    clients,
+    filteredClients,
+    isLoading,
+    isSaving,
+    searchTerm,
+    setSearchTerm,
+    searchType,
+    setSearchType,
+    isDialogOpen,
+    setIsDialogOpen,
+    currentClient,
+    isEditMode,
+    handleOpenAddDialog,
+    handleEditClient,
+    handleSaveClient,
+    handleImportFromOffer,
+    deleteClient,
+    selectClient
+  };
 };
-
-export default SavedClientsPage;
