@@ -9,11 +9,11 @@ export const printContent = () => {
     watermark = document.createElement('div');
     watermark.className = 'offer-watermark';
     watermark.textContent = 'Оригинал';
-    // Add the watermark to the body to ensure it spans the whole page
+    // Add the watermark to the body
     document.body.appendChild(watermark);
   }
   
-  // Show watermark and prepare for printing
+  // Prepare for printing
   document.body.classList.add('print-mode');
   document.body.style.overflow = 'visible';
   

@@ -97,27 +97,26 @@
     background-color: white !important;
   }
   
-  /* Hide everything in print mode */
+  /* Hide everything in print mode except what we want to show */
   body.print-mode * {
-    visibility: hidden !important;
+    visibility: hidden;
   }
   
-  /* Show only the offer content */
+  /* Show only the offer content and its children */
   body.print-mode .offer-preview-content,
   body.print-mode .offer-preview-content * {
     visibility: visible !important;
-    display: block !important;
   }
   
+  /* Position the content properly */
   body.print-mode .offer-preview-content {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 100%;
   }
   
-  /* Show watermark in print mode with lighter color */
+  /* Show watermark with lighter color */
   body.print-mode .offer-watermark {
     display: block !important;
     visibility: visible !important;
@@ -138,7 +137,7 @@
     display: none !important;
   }
   
-  /* Ensure text elements are visible */
+  /* Ensure text elements have proper color */
   body.print-mode .offer-preview-content h1, 
   body.print-mode .offer-preview-content h2, 
   body.print-mode .offer-preview-content h3, 

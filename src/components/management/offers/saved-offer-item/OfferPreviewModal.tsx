@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import OfferPreview from '@/components/OfferPreview';
 import { useOffer } from '@/context/offer/OfferContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface OfferPreviewModalProps {
   open: boolean;
@@ -11,6 +12,7 @@ interface OfferPreviewModalProps {
 
 const OfferPreviewModal = ({ open, onOpenChange }: OfferPreviewModalProps) => {
   const { resetOffer } = useOffer();
+  const { t } = useLanguage();
   
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
@@ -21,6 +23,7 @@ const OfferPreviewModal = ({ open, onOpenChange }: OfferPreviewModalProps) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
+        <DialogTitle className="sr-only">{t.offer.offerPreview}</DialogTitle>
         <OfferPreview
           isSaveDialogOpen={false}
           setIsSaveDialogOpen={() => {}}
