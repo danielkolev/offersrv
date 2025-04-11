@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { formatCurrency, formatDate } from '@/lib/utils';
@@ -188,8 +187,8 @@ const OfferPreview = ({
                     <div className="font-medium">{product.name}</div>
                     <div className="text-sm text-muted-foreground">{product.description}</div>
                     
-                    {/* Display bundled products if this is a bundle */}
-                    {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && (
+                    {/* Display bundled products if this is a bundle and showBundledPrices is true */}
+                    {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
                       <div className="mt-2 pl-4 border-l-2 border-slate-200">
                         <p className="text-xs font-medium text-muted-foreground mb-1">Bundle includes:</p>
                         {product.bundledProducts.map(item => (
@@ -198,6 +197,15 @@ const OfferPreview = ({
                             <span>{formatCurrency(item.unitPrice * item.quantity, language, currency)}</span>
                           </div>
                         ))}
+                      </div>
+                    )}
+                    
+                    {/* Just show the item count if showBundledPrices is false */}
+                    {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
+                      <div className="mt-2 pl-4 border-l-2 border-slate-200">
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Bundle includes {product.bundledProducts.length} items
+                        </p>
                       </div>
                     )}
                   </div>

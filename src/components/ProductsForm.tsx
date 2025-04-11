@@ -49,7 +49,8 @@ const ProductsForm = () => {
       unitPrice: 0,
       unit: 'pcs',
       isBundle: isBundle,
-      bundledProducts: isBundle ? [] : undefined
+      bundledProducts: isBundle ? [] : undefined,
+      showBundledPrices: true // Default to showing bundled prices
     });
   };
 
@@ -209,14 +210,32 @@ const ProductsForm = () => {
             
             {product.isBundle && (
               <div className="mt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => openBundleDialog(product.id)}
-                  className="w-full"
-                >
-                  Manage Bundle Items ({product.bundledProducts?.length || 0} items)
-                </Button>
+                <div className="flex justify-between items-center mb-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => openBundleDialog(product.id)}
+                    className="flex-grow"
+                  >
+                    Manage Bundle Items ({product.bundledProducts?.length || 0} items)
+                  </Button>
+                  
+                  <div className="flex items-center space-x-2 ml-4">
+                    <Checkbox 
+                      id={`show-bundle-prices-${index}`}
+                      checked={product.showBundledPrices}
+                      onCheckedChange={(checked) => 
+                        updateProduct(product.id, { showBundledPrices: !!checked })
+                      }
+                    />
+                    <Label 
+                      htmlFor={`show-bundle-prices-${index}`}
+                      className="text-sm cursor-pointer"
+                    >
+                      Show bundled item prices
+                    </Label>
+                  </div>
+                </div>
                 
                 {product.bundledProducts && product.bundledProducts.length > 0 && (
                   <div className="mt-2 border rounded-md p-2 bg-slate-50">

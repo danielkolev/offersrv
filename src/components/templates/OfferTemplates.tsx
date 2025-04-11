@@ -92,6 +92,7 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
           quantity: 1,
           unitPrice: 258,
           isBundle: true,
+          showBundledPrices: true,
           bundledProducts: [
             {
               id: crypto.randomUUID(),

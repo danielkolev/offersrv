@@ -32,6 +32,7 @@ export interface Product {
   unit?: string; // Added unit field for measurement (pcs, hours, etc.)
   isBundle?: boolean; // Flag to indicate if this is a bundle
   bundledProducts?: BundledProduct[]; // Products included in a bundle
+  showBundledPrices?: boolean; // New flag to control visibility of bundled product prices
 }
 
 // New interface for products within a bundle
