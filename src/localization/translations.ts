@@ -1,3 +1,4 @@
+
 import { Translations } from '@/types/language';
 
 export const enTranslations: Translations = {
@@ -31,7 +32,26 @@ export const enTranslations: Translations = {
     forgotPassword: 'Forgot Password?',
     noAccount: 'Don\'t have an account?',
     hasAccount: 'Already have an account?',
-    resetPassword: 'Reset Password'
+    resetPassword: 'Reset Password',
+    name: 'Name',
+    loginSuccess: 'Signed in successfully',
+    registerSuccess: 'Registration successful',
+    checkEmail: 'Please check your email to confirm your account',
+    error: 'Authentication error',
+    processing: 'Processing...',
+    loginButton: 'Sign In',
+    registerButton: 'Sign Up',
+    loginTitle: 'Sign in to your account',
+    registerTitle: 'Create a new account',
+    loginDescription: 'Enter your credentials to access your account',
+    registerDescription: 'Fill out the form to create your account',
+    namePlaceholder: 'Enter your name',
+    emailPlaceholder: 'Enter your email',
+    passwordPlaceholder: 'Enter your password',
+    needAccount: 'Need an account?',
+    haveAccount: 'Already have an account?',
+    welcomeTitle: 'Welcome to Offer Forge',
+    welcomeSubtitle: 'Create professional offers easily'
   },
   user: {
     profile: 'My Profile',
@@ -62,14 +82,56 @@ export const enTranslations: Translations = {
     update: 'Update Company',
     updateButton: 'Update',
     delete: 'Delete Company',
-    deleteConfirm: 'Are you sure you want to delete this company?'
+    deleteConfirm: 'Are you sure you want to delete this company?',
+    error: 'Company Error',
+    success: 'Company Success',
+    nameRequired: 'Company name is required',
+    createdSuccessfully: 'Company created successfully',
+    createNew: 'Create New Company',
+    createFirst: 'Please create your first company',
+    namePlaceholder: 'Enter company name',
+    vatPlaceholder: 'Enter VAT number',
+    addressPlaceholder: 'Enter company address',
+    cityPlaceholder: 'Enter city',
+    countryPlaceholder: 'Enter country',
+    phonePlaceholder: 'Enter phone number',
+    emailPlaceholder: 'Enter email address',
+    websitePlaceholder: 'Enter website URL'
   },
   client: {
     info: 'Client Information',
     name: 'Client Name',
     vatNumber: 'VAT Number',
     address: 'Address',
-    email: 'Email'
+    email: 'Email',
+    contactPerson: 'Contact Person',
+    city: 'City',
+    country: 'Country',
+    phone: 'Phone'
+  },
+  clientInfo: {
+    title: 'Client Information',
+    name: 'Client Name',
+    vatNumber: 'VAT Number',
+    address: 'Address',
+    contactPerson: 'Contact Person',
+    city: 'City',
+    country: 'Country',
+    email: 'Email',
+    phone: 'Phone'
+  },
+  companyInfo: {
+    title: 'Company Information',
+    name: 'Company Name',
+    vatNumber: 'VAT Number',
+    address: 'Address',
+    city: 'City',
+    country: 'Country',
+    phone: 'Phone',
+    email: 'Email',
+    website: 'Website',
+    logo: 'Logo',
+    uploadLogo: 'Upload Logo'
   },
   offer: {
     details: 'Offer Details',
@@ -84,7 +146,31 @@ export const enTranslations: Translations = {
       sent: 'Sent',
       accepted: 'Accepted',
       rejected: 'Rejected'
-    }
+    },
+    offerLabel: 'OFFER',
+    toLabel: 'To',
+    attention: 'Attention:',
+    item: 'Item',
+    partNo: 'Part No.',
+    qty: 'Qty',
+    unitPrice: 'Unit Price',
+    total: 'Total',
+    vatIncluded: 'VAT included in the price',
+    vatExcluded: 'VAT excluded from the price',
+    thankYou: 'Thank you for your business!'
+  },
+  offerDetails: {
+    title: 'Offer Details',
+    offerNumber: 'Offer Number',
+    date: 'Date',
+    validUntil: 'Valid Until',
+    showPartNumber: 'Show Part Number',
+    includeVat: 'Include VAT',
+    vatRate: 'VAT Rate (%)',
+    transportCost: 'Transport Cost',
+    otherCosts: 'Other Costs',
+    notes: 'Notes',
+    notesPlaceholder: 'Add any additional notes or comments about the offer...'
   },
   products: {
     title: 'Products',
@@ -97,7 +183,17 @@ export const enTranslations: Translations = {
     total: 'Total',
     addProduct: 'Add Product',
     removeProduct: 'Remove Product',
-    noProducts: 'No products added yet.'
+    noProducts: 'No products added yet.',
+    productName: 'Product Name',
+    partNumber: 'Part Number',
+    unitPrice: 'Unit Price'
+  },
+  totals: {
+    subtotal: 'Subtotal',
+    vat: 'VAT',
+    transport: 'Transport',
+    otherCosts: 'Other Costs',
+    totalAmount: 'Total Amount'
   }
 };
 
@@ -132,7 +228,26 @@ export const bgTranslations: Translations = {
     forgotPassword: 'Забравена парола?',
     noAccount: 'Нямате акаунт?',
     hasAccount: 'Вече имате акаунт?',
-    resetPassword: 'Нулиране на парола'
+    resetPassword: 'Нулиране на парола',
+    name: 'Име',
+    loginSuccess: 'Успешен вход',
+    registerSuccess: 'Успешна регистрация',
+    checkEmail: 'Моля, проверете имейла си за потвърждение на акаунта',
+    error: 'Грешка при автентикация',
+    processing: 'Обработка...',
+    loginButton: 'Вход',
+    registerButton: 'Регистрация',
+    loginTitle: 'Вход в акаунта',
+    registerTitle: 'Създаване на нов акаунт',
+    loginDescription: 'Въведете данните си за достъп до акаунта',
+    registerDescription: 'Попълнете формата, за да създадете акаунт',
+    namePlaceholder: 'Въведете вашето име',
+    emailPlaceholder: 'Въведете вашия имейл',
+    passwordPlaceholder: 'Въведете вашата парола',
+    needAccount: 'Нуждаете се от акаунт?',
+    haveAccount: 'Вече имате акаунт?',
+    welcomeTitle: 'Добре дошли в Офертен ковач',
+    welcomeSubtitle: 'Създавайте професионални оферти лесно'
   },
   user: {
     profile: 'Моят профил',
@@ -163,14 +278,56 @@ export const bgTranslations: Translations = {
     update: 'Обновяване на фирма',
     updateButton: 'Обнови',
     delete: 'Изтриване на фирма',
-    deleteConfirm: 'Сигурни ли сте, че искате да изтриете тази фирма?'
+    deleteConfirm: 'Сигурни ли сте, че искате да изтриете тази фирма?',
+    error: 'Грешка при фирмата',
+    success: 'Успешно действие',
+    nameRequired: 'Името на фирмата е задължително',
+    createdSuccessfully: 'Фирмата беше създадена успешно',
+    createNew: 'Създаване на нова фирма',
+    createFirst: 'Моля, създайте първата си фирма',
+    namePlaceholder: 'Въведете име на фирмата',
+    vatPlaceholder: 'Въведете ДДС номер',
+    addressPlaceholder: 'Въведете адрес на фирмата',
+    cityPlaceholder: 'Въведете град',
+    countryPlaceholder: 'Въведете държава',
+    phonePlaceholder: 'Въведете телефонен номер',
+    emailPlaceholder: 'Въведете имейл адрес',
+    websitePlaceholder: 'Въведете уебсайт URL'
   },
   client: {
     info: 'Информация за клиента',
     name: 'Име на клиента',
     vatNumber: 'ДДС Номер',
     address: 'Адрес',
-    email: 'Имейл'
+    email: 'Имейл',
+    contactPerson: 'Лице за контакт',
+    city: 'Град',
+    country: 'Държава',
+    phone: 'Телефон'
+  },
+  clientInfo: {
+    title: 'Информация за клиента',
+    name: 'Име на клиента',
+    vatNumber: 'ДДС Номер',
+    address: 'Адрес',
+    contactPerson: 'Лице за контакт',
+    city: 'Град',
+    country: 'Държава',
+    email: 'Имейл',
+    phone: 'Телефон'
+  },
+  companyInfo: {
+    title: 'Информация за фирмата',
+    name: 'Име на фирмата',
+    vatNumber: 'ДДС Номер',
+    address: 'Адрес',
+    city: 'Град',
+    country: 'Държава',
+    phone: 'Телефон',
+    email: 'Имейл',
+    website: 'Уебсайт',
+    logo: 'Лого',
+    uploadLogo: 'Качване на лого'
   },
   offer: {
     details: 'Детайли на офертата',
@@ -185,7 +342,31 @@ export const bgTranslations: Translations = {
       sent: 'Изпратена',
       accepted: 'Приета',
       rejected: 'Отхвърлена'
-    }
+    },
+    offerLabel: 'ОФЕРТА',
+    toLabel: 'До',
+    attention: 'Внимание:',
+    item: 'Артикул',
+    partNo: 'Парт №',
+    qty: 'Кол.',
+    unitPrice: 'Ед. цена',
+    total: 'Общо',
+    vatIncluded: 'ДДС е включен в цената',
+    vatExcluded: 'ДДС не е включен в цената',
+    thankYou: 'Благодарим ви за доверието!'
+  },
+  offerDetails: {
+    title: 'Детайли на офертата',
+    offerNumber: 'Номер на офертата',
+    date: 'Дата',
+    validUntil: 'Валидна до',
+    showPartNumber: 'Показвай номер на част',
+    includeVat: 'Включи ДДС',
+    vatRate: 'ДДС ставка (%)',
+    transportCost: 'Транспортни разходи',
+    otherCosts: 'Други разходи',
+    notes: 'Бележки',
+    notesPlaceholder: 'Добавете допълнителни бележки или коментари към офертата...'
   },
   products: {
     title: 'Продукти',
@@ -198,6 +379,22 @@ export const bgTranslations: Translations = {
     total: 'Общо',
     addProduct: 'Добави продукт',
     removeProduct: 'Премахни продукт',
-    noProducts: 'Все още няма добавени продукти.'
+    noProducts: 'Все още няма добавени продукти.',
+    productName: 'Име на продукта',
+    partNumber: 'Номер на част',
+    unitPrice: 'Единична цена'
+  },
+  totals: {
+    subtotal: 'Междинна сума',
+    vat: 'ДДС',
+    transport: 'Транспорт',
+    otherCosts: 'Други разходи',
+    totalAmount: 'Обща сума'
   }
+};
+
+// Create a unified translations object
+export const translations = {
+  en: enTranslations,
+  bg: bgTranslations
 };

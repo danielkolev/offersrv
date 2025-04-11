@@ -1,5 +1,7 @@
 
 export type Language = 'en' | 'bg';
+export type SupportedLanguage = Language;
+export type SupportedCurrency = 'BGN' | 'EUR' | 'USD';
 
 export interface Translations {
   offerTitle: string;
@@ -33,6 +35,25 @@ export interface Translations {
     noAccount: string;
     hasAccount: string;
     resetPassword: string;
+    name: string;
+    loginSuccess: string;
+    registerSuccess: string;
+    checkEmail: string;
+    error: string;
+    processing: string;
+    loginButton: string;
+    registerButton: string;
+    loginTitle: string;
+    registerTitle: string;
+    loginDescription: string;
+    registerDescription: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
+    passwordPlaceholder: string;
+    needAccount: string;
+    haveAccount: string;
+    welcomeTitle: string;
+    welcomeSubtitle: string;
   };
   user: {
     profile: string;
@@ -64,6 +85,20 @@ export interface Translations {
     updateButton: string;
     delete: string;
     deleteConfirm: string;
+    error: string;
+    success: string;
+    nameRequired: string;
+    createdSuccessfully: string;
+    createNew: string;
+    createFirst: string;
+    namePlaceholder: string;
+    vatPlaceholder: string;
+    addressPlaceholder: string;
+    cityPlaceholder: string;
+    countryPlaceholder: string;
+    phonePlaceholder: string;
+    emailPlaceholder: string;
+    websitePlaceholder: string;
   };
   client: {
     info: string;
@@ -71,6 +106,34 @@ export interface Translations {
     vatNumber: string;
     address: string;
     email: string;
+    contactPerson: string;
+    city: string;
+    country: string;
+    phone: string;
+  };
+  clientInfo: {
+    title: string;
+    name: string;
+    vatNumber: string;
+    address: string;
+    contactPerson: string;
+    city: string;
+    country: string;
+    email: string;
+    phone: string;
+  };
+  companyInfo: {
+    title: string;
+    name: string;
+    vatNumber: string;
+    address: string;
+    city: string;
+    country: string;
+    phone: string;
+    email: string;
+    website: string;
+    logo: string;
+    uploadLogo: string;
   };
   offer: {
     details: string;
@@ -86,6 +149,30 @@ export interface Translations {
       accepted: string;
       rejected: string;
     };
+    offerLabel: string;
+    toLabel: string;
+    attention: string;
+    item: string;
+    partNo: string;
+    qty: string;
+    unitPrice: string;
+    total: string;
+    vatIncluded: string;
+    vatExcluded: string;
+    thankYou: string;
+  };
+  offerDetails: {
+    title: string;
+    offerNumber: string;
+    date: string;
+    validUntil: string;
+    showPartNumber: string;
+    includeVat: string;
+    vatRate: string;
+    transportCost: string;
+    otherCosts: string;
+    notes: string;
+    notesPlaceholder: string;
   };
   products: {
     title: string;
@@ -99,5 +186,15 @@ export interface Translations {
     addProduct: string;
     removeProduct: string;
     noProducts: string;
+    productName: string;
+    partNumber: string;
+    unitPrice: string;
+  };
+  totals: {
+    subtotal: string;
+    vat: string;
+    transport: string;
+    otherCosts: string;
+    totalAmount: string;
   };
 }
