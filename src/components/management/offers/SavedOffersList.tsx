@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import SavedOfferItem from './SavedOfferItem';
+import SavedOfferItem from './saved-offer-item';
 import { SavedOffersListProps } from './types';
 import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
 

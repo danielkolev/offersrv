@@ -1,0 +1,34 @@
+
+import React from 'react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import OfferPreview from '@/components/OfferPreview';
+import { useOffer } from '@/context/offer/OfferContext';
+
+interface OfferPreviewModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const OfferPreviewModal = ({ open, onOpenChange }: OfferPreviewModalProps) => {
+  const { resetOffer } = useOffer();
+  
+  const handleOpenChange = (open: boolean) => {
+    onOpenChange(open);
+    // Restore original offer when dialog is closed
+    if (!open) resetOffer();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
+        <OfferPreview
+          isSaveDialogOpen={false}
+          setIsSaveDialogOpen={() => {}}
+          mode="view"
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default OfferPreviewModal;
