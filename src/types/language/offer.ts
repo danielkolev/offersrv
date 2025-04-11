@@ -29,7 +29,7 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
-  // Add templates translations
+  // Templates translations
   templates: {
     title: string;
     description: string;

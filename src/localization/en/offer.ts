@@ -38,7 +38,7 @@ export const enOfferTranslations: OfferTranslations = {
     bulgarian: 'Bulgarian',
     english: 'English'
   },
-  // Add templates translations
+  // Templates translations
   templates: {
     title: 'Templates',
     description: 'Start with a template or save your current offer as a template',

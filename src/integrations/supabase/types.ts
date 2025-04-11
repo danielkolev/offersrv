@@ -369,21 +369,30 @@ export type Database = {
       saved_offers: {
         Row: {
           created_at: string
+          description: string | null
           id: string
+          is_template: boolean | null
+          name: string | null
           offer_data: Json
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
+          is_template?: boolean | null
+          name?: string | null
           offer_data: Json
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
+          is_template?: boolean | null
+          name?: string | null
           offer_data?: Json
           updated_at?: string
           user_id?: string

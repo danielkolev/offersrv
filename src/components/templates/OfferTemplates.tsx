@@ -8,8 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Offer } from '@/types/offer';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  PlusCircle, Template, Save, Trash2, 
-  Language, Info, FileText, BookOpen 
+  PlusCircle, FileText, Save, Trash2, 
+  BookOpen, Info, Languages
 } from 'lucide-react';
 import { 
   Dialog, 
@@ -250,8 +250,8 @@ const OfferTemplates = () => {
           id: item.id,
           name: item.name || 'Unnamed Template',
           description: item.description || '',
-          template: item.offer_data,
-          language: item.offer_data?.details?.offerLanguage || 'all'
+          template: item.offer_data as unknown as Partial<Offer>,
+          language: ((item.offer_data as any)?.details?.offerLanguage || 'all') as 'bg' | 'en' | 'all'
         }));
         
         setUserTemplates(templates);
@@ -297,16 +297,14 @@ const OfferTemplates = () => {
     
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('saved_offers')
-        .insert([
-          {
-            user_id: user.id,
-            name: templateName,
-            offer_data: offer,
-            is_template: true
-          }
-        ]);
+        .insert({
+          user_id: user.id,
+          name: templateName,
+          offer_data: offer as any,
+          is_template: true
+        });
         
       if (error) {
         throw error;
@@ -378,12 +376,12 @@ const OfferTemplates = () => {
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <h4 className="font-medium flex items-center gap-2 mb-2">
-              <Template className="h-4 w-4" />
+              <FileText className="h-4 w-4" />
               {template.name}
             </h4>
             {template.template.details?.offerLanguage && (
               <div className="text-xs inline-flex items-center gap-1 text-muted-foreground mb-2">
-                <Language className="h-3 w-3" /> 
+                <Languages className="h-3 w-3" /> 
                 {template.template.details.offerLanguage === 'bg' ? 'Български' : 'English'}
               </div>
             )}
