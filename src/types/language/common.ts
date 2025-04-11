@@ -16,4 +16,10 @@ export interface CommonTranslations {
   settings: string;
   comingSoon: string;
   featureInDevelopment: string;
+  manage: string;
+  cancel: string;
+  delete: string;
+  confirmation: string;
+  actions: string;
+  close: string;
 }

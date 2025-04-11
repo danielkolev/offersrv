@@ -1,4 +1,3 @@
-
 export interface OfferTranslations {
   details: string;
   number: string;
@@ -69,4 +68,37 @@ export interface TotalsTranslations {
   transport: string;
   otherCosts: string;
   totalAmount: string;
+}
+
+export interface SavedOffersTranslations {
+  title: string;
+  loadOffer: string;
+  saveOffer: string;
+  deleteOffer: string;
+  offerSaved: string;
+  offerDeleted: string;
+  noOffersFound: string;
+  confirmDelete: string;
+  date: string;
+  client: string;
+  amount: string;
+  actions: string;
+  search: string;
+  searchPlaceholder: string;
+  clientName: string;
+  offerNumber: string;
+}
+
+export interface SavedProductsTranslations {
+  title: string;
+  addProduct: string;
+  editProduct: string;
+  deleteProduct: string;
+  deleteConfirmation: string;
+  noProductsFound: string;
+  searchPlaceholder: string;
+  searchByName: string;
+  searchByPartNumber: string;
+  selectProduct: string;
+  cancel: string;
 }

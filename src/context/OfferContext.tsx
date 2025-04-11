@@ -11,6 +11,8 @@ interface OfferContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   removeProduct: (id: string) => void;
+  clearProducts: () => void;
+  resetProducts: (products: Product[]) => void;
   calculateSubtotal: () => number;
   calculateVat: () => number;
   calculateTotal: () => number;
@@ -116,6 +118,20 @@ export function OfferProvider({ children }: { children: ReactNode }) {
       products: prev.products.filter((p) => p.id !== id),
     }));
   };
+  
+  const clearProducts = () => {
+    setOffer((prev) => ({
+      ...prev,
+      products: [],
+    }));
+  };
+  
+  const resetProducts = (products: Product[]) => {
+    setOffer((prev) => ({
+      ...prev,
+      products: products,
+    }));
+  };
 
   const calculateSubtotal = () => {
     return offer.products.reduce((sum, product) => {
@@ -137,9 +153,14 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     setOffer(defaultOffer);
   };
 
-  // Add updateCompanyInfo to window for global access
+  // Add functions to window for global access
   if (typeof window !== 'undefined') {
     window.updateCompanyInfo = updateCompanyInfo;
+    window.updateClientInfo = updateClientInfo;
+    window.updateOfferDetails = updateOfferDetails;
+    window.addProduct = addProduct;
+    window.clearProducts = clearProducts;
+    window.resetProducts = resetProducts;
   }
 
   return (
@@ -152,6 +173,8 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         addProduct,
         updateProduct,
         removeProduct,
+        clearProducts,
+        resetProducts,
         calculateSubtotal,
         calculateVat,
         calculateTotal,
@@ -175,5 +198,10 @@ export function useOffer() {
 declare global {
   interface Window {
     updateCompanyInfo?: (info: Partial<CompanyInfo>) => void;
+    updateClientInfo?: (info: Partial<ClientInfo>) => void;
+    updateOfferDetails?: (details: Partial<OfferDetails>) => void;
+    addProduct?: (product: Omit<Product, 'id'>) => void;
+    clearProducts?: () => void;
+    resetProducts?: (products: Product[]) => void;
   }
 }

@@ -12,6 +12,7 @@ import CurrencySwitcher from '@/components/CurrencySwitcher';
 import { useAuth } from '@/context/AuthContext';
 import AccountButton from '@/components/AccountButton';
 import CompanyManager from '@/components/company/CompanyManager';
+import ManagePanel from '@/components/management/ManagePanel';
 import { supabase } from '@/integrations/supabase/client';
 import { Company } from '@/types/company';
 import { useToast } from '@/hooks/use-toast';
@@ -125,6 +126,8 @@ const Index = () => {
             <AccountButton />
           </div>
         </div>
+        
+        {user && <ManagePanel />}
         
         <Tabs defaultValue="edit" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex justify-center mb-6">

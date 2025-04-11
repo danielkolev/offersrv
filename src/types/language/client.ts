@@ -1,4 +1,3 @@
-
 export interface ClientTranslations {
   info: string;
   name: string;
@@ -35,4 +34,19 @@ export interface CompanyInfoTranslations {
   website: string;
   logo: string;
   uploadLogo: string;
+}
+
+export interface SavedClientsTranslations {
+  title: string;
+  searchPlaceholder: string;
+  noClientsFound: string;
+  addClient: string;
+  editClient: string;
+  deleteClient: string;
+  deleteConfirmation: string;
+  searchByName: string;
+  searchByVat: string;
+  importFromOffer: string;
+  selectClient: string;
+  cancel: string;
 }

@@ -3,9 +3,15 @@ import { CommonTranslations } from './common';
 import { AuthTranslations } from './auth';
 import { UserTranslations } from './user';
 import { CompanyTranslations } from './company';
-import { ClientTranslations, ClientInfoTranslations, CompanyInfoTranslations } from './client';
-import { OfferTranslations, OfferDetailsTranslations, ProductsTranslations, TotalsTranslations } from './offer';
-import { Language, SupportedLanguage, SupportedCurrency } from './base';
+import { ClientTranslations, ClientInfoTranslations, CompanyInfoTranslations, SavedClientsTranslations } from './client';
+import { 
+  OfferTranslations, 
+  OfferDetailsTranslations, 
+  ProductsTranslations, 
+  TotalsTranslations,
+  SavedOffersTranslations,
+  SavedProductsTranslations 
+} from './offer';
 
 export interface Translations {
   offerTitle: string;
@@ -20,7 +26,10 @@ export interface Translations {
   offerDetails: OfferDetailsTranslations;
   products: ProductsTranslations;
   totals: TotalsTranslations;
+  savedOffers: SavedOffersTranslations;
+  savedClients: SavedClientsTranslations;
+  savedProducts: SavedProductsTranslations;
 }
 
 // Re-export the types with proper syntax for isolatedModules
-export type { Language, SupportedLanguage, SupportedCurrency };
+export type { Language, SupportedLanguage, SupportedCurrency } from './base';
