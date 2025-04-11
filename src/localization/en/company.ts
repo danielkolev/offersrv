@@ -1,0 +1,30 @@
+
+import { CompanyTranslations } from '@/types/language/company';
+
+export const enCompanyTranslations: CompanyTranslations = {
+  createCompany: 'Create Company',
+  editCompany: 'Edit Company',
+  updateCompany: 'Update Company',
+  companyName: 'Company Name',
+  companyAddress: 'Address',
+  companyCity: 'City',
+  companyCountry: 'Country',
+  companyVatNumber: 'VAT Number',
+  companyPhone: 'Phone',
+  companyEmail: 'Email',
+  companyWebsite: 'Website',
+  companyLogo: 'Logo',
+  uploadLogo: 'Upload Logo',
+  removeLogo: 'Remove Logo',
+  selectCompany: 'Select Company',
+  noCompanies: 'No companies found',
+  createFirst: 'Create your first company',
+  companyCreated: 'Company created successfully',
+  companyUpdated: 'Company updated successfully',
+  selectFirst: 'Please select a company first',
+  companySettings: 'Company Settings',
+  deleteCompany: 'Delete Company',
+  confirmDelete: 'Are you sure you want to delete this company? This action cannot be undone.',
+  companyDeleted: 'Company deleted successfully',
+  manageCompanies: 'Manage Companies'
+};

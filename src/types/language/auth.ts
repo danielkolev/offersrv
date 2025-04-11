@@ -30,4 +30,5 @@ export interface AuthTranslations {
   haveAccount: string;
   welcomeTitle: string;
   welcomeSubtitle: string;
+  notAuthenticated: string;
 }

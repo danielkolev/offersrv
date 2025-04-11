@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/OfferContext';
@@ -96,7 +95,7 @@ const SavedProductsManager = () => {
     if (!user) {
       toast({
         title: t.common.error,
-        description: t.auth.notAuthenticated,
+        description: t.auth.notAuthenticated || "You need to be logged in",
         variant: 'destructive',
       });
       return;

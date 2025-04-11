@@ -70,7 +70,13 @@ const SavedOffersManager = () => {
         throw error;
       }
       
-      setSavedOffers(data || []);
+      // Convert the data to match our SavedOffer type
+      const typedOffers: SavedOffer[] = data?.map(item => ({
+        ...item,
+        offer_data: item.offer_data as unknown as Offer
+      })) || [];
+      
+      setSavedOffers(typedOffers);
     } catch (error: any) {
       console.error('Error fetching saved offers:', error);
       toast({
@@ -99,7 +105,7 @@ const SavedOffersManager = () => {
         .from('saved_offers')
         .insert({
           user_id: user.id,
-          offer_data: offer,
+          offer_data: offer as any, // Cast to any to bypass type checking
         })
         .select();
         
@@ -107,7 +113,13 @@ const SavedOffersManager = () => {
         throw error;
       }
       
-      setSavedOffers(prev => [data[0], ...prev]);
+      // Convert the returned data to match our SavedOffer type
+      const newOffer = {
+        ...data[0],
+        offer_data: data[0].offer_data as unknown as Offer
+      };
+      
+      setSavedOffers(prev => [newOffer, ...prev]);
       toast({
         title: t.common.success,
         description: t.savedOffers.offerSaved,

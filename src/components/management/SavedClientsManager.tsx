@@ -94,7 +94,7 @@ const SavedClientsManager = () => {
     if (!user) {
       toast({
         title: t.common.error,
-        description: t.auth.notAuthenticated,
+        description: t.auth.notAuthenticated || "You need to be logged in",
         variant: 'destructive',
       });
       return;
