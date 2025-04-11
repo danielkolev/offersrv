@@ -12,12 +12,7 @@ import { Plus } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
-
-interface Company {
-  id: string;
-  name: string;
-  logo: string | null;
-}
+import { Company } from '@/types/company';
 
 interface CompanySelectorProps {
   onSelectCompany: (companyId: string) => void;
@@ -37,21 +32,35 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     
     const fetchCompanies = async () => {
       try {
-        const { data, error } = await supabase
-          .from('companies')
-          .select(`
-            id,
-            name,
-            logo
-          `)
-          .order('name');
+        // Get companies the user is a member of through the company_members table
+        const { data: memberData, error: memberError } = await supabase
+          .from('company_members')
+          .select('company_id')
+          .eq('user_id', user.id);
           
-        if (error) throw error;
+        if (memberError) throw memberError;
         
-        setCompanies(data || []);
-        if (data && data.length > 0) {
-          setSelectedCompany(data[0].id);
-          onSelectCompany(data[0].id);
+        if (memberData && memberData.length > 0) {
+          const companyIds = memberData.map(member => member.company_id);
+          
+          // Get company details
+          const { data: companiesData, error: companiesError } = await supabase
+            .from('companies')
+            .select('id, name, logo')
+            .in('id', companyIds)
+            .order('name');
+            
+          if (companiesError) throw companiesError;
+          
+          if (companiesData) {
+            setCompanies(companiesData);
+            if (companiesData.length > 0) {
+              setSelectedCompany(companiesData[0].id);
+              onSelectCompany(companiesData[0].id);
+            }
+          }
+        } else {
+          setCompanies([]);
         }
       } catch (error) {
         console.error('Error fetching companies:', error);

@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import CompanyManager from '@/components/company/CompanyManager';
 import { supabase } from '@/integrations/supabase/client';
+import { Company } from '@/types/company';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
@@ -38,16 +39,17 @@ const Index = () => {
         
         // Update the company info in the context
         if (data && window.updateCompanyInfo) {
+          const company = data as Company;
           window.updateCompanyInfo({
-            name: data.name,
-            vatNumber: data.vat_number,
-            address: data.address,
-            city: data.city,
-            country: data.country,
-            phone: data.phone,
-            email: data.email,
-            website: data.website,
-            logo: data.logo
+            name: company.name,
+            vatNumber: company.vat_number,
+            address: company.address,
+            city: company.city,
+            country: company.country,
+            phone: company.phone,
+            email: company.email,
+            website: company.website,
+            logo: company.logo
           });
         }
       } catch (error) {
