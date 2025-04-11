@@ -50,6 +50,7 @@ const defaultDetails: OfferDetails = {
   transportCost: 0,
   otherCosts: 0,
   notes: 'Delivery time: 7-14 working days after order confirmation.\nPayment terms: 100% advance payment.',
+  offerLanguage: 'bg', // Default to Bulgarian
 };
 
 const defaultOffer: Offer = {

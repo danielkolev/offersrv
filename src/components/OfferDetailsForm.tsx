@@ -4,9 +4,10 @@ import { useOffer } from '@/context/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/context/LanguageContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails } = useOffer();
@@ -18,7 +19,7 @@ const OfferDetailsForm = () => {
         <CardTitle>{t.offerDetails.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="space-y-2">
             <Label htmlFor="offerNumber">{t.offerDetails.offerNumber}</Label>
             <Input
@@ -26,6 +27,22 @@ const OfferDetailsForm = () => {
               value={offer.details.offerNumber}
               onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
             />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="offerLanguage">{t.offerDetails.language}</Label>
+            <Select
+              value={offer.details.offerLanguage}
+              onValueChange={(value: 'bg' | 'en') => updateOfferDetails({ offerLanguage: value })}
+            >
+              <SelectTrigger id="offerLanguage">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="bg">{t.offer.languageOptions.bulgarian}</SelectItem>
+                <SelectItem value="en">{t.offer.languageOptions.english}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="space-y-2">
@@ -47,7 +64,9 @@ const OfferDetailsForm = () => {
               onChange={(e) => updateOfferDetails({ validUntil: e.target.value })}
             />
           </div>
-          
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="flex items-center space-x-2">
             <Switch
               id="showPartNumber"
@@ -65,17 +84,16 @@ const OfferDetailsForm = () => {
             />
             <Label htmlFor="includeVat">{t.offerDetails.includeVat}</Label>
           </div>
-          
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="space-y-2">
             <Label htmlFor="vatRate">{t.offerDetails.vatRate}</Label>
             <Input
               id="vatRate"
               type="number"
-              min="0"
-              max="100"
               value={offer.details.vatRate}
-              onChange={(e) => updateOfferDetails({ vatRate: parseFloat(e.target.value) || 0 })}
-              disabled={!offer.details.includeVat}
+              onChange={(e) => updateOfferDetails({ vatRate: Number(e.target.value) })}
             />
           </div>
           
@@ -84,9 +102,8 @@ const OfferDetailsForm = () => {
             <Input
               id="transportCost"
               type="number"
-              min="0"
               value={offer.details.transportCost}
-              onChange={(e) => updateOfferDetails({ transportCost: parseFloat(e.target.value) || 0 })}
+              onChange={(e) => updateOfferDetails({ transportCost: Number(e.target.value) })}
             />
           </div>
           
@@ -95,21 +112,20 @@ const OfferDetailsForm = () => {
             <Input
               id="otherCosts"
               type="number"
-              min="0"
               value={offer.details.otherCosts}
-              onChange={(e) => updateOfferDetails({ otherCosts: parseFloat(e.target.value) || 0 })}
+              onChange={(e) => updateOfferDetails({ otherCosts: Number(e.target.value) })}
             />
           </div>
         </div>
         
-        <div className="mt-4 space-y-2">
-          <Label htmlFor="notes">{t.offerDetails.notes}</Label>
+        <div className="space-y-2">
+          <Label htmlFor="offerNotes">{t.offerDetails.notes}</Label>
           <Textarea
-            id="notes"
-            rows={3}
+            id="offerNotes"
             value={offer.details.notes}
             onChange={(e) => updateOfferDetails({ notes: e.target.value })}
             placeholder={t.offerDetails.notesPlaceholder}
+            rows={4}
           />
         </div>
       </CardContent>

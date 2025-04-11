@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OfferProvider } from '@/context/OfferContext';
-import CompanyInfoForm from '@/components/CompanyInfoForm';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
 import ProductsForm from '@/components/ProductsForm';
@@ -78,11 +77,11 @@ const Index = () => {
           name: data.name || '',
           vatNumber: data.vat_number || '',
           address: data.address || '',
-          city: '', // Fallback for missing fields
-          country: '', // Fallback for missing fields
+          city: data.city || '', 
+          country: data.country || '', 
           phone: data.phone || '',
           email: data.email || '',
-          website: '', // Fallback for missing fields
+          website: data.website || '', 
           logo: data.logo_url || null
         });
       }
@@ -145,7 +144,6 @@ const Index = () => {
                 </div>
               ) : (
                 <>
-                  <CompanyInfoForm />
                   <ClientInfoForm />
                   <OfferDetailsForm />
                   <ProductsForm />

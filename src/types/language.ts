@@ -1,3 +1,4 @@
+
 export type Language = 'en' | 'bg';
 export type SupportedLanguage = Language;
 export type SupportedCurrency = 'BGN' | 'EUR' | 'USD';
@@ -160,6 +161,11 @@ export interface Translations {
     vatIncluded: string;
     vatExcluded: string;
     thankYou: string;
+    language: string;
+    languageOptions: {
+      bulgarian: string;
+      english: string;
+    };
   };
   offerDetails: {
     title: string;
@@ -173,6 +179,7 @@ export interface Translations {
     otherCosts: string;
     notes: string;
     notesPlaceholder: string;
+    language: string;
   };
   products: {
     title: string;

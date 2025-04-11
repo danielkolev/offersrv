@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import {
@@ -14,12 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Building, LogOut, Settings, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import CompanySettingsModal from './account/CompanySettingsModal';
 
 const AccountButton = () => {
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [companySettingsOpen, setCompanySettingsOpen] = useState(false);
   
   const handleSignOut = async () => {
     try {
@@ -38,12 +40,9 @@ const AccountButton = () => {
     }
   };
   
-  // Future implementation: Navigate to the company profile page
-  const goToCompanyProfile = () => {
-    toast({
-      title: t.common.comingSoon,
-      description: t.common.featureInDevelopment,
-    });
+  // Open company settings modal
+  const openCompanySettings = () => {
+    setCompanySettingsOpen(true);
   };
   
   // Future implementation: Navigate to the user profile page
@@ -63,44 +62,51 @@ const AccountButton = () => {
   };
   
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="gap-2"
-          aria-label={t.common.account}
-        >
-          <User size={16} />
-          {user?.email ? user.email.split('@')[0] : t.common.account}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>{t.common.account}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem onClick={goToCompanyProfile} className="cursor-pointer">
-          <Building className="mr-2 h-4 w-4" />
-          <span>{t.company.manage}</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem onClick={goToUserProfile} className="cursor-pointer">
-          <User className="mr-2 h-4 w-4" />
-          <span>{t.user.profile}</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem onClick={goToSettings} className="cursor-pointer">
-          <Settings className="mr-2 h-4 w-4" />
-          <span>{t.common.settings}</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>{t.auth.signOut}</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="outline" 
+            className="gap-2"
+            aria-label={t.common.account}
+          >
+            <User size={16} />
+            {user?.email ? user.email.split('@')[0] : t.common.account}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel>{t.common.account}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          
+          <DropdownMenuItem onClick={openCompanySettings} className="cursor-pointer">
+            <Building className="mr-2 h-4 w-4" />
+            <span>{t.company.manage}</span>
+          </DropdownMenuItem>
+          
+          <DropdownMenuItem onClick={goToUserProfile} className="cursor-pointer">
+            <User className="mr-2 h-4 w-4" />
+            <span>{t.user.profile}</span>
+          </DropdownMenuItem>
+          
+          <DropdownMenuItem onClick={goToSettings} className="cursor-pointer">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>{t.common.settings}</span>
+          </DropdownMenuItem>
+          
+          <DropdownMenuSeparator />
+          
+          <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>{t.auth.signOut}</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      
+      <CompanySettingsModal
+        open={companySettingsOpen}
+        onOpenChange={setCompanySettingsOpen}
+      />
+    </>
   );
 };
 

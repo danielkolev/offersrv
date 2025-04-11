@@ -1,4 +1,3 @@
-
 export interface CompanyInfo {
   name: string;
   address: string;
@@ -25,7 +24,7 @@ export interface ClientInfo {
 export interface Product {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   partNumber?: string;
   quantity: number;
   unitPrice: number;
@@ -41,6 +40,7 @@ export interface OfferDetails {
   transportCost: number;
   otherCosts: number;
   notes: string;
+  offerLanguage: 'bg' | 'en';
 }
 
 export interface Offer {

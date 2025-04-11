@@ -157,7 +157,12 @@ export const enTranslations: Translations = {
     total: 'Total',
     vatIncluded: 'VAT included in the price',
     vatExcluded: 'VAT excluded from the price',
-    thankYou: 'Thank you for your business!'
+    thankYou: 'Thank you for your business!',
+    language: 'Offer Language',
+    languageOptions: {
+      bulgarian: 'Bulgarian',
+      english: 'English'
+    }
   },
   offerDetails: {
     title: 'Offer Details',
@@ -170,7 +175,8 @@ export const enTranslations: Translations = {
     transportCost: 'Transport Cost',
     otherCosts: 'Other Costs',
     notes: 'Notes',
-    notesPlaceholder: 'Add any additional notes or comments about the offer...'
+    notesPlaceholder: 'Add any additional notes or comments about the offer...',
+    language: 'Language'
   },
   products: {
     title: 'Products',
@@ -354,7 +360,12 @@ export const bgTranslations: Translations = {
     total: 'Общо',
     vatIncluded: 'ДДС е включен в цената',
     vatExcluded: 'ДДС не е включен в цената',
-    thankYou: 'Благодарим ви за доверието!'
+    thankYou: 'Благодарим ви за доверието!',
+    language: 'Език на офертата',
+    languageOptions: {
+      bulgarian: 'Български',
+      english: 'Английски'
+    }
   },
   offerDetails: {
     title: 'Детайли на офертата',
@@ -367,7 +378,8 @@ export const bgTranslations: Translations = {
     transportCost: 'Транспортни разходи',
     otherCosts: 'Други разходи',
     notes: 'Бележки',
-    notesPlaceholder: 'Добавете допълнителни бележки или коментари към офертата...'
+    notesPlaceholder: 'Добавете допълнителни бележки или коментари към офертата...',
+    language: 'Език'
   },
   products: {
     title: 'Продукти',
