@@ -63,4 +63,5 @@ export interface Offer {
   client: ClientInfo;
   products: Product[];
   details: OfferDetails;
+  name?: string; // Added optional name field for the offer
 }

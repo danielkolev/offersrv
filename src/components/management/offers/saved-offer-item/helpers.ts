@@ -2,6 +2,15 @@
 import html2pdf from 'html2pdf.js';
 import { printContent } from '@/components/offer-preview/utils/printUtils';
 
+export const formatCurrencyValue = (value: number, currency: string): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency || 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+};
+
 export const getOfferFileName = (clientName: string, offerNumber: string) => {
   const formattedClientName = clientName.replace(/\s+/g, '-');
   const date = new Date().toLocaleDateString().replace(/\//g, '-');

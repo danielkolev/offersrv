@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,12 +35,16 @@ const OfferDetailsForm = () => {
           let nextNumber = 1;
           
           // If there are existing offers, extract the highest number and increment it
-          if (data && data.length > 0 && data[0].offer_data.details?.offerNumber) {
-            const lastOfferNumber = data[0].offer_data.details.offerNumber;
-            // Try to parse the numerical part of the offer number
-            const numericPart = parseInt(lastOfferNumber.replace(/\D/g, ''), 10);
-            if (!isNaN(numericPart)) {
-              nextNumber = numericPart + 1;
+          if (data && data.length > 0 && data[0].offer_data) {
+            // Convert to the expected type and access the details safely
+            const offerData = data[0].offer_data as any;
+            if (offerData.details && offerData.details.offerNumber) {
+              const lastOfferNumber = offerData.details.offerNumber;
+              // Try to parse the numerical part of the offer number
+              const numericPart = parseInt(lastOfferNumber.replace(/\D/g, ''), 10);
+              if (!isNaN(numericPart)) {
+                nextNumber = numericPart + 1;
+              }
             }
           }
           

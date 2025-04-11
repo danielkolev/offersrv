@@ -1,36 +1,53 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Eye, FileEdit, FileDown, Printer } from 'lucide-react';
+import { Eye, FileEdit, FileDown, Printer, Trash2 } from 'lucide-react';
+import { SavedOffer } from '@/types/database';
 
 interface OfferActionButtonsProps {
-  onPreview: () => void;
-  onEdit: () => void;
-  onPrint: () => void;
-  onExport: () => void;
-  previewTitle: string;
-  editTitle: string;
-  printTitle: string;
-  exportTitle: string;
+  savedOffer: SavedOffer;
+  loadOffer: (savedOffer: SavedOffer) => void;
+  deleteOffer: (id: string) => void;
+  t: any;
 }
 
 const OfferActionButtons = ({
-  onPreview,
-  onEdit,
-  onPrint,
-  onExport,
-  previewTitle,
-  editTitle,
-  printTitle,
-  exportTitle
+  savedOffer,
+  loadOffer,
+  deleteOffer,
+  t
 }: OfferActionButtonsProps) => {
+  // These handlers would be implemented based on your application needs
+  const handlePreview = () => {
+    console.log('Preview offer', savedOffer.id);
+    // Implementation for preview
+  };
+  
+  const handleEdit = () => {
+    loadOffer(savedOffer);
+  };
+  
+  const handlePrint = () => {
+    console.log('Print offer', savedOffer.id);
+    // Implementation for printing
+  };
+  
+  const handleExport = () => {
+    console.log('Export offer', savedOffer.id);
+    // Implementation for exporting
+  };
+  
+  const handleDelete = () => {
+    deleteOffer(savedOffer.id);
+  };
+
   return (
-    <>
+    <div className="flex space-x-2">
       <Button 
         variant="outline" 
         size="icon"
-        title={previewTitle}
-        onClick={onPreview}
+        title={t.savedOffers.viewOffer}
+        onClick={handlePreview}
       >
         <Eye className="h-4 w-4" />
       </Button>
@@ -38,8 +55,8 @@ const OfferActionButtons = ({
       <Button 
         variant="outline" 
         size="icon"
-        title={editTitle}
-        onClick={onEdit}
+        title={t.savedOffers.loadOffer}
+        onClick={handleEdit}
       >
         <FileEdit className="h-4 w-4" />
       </Button>
@@ -47,8 +64,8 @@ const OfferActionButtons = ({
       <Button 
         variant="outline"
         size="icon"
-        title={printTitle}
-        onClick={onPrint}
+        title="Print Offer"
+        onClick={handlePrint}
       >
         <Printer className="h-4 w-4" />
       </Button>
@@ -56,12 +73,22 @@ const OfferActionButtons = ({
       <Button 
         variant="outline"
         size="icon"
-        title={exportTitle}
-        onClick={onExport}
+        title="Export Offer"
+        onClick={handleExport}
       >
         <FileDown className="h-4 w-4" />
       </Button>
-    </>
+      
+      <Button 
+        variant="outline"
+        size="icon"
+        title={t.savedOffers.deleteOffer}
+        onClick={handleDelete}
+        className="text-destructive hover:bg-destructive/10"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </div>
   );
 };
 

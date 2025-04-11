@@ -7,6 +7,7 @@ export interface SavedOffer {
   offer_data: Offer;
   created_at: string;
   updated_at: string;
+  name?: string;
 }
 
 export interface Client {
