@@ -22,5 +22,5 @@ export interface Translations {
   totals: TotalsTranslations;
 }
 
-// Re-export everything from base.ts
-export { Language, SupportedLanguage, SupportedCurrency };
+// Re-export the types with proper syntax for isolatedModules
+export type { Language, SupportedLanguage, SupportedCurrency };
