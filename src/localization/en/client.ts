@@ -1,3 +1,4 @@
+
 import { 
   ClientTranslations, 
   ClientInfoTranslations, 
@@ -55,5 +56,12 @@ export const enSavedClientsTranslations: SavedClientsTranslations = {
   searchByVat: 'Search by VAT number',
   importFromOffer: 'Import from offer',
   selectClient: 'Select',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  addNewClient: 'Add New Client',
+  createClient: 'Create Client',
+  updateClient: 'Update Client',
+  clientAddedSuccess: 'Client added successfully',
+  clientUpdatedSuccess: 'Client updated successfully',
+  clientDeletedSuccess: 'Client deleted successfully',
+  formTitle: 'Client Details'
 };

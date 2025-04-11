@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -11,6 +12,8 @@ import { Link } from 'react-router-dom';
 import { fetchClients, saveClient, updateClient, deleteClient as deleteClientService } from '@/components/management/clients/clientsService';
 import SavedClientsList from '@/components/management/clients/SavedClientsList';
 import ClientSearch from '@/components/management/clients/ClientSearch';
+import ClientFormDialog from '@/components/management/clients/ClientFormDialog';
+import { ClientFormData } from '@/components/management/clients/ClientFormDialog';
 
 const SavedClientsPage = () => {
   const { user } = useAuth();
@@ -22,6 +25,9 @@ const SavedClientsPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'name' | 'vat'>('name');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentClient, setCurrentClient] = useState<Client | undefined>(undefined);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -48,11 +54,110 @@ const SavedClientsPage = () => {
     }
   };
 
-  const handleSaveClient = async () => {
+  const handleOpenAddDialog = () => {
+    setCurrentClient(undefined);
+    setIsEditMode(false);
+    setIsDialogOpen(true);
+  };
+
+  const handleEditClient = (client: Client) => {
+    setCurrentClient(client);
+    setIsEditMode(true);
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveClient = async (formData: ClientFormData) => {
     if (!user) {
       toast({
         title: t.common.error,
         description: t.auth.notAuthenticated || "You need to be logged in",
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setIsSaving(true);
+    
+    try {
+      if (isEditMode && currentClient) {
+        // Update client
+        await updateClient(currentClient.id, {
+          name: formData.name,
+          contactPerson: formData.contactPerson,
+          address: formData.address,
+          city: formData.city,
+          country: formData.country,
+          vatNumber: formData.vatNumber,
+          email: formData.email,
+          phone: formData.phone,
+        });
+        
+        // Update local state
+        setClients(prev => 
+          prev.map(client => 
+            client.id === currentClient.id 
+              ? {
+                  ...client,
+                  name: formData.name,
+                  contact_person: formData.contactPerson,
+                  address: formData.address,
+                  city: formData.city,
+                  country: formData.country,
+                  vat_number: formData.vatNumber,
+                  email: formData.email,
+                  phone: formData.phone,
+                  updated_at: new Date().toISOString(),
+                }
+              : client
+          )
+        );
+        
+        toast({
+          title: t.common.success,
+          description: t.savedClients.clientUpdatedSuccess,
+        });
+      } else {
+        // Create new client
+        const newClient = await saveClient(user.id, {
+          name: formData.name,
+          contactPerson: formData.contactPerson,
+          address: formData.address,
+          city: formData.city,
+          country: formData.country,
+          vatNumber: formData.vatNumber,
+          email: formData.email,
+          phone: formData.phone,
+        });
+        
+        setClients(prev => [...prev, newClient].sort((a, b) => a.name.localeCompare(b.name)));
+        
+        toast({
+          title: t.common.success,
+          description: t.savedClients.clientAddedSuccess,
+        });
+      }
+      
+      // Close dialog
+      setIsDialogOpen(false);
+    } catch (error: any) {
+      console.error('Error saving/updating client:', error);
+      toast({
+        title: t.common.error,
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleImportFromOffer = () => {
+    if (!user) return;
+    
+    if (!offer.client.name) {
+      toast({
+        title: t.common.error,
+        description: "No client information in current offer",
         variant: 'destructive',
       });
       return;
@@ -65,68 +170,12 @@ const SavedClientsPage = () => {
     
     if (existingClient) {
       // Update existing client
-      await handleUpdateExistingClient(existingClient.id);
-      return;
-    }
-    
-    setIsSaving(true);
-    try {
-      const newClient = await saveClient(user.id, offer.client);
-      setClients(prev => [...prev, newClient].sort((a, b) => a.name.localeCompare(b.name)));
-      toast({
-        title: t.common.success,
-        description: 'Client saved successfully',
-      });
-    } catch (error: any) {
-      console.error('Error saving client:', error);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
-  
-  const handleUpdateExistingClient = async (id: string) => {
-    setIsSaving(true);
-    try {
-      await updateClient(id, offer.client);
-      
-      // Update local state
-      setClients(prev => 
-        prev.map(client => 
-          client.id === id 
-            ? {
-                ...client,
-                name: offer.client.name,
-                contact_person: offer.client.contactPerson,
-                address: offer.client.address,
-                city: offer.client.city,
-                country: offer.client.country,
-                vat_number: offer.client.vatNumber,
-                email: offer.client.email,
-                phone: offer.client.phone,
-                updated_at: new Date().toISOString(),
-              }
-            : client
-        )
-      );
-      
-      toast({
-        title: t.common.success,
-        description: 'Client updated successfully',
-      });
-    } catch (error: any) {
-      console.error('Error updating client:', error);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSaving(false);
+      handleEditClient(existingClient);
+    } else {
+      // Prepare a new client from offer
+      setCurrentClient(undefined);
+      setIsEditMode(false);
+      setIsDialogOpen(true);
     }
   };
 
@@ -136,7 +185,7 @@ const SavedClientsPage = () => {
       setClients(prev => prev.filter(client => client.id !== id));
       toast({
         title: t.common.success,
-        description: 'Client deleted successfully',
+        description: t.savedClients.clientDeletedSuccess,
       });
     } catch (error: any) {
       console.error('Error deleting client:', error);
@@ -188,14 +237,22 @@ const SavedClientsPage = () => {
           <h1 className="text-2xl font-bold">{t.savedClients.title}</h1>
         </div>
         
-        <Button 
-          onClick={handleSaveClient} 
-          className="gap-2"
-          disabled={isSaving}
-        >
-          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
-          {t.savedClients.addClient}
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleImportFromOffer} 
+            variant="outline"
+          >
+            {t.savedClients.importFromOffer}
+          </Button>
+          
+          <Button 
+            onClick={handleOpenAddDialog} 
+            className="gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            {t.savedClients.addNewClient}
+          </Button>
+        </div>
       </div>
       
       <ClientSearch 
@@ -212,6 +269,17 @@ const SavedClientsPage = () => {
         isLoading={isLoading}
         selectClient={selectClient}
         deleteClient={deleteClient}
+        editClient={handleEditClient}
+        t={t}
+      />
+      
+      <ClientFormDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSubmit={handleSaveClient}
+        client={currentClient}
+        isSubmitting={isSaving}
+        isEditMode={isEditMode}
         t={t}
       />
     </div>

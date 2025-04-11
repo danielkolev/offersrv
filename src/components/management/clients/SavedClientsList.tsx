@@ -19,6 +19,7 @@ export interface SavedClientsListProps {
   filteredClients: Client[];
   selectClient: (client: Client) => void;
   deleteClient: (id: string) => void;
+  editClient: (client: Client) => void;
   t: Translations;
 }
 
@@ -27,7 +28,8 @@ const SavedClientsList = ({
   isLoading, 
   filteredClients,
   selectClient, 
-  deleteClient, 
+  deleteClient,
+  editClient,
   t 
 }: SavedClientsListProps) => {
   if (isLoading) {
@@ -53,6 +55,7 @@ const SavedClientsList = ({
           <TableHead>{t.client.name}</TableHead>
           <TableHead>{t.client.vatNumber}</TableHead>
           <TableHead>{t.client.contactPerson}</TableHead>
+          <TableHead>{t.client.email}</TableHead>
           <TableHead className="text-right">{t.common.actions}</TableHead>
         </TableRow>
       </TableHeader>
@@ -63,6 +66,7 @@ const SavedClientsList = ({
             client={client}
             selectClient={selectClient}
             deleteClient={deleteClient}
+            editClient={editClient}
             t={t}
           />
         ))}

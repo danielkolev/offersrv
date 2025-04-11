@@ -1,3 +1,4 @@
+
 import { 
   ClientTranslations, 
   ClientInfoTranslations, 
@@ -55,5 +56,12 @@ export const bgSavedClientsTranslations: SavedClientsTranslations = {
   searchByVat: 'Търсене по ДДС номер',
   importFromOffer: 'Импортирай от оферта',
   selectClient: 'Избери',
-  cancel: 'Отказ'
+  cancel: 'Отказ',
+  addNewClient: 'Добави нов клиент',
+  createClient: 'Създай клиент',
+  updateClient: 'Обнови клиент',
+  clientAddedSuccess: 'Клиентът е добавен успешно',
+  clientUpdatedSuccess: 'Клиентът е обновен успешно',
+  clientDeletedSuccess: 'Клиентът е изтрит успешно',
+  formTitle: 'Данни за клиента'
 };

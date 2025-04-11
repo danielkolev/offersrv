@@ -1,3 +1,4 @@
+
 export interface ClientTranslations {
   info: string;
   name: string;
@@ -49,4 +50,11 @@ export interface SavedClientsTranslations {
   importFromOffer: string;
   selectClient: string;
   cancel: string;
+  addNewClient: string;
+  createClient: string;
+  updateClient: string;
+  clientAddedSuccess: string;
+  clientUpdatedSuccess: string;
+  clientDeletedSuccess: string;
+  formTitle: string;
 }
