@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -5,7 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Copy, FileText, Save, Printer, Trash, Plus, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { printContent } from './offer-preview/utils/printUtils';
-import { generatePdf, getOfferFileName } from './offer-preview/utils/pdfExport';
+import { exportToPdf } from './management/offers/saved-offer-item/helpers';
 
 interface QuickActionToolbarProps {
   onPreview: () => void;
@@ -59,9 +60,9 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
       const element = document.querySelector('.offer-preview-content');
       if (!element) return;
       
-      const filename = `${getOfferFileName(offer.client.name)}.pdf`;
+      const filename = getOfferFileName();
       
-      generatePdf(
+      exportToPdf(
         element,
         filename,
         () => {
