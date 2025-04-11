@@ -1,0 +1,107 @@
+
+import React from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Building, LogOut, Settings, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+
+const AccountButton = () => {
+  const { user, signOut } = useAuth();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: t.common.success,
+        description: t.auth.signOutSuccess,
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: t.common.error,
+        description: t.auth.signOutError,
+        variant: 'destructive',
+      });
+    }
+  };
+  
+  // Future implementation: Navigate to the company profile page
+  const goToCompanyProfile = () => {
+    toast({
+      title: t.common.comingSoon,
+      description: t.common.featureInDevelopment,
+    });
+  };
+  
+  // Future implementation: Navigate to the user profile page
+  const goToUserProfile = () => {
+    toast({
+      title: t.common.comingSoon,
+      description: t.common.featureInDevelopment,
+    });
+  };
+  
+  // Future implementation: Navigate to the settings page
+  const goToSettings = () => {
+    toast({
+      title: t.common.comingSoon,
+      description: t.common.featureInDevelopment,
+    });
+  };
+  
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="gap-2"
+          aria-label={t.common.account}
+        >
+          <User size={16} />
+          {user?.email ? user.email.split('@')[0] : t.common.account}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>{t.common.account}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem onClick={goToCompanyProfile} className="cursor-pointer">
+          <Building className="mr-2 h-4 w-4" />
+          <span>{t.company.manage}</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem onClick={goToUserProfile} className="cursor-pointer">
+          <User className="mr-2 h-4 w-4" />
+          <span>{t.user.profile}</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem onClick={goToSettings} className="cursor-pointer">
+          <Settings className="mr-2 h-4 w-4" />
+          <span>{t.common.settings}</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>{t.auth.signOut}</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export default AccountButton;

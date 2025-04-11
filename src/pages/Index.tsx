@@ -11,8 +11,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import AccountButton from '@/components/AccountButton';
 import CompanyManager from '@/components/company/CompanyManager';
 import { supabase } from '@/integrations/supabase/client';
 import { Company } from '@/types/company';
@@ -24,7 +23,7 @@ const Index = () => {
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
   const { t } = useLanguage();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fetchRetryCount = useRef(0);
@@ -110,17 +109,21 @@ const Index = () => {
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-offer-gray">
-            {t.offerTitle}
-          </h1>
+          <div className="flex items-center">
+            <img 
+              src="/logo.svg" 
+              alt="Offer Forge Logo" 
+              className="h-8 mr-3" 
+            />
+            <h1 className="text-3xl font-bold text-offer-gray">
+              {t.offerTitle}
+            </h1>
+          </div>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <CompanyManager onSelectCompany={handleSelectCompany} />
             <CurrencySwitcher />
             <LanguageSwitcher />
-            <Button variant="outline" size="sm" onClick={signOut}>
-              <LogOut size={16} className="mr-1" />
-              {t.auth.signOut}
-            </Button>
+            <AccountButton />
           </div>
         </div>
         
