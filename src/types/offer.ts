@@ -29,6 +29,19 @@ export interface Product {
   partNumber?: string;
   quantity: number;
   unitPrice: number;
+  unit?: string; // Added unit field for measurement (pcs, hours, etc.)
+  isBundle?: boolean; // Flag to indicate if this is a bundle
+  bundledProducts?: BundledProduct[]; // Products included in a bundle
+}
+
+// New interface for products within a bundle
+export interface BundledProduct {
+  id: string;
+  name: string;
+  description?: string;
+  partNumber?: string;
+  quantity: number;
+  unitPrice: number;
 }
 
 export interface OfferDetails {

@@ -187,6 +187,19 @@ const OfferPreview = ({
                   <div className="col-span-5">
                     <div className="font-medium">{product.name}</div>
                     <div className="text-sm text-muted-foreground">{product.description}</div>
+                    
+                    {/* Display bundled products if this is a bundle */}
+                    {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && (
+                      <div className="mt-2 pl-4 border-l-2 border-slate-200">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Bundle includes:</p>
+                        {product.bundledProducts.map(item => (
+                          <div key={item.id} className="text-xs flex justify-between">
+                            <span>{item.name} x{item.quantity}</span>
+                            <span>{formatCurrency(item.unitPrice * item.quantity, language, currency)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   
                   {offer.details.showPartNumber && (
@@ -194,11 +207,14 @@ const OfferPreview = ({
                   )}
                   
                   <div className={`col-span-${offer.details.showPartNumber ? '1' : '3'} self-center text-center`}>
-                    {product.quantity}
+                    {product.quantity} {product.unit && product.unit !== 'pcs' ? product.unit : ''}
                   </div>
                   
                   <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} self-center text-right`}>
                     {formatCurrency(product.unitPrice, language, currency)}
+                    {product.unit && product.unit !== 'pcs' && !product.isBundle && (
+                      <span className="text-xs ml-1">/ {product.unit}</span>
+                    )}
                   </div>
                   
                   <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} self-center text-right font-medium`}>

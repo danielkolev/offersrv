@@ -52,14 +52,16 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
           name: 'Consultation Services',
           description: 'Initial consultation and requirements gathering',
           quantity: 1,
-          unitPrice: 150
+          unitPrice: 150,
+          unit: 'hour'
         },
         {
           id: crypto.randomUUID(),
           name: 'Implementation',
           description: 'Implementation of the discussed solution',
           quantity: 1,
-          unitPrice: 500
+          unitPrice: 500,
+          unit: 'day'
         }
       ]
     }
@@ -84,19 +86,30 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
       products: [
         {
           id: crypto.randomUUID(),
-          name: 'Product A',
-          description: 'Main product',
-          partNumber: 'PA-001',
+          name: 'Product Bundle',
+          description: 'Discounted product bundle',
+          partNumber: 'BUNDLE-001',
           quantity: 1,
-          unitPrice: 199
-        },
-        {
-          id: crypto.randomUUID(),
-          name: 'Product B',
-          description: 'Complementary product',
-          partNumber: 'PB-002',
-          quantity: 1,
-          unitPrice: 59
+          unitPrice: 258,
+          isBundle: true,
+          bundledProducts: [
+            {
+              id: crypto.randomUUID(),
+              name: 'Product A',
+              description: 'Main product',
+              partNumber: 'PA-001',
+              quantity: 1,
+              unitPrice: 199
+            },
+            {
+              id: crypto.randomUUID(),
+              name: 'Product B',
+              description: 'Complementary product',
+              partNumber: 'PB-002',
+              quantity: 1,
+              unitPrice: 59
+            }
+          ]
         }
       ]
     }
