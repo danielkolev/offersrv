@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,6 +22,8 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
   const [logo, setLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const isSubmitting = useRef(false);
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -30,10 +32,27 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: t.company.error,
+          description: "File is too large. Maximum size is 5MB.",
+          variant: 'destructive'
+        });
+        return;
+      }
+      
       setLogo(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result as string);
+      };
+      reader.onerror = () => {
+        toast({
+          title: t.company.error,
+          description: "Failed to read file. Please try another image.",
+          variant: 'destructive'
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -46,12 +65,18 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
+    
     if (!name) {
       toast({
         title: t.company.error,
         description: t.company.nameRequired,
         variant: 'destructive'
       });
+      isSubmitting.current = false;
       return;
     }
     
@@ -61,10 +86,13 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
         description: "You must be logged in to create a company",
         variant: 'destructive'
       });
+      isSubmitting.current = false;
       return;
     }
     
     setLoading(true);
+    setSubmitError(null);
+    
     try {
       // Upload logo if selected
       let logoUrl = null;
@@ -121,11 +149,24 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
         description: t.company.createdSuccessfully
       });
       
+      // Reset form
+      setName('');
+      setVatNumber('');
+      setAddress('');
+      setCity('');
+      setCountry('');
+      setPhone('');
+      setEmail('');
+      setWebsite('');
+      setLogo(null);
+      setLogoPreview(null);
+      
       if (onSuccess && company) {
         onSuccess(company.id);
       }
     } catch (error: any) {
       console.error('Error creating company:', error);
+      setSubmitError(error.message);
       toast({
         title: t.company.error,
         description: error.message,
@@ -133,6 +174,7 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
       });
     } finally {
       setLoading(false);
+      isSubmitting.current = false;
     }
   };
 
@@ -148,7 +190,8 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
       website,
       logo,
       logoPreview,
-      loading
+      loading,
+      submitError
     },
     setters: {
       setName,

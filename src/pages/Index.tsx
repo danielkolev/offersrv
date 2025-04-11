@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OfferProvider } from '@/context/OfferContext';
 import CompanyInfoForm from '@/components/CompanyInfoForm';
@@ -15,6 +16,7 @@ import { LogOut } from 'lucide-react';
 import CompanyManager from '@/components/company/CompanyManager';
 import { supabase } from '@/integrations/supabase/client';
 import { Company } from '@/types/company';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
@@ -23,6 +25,10 @@ const Index = () => {
   const [fetchError, setFetchError] = useState<boolean>(false);
   const { t } = useLanguage();
   const { signOut, user } = useAuth();
+  const { toast } = useToast();
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const fetchRetryCount = useRef(0);
+  const MAX_RETRIES = 3;
 
   // Make updateCompanyInfo available globally for the Index component to use
   useEffect(() => {
@@ -34,48 +40,71 @@ const Index = () => {
     }
   }, []);
 
-  const handleSelectCompany = async (companyId: string) => {
-    setSelectedCompanyId(companyId);
+  const handleSelectCompany = useCallback(async (companyId: string) => {
+    if (!companyId) return;
     
-    if (companyId) {
-      setIsLoadingCompanyData(true);
-      setFetchError(false);
-      
-      try {
-        const { data, error } = await supabase
-          .from('organizations')
-          .select('*')
-          .eq('id', companyId)
-          .single();
-          
-        if (error) {
-          console.error('Error loading company data:', error);
-          setFetchError(true);
-          return;
-        }
+    setSelectedCompanyId(companyId);
+    setIsLoadingCompanyData(true);
+    setFetchError(false);
+    
+    try {
+      const { data, error } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('id', companyId)
+        .single();
         
-        // Update the company info in the context
-        if (data && window.updateCompanyInfo) {
-          window.updateCompanyInfo({
-            name: data.name || '',
-            vatNumber: data.vat_number || '',
-            address: data.address || '',
-            city: '', // Fallback for missing fields
-            country: '', // Fallback for missing fields
-            phone: data.phone || '',
-            email: data.email || '',
-            website: '', // Fallback for missing fields
-            logo: data.logo_url || null
-          });
-        }
-      } catch (error) {
+      if (error) {
         console.error('Error loading company data:', error);
         setFetchError(true);
-      } finally {
-        setIsLoadingCompanyData(false);
+        
+        // If repeated errors happen, show a toast notification
+        if (fetchRetryCount.current >= MAX_RETRIES) {
+          toast({
+            title: t.common.error,
+            description: error.message,
+            variant: 'destructive'
+          });
+        }
+        
+        fetchRetryCount.current++;
+        return;
       }
+      
+      fetchRetryCount.current = 0;
+      
+      // Update the company info in the context
+      if (data && window.updateCompanyInfo) {
+        window.updateCompanyInfo({
+          name: data.name || '',
+          vatNumber: data.vat_number || '',
+          address: data.address || '',
+          city: '', // Fallback for missing fields
+          country: '', // Fallback for missing fields
+          phone: data.phone || '',
+          email: data.email || '',
+          website: '', // Fallback for missing fields
+          logo: data.logo_url || null
+        });
+      }
+    } catch (error: any) {
+      console.error('Error loading company data:', error);
+      setFetchError(true);
+      
+      // If repeated errors happen, show a toast notification
+      if (fetchRetryCount.current >= MAX_RETRIES) {
+        toast({
+          title: t.common.error,
+          description: error.message,
+          variant: 'destructive'
+        });
+      }
+      
+      fetchRetryCount.current++;
+    } finally {
+      setIsLoadingCompanyData(false);
     }
-  };
+  }, [t, toast]);
 
   return (
     <OfferProvider>

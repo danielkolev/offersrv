@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { 
   Select, 
   SelectContent, 
@@ -13,6 +13,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Company } from '@/types/company';
+import { useToast } from '@/hooks/use-toast';
 
 interface CompanySelectorProps {
   onSelectCompany: (companyId: string) => void;
@@ -23,61 +24,74 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>('');
   const [loading, setLoading] = useState(true);
-  
+  const [fetchError, setFetchError] = useState(false);
+  const hasAttemptedFetch = useRef(false);
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const fetchCompanies = useCallback(async () => {
+    if (!user || hasAttemptedFetch.current) return;
+    
+    setLoading(true);
+    hasAttemptedFetch.current = true;
+    
+    try {
+      // Get companies the user is a member of through the organization_members table
+      const { data: memberData, error: memberError } = await supabase
+        .from('organization_members')
+        .select('organization_id')
+        .eq('user_id', user.id);
+        
+      if (memberError) throw memberError;
+      
+      if (memberData && memberData.length > 0) {
+        const companyIds = memberData.map(member => member.organization_id);
+        
+        // Get company details
+        const { data: companiesData, error: companiesError } = await supabase
+          .from('organizations')
+          .select('id, name, logo_url')
+          .in('id', companyIds)
+          .order('name');
+          
+        if (companiesError) throw companiesError;
+        
+        if (companiesData) {
+          // Map the data to our Company interface
+          const formattedCompanies: Company[] = companiesData.map(org => ({
+            id: org.id,
+            name: org.name,
+            logo_url: org.logo_url
+          }));
+          
+          setCompanies(formattedCompanies);
+          if (formattedCompanies.length > 0 && !selectedCompany) {
+            setSelectedCompany(formattedCompanies[0].id);
+            onSelectCompany(formattedCompanies[0].id);
+          }
+        }
+      } else {
+        setCompanies([]);
+      }
+      
+      setFetchError(false);
+    } catch (error: any) {
+      console.error('Error fetching companies:', error);
+      setFetchError(true);
+      toast({
+        title: t.common.error,
+        description: error.message,
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [user, onSelectCompany, selectedCompany, toast, t.common.error]);
   
   useEffect(() => {
-    if (!user) return;
-    
-    const fetchCompanies = async () => {
-      try {
-        // Get companies the user is a member of through the organization_members table
-        const { data: memberData, error: memberError } = await supabase
-          .from('organization_members')
-          .select('organization_id')
-          .eq('user_id', user.id);
-          
-        if (memberError) throw memberError;
-        
-        if (memberData && memberData.length > 0) {
-          const companyIds = memberData.map(member => member.organization_id);
-          
-          // Get company details
-          const { data: companiesData, error: companiesError } = await supabase
-            .from('organizations')
-            .select('id, name, logo_url')
-            .in('id', companyIds)
-            .order('name');
-            
-          if (companiesError) throw companiesError;
-          
-          if (companiesData) {
-            // Map the data to our Company interface
-            const formattedCompanies: Company[] = companiesData.map(org => ({
-              id: org.id,
-              name: org.name,
-              logo_url: org.logo_url
-            }));
-            
-            setCompanies(formattedCompanies);
-            if (formattedCompanies.length > 0) {
-              setSelectedCompany(formattedCompanies[0].id);
-              onSelectCompany(formattedCompanies[0].id);
-            }
-          }
-        } else {
-          setCompanies([]);
-        }
-      } catch (error) {
-        console.error('Error fetching companies:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     fetchCompanies();
-  }, [user, onSelectCompany]);
+  }, [fetchCompanies]);
   
   const handleCompanyChange = (value: string) => {
     setSelectedCompany(value);
@@ -86,6 +100,20 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
   
   if (loading) {
     return <div className="text-center py-4">{t.common.loading}</div>;
+  }
+  
+  if (fetchError) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="text-red-500 mr-2">{t.common.error}</div>
+        <Button onClick={() => { 
+          hasAttemptedFetch.current = false; 
+          fetchCompanies(); 
+        }} size="sm" variant="outline">
+          Retry
+        </Button>
+      </div>
+    );
   }
   
   return (
@@ -105,6 +133,9 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
                         src={company.logo_url} 
                         alt={company.name} 
                         className="h-5 w-5 object-contain" 
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
                       />
                     )}
                     {company.name}

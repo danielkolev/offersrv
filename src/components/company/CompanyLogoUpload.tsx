@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { UploadCloud, X } from 'lucide-react';
+import { Trash2, Upload } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface CompanyLogoUploadProps {
@@ -17,60 +16,66 @@ export const CompanyLogoUpload = ({
   onClearLogo 
 }: CompanyLogoUploadProps) => {
   const { t } = useLanguage();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const handleButtonClick = () => {
-    if (inputRef.current) {
-      inputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
   
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error('Error loading logo image');
+    e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23f0f0f0"/%3E%3Ctext x="50" y="50" font-family="Arial" font-size="12" text-anchor="middle" dominant-baseline="middle" fill="%23999"%3ELogo%3C/text%3E%3C/svg%3E';
+  };
+  
   return (
-    <div className="space-y-2">
-      <Label>{t.companyInfo.logo}</Label>
+    <div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700">
+        {t.companyInfo.logo}
+      </label>
+      
       <div className="flex items-center gap-4">
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={onLogoChange}
+          ref={fileInputRef}
+        />
+        
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleButtonClick}
+          className="flex items-center gap-2"
+        >
+          <Upload size={16} />
+          {t.companyInfo.uploadLogo}
+        </Button>
+        
         {logoPreview && (
-          <div className="relative h-20 w-auto">
-            <img
-              src={logoPreview}
-              alt={t.companyInfo.logo}
-              className="h-full object-contain"
-              onError={(e) => {
-                // Handle image loading errors
-                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YxZjFmMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGFsaWdubWVudC1iYXNlbGluZT0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
-              }}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
-              onClick={onClearLogo}
-            >
-              <X size={14} />
-            </Button>
-          </div>
-        )}
-        <div>
           <Button
             type="button"
-            variant="outline"
-            onClick={handleButtonClick}
-            className="flex items-center gap-2"
+            variant="destructive"
+            size="sm"
+            onClick={onClearLogo}
           >
-            <UploadCloud size={16} />
-            {t.companyInfo.uploadLogo}
+            <Trash2 size={16} />
           </Button>
-          <input
-            ref={inputRef}
-            id="logoInput"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={onLogoChange}
+        )}
+      </div>
+      
+      {logoPreview && (
+        <div className="mt-4 flex justify-center">
+          <img
+            src={logoPreview}
+            alt="Company Logo"
+            className="max-h-32 max-w-full object-contain border p-2 rounded"
+            onError={handleImageError}
           />
         </div>
-      </div>
+      )}
     </div>
   );
 };
