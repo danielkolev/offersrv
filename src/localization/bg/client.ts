@@ -1,5 +1,10 @@
 
-import { ClientInfoTranslations } from '@/types/language/client';
+import { 
+  ClientInfoTranslations,
+  CompanyInfoTranslations,
+  ClientTranslations,
+  SavedClientsTranslations
+} from '@/types/language/client';
 
 export const bgClientInfoTranslations: ClientInfoTranslations = {
   title: 'Информация за клиента',
@@ -14,4 +19,56 @@ export const bgClientInfoTranslations: ClientInfoTranslations = {
   selectExisting: 'Избери съществуващ клиент',
   selectClient: 'Избери клиент',
   searchClients: 'Търси клиенти по име или ДДС номер'
+};
+
+export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
+  title: 'Информация за компанията',
+  name: 'Име на компанията',
+  vatNumber: 'ДДС номер',
+  address: 'Адрес',
+  city: 'Град',
+  country: 'Държава',
+  phone: 'Телефон',
+  email: 'Имейл',
+  website: 'Уебсайт',
+  logo: 'Лого',
+  uploadLogo: 'Качи лого',
+  removeLogo: 'Премахни лого'
+};
+
+export const bgClientTranslations: ClientTranslations = {
+  add: 'Добави клиент',
+  edit: 'Редактирай клиент',
+  delete: 'Изтрий клиент',
+  save: 'Запази клиент',
+  cancel: 'Отказ',
+  confirmDelete: 'Сигурни ли сте, че искате да изтриете този клиент?',
+  clientAdded: 'Клиентът е добавен успешно',
+  clientUpdated: 'Клиентът е обновен успешно',
+  clientDeleted: 'Клиентът е изтрит успешно'
+};
+
+export const bgSavedClientsTranslations: SavedClientsTranslations = {
+  title: 'Запазени клиенти',
+  loadClient: 'Зареди клиент',
+  saveClient: 'Запази клиент',
+  deleteClient: 'Изтрий клиент',
+  clientSaved: 'Клиентът е запазен успешно',
+  clientDeleted: 'Клиентът е изтрит успешно',
+  noClientsFound: 'Няма намерени клиенти',
+  noClientsFoundSearch: 'Няма намерени клиенти, отговарящи на търсенето',
+  confirmDelete: 'Сигурни ли сте, че искате да изтриете този клиент?',
+  date: 'Дата',
+  name: 'Име',
+  vatNumber: 'ДДС номер',
+  actions: 'Действия',
+  search: 'Търсене',
+  searchPlaceholder: 'Търси по име или ДДС номер',
+  createNew: 'Създай нов клиент',
+  clientLoaded: 'Клиентът е зареден успешно',
+  addNewClient: 'Добави нов клиент',
+  editClient: 'Редактирай клиент',
+  importFromOffer: 'Импортирай от оферта',
+  searchByName: 'Търси по име',
+  searchByVatNumber: 'Търси по ДДС номер'
 };
