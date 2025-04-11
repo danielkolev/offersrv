@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -95,7 +96,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
           // Note: city and country fields are not included as they don't exist in the organizations table
           phone,
           email,
-          website,
+          // website field is removed as it doesn't exist in the organizations table
           logo_url: logoUrl,
           owner_id: user.id
         })

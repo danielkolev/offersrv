@@ -24,6 +24,16 @@ const Index = () => {
   const { t } = useLanguage();
   const { signOut, user } = useAuth();
 
+  // Make updateCompanyInfo available globally for the Index component to use
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.updateCompanyInfo = (companyInfo) => {
+        // This function will be defined by OfferContext when it's rendered
+        console.log('Update company info called:', companyInfo);
+      };
+    }
+  }, []);
+
   const handleSelectCompany = async (companyId: string) => {
     setSelectedCompanyId(companyId);
     if (companyId) {
