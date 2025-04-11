@@ -73,5 +73,11 @@ export const enCommonTranslations: CommonTranslations = {
   confirmation: 'Confirmation',
   processing: 'Processing...',
   comingSoon: 'Coming Soon',
-  featureInDevelopment: 'This feature is currently in development'
+  featureInDevelopment: 'This feature is currently in development',
+  // Adding new wizard navigation translations
+  next: 'Next',
+  back: 'Back',
+  step: 'Step',
+  of: 'of',
+  finish: 'Finish'
 };

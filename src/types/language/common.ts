@@ -67,9 +67,15 @@ export interface CommonTranslations {
   price: string;
   status: string;
   type: string;
-  // Adding missing translations
+  // Standard translations
   confirmation: string;
   processing: string;
   comingSoon: string;
   featureInDevelopment: string;
+  // Wizard navigation translations
+  next: string;
+  back: string;
+  step: string;
+  of: string;
+  finish: string;
 }

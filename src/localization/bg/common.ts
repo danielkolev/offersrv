@@ -73,5 +73,11 @@ export const bgCommonTranslations: CommonTranslations = {
   confirmation: 'Потвърждение',
   processing: 'Обработване...',
   comingSoon: 'Очаквайте скоро',
-  featureInDevelopment: 'Тази функционалност е в процес на разработка'
+  featureInDevelopment: 'Тази функционалност е в процес на разработка',
+  // Adding new wizard navigation translations
+  next: 'Напред',
+  back: 'Назад',
+  step: 'Стъпка',
+  of: 'от',
+  finish: 'Завърши'
 };

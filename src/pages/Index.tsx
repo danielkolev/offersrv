@@ -1,11 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OfferProvider } from '@/context/offer/OfferContext';
-import ClientInfoForm from '@/components/ClientInfoForm';
-import OfferDetailsForm from '@/components/OfferDetailsForm';
-import ProductsForm from '@/components/ProductsForm';
-import OfferPreview from '@/components/OfferPreview';
 import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
@@ -14,18 +9,13 @@ import AccountButton from '@/components/AccountButton';
 import CompanyManager from '@/components/company/CompanyManager';
 import ManagePanel from '@/components/management/ManagePanel';
 import { supabase } from '@/integrations/supabase/client';
-import { Company } from '@/types/company';
 import { useToast } from '@/hooks/use-toast';
-import OfferTemplates from '@/components/templates/OfferTemplates';
-import QuickActionToolbar from '@/components/QuickActionToolbar';
-import SaveOfferDialog from '@/components/SaveOfferDialog';
+import OfferWizard from '@/components/wizard/OfferWizard';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('edit');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
-  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -109,19 +99,6 @@ const Index = () => {
     }
   }, [t, toast]);
 
-  const handleOpenSaveDialog = () => {
-    if (!user) {
-      toast({
-        title: t.common.error,
-        description: t.auth.notAuthenticated || "You need to be logged in",
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    setIsSaveDialogOpen(true);
-  };
-
   return (
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
@@ -137,7 +114,6 @@ const Index = () => {
             </h1>
           </div>
           <div className="flex items-center gap-4 flex-wrap justify-center">
-            <CompanyManager onSelectCompany={handleSelectCompany} />
             <CurrencySwitcher />
             <LanguageSwitcher />
             <AccountButton />
@@ -146,71 +122,12 @@ const Index = () => {
         
         {user && <ManagePanel />}
         
-        <Tabs defaultValue="edit" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-center mb-6">
-            <TabsList>
-              <TabsTrigger value="edit">{t.common.edit}</TabsTrigger>
-              <TabsTrigger value="preview">{t.common.preview}</TabsTrigger>
-            </TabsList>
-          </div>
-          
-          <TabsContent value="edit" className="space-y-6">
-            {selectedCompanyId ? (
-              isLoadingCompanyData ? (
-                <div className="text-center py-4">{t.common.loading}</div>
-              ) : fetchError ? (
-                <div className="text-center py-4 text-red-500">
-                  {t.common.error}
-                </div>
-              ) : (
-                <>
-                  {/* Add the templates component at the top of the edit form */}
-                  <OfferTemplates />
-                  <ClientInfoForm />
-                  <OfferDetailsForm />
-                  <ProductsForm />
-                  
-                  <div className="flex justify-center mt-8">
-                    <button
-                      onClick={() => setActiveTab('preview')}
-                      className="px-6 py-2 bg-offer-blue text-white rounded-md hover:bg-blue-600 transition-colors"
-                    >
-                      {t.common.previewOffer}
-                    </button>
-                  </div>
-                </>
-              )
-            ) : (
-              <div className="text-center py-8">
-                {t.company.selectFirst}
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="preview">
-            <OfferPreview 
-              isSaveDialogOpen={isSaveDialogOpen}
-              setIsSaveDialogOpen={setIsSaveDialogOpen}
-            />
-            
-            <div className="flex justify-center mt-8 no-print">
-              <button
-                onClick={() => setActiveTab('edit')}
-                className="px-6 py-2 border border-offer-gray text-offer-gray rounded-md hover:bg-gray-100 transition-colors"
-              >
-                {t.common.backToEdit}
-              </button>
-            </div>
-          </TabsContent>
-        </Tabs>
-        
-        {/* Quick Action Toolbar */}
-        {selectedCompanyId && !isLoadingCompanyData && !fetchError && (
-          <QuickActionToolbar 
-            onPreview={() => setActiveTab('preview')} 
-            onSave={handleOpenSaveDialog}
-          />
-        )}
+        <OfferWizard 
+          isLoadingCompanyData={isLoadingCompanyData}
+          fetchError={fetchError}
+          selectedCompanyId={selectedCompanyId}
+          onSelectCompany={handleSelectCompany}
+        />
       </div>
     </OfferProvider>
   );
