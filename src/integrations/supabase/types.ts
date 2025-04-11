@@ -522,6 +522,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_settings: {
+        Row: {
+          bank_details: Json | null
+          created_at: string
+          id: string
+          offer_settings: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bank_details?: Json | null
+          created_at?: string
+          id?: string
+          offer_settings?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bank_details?: Json | null
+          created_at?: string
+          id?: string
+          offer_settings?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

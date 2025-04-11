@@ -79,5 +79,8 @@ export const bgCommonTranslations: CommonTranslations = {
   back: 'Назад',
   step: 'Стъпка',
   of: 'от',
-  finish: 'Завърши'
+  finish: 'Завърши',
+  // Adding missing translations for settings page
+  unauthorized: 'Неоторизиран достъп',
+  manageAccount: 'Управление на акаунта'
 };

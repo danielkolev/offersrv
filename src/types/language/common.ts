@@ -78,4 +78,7 @@ export interface CommonTranslations {
   step: string;
   of: string;
   finish: string;
+  // New translations for settings page
+  unauthorized: string;
+  manageAccount: string;
 }

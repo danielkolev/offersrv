@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -12,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Save, Building2, CreditCard } from 'lucide-react';
+import { useUserSettings, BankDetailsValues } from '@/hooks/use-user-settings';
 
 const bankDetailsSchema = z.object({
   showBankDetails: z.boolean().default(false),
@@ -21,13 +21,10 @@ const bankDetailsSchema = z.object({
   additionalInfo: z.string().optional()
 });
 
-type BankDetailsValues = z.infer<typeof bankDetailsSchema>;
-
 const CompanyBankSettings = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, loadSettings, saveSettings } = useUserSettings();
   
   const form = useForm<BankDetailsValues>({
     resolver: zodResolver(bankDetailsSchema),
@@ -42,97 +39,25 @@ const CompanyBankSettings = () => {
   
   useEffect(() => {
     if (user) {
-      loadSettings();
+      loadAndSetSettings();
     }
   }, [user]);
   
-  const loadSettings = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-        
-      if (error && error.code !== 'PGRST116') { // Not found error
-        throw error;
-      }
-      
-      if (data && data.bank_details) {
-        const bankDetails = data.bank_details;
-        form.reset({
-          showBankDetails: bankDetails.showBankDetails || false,
-          bankName: bankDetails.bankName || '',
-          iban: bankDetails.iban || '',
-          swift: bankDetails.swift || '',
-          additionalInfo: bankDetails.additionalInfo || ''
-        });
-      }
-    } catch (error) {
-      console.error('Error loading settings:', error);
-      toast({
-        title: t.common.error,
-        description: t.settings.errorLoadingSettings,
-        variant: 'destructive'
+  const loadAndSetSettings = async () => {
+    const settings = await loadSettings<BankDetailsValues>('bank_details');
+    if (settings) {
+      form.reset({
+        showBankDetails: settings.showBankDetails || false,
+        bankName: settings.bankName || '',
+        iban: settings.iban || '',
+        swift: settings.swift || '',
+        additionalInfo: settings.additionalInfo || ''
       });
-    } finally {
-      setIsLoading(false);
     }
   };
   
   const onSubmit = async (values: BankDetailsValues) => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    try {
-      // Check if settings exist for this user
-      const { data: existingSettings, error: checkError } = await supabase
-        .from('user_settings')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-        
-      if (checkError) throw checkError;
-      
-      if (existingSettings) {
-        // Update existing settings
-        const { error } = await supabase
-          .from('user_settings')
-          .update({
-            bank_details: values
-          })
-          .eq('id', existingSettings.id);
-          
-        if (error) throw error;
-      } else {
-        // Create new settings
-        const { error } = await supabase
-          .from('user_settings')
-          .insert({
-            user_id: user.id,
-            bank_details: values
-          });
-          
-        if (error) throw error;
-      }
-      
-      toast({
-        title: t.common.success,
-        description: t.settings.settingsSaved
-      });
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      toast({
-        title: t.common.error,
-        description: t.settings.errorSavingSettings,
-        variant: 'destructive'
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings('bank_details', values);
   };
 
   return (

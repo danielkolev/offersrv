@@ -79,5 +79,8 @@ export const enCommonTranslations: CommonTranslations = {
   back: 'Back',
   step: 'Step',
   of: 'of',
-  finish: 'Finish'
+  finish: 'Finish',
+  // Adding missing translations for settings page
+  unauthorized: 'Unauthorized',
+  manageAccount: 'Manage Account'
 };
