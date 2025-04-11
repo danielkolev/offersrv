@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud, X } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface CompanyLogoUploadProps {
@@ -17,6 +17,13 @@ export const CompanyLogoUpload = ({
   onClearLogo 
 }: CompanyLogoUploadProps) => {
   const { t } = useLanguage();
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  
+  const handleButtonClick = () => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
   
   return (
     <div className="space-y-2">
@@ -28,15 +35,19 @@ export const CompanyLogoUpload = ({
               src={logoPreview}
               alt={t.companyInfo.logo}
               className="h-full object-contain"
+              onError={(e) => {
+                // Handle image loading errors
+                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YxZjFmMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGFsaWdubWVudC1iYXNlbGluZT0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
+              }}
             />
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="absolute -top-2 -right-2"
+              className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
               onClick={onClearLogo}
             >
-              X
+              <X size={14} />
             </Button>
           </div>
         )}
@@ -44,13 +55,14 @@ export const CompanyLogoUpload = ({
           <Button
             type="button"
             variant="outline"
-            onClick={() => document.getElementById('logoInput')?.click()}
+            onClick={handleButtonClick}
             className="flex items-center gap-2"
           >
             <UploadCloud size={16} />
             {t.companyInfo.uploadLogo}
           </Button>
           <input
+            ref={inputRef}
             id="logoInput"
             type="file"
             accept="image/*"

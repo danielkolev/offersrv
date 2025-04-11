@@ -21,6 +21,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
+  const [fetchError, setFetchError] = useState<boolean>(false);
   const { t } = useLanguage();
   const { signOut, user } = useAuth();
 
@@ -36,8 +37,11 @@ const Index = () => {
 
   const handleSelectCompany = async (companyId: string) => {
     setSelectedCompanyId(companyId);
+    
     if (companyId) {
       setIsLoadingCompanyData(true);
+      setFetchError(false);
+      
       try {
         const { data, error } = await supabase
           .from('organizations')
@@ -45,28 +49,29 @@ const Index = () => {
           .eq('id', companyId)
           .single();
           
-        if (error) throw error;
+        if (error) {
+          console.error('Error loading company data:', error);
+          setFetchError(true);
+          return;
+        }
         
         // Update the company info in the context
         if (data && window.updateCompanyInfo) {
           window.updateCompanyInfo({
-            name: data.name,
-            vatNumber: data.vat_number,
-            address: data.address,
-            // Supabase organizations table doesn't have city and country fields
-            // Use empty strings as fallbacks
-            city: '', 
-            country: '', 
-            phone: data.phone,
-            email: data.email,
-            // Supabase organizations table doesn't have website field
-            // Use empty string as fallback
-            website: '', 
-            logo: data.logo_url
+            name: data.name || '',
+            vatNumber: data.vat_number || '',
+            address: data.address || '',
+            city: '', // Fallback for missing fields
+            country: '', // Fallback for missing fields
+            phone: data.phone || '',
+            email: data.email || '',
+            website: '', // Fallback for missing fields
+            logo: data.logo_url || null
           });
         }
       } catch (error) {
         console.error('Error loading company data:', error);
+        setFetchError(true);
       } finally {
         setIsLoadingCompanyData(false);
       }
@@ -103,6 +108,10 @@ const Index = () => {
             {selectedCompanyId ? (
               isLoadingCompanyData ? (
                 <div className="text-center py-4">{t.common.loading}</div>
+              ) : fetchError ? (
+                <div className="text-center py-4 text-red-500">
+                  {t.common.error || "Error loading company data. Please try again."}
+                </div>
               ) : (
                 <>
                   <CompanyInfoForm />
