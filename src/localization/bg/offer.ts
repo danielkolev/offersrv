@@ -34,6 +34,7 @@ export const bgOfferTranslations: OfferTranslations = {
   vatExcluded: 'Без ДДС',
   thankYou: 'Благодарим Ви за доверието!',
   language: 'Език',
+  offerPreview: 'Преглед на оферта', // Added this translation
   languageOptions: {
     bulgarian: 'Български',
     english: 'Английски'

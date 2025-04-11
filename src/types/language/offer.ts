@@ -29,6 +29,7 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
+  offerPreview: string; // Added this property
   // Templates translations
   templates: {
     title: string;

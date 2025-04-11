@@ -34,6 +34,7 @@ export const enOfferTranslations: OfferTranslations = {
   vatExcluded: 'VAT excluded',
   thankYou: 'Thank you for your business!',
   language: 'Language',
+  offerPreview: 'Offer Preview', // Added this translation
   languageOptions: {
     bulgarian: 'Bulgarian',
     english: 'English'
