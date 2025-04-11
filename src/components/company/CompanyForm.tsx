@@ -94,6 +94,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
           vat_number: vatNumber,
           address,
           city: city,
+          country: country,
           phone,
           email,
           website,
@@ -104,6 +105,17 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
         .single();
         
       if (companyError) throw companyError;
+      
+      // Create organization member record for the creator (as admin)
+      const { error: memberError } = await supabase
+        .from('organization_members')
+        .insert({
+          user_id: user.id,
+          organization_id: company.id,
+          role: 'admin'
+        });
+        
+      if (memberError) throw memberError;
       
       toast({
         title: t.company.success,

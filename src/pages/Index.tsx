@@ -43,11 +43,11 @@ const Index = () => {
             name: data.name,
             vatNumber: data.vat_number,
             address: data.address,
-            city: data.city,
-            country: data.country,
+            city: data.city || '', // Handle missing fields
+            country: data.country || '', // Handle missing fields
             phone: data.phone,
             email: data.email,
-            website: data.website,
+            website: data.website || '', // Handle missing fields
             logo: data.logo_url
           });
         }

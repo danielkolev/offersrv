@@ -57,7 +57,7 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
             const formattedCompanies: Company[] = companiesData.map(org => ({
               id: org.id,
               name: org.name,
-              logo: org.logo_url
+              logo_url: org.logo_url
             }));
             
             setCompanies(formattedCompanies);
@@ -100,9 +100,9 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
               {companies.map((company) => (
                 <SelectItem key={company.id} value={company.id}>
                   <div className="flex items-center gap-2">
-                    {company.logo && (
+                    {company.logo_url && (
                       <img 
-                        src={company.logo} 
+                        src={company.logo_url} 
                         alt={company.name} 
                         className="h-5 w-5 object-contain" 
                       />
