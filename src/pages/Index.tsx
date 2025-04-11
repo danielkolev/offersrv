@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OfferProvider } from '@/context/OfferContext';
@@ -110,7 +109,7 @@ const Index = () => {
                 <div className="text-center py-4">{t.common.loading}</div>
               ) : fetchError ? (
                 <div className="text-center py-4 text-red-500">
-                  {t.common.error || "Error loading company data. Please try again."}
+                  {t.common.error}
                 </div>
               ) : (
                 <>

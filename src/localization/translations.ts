@@ -13,6 +13,7 @@ export const translations: Record<string, Translations> = {
       currency: 'Currency',
       loading: 'Loading...',
       processing: 'Processing...',
+      error: 'Error loading data. Please try again.', // Added the error message
     },
     offerTitle: 'Offer Generator',
     companyInfo: {
@@ -144,6 +145,7 @@ export const translations: Record<string, Translations> = {
       currency: 'Валута',
       loading: 'Зареждане...',
       processing: 'Обработка...',
+      error: 'Грешка при зареждане на данни. Моля, опитайте отново.', // Added the error message in Bulgarian
     },
     offerTitle: 'Генератор на оферти',
     companyInfo: {

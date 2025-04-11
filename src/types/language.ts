@@ -14,6 +14,7 @@ export interface Translations {
     currency: string;
     loading: string;
     processing: string;
+    error: string; // Added the error property
   };
   offerTitle: string;
   companyInfo: {
