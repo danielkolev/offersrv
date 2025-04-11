@@ -54,7 +54,9 @@ export const enClientTranslations: ClientTranslations = {
   city: 'City',
   country: 'Country',
   email: 'Email',
-  phone: 'Phone'
+  phone: 'Phone',
+  // Add title translation
+  title: 'Client'
 };
 
 export const enSavedClientsTranslations: SavedClientsTranslations = {

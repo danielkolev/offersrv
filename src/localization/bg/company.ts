@@ -49,5 +49,8 @@ export const bgCompanyTranslations: CompanyTranslations = {
   emailPlaceholder: 'Въведете имейл адрес',
   websitePlaceholder: 'Въведете URL адрес на уебсайт',
   selectPlaceholder: 'Изберете фирма',
-  createNew: 'Създай нова фирма'
+  createNew: 'Създай нова фирма',
+  
+  // Adding title translation
+  title: 'Фирма'
 };

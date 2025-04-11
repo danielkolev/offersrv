@@ -48,4 +48,7 @@ export interface CompanyTranslations {
   websitePlaceholder: string;
   selectPlaceholder: string;
   createNew: string;
+  
+  // Add title property
+  title: string;
 }

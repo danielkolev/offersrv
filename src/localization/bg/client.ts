@@ -54,7 +54,9 @@ export const bgClientTranslations: ClientTranslations = {
   city: 'Град',
   country: 'Държава',
   email: 'Имейл',
-  phone: 'Телефон'
+  phone: 'Телефон',
+  // Add title translation
+  title: 'Клиент'
 };
 
 export const bgSavedClientsTranslations: SavedClientsTranslations = {

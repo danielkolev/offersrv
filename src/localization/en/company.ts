@@ -49,5 +49,8 @@ export const enCompanyTranslations: CompanyTranslations = {
   emailPlaceholder: 'Enter email address',
   websitePlaceholder: 'Enter website URL',
   selectPlaceholder: 'Select a company',
-  createNew: 'Create New Company'
+  createNew: 'Create New Company',
+  
+  // Adding title translation
+  title: 'Company'
 };

@@ -48,6 +48,8 @@ export interface ClientTranslations {
   country: string;
   email: string;
   phone: string;
+  // Add title property
+  title: string;
 }
 
 export interface SavedClientsTranslations {
