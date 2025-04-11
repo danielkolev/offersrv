@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -74,7 +73,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
         const filePath = `${fileName}`;
         
         const { error: uploadError, data } = await supabase.storage
-          .from('company_logos')
+          .from('company_logos')  // Use the bucket we just created
           .upload(filePath, logo);
           
         if (uploadError) throw uploadError;
@@ -93,8 +92,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
           name,
           vat_number: vatNumber,
           address,
-          city: city,
-          country: country,
+          // Note: city and country fields are not included as they don't exist in the organizations table
           phone,
           email,
           website,
