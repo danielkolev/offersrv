@@ -1,0 +1,89 @@
+
+import React from 'react';
+import { Product } from '@/types/offer';
+import { useLanguage } from '@/context/LanguageContext';
+import { formatCurrency } from '@/lib/utils';
+
+interface ProductsTableProps {
+  products: Product[];
+  showPartNumber: boolean;
+}
+
+const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber }) => {
+  const { language, currency, t } = useLanguage();
+
+  return (
+    <div className="mb-8">
+      <div className="bg-offer-blue text-white py-2 px-4 rounded-t-md">
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-5 font-medium">{t.offer.item}</div>
+          {showPartNumber && (
+            <div className="col-span-2 font-medium">{t.offer.partNo}</div>
+          )}
+          <div className={`col-span-${showPartNumber ? '1' : '3'} text-center font-medium`}>{t.offer.qty}</div>
+          <div className={`col-span-${showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.unitPrice}</div>
+          <div className={`col-span-${showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.total}</div>
+        </div>
+      </div>
+      
+      <div className="border-x border-b rounded-b-md overflow-hidden">
+        {products.map((product, index) => (
+          <div 
+            key={product.id} 
+            className={`grid grid-cols-12 gap-2 px-4 py-3 ${
+              index % 2 === 0 ? 'bg-white' : 'bg-offer-lightgray'
+            }`}
+          >
+            <div className="col-span-5">
+              <div className="font-medium">{product.name}</div>
+              <div className="text-sm text-muted-foreground">{product.description}</div>
+              
+              {/* Display bundled products if this is a bundle and showBundledPrices is true */}
+              {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
+                <div className="mt-2 pl-4 border-l-2 border-slate-200">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Bundle includes:</p>
+                  {product.bundledProducts.map(item => (
+                    <div key={item.id} className="text-xs flex justify-between">
+                      <span>{item.name} x{item.quantity}</span>
+                      <span>{formatCurrency(item.unitPrice * item.quantity, language, currency)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Just show the item count if showBundledPrices is false */}
+              {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
+                <div className="mt-2 pl-4 border-l-2 border-slate-200">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Bundle includes {product.bundledProducts.length} items
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            {showPartNumber && (
+              <div className="col-span-2 self-center">{product.partNumber || '-'}</div>
+            )}
+            
+            <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center`}>
+              {product.quantity} {product.unit && product.unit !== 'pcs' ? product.unit : ''}
+            </div>
+            
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right`}>
+              {formatCurrency(product.unitPrice, language, currency)}
+              {product.unit && product.unit !== 'pcs' && !product.isBundle && (
+                <span className="text-xs ml-1">/ {product.unit}</span>
+              )}
+            </div>
+            
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium`}>
+              {formatCurrency(product.quantity * product.unitPrice, language, currency)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductsTable;
