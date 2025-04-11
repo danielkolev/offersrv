@@ -1,4 +1,3 @@
-
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -69,7 +68,9 @@ export const enProductsTranslations: ProductsTranslations = {
   noProducts: 'No products added yet',
   productName: 'Product Name',
   partNumber: 'Part Number',
-  unitPrice: 'Unit Price'
+  unitPrice: 'Unit Price',
+  selectExisting: 'Select Existing Product',
+  selectProduct: 'Select a Product'
 };
 
 export const enTotalsTranslations: TotalsTranslations = {
@@ -110,6 +111,7 @@ export const enSavedProductsTranslations: SavedProductsTranslations = {
   deleteProduct: 'Delete Product',
   deleteConfirmation: 'Are you sure you want to delete this product?',
   noProductsFound: 'No saved products found',
+  noProductsFoundSearch: 'No products found matching your search',
   searchPlaceholder: 'Search products',
   searchByName: 'Search by name',
   searchByPartNumber: 'Search by part number',

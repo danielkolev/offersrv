@@ -61,6 +61,8 @@ export interface ProductsTranslations {
   productName: string;
   partNumber: string;
   unitPrice: string;
+  selectExisting: string;
+  selectProduct: string;
 }
 
 export interface TotalsTranslations {
@@ -101,6 +103,7 @@ export interface SavedProductsTranslations {
   deleteProduct: string;
   deleteConfirmation: string;
   noProductsFound: string;
+  noProductsFoundSearch: string;
   searchPlaceholder: string;
   searchByName: string;
   searchByPartNumber: string;

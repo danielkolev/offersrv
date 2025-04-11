@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/LanguageContext';
+import ClientSelector from './client-selector/ClientSelector';
 
 const ClientInfoForm = () => {
   const { offer, updateClientInfo } = useOffer();
@@ -12,8 +13,9 @@ const ClientInfoForm = () => {
 
   return (
     <Card className="mb-6">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.clientInfo.title}</CardTitle>
+        <ClientSelector onSelectClient={updateClientInfo} />
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

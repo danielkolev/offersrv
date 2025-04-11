@@ -1,4 +1,3 @@
-
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -12,8 +11,8 @@ export const bgOfferTranslations: OfferTranslations = {
   details: 'Детайли',
   number: 'Номер',
   date: 'Дата',
-  validUntil: 'Валидна до',
-  notes: 'Забележки',
+  validUntil: 'Валиден до',
+  notes: 'Бележки',
   terms: 'Условия',
   status: 'Статус',
   statuses: {
@@ -24,14 +23,14 @@ export const bgOfferTranslations: OfferTranslations = {
   },
   offerLabel: 'ОФЕРТА',
   toLabel: 'До',
-  attention: 'На вниманието на',
+  attention: 'Внимание',
   item: 'Артикул',
-  partNo: 'Артикулен №',
-  qty: 'Кол.',
-  unitPrice: 'Ед. цена',
+  partNo: 'Парт. No.',
+  qty: 'Кол',
+  unitPrice: 'Ед. Цена',
   total: 'Общо',
-  vatIncluded: 'ДДС включено',
-  vatExcluded: 'ДДС не е включено',
+  vatIncluded: 'С ДДС',
+  vatExcluded: 'Без ДДС',
   thankYou: 'Благодарим Ви за доверието!',
   language: 'Език',
   languageOptions: {
@@ -42,22 +41,22 @@ export const bgOfferTranslations: OfferTranslations = {
 
 export const bgOfferDetailsTranslations: OfferDetailsTranslations = {
   title: 'Детайли на офертата',
-  offerNumber: 'Номер на оферта',
+  offerNumber: 'Номер на офертата',
   date: 'Дата',
-  validUntil: 'Валидна до',
-  showPartNumber: 'Покажи артикулен номер',
+  validUntil: 'Валиден до',
+  showPartNumber: 'Покажи парт. номер',
   includeVat: 'Включи ДДС',
   vatRate: 'ДДС ставка (%)',
-  transportCost: 'Транспортни разходи',
+  transportCost: 'Цена за транспорт',
   otherCosts: 'Други разходи',
-  notes: 'Забележки',
+  notes: 'Бележки',
   notesPlaceholder: 'Въведете допълнителни бележки или условия за тази оферта',
   language: 'Език на офертата'
 };
 
 export const bgProductsTranslations: ProductsTranslations = {
   title: 'Продукти',
-  name: 'Име на продукт',
+  name: 'Име на продукта',
   description: 'Описание',
   price: 'Цена',
   quantity: 'Количество',
@@ -66,10 +65,12 @@ export const bgProductsTranslations: ProductsTranslations = {
   total: 'Общо',
   addProduct: 'Добави продукт',
   removeProduct: 'Премахни',
-  noProducts: 'Все още няма добавени продукти',
-  productName: 'Име на продукт',
-  partNumber: 'Артикулен номер',
-  unitPrice: 'Единична цена'
+  noProducts: 'Няма добавени продукти',
+  productName: 'Име на продукта',
+  partNumber: 'Номер на част',
+  unitPrice: 'Единична цена',
+  selectExisting: 'Избери съществуващ продукт',
+  selectProduct: 'Избери продукт'
 };
 
 export const bgTotalsTranslations: TotalsTranslations = {
@@ -88,7 +89,7 @@ export const bgSavedOffersTranslations: SavedOffersTranslations = {
   offerSaved: 'Офертата е запазена успешно',
   offerDeleted: 'Офертата е изтрита успешно',
   noOffersFound: 'Няма намерени запазени оферти',
-  noOffersFoundSearch: 'Няма намерени оферти по вашето търсене',
+  noOffersFoundSearch: 'Няма намерени оферти, отговарящи на търсенето',
   confirmDelete: 'Сигурни ли сте, че искате да изтриете тази оферта?',
   date: 'Дата',
   client: 'Клиент',
@@ -110,10 +111,11 @@ export const bgSavedProductsTranslations: SavedProductsTranslations = {
   deleteProduct: 'Изтрий продукт',
   deleteConfirmation: 'Сигурни ли сте, че искате да изтриете този продукт?',
   noProductsFound: 'Няма намерени запазени продукти',
-  searchPlaceholder: 'Търсене на продукти',
-  searchByName: 'Търсене по име',
-  searchByPartNumber: 'Търсене по артикулен номер',
+  noProductsFoundSearch: 'Няма намерени продукти, отговарящи на търсенето',
+  searchPlaceholder: 'Търси продукти',
+  searchByName: 'Търси по име',
+  searchByPartNumber: 'Търси по номер',
   selectProduct: 'Избери',
   cancel: 'Отказ',
-  saveFromOffer: 'Запази от офертата'
+  saveFromOffer: 'Запази от оферта'
 };

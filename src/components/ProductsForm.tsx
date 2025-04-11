@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from "@/components/ui/checkbox";
 import { BundledProduct } from '@/types/offer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ProductSelector from './product-selector/ProductSelector';
 
 const ProductsForm = () => {
   const { offer, addProduct, updateProduct, removeProduct } = useOffer();
@@ -112,6 +113,7 @@ const ProductsForm = () => {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.products.title}</CardTitle>
         <div className="flex gap-2">
+          <ProductSelector onSelectProduct={addProduct} buttonText={t.products.selectExisting} />
           <Button onClick={() => handleAddProduct(true)} variant="outline" className="gap-2">
             <PackageOpen size={16} /> Add Bundle
           </Button>
