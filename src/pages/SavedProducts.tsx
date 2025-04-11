@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useOffer } from '@/context/OfferContext';
+import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SavedProduct } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
