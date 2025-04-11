@@ -21,11 +21,13 @@ import SaveButton from './offer-preview/SaveButton';
 interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
   setIsSaveDialogOpen?: (isOpen: boolean) => void;
+  mode?: 'edit' | 'view';
 }
 
 const OfferPreview = ({ 
   isSaveDialogOpen: externalIsSaveDialogOpen, 
-  setIsSaveDialogOpen: externalSetIsSaveDialogOpen 
+  setIsSaveDialogOpen: externalSetIsSaveDialogOpen,
+  mode = 'edit'
 }: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
   const { language, t } = useLanguage();
@@ -50,17 +52,17 @@ const OfferPreview = ({
   };
 
   const handlePrint = () => {
-    // Запазваме оригиналното състояние на body
+    // Save original body state
     const originalOverflow = document.body.style.overflow;
     
-    // Скриваме всичко преди печат
+    // Hide everything before printing
     document.body.classList.add('print-content');
     document.body.style.overflow = 'visible';
     
-    // Принтираме
+    // Print
     window.print();
     
-    // Връщаме оригиналното състояние
+    // Restore original state
     setTimeout(() => {
       document.body.classList.remove('print-content');
       document.body.style.overflow = originalOverflow;
@@ -81,7 +83,7 @@ const OfferPreview = ({
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Добавяме временен клас за PDF експорт
+    // Add temporary class for PDF export
     element.classList.add('pdf-export');
     
     toast({
@@ -90,7 +92,7 @@ const OfferPreview = ({
     });
 
     html2pdf().set(options).from(element).save().then(() => {
-      // Премахваме временния клас
+      // Remove temporary class
       element.classList.remove('pdf-export');
       
       toast({
@@ -171,6 +173,7 @@ const OfferPreview = ({
         onPrint={handlePrint}
         onExportPDF={handleExportPDF}
         onCopy={handleCopy}
+        mode={mode}
       />
       
       <CardContent className="card-content">
@@ -198,7 +201,7 @@ const OfferPreview = ({
         </div>
       </CardContent>
       
-      <SaveButton onClick={() => setIsSaveDialogOpen(true)} />
+      {mode === 'edit' && <SaveButton onClick={() => setIsSaveDialogOpen(true)} />}
       
       <SaveOfferDialog
         open={isSaveDialogOpen}

@@ -21,6 +21,7 @@ import {
 import { SavedOfferItemProps } from './types';
 import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useOffer } from '@/context/offer/OfferContext';
 import OfferPreview from '@/components/OfferPreview';
 import { useNavigate } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
@@ -35,8 +36,11 @@ const SavedOfferItem = ({
 }: SavedOfferItemProps) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const navigate = useNavigate();
+  const { resetOffer, applyTemplate } = useOffer();
 
   const handlePreviewOffer = () => {
+    // Temporarily apply the saved offer data to the context for preview
+    applyTemplate(savedOffer.offer_data);
     setPreviewOpen(true);
   };
 
@@ -53,9 +57,11 @@ const SavedOfferItem = ({
   };
 
   const handleExportPdf = () => {
+    // Temporarily apply the saved offer data to the context for export
+    applyTemplate(savedOffer.offer_data);
     setPreviewOpen(true);
     
-    // Дефинираме функцията за експорт, която ще се изпълни след отварянето на прегледа
+    // Defines the export function, which will run after the preview opens
     setTimeout(() => {
       const element = document.querySelector('.offer-preview-content');
       if (!element) return;
@@ -70,22 +76,28 @@ const SavedOfferItem = ({
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
   
-      // Добавяме временен клас за PDF експорт
+      // Add temporary class for PDF export
       element.classList.add('pdf-export');
       
       html2pdf().set(options).from(element).save().then(() => {
-        // Премахваме временния клас
+        // Remove temporary class
         element.classList.remove('pdf-export');
         setPreviewOpen(false);
+        // Restore original offer after export
+        resetOffer();
       }).catch((error) => {
         console.error("PDF generation error:", error);
         element.classList.remove('pdf-export');
         setPreviewOpen(false);
+        // Restore original offer after export
+        resetOffer();
       });
     }, 500);
   };
 
   const handlePrint = () => {
+    // Temporarily apply the saved offer data to the context for printing
+    applyTemplate(savedOffer.offer_data);
     setPreviewOpen(true);
     
     setTimeout(() => {
@@ -99,6 +111,8 @@ const SavedOfferItem = ({
         document.body.classList.remove('print-content');
         document.body.style.overflow = originalOverflow;
         setPreviewOpen(false);
+        // Restore original offer after printing
+        resetOffer();
       }, 500);
     }, 500);
   };
@@ -201,18 +215,16 @@ const SavedOfferItem = ({
         </TableCell>
       </TableRow>
 
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+      <Dialog open={previewOpen} onOpenChange={(open) => {
+        setPreviewOpen(open);
+        // Restore original offer when dialog is closed
+        if (!open) resetOffer();
+      }}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
-          <div className="print-container offer-preview-content">
-            <OfferPreview 
-              offer={savedOffer.offer_data} 
-              onExportPDF={handleExportPdf}
-              onPrint={handlePrint}
-              onSave={() => {}}
-              onCopy={() => {}}
-              mode="view"
-            />
-          </div>
+          <OfferPreview
+            isSaveDialogOpen={false}
+            setIsSaveDialogOpen={() => {}}
+          />
         </DialogContent>
       </Dialog>
     </>
