@@ -178,39 +178,60 @@ export type Database = {
       organizations: {
         Row: {
           address: string | null
+          address_en: string | null
+          city: string | null
+          city_en: string | null
+          country: string | null
+          country_en: string | null
           created_at: string
           email: string | null
           id: string
           logo_url: string | null
           name: string
+          name_en: string | null
           owner_id: string
           phone: string | null
           updated_at: string
           vat_number: string | null
+          website: string | null
         }
         Insert: {
           address?: string | null
+          address_en?: string | null
+          city?: string | null
+          city_en?: string | null
+          country?: string | null
+          country_en?: string | null
           created_at?: string
           email?: string | null
           id?: string
           logo_url?: string | null
           name: string
+          name_en?: string | null
           owner_id: string
           phone?: string | null
           updated_at?: string
           vat_number?: string | null
+          website?: string | null
         }
         Update: {
           address?: string | null
+          address_en?: string | null
+          city?: string | null
+          city_en?: string | null
+          country?: string | null
+          country_en?: string | null
           created_at?: string
           email?: string | null
           id?: string
           logo_url?: string | null
           name?: string
+          name_en?: string | null
           owner_id?: string
           phone?: string | null
           updated_at?: string
           vat_number?: string | null
+          website?: string | null
         }
         Relationships: []
       }
