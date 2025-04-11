@@ -120,6 +120,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     <OfferContext.Provider
       value={{
         offer,
+        setOffer, // Add setOffer to the context value
         updateCompanyInfo,
         updateClientInfo,
         updateOfferDetails,
