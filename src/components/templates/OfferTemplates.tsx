@@ -16,10 +16,16 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
     description: 'A simple offer with standard terms',
     template: {
       details: {
+        offerNumber: '',
+        date: new Date().toISOString().split('T')[0],
+        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         includeVat: true,
         vatRate: 20,
         showPartNumber: true,
+        transportCost: 0,
+        otherCosts: 0,
         notes: 'Payment terms: 100% advance payment.\nDelivery time: 7-14 working days after order confirmation.',
+        offerLanguage: 'en'
       }
     }
   },
@@ -29,10 +35,16 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
     description: 'Template for service-based offers',
     template: {
       details: {
+        offerNumber: '',
+        date: new Date().toISOString().split('T')[0],
+        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         includeVat: true,
         vatRate: 20,
         showPartNumber: false,
+        transportCost: 0,
+        otherCosts: 0,
         notes: 'Service terms: This offer is valid for the specified services only.\nPayment terms: 50% advance, 50% upon completion.\nValidity: This offer is valid for 30 days from the date issued.',
+        offerLanguage: 'en'
       },
       products: [
         {
@@ -58,10 +70,16 @@ const TEMPLATES: { id: string; name: string; description: string; template: Part
     description: 'Template for product bundles with discount',
     template: {
       details: {
+        offerNumber: '',
+        date: new Date().toISOString().split('T')[0],
+        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         includeVat: true,
         vatRate: 20,
         showPartNumber: true,
+        transportCost: 0,
+        otherCosts: 0,
         notes: 'Bundle discount applied.\nDelivery time: 5-7 working days after order confirmation.\nPayment terms: 100% advance payment.',
+        offerLanguage: 'en'
       },
       products: [
         {

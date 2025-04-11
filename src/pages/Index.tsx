@@ -18,7 +18,7 @@ import { Company } from '@/types/company';
 import { useToast } from '@/hooks/use-toast';
 import OfferTemplates from '@/components/templates/OfferTemplates';
 import QuickActionToolbar from '@/components/QuickActionToolbar';
-import { useState as useDialogState } from '@/components/SaveOfferDialog';
+import SaveOfferDialog from '@/components/SaveOfferDialog';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
