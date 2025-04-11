@@ -1,15 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { TableRow, TableCell } from '@/components/ui/table';
-import { formatCurrency, formatDate } from '@/lib/utils';
 import { SavedOfferItemProps } from '../types';
-import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
-import { useOffer } from '@/context/offer/OfferContext';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { getOfferFileName, exportToPdf, handlePrint } from './helpers';
-import OfferPreviewModal from './OfferPreviewModal';
-import DeleteOfferDialog from './DeleteOfferDialog';
+import { formatCurrencyValue } from './helpers';
 import OfferActionButtons from './OfferActionButtons';
 
 const SavedOfferItem = ({ 
@@ -20,138 +13,66 @@ const SavedOfferItem = ({
   currency, 
   t 
 }: SavedOfferItemProps) => {
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const navigate = useNavigate();
-  const { resetOffer, applyTemplate } = useOffer();
-  const { toast } = useToast();
-
-  const handlePreviewOffer = () => {
-    // Temporarily apply the saved offer data to the context for preview
-    applyTemplate(savedOffer.offer_data);
-    setPreviewOpen(true);
-  };
-
-  const handleEditOffer = () => {
-    loadOffer(savedOffer);
-    navigate('/');
-  };
-
-  const handleExportPdf = () => {
-    // Temporarily apply the saved offer data to the context for export
-    applyTemplate(savedOffer.offer_data);
-    setPreviewOpen(true);
+  const { offer_data, created_at } = savedOffer;
+  
+  // Get the total amount from the offer data
+  const calculateTotal = () => {
+    let subtotal = 0;
     
-    // Defines the export function, which will run after the preview opens
-    setTimeout(() => {
-      const element = document.querySelector('.offer-preview-content');
-      const filename = getOfferFileName(
-        savedOffer.offer_data.client.name, 
-        savedOffer.offer_data.details.offerNumber
-      );
-      
-      exportToPdf(
-        element,
-        filename,
-        () => {
-          toast({
-            title: t.common.processing,
-            description: "Generating PDF...",
-          });
-        },
-        () => {
-          toast({
-            title: t.common.success,
-            description: "PDF successfully generated",
-          });
-          setPreviewOpen(false);
-          // Restore original offer after export
-          resetOffer();
-        },
-        (error) => {
-          toast({
-            title: t.common.error,
-            description: "Failed to generate PDF",
-            variant: 'destructive',
-          });
-          setPreviewOpen(false);
-          // Restore original offer after export
-          resetOffer();
-        }
-      );
-    }, 500);
+    // Calculate the subtotal from products
+    offer_data.products.forEach(product => {
+      subtotal += product.quantity * product.unitPrice;
+    });
+    
+    // Add additional costs
+    const total = subtotal + 
+      (offer_data.details.transportCost || 0) +
+      (offer_data.details.otherCosts || 0);
+    
+    // Add VAT if needed
+    return offer_data.details.includeVat 
+      ? total * (1 + (offer_data.details.vatRate || 0) / 100) 
+      : total;
   };
 
-  const handlePrintOffer = () => {
-    // Temporarily apply the saved offer data to the context for printing
-    applyTemplate(savedOffer.offer_data);
-    setPreviewOpen(true);
-    
-    handlePrint(
-      () => {}, // Before print
-      () => {
-        setPreviewOpen(false);
-        // Restore original offer after printing
-        resetOffer();
-      }  // After print
-    );
+  // Format the date according to the current language
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    });
   };
+
+  // Get the name of the offer (if available) or use client name as fallback
+  const offerName = savedOffer.name || offer_data.name || offer_data.client.name;
+  
+  // Format display of offer details
+  const displayOfferNumber = `#${offer_data.details.offerNumber || '---'}`;
 
   return (
-    <>
-      <TableRow key={savedOffer.id}>
-        <TableCell>
-          <button 
-            onClick={handlePreviewOffer}
-            className="text-primary hover:underline focus:outline-none"
-          >
-            {savedOffer.offer_data.details.offerNumber}
-          </button>
-        </TableCell>
-        <TableCell>
-          {formatDate(savedOffer.offer_data.details.date, language as SupportedLanguage)}
-        </TableCell>
-        <TableCell>
-          {savedOffer.offer_data.client.name}
-        </TableCell>
-        <TableCell className="text-right">
-          {formatCurrency(
-            savedOffer.offer_data.products.reduce(
-              (sum, product) => sum + product.quantity * product.unitPrice,
-              0
-            ),
-            language as SupportedLanguage,
-            currency as SupportedCurrency
-          )}
-        </TableCell>
-        <TableCell className="text-right">
-          <div className="flex justify-end gap-2">
-            <OfferActionButtons
-              onPreview={handlePreviewOffer}
-              onEdit={handleEditOffer}
-              onPrint={handlePrintOffer}
-              onExport={handleExportPdf}
-              previewTitle={t.common.preview}
-              editTitle={t.common.edit}
-              printTitle={t.common.print}
-              exportTitle={t.common.export}
-            />
-            
-            <DeleteOfferDialog
-              onDelete={() => deleteOffer(savedOffer.id)}
-              confirmationText={t.savedOffers.confirmDelete}
-              confirmationTitle={t.common.confirmation}
-              deleteButtonText={t.common.delete}
-              cancelButtonText={t.common.cancel}
-            />
-          </div>
-        </TableCell>
-      </TableRow>
-
-      <OfferPreviewModal
-        open={previewOpen}
-        onOpenChange={setPreviewOpen}
-      />
-    </>
+    <TableRow>
+      <TableCell>
+        <div className="font-medium">{displayOfferNumber}</div>
+        {offerName && offerName !== offer_data.client.name && (
+          <div className="text-sm text-muted-foreground">{offerName}</div>
+        )}
+      </TableCell>
+      <TableCell>{formatDate(created_at)}</TableCell>
+      <TableCell>{offer_data.client.name}</TableCell>
+      <TableCell className="text-right">
+        {formatCurrencyValue(calculateTotal(), currency)}
+      </TableCell>
+      <TableCell className="text-right">
+        <OfferActionButtons
+          savedOffer={savedOffer}
+          loadOffer={loadOffer}
+          deleteOffer={deleteOffer}
+          t={t}
+        />
+      </TableCell>
+    </TableRow>
   );
 };
 

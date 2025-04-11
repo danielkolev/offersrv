@@ -22,12 +22,16 @@ export const fetchSavedOffers = async (): Promise<SavedOffer[]> => {
   return typedOffers;
 };
 
-export const saveOfferToDatabase = async (userId: string, offer: Offer): Promise<SavedOffer> => {
+export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?: string }): Promise<SavedOffer> => {
+  // Extract name from offer if available
+  const offerName = offer.name || `${offer.client.name} - #${offer.details.offerNumber} - ${new Date().toLocaleDateString()}`;
+  
   const { data, error } = await supabase
     .from('saved_offers')
     .insert({
       user_id: userId,
       offer_data: offer as any, // Cast to any to bypass type checking
+      name: offerName // Store the name in the separate column
     })
     .select();
     

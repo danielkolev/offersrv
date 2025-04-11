@@ -66,7 +66,7 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
       onClose={() => setIsSaveDialogOpen(false)}
       onSave={handleSaveOffer}
       isLoading={isSaving}
-      defaultName={`${offer.client.name} - ${new Date().toLocaleDateString()}`}
+      defaultName={`${offer.client.name} - #${offer.details.offerNumber || ''} - ${new Date().toLocaleDateString()}`}
     />
   );
 };
