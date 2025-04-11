@@ -3,45 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
 import { SavedOffer } from '@/types/database';
-import { formatCurrency, formatDate } from '@/lib/utils';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger,
-  DialogFooter,
-  DialogClose
-} from '@/components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Save, Trash2, Loader2 } from 'lucide-react';
+import { Search, Save, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import SavedOffersList from './offers/SavedOffersList';
+import SavedOfferDialog from './offers/SavedOfferDialog';
+import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from './offers/savedOffersService';
 
 const SavedOffersManager = () => {
   const { user } = useAuth();
-  const { offer, calculateTotal } = useOffer();
+  const { offer } = useOffer();
   const { toast } = useToast();
   const { t, language, currency } = useLanguage();
   const [savedOffers, setSavedOffers] = useState<SavedOffer[]>([]);
@@ -52,31 +26,17 @@ const SavedOffersManager = () => {
 
   useEffect(() => {
     if (user && open) {
-      fetchSavedOffers();
+      handleFetchSavedOffers();
     }
   }, [user, open]);
 
-  const fetchSavedOffers = async () => {
+  const handleFetchSavedOffers = async () => {
     if (!user) return;
     
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('saved_offers')
-        .select('*')
-        .order('created_at', { ascending: false });
-        
-      if (error) {
-        throw error;
-      }
-      
-      // Convert the data to match our SavedOffer type
-      const typedOffers: SavedOffer[] = data?.map(item => ({
-        ...item,
-        offer_data: item.offer_data as unknown as Offer
-      })) || [];
-      
-      setSavedOffers(typedOffers);
+      const offers = await fetchSavedOffers();
+      setSavedOffers(offers);
     } catch (error: any) {
       console.error('Error fetching saved offers:', error);
       toast({
@@ -89,7 +49,7 @@ const SavedOffersManager = () => {
     }
   };
 
-  const saveOffer = async () => {
+  const handleSaveOffer = async () => {
     if (!user) {
       toast({
         title: t.common.error,
@@ -101,24 +61,7 @@ const SavedOffersManager = () => {
     
     setIsSaving(true);
     try {
-      const { data, error } = await supabase
-        .from('saved_offers')
-        .insert({
-          user_id: user.id,
-          offer_data: offer as any, // Cast to any to bypass type checking
-        })
-        .select();
-        
-      if (error) {
-        throw error;
-      }
-      
-      // Convert the returned data to match our SavedOffer type
-      const newOffer = {
-        ...data[0],
-        offer_data: data[0].offer_data as unknown as Offer
-      };
-      
+      const newOffer = await saveOfferToDatabase(user.id, offer);
       setSavedOffers(prev => [newOffer, ...prev]);
       toast({
         title: t.common.success,
@@ -136,17 +79,9 @@ const SavedOffersManager = () => {
     }
   };
 
-  const deleteOffer = async (id: string) => {
+  const handleDeleteOffer = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('saved_offers')
-        .delete()
-        .eq('id', id);
-        
-      if (error) {
-        throw error;
-      }
-      
+      await deleteOfferFromDatabase(id);
       setSavedOffers(prev => prev.filter(offer => offer.id !== id));
       toast({
         title: t.common.success,
@@ -162,26 +97,22 @@ const SavedOffersManager = () => {
     }
   };
 
-  const loadOffer = (savedOffer: SavedOffer) => {
+  const handleLoadOffer = (savedOffer: SavedOffer) => {
     if (typeof window.updateCompanyInfo === 'function') {
       window.updateCompanyInfo(savedOffer.offer_data.company);
     }
     
-    // Update client info
     if (typeof window.updateClientInfo === 'function') {
       window.updateClientInfo(savedOffer.offer_data.client);
     }
     
-    // Update offer details
     if (typeof window.updateOfferDetails === 'function') {
       window.updateOfferDetails(savedOffer.offer_data.details);
     }
     
-    // Update products
     if (typeof window.resetProducts === 'function') {
       window.resetProducts(savedOffer.offer_data.products);
     } else {
-      // Fallback if resetProducts is not defined
       if (typeof window.clearProducts === 'function') {
         window.clearProducts();
       }
@@ -193,7 +124,6 @@ const SavedOffersManager = () => {
       }
     }
     
-    // Close dialog
     setOpen(false);
     
     toast({
@@ -201,14 +131,6 @@ const SavedOffersManager = () => {
       description: 'Offer loaded successfully',
     });
   };
-
-  const filteredOffers = savedOffers.filter(offer => {
-    const clientName = offer.offer_data.client.name.toLowerCase();
-    const offerNumber = offer.offer_data.details.offerNumber.toLowerCase();
-    const search = searchTerm.toLowerCase();
-    
-    return clientName.includes(search) || offerNumber.includes(search);
-  });
 
   return (
     <>
@@ -219,15 +141,11 @@ const SavedOffersManager = () => {
           </Button>
         </DialogTrigger>
         
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{t.savedOffers.title}</DialogTitle>
-          </DialogHeader>
-          
+        <SavedOfferDialog open={open} setOpen={setOpen}>
           <div className="mb-4">
             <div className="flex gap-2 my-4">
               <Button 
-                onClick={saveOffer} 
+                onClick={handleSaveOffer} 
                 className="gap-2"
                 disabled={isSaving}
               >
@@ -246,100 +164,18 @@ const SavedOffersManager = () => {
               />
             </div>
             
-            {isLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-offer-blue" />
-              </div>
-            ) : filteredOffers.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                {t.savedOffers.noOffersFound}
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t.savedOffers.offerNumber}</TableHead>
-                    <TableHead>{t.savedOffers.date}</TableHead>
-                    <TableHead>{t.savedOffers.clientName}</TableHead>
-                    <TableHead className="text-right">{t.savedOffers.amount}</TableHead>
-                    <TableHead className="text-right">{t.savedOffers.actions}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredOffers.map((savedOffer) => (
-                    <TableRow key={savedOffer.id}>
-                      <TableCell>
-                        {savedOffer.offer_data.details.offerNumber}
-                      </TableCell>
-                      <TableCell>
-                        {formatDate(savedOffer.offer_data.details.date, language)}
-                      </TableCell>
-                      <TableCell>
-                        {savedOffer.offer_data.client.name}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(
-                          savedOffer.offer_data.products.reduce(
-                            (sum, product) => sum + product.quantity * product.unitPrice,
-                            0
-                          ),
-                          language,
-                          currency
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => loadOffer(savedOffer)}
-                          >
-                            {t.savedOffers.loadOffer}
-                          </Button>
-                          
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button 
-                                variant="destructive"
-                                size="icon"
-                                className="h-8 w-8"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>{t.common.confirmation}</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  {t.savedOffers.confirmDelete}
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  onClick={() => deleteOffer(savedOffer.id)}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                >
-                                  {t.common.delete}
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+            <SavedOffersList
+              savedOffers={savedOffers}
+              isLoading={isLoading}
+              searchTerm={searchTerm}
+              loadOffer={handleLoadOffer}
+              deleteOffer={handleDeleteOffer}
+              language={language}
+              currency={currency}
+              t={t}
+            />
           </div>
-          
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">{t.common.close}</Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
+        </SavedOfferDialog>
       </Dialog>
     </>
   );
