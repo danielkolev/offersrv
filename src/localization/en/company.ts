@@ -26,5 +26,28 @@ export const enCompanyTranslations: CompanyTranslations = {
   deleteCompany: 'Delete Company',
   confirmDelete: 'Are you sure you want to delete this company? This action cannot be undone.',
   companyDeleted: 'Company deleted successfully',
-  manageCompanies: 'Manage Companies'
+  manageCompanies: 'Manage Companies',
+  
+  // Adding new properties
+  create: 'Create Company',
+  createButton: 'Create Company',
+  updateButton: 'Update Company',
+  manage: 'Manage Companies',
+  info: 'Manage your company information',
+  error: 'Error',
+  success: 'Success',
+  nameRequired: 'Company name is required',
+  createdSuccessfully: 'Company created successfully',
+  
+  // Placeholder texts
+  namePlaceholder: 'Enter company name',
+  vatPlaceholder: 'Enter VAT number',
+  addressPlaceholder: 'Enter company address',
+  cityPlaceholder: 'Enter city',
+  countryPlaceholder: 'Enter country',
+  phonePlaceholder: 'Enter phone number',
+  emailPlaceholder: 'Enter email address',
+  websitePlaceholder: 'Enter website URL',
+  selectPlaceholder: 'Select a company',
+  createNew: 'Create New Company'
 };

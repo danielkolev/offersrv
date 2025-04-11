@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import SavedOfferItem from './SavedOfferItem';
 import { SavedOffersListProps } from './types';
+import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
 
 const SavedOffersList = ({ 
   savedOffers, 

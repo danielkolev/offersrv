@@ -4,7 +4,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SavedOffer } from '@/types/database';
-import { DialogTrigger } from '@/components/ui/dialog';
+import { 
+  Dialog,
+  DialogTrigger 
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Save, Loader2 } from 'lucide-react';
@@ -36,7 +39,7 @@ const SavedOffersManager = () => {
     setIsLoading(true);
     try {
       const offers = await fetchSavedOffers();
-      setSavedOffers(offers);
+      setSavedOffers(offers as SavedOffer[]);
     } catch (error: any) {
       console.error('Error fetching saved offers:', error);
       toast({
@@ -62,7 +65,7 @@ const SavedOffersManager = () => {
     setIsSaving(true);
     try {
       const newOffer = await saveOfferToDatabase(user.id, offer);
-      setSavedOffers(prev => [newOffer, ...prev]);
+      setSavedOffers(prev => [newOffer as SavedOffer, ...prev]);
       toast({
         title: t.common.success,
         description: t.savedOffers.offerSaved,

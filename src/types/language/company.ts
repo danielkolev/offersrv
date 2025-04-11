@@ -25,4 +25,27 @@ export interface CompanyTranslations {
   confirmDelete: string;
   companyDeleted: string;
   manageCompanies: string;
+  
+  // Adding missing properties
+  create: string;
+  createButton: string;
+  updateButton: string;
+  manage: string;
+  info: string;
+  error: string;
+  success: string;
+  nameRequired: string;
+  createdSuccessfully: string;
+  
+  // Placeholder texts
+  namePlaceholder: string;
+  vatPlaceholder: string;
+  addressPlaceholder: string;
+  cityPlaceholder: string;
+  countryPlaceholder: string;
+  phonePlaceholder: string;
+  emailPlaceholder: string;
+  websitePlaceholder: string;
+  selectPlaceholder: string;
+  createNew: string;
 }

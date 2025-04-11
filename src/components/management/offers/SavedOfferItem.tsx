@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { SavedOfferItemProps } from './types';
+import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
 
 const SavedOfferItem = ({ 
   savedOffer, 
@@ -34,7 +35,7 @@ const SavedOfferItem = ({
         {savedOffer.offer_data.details.offerNumber}
       </TableCell>
       <TableCell>
-        {formatDate(savedOffer.offer_data.details.date, language)}
+        {formatDate(savedOffer.offer_data.details.date, language as SupportedLanguage)}
       </TableCell>
       <TableCell>
         {savedOffer.offer_data.client.name}
@@ -45,8 +46,8 @@ const SavedOfferItem = ({
             (sum, product) => sum + product.quantity * product.unitPrice,
             0
           ),
-          language,
-          currency
+          language as SupportedLanguage,
+          currency as SupportedCurrency
         )}
       </TableCell>
       <TableCell className="text-right">
