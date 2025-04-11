@@ -527,6 +527,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_next_offer_number: {
+        Args: { user_id_param: string }
+        Returns: string
+      }
       is_organization_member: {
         Args: {
           org_id: string

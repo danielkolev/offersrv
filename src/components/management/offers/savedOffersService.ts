@@ -33,7 +33,7 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
       offer_data: offer as any, // Cast to any to bypass type checking
       name: offerName // Store the name in the separate column
     })
-    .select();
+    .select('*');
     
   if (error) {
     throw error;

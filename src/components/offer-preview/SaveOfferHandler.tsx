@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useOffer } from '@/context/offer/OfferContext';
 import { saveOfferToDatabase } from '../management/offers/savedOffersService';
 import SaveOfferDialog from '../SaveOfferDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface SaveOfferHandlerProps {
   isSaveDialogOpen: boolean;
@@ -17,10 +18,11 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
   setIsSaveDialogOpen 
 }) => {
   const { user } = useAuth();
-  const { offer } = useOffer();
+  const { offer, setOffer } = useOffer();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
 
   const handleSaveOffer = async (offerName: string) => {
     if (!user) {
@@ -40,7 +42,10 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
         name: offerName,
       };
       
-      await saveOfferToDatabase(user.id, offerToSave);
+      const savedOffer = await saveOfferToDatabase(user.id, offerToSave);
+      
+      // Update the current offer with the server-assigned offer number
+      setOffer(savedOffer.offer_data);
       
       toast({
         title: t.common.success,
@@ -48,6 +53,9 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
       });
       
       setIsSaveDialogOpen(false);
+      
+      // Optionally navigate to saved offers page to see the new offer
+      // navigate('/saved-offers');
     } catch (error: any) {
       console.error('Error saving offer:', error);
       toast({

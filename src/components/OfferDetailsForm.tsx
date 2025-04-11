@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,68 +8,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/context/LanguageContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails } = useOffer();
   const { t } = useLanguage();
-  const { user } = useAuth();
-
-  // Generate a unique offer number when the component mounts if none exists
-  useEffect(() => {
-    const generateOfferNumber = async () => {
-      // Only generate if the offer doesn't already have a number
-      if (!offer.details.offerNumber || offer.details.offerNumber === '') {
-        try {
-          if (!user) {
-            console.error("User not authenticated");
-            return;
-          }
-
-          // Get the highest offer number from the database for the current user
-          const { data, error } = await supabase
-            .from('saved_offers')
-            .select('offer_data')
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
-            .limit(1);
-
-          if (error) {
-            console.error('Error fetching latest offer number:', error);
-            return;
-          }
-
-          let nextNumber = 1;
-          
-          // If there are existing offers, extract the highest number and increment it
-          if (data && data.length > 0 && data[0].offer_data) {
-            // Convert to the expected type and access the details safely
-            const offerData = data[0].offer_data as any;
-            if (offerData.details && offerData.details.offerNumber) {
-              const lastOfferNumber = offerData.details.offerNumber;
-              // Try to parse the numerical part of the offer number
-              const numericPart = parseInt(lastOfferNumber.replace(/\D/g, ''), 10);
-              if (!isNaN(numericPart)) {
-                nextNumber = numericPart + 1;
-              }
-            }
-          }
-          
-          // Format the number with leading zeros
-          const formattedNumber = nextNumber.toString().padStart(5, '0');
-          updateOfferDetails({ offerNumber: formattedNumber });
-        } catch (err) {
-          console.error('Error generating offer number:', err);
-          // Fallback to a timestamp-based number if there's an error
-          const timestamp = new Date().getTime().toString().slice(-5);
-          updateOfferDetails({ offerNumber: timestamp });
-        }
-      }
-    };
-
-    generateOfferNumber();
-  }, [user]);
 
   return (
     <Card className="mb-6">
@@ -81,9 +24,13 @@ const OfferDetailsForm = () => {
             <Label htmlFor="offerNumber">{t.offerDetails.offerNumber}</Label>
             <Input
               id="offerNumber"
-              value={offer.details.offerNumber}
+              value={offer.details.offerNumber || ''}
               onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
+              placeholder="00000"
             />
+            <p className="text-xs text-muted-foreground">
+              {t.offerDetails.offerNumberInfo || "Final number will be assigned when saving"}
+            </p>
           </div>
           
           <div className="space-y-2">
