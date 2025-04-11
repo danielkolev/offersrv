@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,10 +8,12 @@ import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/context/LanguageContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails } = useOffer();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   // Generate a unique offer number when the component mounts if none exists
   useEffect(() => {
@@ -20,10 +21,16 @@ const OfferDetailsForm = () => {
       // Only generate if the offer doesn't already have a number
       if (!offer.details.offerNumber || offer.details.offerNumber === '') {
         try {
-          // Get the highest offer number from the database
+          if (!user) {
+            console.error("User not authenticated");
+            return;
+          }
+
+          // Get the highest offer number from the database for the current user
           const { data, error } = await supabase
             .from('saved_offers')
             .select('offer_data')
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false })
             .limit(1);
 
@@ -61,7 +68,7 @@ const OfferDetailsForm = () => {
     };
 
     generateOfferNumber();
-  }, []);
+  }, [user]);
 
   return (
     <Card className="mb-6">

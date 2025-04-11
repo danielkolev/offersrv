@@ -64,7 +64,7 @@ const SavedOfferItem = ({
       <TableCell className="text-right">
         {formatCurrencyValue(calculateTotal(), currency)}
       </TableCell>
-      <TableCell className="text-right">
+      <TableCell>
         <OfferActionButtons
           savedOffer={savedOffer}
           loadOffer={loadOffer}
