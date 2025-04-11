@@ -1,6 +1,7 @@
 
 import { SavedOffer } from '@/types/database';
 import { Translations } from '@/types/language';
+import { Offer } from '@/types/offer';
 
 export interface SavedOfferItemProps {
   savedOffer: SavedOffer;

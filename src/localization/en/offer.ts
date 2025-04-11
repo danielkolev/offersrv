@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -87,15 +88,19 @@ export const enSavedOffersTranslations: SavedOffersTranslations = {
   offerSaved: 'Offer saved successfully',
   offerDeleted: 'Offer deleted successfully',
   noOffersFound: 'No saved offers found',
+  noOffersFoundSearch: 'No offers found matching your search',
   confirmDelete: 'Are you sure you want to delete this offer?',
   date: 'Date',
   client: 'Client',
   amount: 'Amount',
   actions: 'Actions',
   search: 'Search',
-  searchPlaceholder: 'Search by client name or offer number',
+  searchPlaceholder: 'Search by client name, offer number or date',
   clientName: 'Client Name',
-  offerNumber: 'Offer Number'
+  offerNumber: 'Offer Number',
+  createNew: 'Create New Offer',
+  offerLoaded: 'Offer loaded successfully',
+  viewOffer: 'View Offer'
 };
 
 export const enSavedProductsTranslations: SavedProductsTranslations = {

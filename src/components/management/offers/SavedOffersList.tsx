@@ -24,17 +24,24 @@ const SavedOffersList = ({
   t 
 }: SavedOffersListProps) => {
   const filteredOffers = savedOffers.filter(offer => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
     const clientName = offer.offer_data.client.name.toLowerCase();
     const offerNumber = offer.offer_data.details.offerNumber.toLowerCase();
-    const search = searchTerm.toLowerCase();
+    const offerDate = new Date(offer.offer_data.details.date)
+      .toLocaleDateString(language as SupportedLanguage)
+      .toLowerCase();
     
-    return clientName.includes(search) || offerNumber.includes(search);
+    return clientName.includes(searchLower) || 
+           offerNumber.includes(searchLower) ||
+           offerDate.includes(searchLower);
   });
 
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-offer-blue" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -42,7 +49,9 @@ const SavedOffersList = ({
   if (filteredOffers.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        {t.savedOffers.noOffersFound}
+        {searchTerm 
+          ? t.savedOffers.noOffersFoundSearch 
+          : t.savedOffers.noOffersFound}
       </div>
     );
   }

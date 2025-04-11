@@ -1,3 +1,4 @@
+
 export interface OfferTranslations {
   details: string;
   number: string;
@@ -78,6 +79,7 @@ export interface SavedOffersTranslations {
   offerSaved: string;
   offerDeleted: string;
   noOffersFound: string;
+  noOffersFoundSearch: string;
   confirmDelete: string;
   date: string;
   client: string;
@@ -87,6 +89,9 @@ export interface SavedOffersTranslations {
   searchPlaceholder: string;
   clientName: string;
   offerNumber: string;
+  createNew: string;
+  offerLoaded: string;
+  viewOffer: string;
 }
 
 export interface SavedProductsTranslations {

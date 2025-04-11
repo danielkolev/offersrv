@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -87,15 +88,19 @@ export const bgSavedOffersTranslations: SavedOffersTranslations = {
   offerSaved: 'Офертата е запазена успешно',
   offerDeleted: 'Офертата е изтрита успешно',
   noOffersFound: 'Няма намерени запазени оферти',
+  noOffersFoundSearch: 'Няма намерени оферти по вашето търсене',
   confirmDelete: 'Сигурни ли сте, че искате да изтриете тази оферта?',
   date: 'Дата',
   client: 'Клиент',
   amount: 'Сума',
   actions: 'Действия',
   search: 'Търсене',
-  searchPlaceholder: 'Търсене по име на клиент или номер на оферта',
+  searchPlaceholder: 'Търсене по име на клиент, номер на оферта или дата',
   clientName: 'Име на клиент',
-  offerNumber: 'Номер на оферта'
+  offerNumber: 'Номер на оферта',
+  createNew: 'Създай нова оферта',
+  offerLoaded: 'Офертата е заредена успешно',
+  viewOffer: 'Преглед на оферта'
 };
 
 export const bgSavedProductsTranslations: SavedProductsTranslations = {
