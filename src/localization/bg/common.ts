@@ -68,5 +68,10 @@ export const bgCommonTranslations: CommonTranslations = {
   quantity: 'Количество',
   price: 'Цена',
   status: 'Статус',
-  type: 'Тип'
+  type: 'Тип',
+  // Adding missing translations
+  confirmation: 'Потвърждение',
+  processing: 'Обработване...',
+  comingSoon: 'Очаквайте скоро',
+  featureInDevelopment: 'Тази функционалност е в процес на разработка'
 };
