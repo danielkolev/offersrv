@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import OfferWizardSteps, { WizardStep } from './OfferWizardSteps';
-import CompanyManager from '@/components/company/CompanyManager';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
 import ProductsForm from '@/components/ProductsForm';
@@ -30,40 +29,35 @@ const OfferWizard = ({
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  // Start from the client step (index 0) instead of company step
   const [currentStep, setCurrentStep] = useState(0);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   
-  // Define all steps
+  // Define steps - removed company step
   const wizardSteps: WizardStep[] = [
     { 
-      id: 'company', 
-      title: t.company.title || 'Company',
+      id: 'client', 
+      title: t.client.title || 'Client',
       completed: currentStep > 0,
       current: currentStep === 0
     },
     { 
-      id: 'client', 
-      title: t.client.title || 'Client',
+      id: 'details', 
+      title: t.offer.details || 'Details',
       completed: currentStep > 1,
       current: currentStep === 1
     },
     { 
-      id: 'details', 
-      title: t.offer.details || 'Details',
-      completed: currentStep > 2,
-      current: currentStep === 2
-    },
-    { 
       id: 'products', 
       title: t.products.title || 'Products',
-      completed: currentStep > 3,
-      current: currentStep === 3
+      completed: currentStep > 2,
+      current: currentStep === 2
     },
     { 
       id: 'preview', 
       title: t.offer.offerPreview || 'Preview',
       completed: false,
-      current: currentStep === 4
+      current: currentStep === 3
     }
   ];
   
@@ -119,32 +113,26 @@ const OfferWizard = ({
     }
 
     switch (currentStep) {
-      case 0: // Company
-        return (
-          <div className="space-y-6">
-            <CompanyManager onSelectCompany={onSelectCompany} />
-          </div>
-        );
-      case 1: // Client
+      case 0: // Client
         return (
           <div className="space-y-6">
             <ClientInfoForm />
           </div>
         );
-      case 2: // Offer Details
+      case 1: // Offer Details
         return (
           <div className="space-y-6">
             <OfferTemplates />
             <OfferDetailsForm />
           </div>
         );
-      case 3: // Products
+      case 2: // Products
         return (
           <div className="space-y-6">
             <ProductsForm />
           </div>
         );
-      case 4: // Preview
+      case 3: // Preview
         return (
           <OfferPreview 
             isSaveDialogOpen={isSaveDialogOpen}

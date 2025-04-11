@@ -6,7 +6,6 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
 import { useAuth } from '@/context/AuthContext';
 import AccountButton from '@/components/AccountButton';
-import CompanyManager from '@/components/company/CompanyManager';
 import ManagePanel from '@/components/management/ManagePanel';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -23,6 +22,13 @@ const Index = () => {
   const fetchRetryCount = useRef(0);
   const MAX_RETRIES = 3;
 
+  // Fetch the user's default company on page load
+  useEffect(() => {
+    if (user) {
+      fetchDefaultCompany();
+    }
+  }, [user]);
+
   // Make updateCompanyInfo available globally for the Index component to use
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -32,6 +38,39 @@ const Index = () => {
       };
     }
   }, []);
+
+  // Function to fetch the user's default company
+  const fetchDefaultCompany = async () => {
+    if (!user) return;
+    
+    setIsLoadingCompanyData(true);
+    
+    try {
+      // Get the user's organizations
+      const { data: orgData, error: orgError } = await supabase
+        .from('organizations')
+        .select('id')
+        .order('created_at', { ascending: false });
+        
+      if (orgError) {
+        console.error('Error fetching organizations:', orgError);
+        setFetchError(true);
+        return;
+      }
+      
+      // Use the first organization as default
+      if (orgData && orgData.length > 0) {
+        const defaultCompanyId = orgData[0].id;
+        setSelectedCompanyId(defaultCompanyId);
+        handleSelectCompany(defaultCompanyId);
+      }
+    } catch (error) {
+      console.error('Error fetching default company:', error);
+      setFetchError(true);
+    } finally {
+      setIsLoadingCompanyData(false);
+    }
+  };
 
   const handleSelectCompany = useCallback(async (companyId: string) => {
     if (!companyId) return;
