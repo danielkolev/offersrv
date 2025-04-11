@@ -11,13 +11,28 @@ import SaveOfferDialog from './SaveOfferDialog';
 import { useAuth } from '@/context/AuthContext';
 import { saveOfferToDatabase } from './management/offers/savedOffersService';
 
-const OfferPreview = () => {
+interface OfferPreviewProps {
+  isSaveDialogOpen?: boolean;
+  setIsSaveDialogOpen?: (isOpen: boolean) => void;
+}
+
+const OfferPreview = ({ 
+  isSaveDialogOpen: externalIsSaveDialogOpen, 
+  setIsSaveDialogOpen: externalSetIsSaveDialogOpen 
+}: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
   const { language, currency, t } = useLanguage();
   const { toast } = useToast();
   const { user } = useAuth();
-  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Use either external or internal state based on what's provided
+  const isSaveDialogOpen = externalIsSaveDialogOpen !== undefined 
+    ? externalIsSaveDialogOpen 
+    : internalIsSaveDialogOpen;
+    
+  const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
 
   const handlePrint = () => {
     window.print();

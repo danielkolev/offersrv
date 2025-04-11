@@ -16,12 +16,16 @@ import ManagePanel from '@/components/management/ManagePanel';
 import { supabase } from '@/integrations/supabase/client';
 import { Company } from '@/types/company';
 import { useToast } from '@/hooks/use-toast';
+import OfferTemplates from '@/components/templates/OfferTemplates';
+import QuickActionToolbar from '@/components/QuickActionToolbar';
+import { useState as useDialogState } from '@/components/SaveOfferDialog';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -105,6 +109,19 @@ const Index = () => {
     }
   }, [t, toast]);
 
+  const handleOpenSaveDialog = () => {
+    if (!user) {
+      toast({
+        title: t.common.error,
+        description: t.auth.notAuthenticated || "You need to be logged in",
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setIsSaveDialogOpen(true);
+  };
+
   return (
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
@@ -147,6 +164,8 @@ const Index = () => {
                 </div>
               ) : (
                 <>
+                  {/* Add the templates component at the top of the edit form */}
+                  <OfferTemplates />
                   <ClientInfoForm />
                   <OfferDetailsForm />
                   <ProductsForm />
@@ -169,7 +188,10 @@ const Index = () => {
           </TabsContent>
           
           <TabsContent value="preview">
-            <OfferPreview />
+            <OfferPreview 
+              isSaveDialogOpen={isSaveDialogOpen}
+              setIsSaveDialogOpen={setIsSaveDialogOpen}
+            />
             
             <div className="flex justify-center mt-8 no-print">
               <button
@@ -181,6 +203,14 @@ const Index = () => {
             </div>
           </TabsContent>
         </Tabs>
+        
+        {/* Quick Action Toolbar */}
+        {selectedCompanyId && !isLoadingCompanyData && !fetchError && (
+          <QuickActionToolbar 
+            onPreview={() => setActiveTab('preview')} 
+            onSave={handleOpenSaveDialog}
+          />
+        )}
       </div>
     </OfferProvider>
   );

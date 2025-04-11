@@ -15,6 +15,7 @@ export interface OfferContextType {
   calculateVat: () => number;
   calculateTotal: () => number;
   resetOffer: () => void;
+  applyTemplate: (template: Partial<Offer>) => void;
 }
 
 // Extend Window interface

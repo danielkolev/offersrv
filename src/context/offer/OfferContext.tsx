@@ -84,6 +84,28 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     setOffer(defaultOffer);
   };
 
+  // New function to apply a template to the current offer
+  const applyTemplate = (template: Partial<Offer>) => {
+    setOffer((prev) => {
+      const updatedOffer = { ...prev };
+      
+      // Apply template details if provided
+      if (template.details) {
+        updatedOffer.details = {
+          ...prev.details,
+          ...template.details
+        };
+      }
+      
+      // Apply template products if provided
+      if (template.products && template.products.length > 0) {
+        updatedOffer.products = template.products;
+      }
+      
+      return updatedOffer;
+    });
+  };
+
   // Add functions to window for global access
   if (typeof window !== 'undefined') {
     window.updateCompanyInfo = updateCompanyInfo;
@@ -110,6 +132,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         calculateVat: calculateOfferVat,
         calculateTotal: calculateOfferTotal,
         resetOffer,
+        applyTemplate
       }}
     >
       {children}
