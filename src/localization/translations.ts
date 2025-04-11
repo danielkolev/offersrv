@@ -1,4 +1,3 @@
-
 import { Translations } from '@/types/language';
 
 export const enTranslations: Translations = {
@@ -89,6 +88,7 @@ export const enTranslations: Translations = {
     createdSuccessfully: 'Company created successfully',
     createNew: 'Create New Company',
     createFirst: 'Please create your first company',
+    selectPlaceholder: 'Select a company',
     namePlaceholder: 'Enter company name',
     vatPlaceholder: 'Enter VAT number',
     addressPlaceholder: 'Enter company address',
@@ -285,6 +285,7 @@ export const bgTranslations: Translations = {
     createdSuccessfully: 'Фирмата беше създадена успешно',
     createNew: 'Създаване на нова фирма',
     createFirst: 'Моля, създайте първата си фирма',
+    selectPlaceholder: 'Изберете фирма',
     namePlaceholder: 'Въведете име на фирмата',
     vatPlaceholder: 'Въведете ДДС номер',
     addressPlaceholder: 'Въведете адрес на фирмата',
