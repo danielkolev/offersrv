@@ -1,11 +1,11 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Copy, FileText, Save, Printer, Trash, Plus, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import html2pdf from 'html2pdf.js';
+import { printContent } from './offer-preview/utils/printUtils';
+import { generatePdf, getOfferFileName } from './offer-preview/utils/pdfExport';
 
 interface QuickActionToolbarProps {
   onPreview: () => void;
@@ -49,21 +49,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
   const handlePrint = () => {
     onPreview();
     setTimeout(() => {
-      // Запазваме оригиналното състояние на body
-      const originalOverflow = document.body.style.overflow;
-      
-      // Скриваме всичко преди печат
-      document.body.classList.add('print-content');
-      document.body.style.overflow = 'visible';
-      
-      // Принтираме
-      window.print();
-      
-      // Връщаме оригиналното състояние
-      setTimeout(() => {
-        document.body.classList.remove('print-content');
-        document.body.style.overflow = originalOverflow;
-      }, 500);
+      printContent();
     }, 500);
   };
 
@@ -73,42 +59,33 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
       const element = document.querySelector('.offer-preview-content');
       if (!element) return;
       
-      const filename = `${getOfferFileName()}.pdf`;
+      const filename = `${getOfferFileName(offer.client.name)}.pdf`;
       
-      const options = {
-        margin: 10,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-  
-      // Добавяме временен клас за PDF експорт
-      element.classList.add('pdf-export');
-      
-      toast({
-        title: t.common.processing,
-        description: "Generating PDF...",
-      });
-  
-      html2pdf().set(options).from(element).save().then(() => {
-        // Премахваме временния клас
-        element.classList.remove('pdf-export');
-        
-        toast({
-          title: t.common.success,
-          description: "PDF successfully generated",
-        });
-      }).catch((error) => {
-        console.error("PDF generation error:", error);
-        element.classList.remove('pdf-export');
-        
-        toast({
-          title: t.common.error,
-          description: "Failed to generate PDF",
-          variant: 'destructive',
-        });
-      });
+      generatePdf(
+        element,
+        filename,
+        () => {
+          toast({
+            title: t.common.processing,
+            description: "Generating PDF...",
+          });
+        },
+        () => {
+          toast({
+            title: t.common.success,
+            description: "PDF successfully generated",
+          });
+        },
+        (error) => {
+          console.error("PDF generation error:", error);
+          
+          toast({
+            title: t.common.error,
+            description: "Failed to generate PDF",
+            variant: 'destructive',
+          });
+        }
+      );
     }, 500);
   };
 

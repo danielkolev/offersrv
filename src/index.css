@@ -83,6 +83,11 @@
   margin: 0 auto;
 }
 
+/* Watermark for printing */
+.offer-watermark {
+  display: none;
+}
+
 @media print {
   @page {
     size: A4;
@@ -106,42 +111,43 @@
     padding: 0 !important;
   }
   
-  /* Скриваме всичко освен съдържанието на офертата при печат */
-  body > *:not(.print-container) {
-    display: none !important;
+  /* Show offer content during printing */
+  .offer-preview-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
   }
   
-  /* Гарантираме че Card компонентът се вижда */
-  .card {
+  /* Show watermark during printing */
+  .offer-watermark {
+    display: block !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 80px;
+    color: rgba(0, 0, 0, 0.1);
+    z-index: 0;
+    pointer-events: none;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  /* Ensure all card and container styles are properly set for printing */
+  .card,
+  .card-content {
     display: block !important;
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
+    background-color: white !important;
   }
   
-  /* Показваме само съдържанието на офертата */
-  .offer-preview-content {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  /* Премахваме сенки и граници при печат */
-  .shadow, 
-  .border {
-    box-shadow: none !important;
-    border: none !important;
-  }
-  
-  /* Премахваме всички маргини и падинги на контейнера при печат */
-  .card-content {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  /* Гарантираме че всички текстови елементи са видими */
+  /* Ensure text elements are visible */
   h1, h2, h3, h4, p, span, div, table, tr, td, th {
     color: black !important;
     background-color: transparent !important;

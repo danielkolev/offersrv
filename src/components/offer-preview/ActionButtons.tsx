@@ -37,7 +37,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         <FileDown size={16} /> PDF
       </Button>
       
-      <Button onClick={onPrint} className="gap-2">
+      <Button variant="outline" onClick={onPrint} className="gap-2">
         <Printer size={16} /> {t.common.print}
       </Button>
     </div>

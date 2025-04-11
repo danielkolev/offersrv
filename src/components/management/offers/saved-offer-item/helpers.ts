@@ -1,5 +1,6 @@
 
 import html2pdf from 'html2pdf.js';
+import { printContent } from '@/components/offer-preview/utils/printUtils';
 
 export const getOfferFileName = (clientName: string, offerNumber: string) => {
   const formattedClientName = clientName.replace(/\s+/g, '-');
@@ -49,16 +50,10 @@ export const handlePrint = (
   onBeforePrint();
   
   setTimeout(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.classList.add('print-content');
-    document.body.style.overflow = 'visible';
+    // Use the centralized print utility
+    printContent();
     
-    window.print();
-    
-    setTimeout(() => {
-      document.body.classList.remove('print-content');
-      document.body.style.overflow = originalOverflow;
-      onAfterPrint();
-    }, 500);
+    // Call the after-print callback after a delay
+    setTimeout(onAfterPrint, 500);
   }, 500);
 };

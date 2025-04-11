@@ -3,6 +3,15 @@ export const printContent = () => {
   // Save original body state
   const originalOverflow = document.body.style.overflow;
   
+  // Create watermark element if it doesn't exist
+  let watermark = document.querySelector('.offer-watermark');
+  if (!watermark) {
+    watermark = document.createElement('div');
+    watermark.className = 'offer-watermark';
+    watermark.textContent = 'Оригинал';
+    document.body.appendChild(watermark);
+  }
+  
   // Hide everything before printing
   document.body.classList.add('print-content');
   document.body.style.overflow = 'visible';
@@ -14,5 +23,10 @@ export const printContent = () => {
   setTimeout(() => {
     document.body.classList.remove('print-content');
     document.body.style.overflow = originalOverflow;
+    
+    // Remove watermark after printing
+    if (watermark && watermark.parentNode) {
+      watermark.parentNode.removeChild(watermark);
+    }
   }, 500);
 };
