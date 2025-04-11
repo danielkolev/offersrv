@@ -169,6 +169,14 @@ const SavedClientsPage = () => {
     });
   };
 
+  // Add editClient function to handle client editing
+  const editClient = (client: Client) => {
+    // For now, we'll just log the client - the actual editing functionality
+    // will be implemented with a dialog in a future update
+    console.log('Edit client:', client);
+    // In a full implementation, this would open a dialog with the client's data
+  };
+
   const filteredClients = clients.filter(client => {
     if (searchType === 'name') {
       return client.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -213,6 +221,7 @@ const SavedClientsPage = () => {
         isLoading={isLoading}
         selectClient={selectClient}
         deleteClient={deleteClient}
+        editClient={editClient}
         t={t}
       />
     </div>
