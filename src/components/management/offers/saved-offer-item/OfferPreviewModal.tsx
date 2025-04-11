@@ -4,24 +4,36 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import OfferPreview from '@/components/OfferPreview';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { SavedOffer } from '@/types/database';
 
 interface OfferPreviewModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  savedOffer: SavedOffer;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const OfferPreviewModal = ({ open, onOpenChange }: OfferPreviewModalProps) => {
-  const { resetOffer } = useOffer();
+const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalProps) => {
+  const { offer, setOffer, resetOffer } = useOffer();
   const { t } = useLanguage();
   
-  const handleOpenChange = (open: boolean) => {
-    onOpenChange(open);
-    // Restore original offer when dialog is closed
-    if (!open) resetOffer();
-  };
+  // When the modal opens, temporarily set the offer to the saved offer for preview
+  React.useEffect(() => {
+    if (isOpen) {
+      setOffer(savedOffer.offer_data);
+    }
+    
+    // Cleanup when modal closes
+    return () => {
+      if (!isOpen) {
+        resetOffer();
+      }
+    };
+  }, [isOpen, savedOffer, setOffer, resetOffer]);
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) onClose();
+    }}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
         <DialogTitle className="sr-only">{t.offer.offerPreview}</DialogTitle>
         <OfferPreview
