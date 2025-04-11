@@ -9,7 +9,13 @@ export const printContent = () => {
     watermark = document.createElement('div');
     watermark.className = 'offer-watermark';
     watermark.textContent = 'Оригинал';
-    document.body.appendChild(watermark);
+    // Add the watermark to the print container to ensure it only shows with the content
+    const printContainer = document.querySelector('.offer-preview-content');
+    if (printContainer) {
+      printContainer.appendChild(watermark);
+    } else {
+      document.body.appendChild(watermark);
+    }
   }
   
   // Hide everything before printing

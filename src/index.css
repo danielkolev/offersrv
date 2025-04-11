@@ -100,27 +100,34 @@
     padding: 0 !important;
   }
   
-  .no-print {
+  /* Hide everything except the offer content when printing */
+  body * {
+    visibility: hidden !important;
     display: none !important;
   }
   
-  .print-container {
+  .offer-preview-content,
+  .offer-preview-content * {
+    visibility: visible !important;
+    display: block !important;
+  }
+  
+  .offer-preview-content {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     max-width: 100%;
     margin: 0 !important;
     padding: 0 !important;
   }
   
-  /* Show offer content during printing */
-  .offer-preview-content {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative;
-    z-index: 1;
+  .no-print {
+    display: none !important;
+    visibility: hidden !important;
   }
   
-  /* Show watermark during printing */
+  /* Show watermark during printing with lighter color */
   .offer-watermark {
     display: block !important;
     position: fixed;
@@ -128,7 +135,7 @@
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
     font-size: 80px;
-    color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.05); /* Make the watermark very light */
     z-index: 0;
     pointer-events: none;
     font-weight: bold;
@@ -151,7 +158,5 @@
   h1, h2, h3, h4, p, span, div, table, tr, td, th {
     color: black !important;
     background-color: transparent !important;
-    visibility: visible !important;
-    opacity: 1 !important;
   }
 }
