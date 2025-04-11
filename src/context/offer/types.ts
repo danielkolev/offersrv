@@ -3,6 +3,7 @@ import { Offer, CompanyInfo, ClientInfo, Product, OfferDetails } from '../../typ
 
 export interface OfferContextType {
   offer: Offer;
+  setOffer: (offer: Offer) => void;
   updateCompanyInfo: (info: Partial<CompanyInfo>) => void;
   updateClientInfo: (info: Partial<ClientInfo>) => void;
   updateOfferDetails: (details: Partial<OfferDetails>) => void;
