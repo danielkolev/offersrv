@@ -45,7 +45,16 @@ export const enClientTranslations: ClientTranslations = {
   confirmDelete: 'Are you sure you want to delete this client?',
   clientAdded: 'Client added successfully',
   clientUpdated: 'Client updated successfully',
-  clientDeleted: 'Client deleted successfully'
+  clientDeleted: 'Client deleted successfully',
+  // Add these fields that are being accessed in components:
+  name: 'Name',
+  vatNumber: 'VAT Number',
+  contactPerson: 'Contact Person',
+  address: 'Address',
+  city: 'City',
+  country: 'Country',
+  email: 'Email',
+  phone: 'Phone'
 };
 
 export const enSavedClientsTranslations: SavedClientsTranslations = {
@@ -70,5 +79,16 @@ export const enSavedClientsTranslations: SavedClientsTranslations = {
   editClient: 'Edit Client',
   importFromOffer: 'Import From Offer',
   searchByName: 'Search by name',
-  searchByVatNumber: 'Search by VAT number'
+  searchByVatNumber: 'Search by VAT number',
+  // Add the missing properties:
+  noClients: 'No clients available',
+  searchByVat: 'Search by VAT number',
+  selectClient: 'Select',
+  deleteConfirmation: 'Are you sure you want to delete this client?',
+  cancel: 'Cancel',
+  updateClient: 'Update Client', 
+  createClient: 'Create Client',
+  clientUpdatedSuccess: 'Client updated successfully',
+  clientAddedSuccess: 'Client added successfully',
+  clientDeletedSuccess: 'Client deleted successfully'
 };

@@ -39,6 +39,15 @@ export interface ClientTranslations {
   clientAdded: string;
   clientUpdated: string;
   clientDeleted: string;
+  // Add these fields that are being accessed in components:
+  name: string;
+  vatNumber: string;
+  contactPerson: string;
+  address: string;
+  city: string;
+  country: string;
+  email: string;
+  phone: string;
 }
 
 export interface SavedClientsTranslations {
@@ -64,4 +73,15 @@ export interface SavedClientsTranslations {
   importFromOffer: string;
   searchByName: string;
   searchByVatNumber: string;
+  // Add these missing properties:
+  noClients: string;
+  searchByVat: string;
+  selectClient: string;
+  deleteConfirmation: string;
+  cancel: string;
+  updateClient: string;
+  createClient: string;
+  clientUpdatedSuccess: string;
+  clientAddedSuccess: string;
+  clientDeletedSuccess: string;
 }

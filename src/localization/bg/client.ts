@@ -45,7 +45,16 @@ export const bgClientTranslations: ClientTranslations = {
   confirmDelete: 'Сигурни ли сте, че искате да изтриете този клиент?',
   clientAdded: 'Клиентът е добавен успешно',
   clientUpdated: 'Клиентът е обновен успешно',
-  clientDeleted: 'Клиентът е изтрит успешно'
+  clientDeleted: 'Клиентът е изтрит успешно',
+  // Add these fields that are being accessed in components:
+  name: 'Име',
+  vatNumber: 'ДДС номер',
+  contactPerson: 'Лице за контакт',
+  address: 'Адрес',
+  city: 'Град',
+  country: 'Държава',
+  email: 'Имейл',
+  phone: 'Телефон'
 };
 
 export const bgSavedClientsTranslations: SavedClientsTranslations = {
@@ -70,5 +79,16 @@ export const bgSavedClientsTranslations: SavedClientsTranslations = {
   editClient: 'Редактирай клиент',
   importFromOffer: 'Импортирай от оферта',
   searchByName: 'Търси по име',
-  searchByVatNumber: 'Търси по ДДС номер'
+  searchByVatNumber: 'Търси по ДДС номер',
+  // Add the missing properties:
+  noClients: 'Няма налични клиенти',
+  searchByVat: 'Търси по ДДС номер',
+  selectClient: 'Избери',
+  deleteConfirmation: 'Сигурни ли сте, че искате да изтриете този клиент?',
+  cancel: 'Отказ',
+  updateClient: 'Обнови клиент',
+  createClient: 'Създай клиент',
+  clientUpdatedSuccess: 'Клиентът е обновен успешно',
+  clientAddedSuccess: 'Клиентът е добавен успешно',
+  clientDeletedSuccess: 'Клиентът е изтрит успешно'
 };

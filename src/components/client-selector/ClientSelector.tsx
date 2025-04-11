@@ -121,7 +121,7 @@ const ClientSelector = ({ onSelectClient }: ClientSelectorProps) => {
             <div className="text-center py-8 text-muted-foreground">
               {searchTerm 
                 ? t.savedClients.noClientsFoundSearch 
-                : t.savedClients.noClients}
+                : t.savedClients.noClientsFound}
             </div>
           )}
         </div>
