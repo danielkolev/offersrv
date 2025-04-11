@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -36,6 +37,22 @@ export const bgOfferTranslations: OfferTranslations = {
   languageOptions: {
     bulgarian: 'Български',
     english: 'Английски'
+  },
+  // Add templates translations
+  templates: {
+    title: 'Шаблони',
+    description: 'Започнете с шаблон или запазете текущата оферта като шаблон',
+    useTemplate: 'Използвай шаблон',
+    createFromCurrent: 'Запази текущата като шаблон',
+    templateName: 'Име на шаблона',
+    saveAsTemplate: 'Запази като шаблон',
+    templateSaved: 'Шаблонът е запазен успешно',
+    noTemplates: 'Няма намерени шаблони',
+    confirmDelete: 'Сигурни ли сте, че искате да изтриете този шаблон?',
+    deleteTemplate: 'Изтрий шаблон',
+    templateDeleted: 'Шаблонът е изтрит успешно',
+    defaultTemplates: 'Стандартни шаблони',
+    userTemplates: 'Вашите шаблони'
   }
 };
 

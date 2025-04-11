@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -36,6 +37,22 @@ export const enOfferTranslations: OfferTranslations = {
   languageOptions: {
     bulgarian: 'Bulgarian',
     english: 'English'
+  },
+  // Add templates translations
+  templates: {
+    title: 'Templates',
+    description: 'Start with a template or save your current offer as a template',
+    useTemplate: 'Use template',
+    createFromCurrent: 'Save current as template',
+    templateName: 'Template Name',
+    saveAsTemplate: 'Save as Template',
+    templateSaved: 'Template saved successfully',
+    noTemplates: 'No templates found',
+    confirmDelete: 'Are you sure you want to delete this template?',
+    deleteTemplate: 'Delete Template',
+    templateDeleted: 'Template deleted successfully',
+    defaultTemplates: 'Default Templates',
+    userTemplates: 'Your Templates'
   }
 };
 

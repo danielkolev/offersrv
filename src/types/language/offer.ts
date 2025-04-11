@@ -29,6 +29,22 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
+  // Add templates translations
+  templates: {
+    title: string;
+    description: string;
+    useTemplate: string;
+    createFromCurrent: string;
+    templateName: string;
+    saveAsTemplate: string;
+    templateSaved: string;
+    noTemplates: string;
+    confirmDelete: string;
+    deleteTemplate: string;
+    templateDeleted: string;
+    defaultTemplates: string;
+    userTemplates: string;
+  };
 }
 
 export interface OfferDetailsTranslations {
