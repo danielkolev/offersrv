@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { OfferProvider } from '@/context/OfferContext';
+import { OfferProvider } from '@/context/offer/OfferContext';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
 import ProductsForm from '@/components/ProductsForm';

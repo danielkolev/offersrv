@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useOffer } from '@/context/OfferContext';
+import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

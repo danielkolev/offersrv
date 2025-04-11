@@ -1,0 +1,30 @@
+
+import { Offer, CompanyInfo, ClientInfo, Product, OfferDetails } from '../../types/offer';
+
+export interface OfferContextType {
+  offer: Offer;
+  updateCompanyInfo: (info: Partial<CompanyInfo>) => void;
+  updateClientInfo: (info: Partial<ClientInfo>) => void;
+  updateOfferDetails: (details: Partial<OfferDetails>) => void;
+  addProduct: (product: Omit<Product, 'id'>) => void;
+  updateProduct: (id: string, product: Partial<Product>) => void;
+  removeProduct: (id: string) => void;
+  clearProducts: () => void;
+  resetProducts: (products: Product[]) => void;
+  calculateSubtotal: () => number;
+  calculateVat: () => number;
+  calculateTotal: () => number;
+  resetOffer: () => void;
+}
+
+// Extend Window interface
+declare global {
+  interface Window {
+    updateCompanyInfo?: (info: Partial<CompanyInfo>) => void;
+    updateClientInfo?: (info: Partial<ClientInfo>) => void;
+    updateOfferDetails?: (details: Partial<OfferDetails>) => void;
+    addProduct?: (product: Omit<Product, 'id'>) => void;
+    clearProducts?: () => void;
+    resetProducts?: (products: Product[]) => void;
+  }
+}

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useOffer } from '@/context/OfferContext';
+import { useOffer } from '@/context/offer/OfferContext';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

@@ -12,7 +12,7 @@ import SavedClientsPage from "./pages/SavedClients";
 import SavedProductsPage from "./pages/SavedProducts";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
-import { OfferProvider } from "./context/OfferContext";
+import { OfferProvider } from "./context/offer/OfferContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
