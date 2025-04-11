@@ -13,6 +13,7 @@ import {
   deleteProduct, 
   convertToOfferProduct 
 } from '@/components/management/products/productsService';
+import { v4 as uuidv4 } from 'uuid';
 
 export const useProductsManagement = (t: Translations) => {
   const { user } = useAuth();
@@ -105,13 +106,17 @@ export const useProductsManagement = (t: Translations) => {
         });
       } else {
         // Create new product
-        savedProduct = await saveProduct(user.id, {
+        // Adding temporary id with uuid as it's used by convertToOfferProduct later
+        const tempProductForSaving: Omit<Product, 'id'> & { id?: string } = {
+          id: uuidv4(), // Generate a temporary ID
           name: product.name || '',
           description: product.description || undefined,
           partNumber: product.part_number || undefined,
           quantity: 1,
           unitPrice: product.unit_price || 0
-        });
+        };
+        
+        savedProduct = await saveProduct(user.id, tempProductForSaving);
         
         setProducts(prev => 
           [...prev, savedProduct].sort((a, b) => a.name.localeCompare(b.name))

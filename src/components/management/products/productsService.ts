@@ -16,7 +16,7 @@ export const fetchSavedProducts = async (userId: string) => {
   return data || [];
 };
 
-export const saveProduct = async (userId: string, product: Product) => {
+export const saveProduct = async (userId: string, product: Omit<Product, 'id'> & { id?: string }) => {
   const { data, error } = await supabase
     .from('saved_products')
     .insert({
