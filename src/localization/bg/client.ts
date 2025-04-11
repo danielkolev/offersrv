@@ -1,3 +1,4 @@
+
 import { 
   ClientTranslations, 
   ClientInfoTranslations, 
@@ -7,13 +8,6 @@ import {
 
 export const bgClientTranslations: ClientTranslations = {
   title: 'Клиенти',
-  addClient: 'Добави клиент',
-  editClient: 'Редактирай клиент',
-  deleteClient: 'Изтрий клиент',
-  deleteConfirmation: 'Сигурни ли сте, че искате да изтриете този клиент?',
-  noClientsFound: 'Няма намерени клиенти',
-  noClientsFoundSearch: 'Няма намерени клиенти, отговарящи на търсенето',
-  searchPlaceholder: 'Търси клиенти',
   name: 'Име',
   vatNumber: 'ЕИК/ДДС номер',
   contactPerson: 'Лице за контакт',
@@ -22,14 +16,29 @@ export const bgClientTranslations: ClientTranslations = {
   address: 'Адрес',
   city: 'Град',
   country: 'Държава',
+  selectExisting: 'Избери съществуващ клиент',
+  selectClient: 'Избери клиент',
+  searchClients: 'Търси клиенти',
+  noClientsFound: 'Няма намерени клиенти',
+  noClientsFoundSearch: 'Няма намерени клиенти, отговарящи на търсенето',
+  
+  // Adding missing properties
+  addClient: 'Добави клиент',
+  editClient: 'Редактирай клиент',
+  deleteClient: 'Изтрий клиент',
+  deleteConfirmation: 'Сигурни ли сте, че искате да изтриете този клиент?',
+  searchPlaceholder: 'Търси клиенти',
   actions: 'Действия',
+  search: 'Търсене',
+  createNew: 'Създай нов клиент',
+  clientCreated: 'Клиентът е създаден успешно',
+  clientUpdated: 'Клиентът е актуализиран успешно',
+  clientDeleted: 'Клиентът е изтрит успешно',
   cancel: 'Отказ',
   save: 'Запази',
   clientSaved: 'Клиентът е запазен успешно',
-  clientDeleted: 'Клиентът е изтрит успешно',
   searchByName: 'Търсене по име',
-  searchByVat: 'Търсене по ЕИК/ДДС номер',
-  createNew: 'Създай нов клиент'
+  searchByVat: 'Търсене по ЕИК/ДДС номер'
 };
 
 export const bgClientInfoTranslations: ClientInfoTranslations = {
@@ -65,26 +74,58 @@ export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
   phone: 'Телефон',
   email: 'Имейл',
   website: 'Уебсайт',
-  logo: 'Лого'
+  logo: 'Лого',
+  uploadLogo: 'Качи лого',
+  removeLogo: 'Премахни лого',
+  selectLogo: 'Избери лого',
+  changeLogo: 'Промени лого',
+  companyUpdated: 'Информацията за фирмата е актуализирана успешно'
 };
 
 export const bgSavedClientsTranslations: SavedClientsTranslations = {
   title: 'Запазени клиенти',
-  loadClient: 'Зареди',
-  saveClient: 'Запази клиент',
+  name: 'Име',
+  vatNumber: 'ЕИК/ДДС номер',
+  contactPerson: 'Лице за контакт',
+  email: 'Имейл',
+  phone: 'Телефон',
+  address: 'Адрес',
+  city: 'Град',
+  country: 'Държава',
+  actions: 'Действия',
+  editClient: 'Редактирай',
   deleteClient: 'Изтрий',
-  clientSaved: 'Клиентът е запазен успешно',
-  clientDeleted: 'Клиентът е изтрит успешно',
+  deleteConfirmation: 'Сигурни ли сте, че искате да изтриете този клиент?',
+  search: 'Търсене',
+  searchPlaceholder: 'Търсене по име на клиент, ЕИК/ДДС номер или лице за контакт',
   noClientsFound: 'Няма намерени запазени клиенти',
   noClientsFoundSearch: 'Няма намерени клиенти, отговарящи на търсенето',
+  createClient: 'Създай клиент',
+  clientCreated: 'Клиентът е създаден успешно',
+  clientUpdated: 'Клиентът е актуализиран успешно',
+  clientDeleted: 'Клиентът е изтрит успешно',
+  
+  // Adding missing properties
+  loadClient: 'Зареди',
+  saveClient: 'Запази клиент',
+  clientSaved: 'Клиентът е запазен успешно',
   confirmDelete: 'Сигурни ли сте, че искате да изтриете този клиент?',
   date: 'Дата',
-  name: 'Име',
-  contactPerson: 'Лице за контакт',
-  actions: 'Действия',
-  search: 'Търсене',
-  searchPlaceholder: 'Търсене по име на клиент, ЕИК/ДДС номер или дата',
+  client: 'Клиент',
+  contact: 'Контакт',
   clientName: 'Име на клиент',
-  vatNumber: 'ЕИК/ДДС номер',
-  createNew: 'Създай нов клиент'
+  contactName: 'Име на контакт',
+  createNew: 'Създай нов клиент',
+  clientLoaded: 'Клиентът е зареден успешно',
+  viewClient: 'Преглед на клиент',
+  selectClient: 'Избери',
+  addNewClient: 'Добави нов клиент',
+  updateClient: 'Актуализирай клиент',
+  cancel: 'Отказ',
+  importFromOffer: 'Импортирай от оферта',
+  searchByName: 'Търсене по име',
+  searchByVat: 'Търсене по ЕИК/ДДС номер',
+  clientUpdatedSuccess: 'Клиентът е актуализиран успешно',
+  clientAddedSuccess: 'Клиентът е добавен успешно',
+  clientDeletedSuccess: 'Клиентът е изтрит успешно'
 };

@@ -1,3 +1,4 @@
+
 export interface ClientTranslations {
   title: string;
   name: string;
@@ -13,6 +14,24 @@ export interface ClientTranslations {
   searchClients: string;
   noClientsFound: string;
   noClientsFoundSearch: string;
+  
+  // Adding missing properties
+  addClient: string;
+  editClient: string;
+  deleteClient: string;
+  deleteConfirmation: string;
+  searchPlaceholder: string;
+  actions: string;
+  search: string;
+  createNew: string;
+  clientCreated: string;
+  clientUpdated: string;
+  clientDeleted: string;
+  cancel: string;
+  save: string;
+  clientSaved: string;
+  searchByName: string;
+  searchByVat: string;
 }
 
 export interface CompanyInfoTranslations {
@@ -26,6 +45,13 @@ export interface CompanyInfoTranslations {
   phone: string;
   website: string;
   logo: string;
+  
+  // Adding missing properties
+  uploadLogo: string;
+  removeLogo: string;
+  selectLogo: string;
+  changeLogo: string;
+  companyUpdated: string;
 }
 
 export interface SavedClientsTranslations {
@@ -50,6 +76,30 @@ export interface SavedClientsTranslations {
   clientCreated: string;
   clientUpdated: string;
   clientDeleted: string;
+  
+  // Adding missing properties
+  loadClient: string;
+  saveClient: string;
+  clientSaved: string;
+  confirmDelete: string;
+  date: string;
+  client: string;
+  contact: string;
+  clientName: string;
+  contactName: string;
+  createNew: string;
+  clientLoaded: string;
+  viewClient: string;
+  selectClient: string;
+  addNewClient: string;
+  updateClient: string;
+  cancel: string;
+  importFromOffer: string;
+  searchByName: string;
+  searchByVat: string;
+  clientUpdatedSuccess: string;
+  clientAddedSuccess: string;
+  clientDeletedSuccess: string;
 }
 
 export interface ClientInfoTranslations {

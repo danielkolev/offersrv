@@ -1,3 +1,4 @@
+
 import { 
   ClientTranslations, 
   ClientInfoTranslations, 
@@ -7,22 +8,37 @@ import {
 
 export const enClientTranslations: ClientTranslations = {
   title: 'Clients',
+  name: 'Name',
+  vatNumber: 'VAT Number',
+  contactPerson: 'Contact Person',
+  email: 'Email',
+  phone: 'Phone',
+  address: 'Address',
+  city: 'City',
+  country: 'Country',
+  selectExisting: 'Select Existing Client',
+  selectClient: 'Select Client',
+  searchClients: 'Search clients',
+  noClientsFound: 'No clients found',
+  noClientsFoundSearch: 'No clients found matching your search',
+  
+  // Adding missing properties
   addClient: 'Add Client',
   editClient: 'Edit Client',
   deleteClient: 'Delete Client',
   deleteConfirmation: 'Are you sure you want to delete this client?',
-  noClientsFound: 'No clients found',
-  noClientsFoundSearch: 'No clients found matching your search',
   searchPlaceholder: 'Search clients',
-  clientName: 'Client Name',
-  vatNumber: 'VAT Number',
-  contactPerson: 'Contact Person',
   actions: 'Actions',
   search: 'Search',
   createNew: 'Create New Client',
   clientCreated: 'Client created successfully',
   clientUpdated: 'Client updated successfully',
-  clientDeleted: 'Client deleted successfully'
+  clientDeleted: 'Client deleted successfully',
+  cancel: 'Cancel',
+  save: 'Save',
+  clientSaved: 'Client saved successfully',
+  searchByName: 'Search by name',
+  searchByVat: 'Search by VAT'
 };
 
 export const enCompanyInfoTranslations: CompanyInfoTranslations = {
@@ -36,33 +52,59 @@ export const enCompanyInfoTranslations: CompanyInfoTranslations = {
   email: 'Email',
   website: 'Website',
   logo: 'Logo',
+  uploadLogo: 'Upload Logo',
+  removeLogo: 'Remove Logo',
   selectLogo: 'Select Logo',
   changeLogo: 'Change Logo',
-  removeLogo: 'Remove Logo',
   companyUpdated: 'Company information updated successfully'
 };
 
 export const enSavedClientsTranslations: SavedClientsTranslations = {
   title: 'Saved Clients',
-  loadClient: 'Load Client',
-  saveClient: 'Save Client',
-  deleteClient: 'Delete Client',
-  clientSaved: 'Client saved successfully',
-  clientDeleted: 'Client deleted successfully',
+  name: 'Name',
+  vatNumber: 'VAT Number',
+  contactPerson: 'Contact Person',
+  email: 'Email',
+  phone: 'Phone',
+  address: 'Address',
+  city: 'City',
+  country: 'Country',
+  actions: 'Actions',
+  editClient: 'Edit',
+  deleteClient: 'Delete',
+  deleteConfirmation: 'Are you sure you want to delete this client?',
+  search: 'Search',
+  searchPlaceholder: 'Search by client name, VAT number or contact person',
   noClientsFound: 'No saved clients found',
   noClientsFoundSearch: 'No clients found matching your search',
+  createClient: 'Create Client',
+  clientCreated: 'Client created successfully',
+  clientUpdated: 'Client updated successfully',
+  clientDeleted: 'Client deleted successfully',
+  
+  // Adding missing properties
+  loadClient: 'Load Client',
+  saveClient: 'Save Client',
+  clientSaved: 'Client saved successfully',
   confirmDelete: 'Are you sure you want to delete this client?',
   date: 'Date',
   client: 'Client',
   contact: 'Contact',
-  actions: 'Actions',
-  search: 'Search',
-  searchPlaceholder: 'Search by client name, VAT number or contact person',
   clientName: 'Client Name',
   contactName: 'Contact Name',
   createNew: 'Create New Client',
   clientLoaded: 'Client loaded successfully',
-  viewClient: 'View Client'
+  viewClient: 'View Client',
+  selectClient: 'Select',
+  addNewClient: 'Add New Client',
+  updateClient: 'Update Client',
+  cancel: 'Cancel',
+  importFromOffer: 'Import from Offer',
+  searchByName: 'Search by Name',
+  searchByVat: 'Search by VAT',
+  clientUpdatedSuccess: 'Client updated successfully',
+  clientAddedSuccess: 'Client added successfully',
+  clientDeletedSuccess: 'Client deleted successfully'
 };
 
 export const enClientInfoTranslations: ClientInfoTranslations = {
