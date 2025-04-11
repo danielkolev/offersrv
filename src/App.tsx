@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import SavedOffersPage from "./pages/SavedOffers";
 import SavedClientsPage from "./pages/SavedClients";
 import SavedProductsPage from "./pages/SavedProductsPage";
+import Settings from "./pages/Settings";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
 import { OfferProvider } from "./context/offer/OfferContext";
@@ -56,6 +57,14 @@ const App = () => (
                   element={
                     <ProtectedRoute>
                       <SavedProductsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />

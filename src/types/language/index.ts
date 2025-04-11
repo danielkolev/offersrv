@@ -12,6 +12,7 @@ import {
   SavedOffersTranslations,
   SavedProductsTranslations 
 } from './offer';
+import { SettingsTranslations } from './settings';
 
 export interface Translations {
   offerTitle: string;
@@ -29,6 +30,7 @@ export interface Translations {
   savedOffers: SavedOffersTranslations;
   savedClients: SavedClientsTranslations;
   savedProducts: SavedProductsTranslations;
+  settings: SettingsTranslations;
 }
 
 // Re-export the types with proper syntax for isolatedModules

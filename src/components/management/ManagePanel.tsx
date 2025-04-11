@@ -1,37 +1,32 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Button } from '@/components/ui/button';
-import { Save, Users, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 
 const ManagePanel = () => {
+  const { user } = useAuth();
   const { t } = useLanguage();
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <Link to="/saved-offers">
-        <Button variant="outline" className="w-full gap-2">
-          <Save className="h-4 w-4" />
-          {t.savedOffers.title}
-        </Button>
-      </Link>
-      
-      <Link to="/saved-clients">
-        <Button variant="outline" className="w-full gap-2">
-          <Users className="h-4 w-4" />
-          {t.savedClients.title}
-        </Button>
-      </Link>
-      
-      <Link to="/saved-products">
-        <Button variant="outline" className="w-full gap-2">
-          <ShoppingCart className="h-4 w-4" />
-          {t.savedProducts.title}
-        </Button>
-      </Link>
-    </div>
+    <Card className="mb-6">
+      <CardContent className="p-4 flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          {t.common.manageAccount}
+        </div>
+        <Link to="/settings" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground hover:bg-secondary hover:text-secondary-foreground px-4 py-2">
+          <Settings className="w-4 h-4 mr-2" />
+          {t.settings.title}
+        </Link>
+      </CardContent>
+    </Card>
   );
 };
 
 export default ManagePanel;
+

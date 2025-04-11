@@ -18,9 +18,10 @@ import {
   bgSavedOffersTranslations,
   bgSavedProductsTranslations
 } from './offer';
+import { bgSettingsTranslations } from './settings';
 
 export const bgTranslations: Translations = {
-  offerTitle: 'Създайте професионални оферти мигновено',
+  offerTitle: 'Създай професионални оферти мигновено',
   common: bgCommonTranslations,
   auth: bgAuthTranslations,
   user: bgUserTranslations,
@@ -34,5 +35,6 @@ export const bgTranslations: Translations = {
   totals: bgTotalsTranslations,
   savedOffers: bgSavedOffersTranslations,
   savedClients: bgSavedClientsTranslations,
-  savedProducts: bgSavedProductsTranslations
+  savedProducts: bgSavedProductsTranslations,
+  settings: bgSettingsTranslations
 };

@@ -18,6 +18,7 @@ import {
   enSavedOffersTranslations,
   enSavedProductsTranslations
 } from './offer';
+import { enSettingsTranslations } from './settings';
 
 export const enTranslations: Translations = {
   offerTitle: 'Create Professional Offers Instantly',
@@ -34,5 +35,6 @@ export const enTranslations: Translations = {
   totals: enTotalsTranslations,
   savedOffers: enSavedOffersTranslations,
   savedClients: enSavedClientsTranslations,
-  savedProducts: enSavedProductsTranslations
+  savedProducts: enSavedProductsTranslations,
+  settings: enSettingsTranslations
 };
