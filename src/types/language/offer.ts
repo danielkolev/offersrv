@@ -1,4 +1,3 @@
-
 export interface OfferTranslations {
   details: string;
   number: string;
@@ -29,7 +28,7 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
-  offerPreview: string; // Added this property
+  offerPreview: string;
   // Templates translations
   templates: {
     title: string;
@@ -51,14 +50,17 @@ export interface OfferTranslations {
 export interface OfferDetailsTranslations {
   title: string;
   offerNumber: string;
-  offerNumberInfo: string; // Add the missing property here
+  offerNumberInfo: string;
   date: string;
   validUntil: string;
+  validUntilPlaceholder: string;
   showPartNumber: string;
   includeVat: string;
   vatRate: string;
   transportCost: string;
+  transportCostPlaceholder: string;
   otherCosts: string;
+  otherCostsPlaceholder: string;
   notes: string;
   notesPlaceholder: string;
   language: string;
@@ -81,6 +83,8 @@ export interface ProductsTranslations {
   unitPrice: string;
   selectExisting: string;
   selectProduct: string;
+  unit: string;
+  unitPlaceholder: string;
 }
 
 export interface TotalsTranslations {

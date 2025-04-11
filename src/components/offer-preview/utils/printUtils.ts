@@ -13,6 +13,12 @@ export const printContent = () => {
     document.body.appendChild(watermark);
   }
   
+  // Make sure all elements in the offer preview are visible
+  const offerPreviewContent = document.querySelector('.offer-preview-content');
+  if (offerPreviewContent) {
+    offerPreviewContent.classList.add('print-full-content');
+  }
+  
   // Prepare for printing
   document.body.classList.add('print-mode');
   document.body.style.overflow = 'visible';
@@ -28,6 +34,11 @@ export const printContent = () => {
     // Remove watermark after printing
     if (watermark && watermark.parentNode) {
       watermark.parentNode.removeChild(watermark);
+    }
+    
+    // Restore original visibility
+    if (offerPreviewContent) {
+      offerPreviewContent.classList.remove('print-full-content');
     }
   }, 500);
 };

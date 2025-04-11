@@ -1,89 +1,76 @@
-
-export interface ClientInfoTranslations {
+export interface ClientTranslations {
   title: string;
   name: string;
+  vatNumber: string;
   contactPerson: string;
+  email: string;
+  phone: string;
   address: string;
   city: string;
   country: string;
-  vatNumber: string;
-  email: string;
-  phone: string;
   selectExisting: string;
   selectClient: string;
   searchClients: string;
+  noClientsFound: string;
+  noClientsFoundSearch: string;
 }
 
 export interface CompanyInfoTranslations {
   title: string;
   name: string;
-  vatNumber: string;
   address: string;
   city: string;
   country: string;
-  phone: string;
+  vatNumber: string;
   email: string;
+  phone: string;
   website: string;
   logo: string;
-  uploadLogo: string;
-  removeLogo: string;
-}
-
-export interface ClientTranslations {
-  add: string;
-  edit: string;
-  delete: string;
-  save: string;
-  cancel: string;
-  confirmDelete: string;
-  clientAdded: string;
-  clientUpdated: string;
-  clientDeleted: string;
-  // Add these fields that are being accessed in components:
-  name: string;
-  vatNumber: string;
-  contactPerson: string;
-  address: string;
-  city: string;
-  country: string;
-  email: string;
-  phone: string;
-  // Add title property
-  title: string;
 }
 
 export interface SavedClientsTranslations {
   title: string;
-  loadClient: string;
-  saveClient: string;
-  deleteClient: string;
-  clientSaved: string;
-  clientDeleted: string;
-  noClientsFound: string;
-  noClientsFoundSearch: string;
-  confirmDelete: string;
-  date: string;
   name: string;
   vatNumber: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
   actions: string;
+  editClient: string;
+  deleteClient: string;
+  deleteConfirmation: string;
   search: string;
   searchPlaceholder: string;
-  createNew: string;
-  clientLoaded: string;
-  addNewClient: string;
-  editClient: string;
-  importFromOffer: string;
-  searchByName: string;
-  searchByVatNumber: string;
-  // Add these missing properties:
-  noClients: string;
-  searchByVat: string;
-  selectClient: string;
-  deleteConfirmation: string;
-  cancel: string;
-  updateClient: string;
+  noClientsFound: string;
+  noClientsFoundSearch: string;
   createClient: string;
-  clientUpdatedSuccess: string;
-  clientAddedSuccess: string;
-  clientDeletedSuccess: string;
+  clientCreated: string;
+  clientUpdated: string;
+  clientDeleted: string;
+}
+
+export interface ClientInfoTranslations {
+  title: string;
+  name: string;
+  namePlaceholder: string;
+  contactPerson: string;
+  contactPersonPlaceholder: string;
+  address: string;
+  addressPlaceholder: string;
+  city: string;
+  cityPlaceholder: string;
+  country: string;
+  countryPlaceholder: string;
+  vatNumber: string;
+  vatNumberPlaceholder: string;
+  email: string;
+  emailPlaceholder: string;
+  phone: string;
+  phonePlaceholder: string;
+  selectExisting: string;
+  selectClient: string;
+  searchClients: string;
 }

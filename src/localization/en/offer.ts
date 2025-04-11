@@ -1,4 +1,3 @@
-
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -34,7 +33,7 @@ export const enOfferTranslations: OfferTranslations = {
   vatExcluded: 'VAT excluded',
   thankYou: 'Thank you for your business!',
   language: 'Language',
-  offerPreview: 'Offer Preview', // Added this translation
+  offerPreview: 'Offer Preview',
   languageOptions: {
     bulgarian: 'Bulgarian',
     english: 'English'
@@ -63,11 +62,14 @@ export const enOfferDetailsTranslations: OfferDetailsTranslations = {
   offerNumberInfo: 'Final number will be assigned when saving',
   date: 'Date',
   validUntil: 'Valid Until',
+  validUntilPlaceholder: 'Enter expiration date',
   showPartNumber: 'Show Part Number',
   includeVat: 'Include VAT',
   vatRate: 'VAT Rate (%)',
   transportCost: 'Transport Cost',
+  transportCostPlaceholder: 'Enter transport cost',
   otherCosts: 'Other Costs',
+  otherCostsPlaceholder: 'Enter other costs',
   notes: 'Notes',
   notesPlaceholder: 'Enter any additional notes or terms for this offer',
   language: 'Offer Language'
@@ -89,7 +91,9 @@ export const enProductsTranslations: ProductsTranslations = {
   partNumber: 'Part Number',
   unitPrice: 'Unit Price',
   selectExisting: 'Select Existing Product',
-  selectProduct: 'Select a Product'
+  selectProduct: 'Select a Product',
+  unit: 'Unit',
+  unitPlaceholder: 'Enter unit (e.g., pcs, hours)'
 };
 
 export const enTotalsTranslations: TotalsTranslations = {

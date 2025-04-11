@@ -1,4 +1,3 @@
-
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -34,7 +33,7 @@ export const bgOfferTranslations: OfferTranslations = {
   vatExcluded: 'Без ДДС',
   thankYou: 'Благодарим Ви за доверието!',
   language: 'Език',
-  offerPreview: 'Преглед на оферта', // Added this translation
+  offerPreview: 'Преглед на оферта',
   languageOptions: {
     bulgarian: 'Български',
     english: 'Английски'
@@ -63,11 +62,14 @@ export const bgOfferDetailsTranslations: OfferDetailsTranslations = {
   offerNumberInfo: 'Крайният номер ще бъде присвоен при записване',
   date: 'Дата',
   validUntil: 'Валиден до',
+  validUntilPlaceholder: 'Въведете дата на валидност',
   showPartNumber: 'Покажи парт. номер',
   includeVat: 'Включи ДДС',
   vatRate: 'ДДС ставка (%)',
   transportCost: 'Цена за транспорт',
+  transportCostPlaceholder: 'Въведете цена за транспорт',
   otherCosts: 'Други разходи',
+  otherCostsPlaceholder: 'Въведете други разходи',
   notes: 'Бележки',
   notesPlaceholder: 'Въведете допълнителни бележки или условия за тази оферта',
   language: 'Език на офертата'
@@ -89,7 +91,9 @@ export const bgProductsTranslations: ProductsTranslations = {
   partNumber: 'Номер на част',
   unitPrice: 'Единична цена',
   selectExisting: 'Избери съществуващ продукт',
-  selectProduct: 'Избери продукт'
+  selectProduct: 'Избери продукт',
+  unit: 'Мерна единица',
+  unitPlaceholder: 'Въведете мерна единица (напр. бр., часове)'
 };
 
 export const bgTotalsTranslations: TotalsTranslations = {

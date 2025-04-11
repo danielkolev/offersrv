@@ -5,151 +5,129 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 210 100% 51%; /* Blue color */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+ 
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 222.2 47.4% 11.2%;
 
     --radius: 0.5rem;
   }
-
+ 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.9%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
 
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
+ 
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 217.2 32.6% 17.5%;
+
+    --radius: 0.5rem;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
 
-.print-container {
-  max-width: 210mm;
+/* Styles for the React PDF library */
+.react-pdf__Page__canvas {
   margin: 0 auto;
 }
 
-/* Watermark for printing */
-.offer-watermark {
-  display: none;
-}
-
+/* Print styles */
 @media print {
-  @page {
-    size: A4;
-    margin: 10mm;
-  }
-  
-  body {
+  .print-mode {
     background-color: white !important;
   }
   
-  /* Hide everything in print mode except what we want to show */
-  body.print-mode * {
-    visibility: hidden;
+  .print-container {
+    margin: 0 !important;
+    padding: 1cm !important;
+    width: 100% !important;
+    box-shadow: none !important;
   }
   
-  /* Show only the offer content and its children */
-  body.print-mode .offer-preview-content,
-  body.print-mode .offer-preview-content * {
-    visibility: visible !important;
-  }
-  
-  /* Position the content properly */
-  body.print-mode .offer-preview-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
-  
-  /* Show watermark with lighter color */
-  body.print-mode .offer-watermark {
+  .print-full-content {
     display: block !important;
-    visibility: visible !important;
+    position: relative !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  
+  .offer-watermark {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
-    font-size: 80px;
-    color: rgba(0, 0, 0, 0.05); /* Very light watermark */
+    font-size: 72px;
+    opacity: 0.2;
+    color: gray;
     z-index: 1000;
     pointer-events: none;
-    font-weight: bold;
-    text-transform: uppercase;
   }
   
-  /* Hide elements not needed in print */
-  .no-print {
+  /* Hide elements that shouldn't be printed */
+  button, 
+  .no-print,
+  .print-hidden {
     display: none !important;
   }
   
-  /* Ensure text elements have proper color */
-  body.print-mode .offer-preview-content h1, 
-  body.print-mode .offer-preview-content h2, 
-  body.print-mode .offer-preview-content h3, 
-  body.print-mode .offer-preview-content h4, 
-  body.print-mode .offer-preview-content p, 
-  body.print-mode .offer-preview-content span, 
-  body.print-mode .offer-preview-content div, 
-  body.print-mode .offer-preview-content table, 
-  body.print-mode .offer-preview-content tr, 
-  body.print-mode .offer-preview-content td, 
-  body.print-mode .offer-preview-content th {
-    color: black !important;
-    background-color: transparent !important;
+  /* Ensure all content is visible */
+  .print-visible {
+    display: block !important;
   }
 }

@@ -5,7 +5,6 @@ import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
 import ProductsForm from '@/components/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
-import OfferTemplates from '@/components/templates/OfferTemplates';
 
 interface WizardContentProps {
   currentStep: number;
@@ -58,7 +57,6 @@ const WizardContent: React.FC<WizardContentProps> = ({
     case 1: // Offer Details
       return (
         <div className="space-y-6">
-          <OfferTemplates />
           <OfferDetailsForm />
         </div>
       );

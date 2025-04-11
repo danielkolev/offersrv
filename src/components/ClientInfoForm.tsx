@@ -20,11 +20,15 @@ const ClientInfoForm = () => {
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="clientName">{t.clientInfo.name}</Label>
+            <Label htmlFor="clientName" className="after:content-['*'] after:text-red-500 after:ml-0.5">
+              {t.clientInfo.name}
+            </Label>
             <Input
               id="clientName"
               value={offer.client.name}
               onChange={(e) => updateClientInfo({ name: e.target.value })}
+              placeholder={t.clientInfo.namePlaceholder}
+              required
             />
           </div>
           
@@ -34,6 +38,7 @@ const ClientInfoForm = () => {
               id="clientContactPerson"
               value={offer.client.contactPerson}
               onChange={(e) => updateClientInfo({ contactPerson: e.target.value })}
+              placeholder={t.clientInfo.contactPersonPlaceholder}
             />
           </div>
           
@@ -43,6 +48,7 @@ const ClientInfoForm = () => {
               id="clientAddress"
               value={offer.client.address}
               onChange={(e) => updateClientInfo({ address: e.target.value })}
+              placeholder={t.clientInfo.addressPlaceholder}
             />
           </div>
           
@@ -52,6 +58,7 @@ const ClientInfoForm = () => {
               id="clientCity"
               value={offer.client.city}
               onChange={(e) => updateClientInfo({ city: e.target.value })}
+              placeholder={t.clientInfo.cityPlaceholder}
             />
           </div>
           
@@ -61,6 +68,7 @@ const ClientInfoForm = () => {
               id="clientCountry"
               value={offer.client.country}
               onChange={(e) => updateClientInfo({ country: e.target.value })}
+              placeholder={t.clientInfo.countryPlaceholder}
             />
           </div>
           
@@ -70,6 +78,7 @@ const ClientInfoForm = () => {
               id="clientVat"
               value={offer.client.vatNumber}
               onChange={(e) => updateClientInfo({ vatNumber: e.target.value })}
+              placeholder={t.clientInfo.vatNumberPlaceholder}
             />
           </div>
           
@@ -79,6 +88,7 @@ const ClientInfoForm = () => {
               id="clientEmail"
               value={offer.client.email}
               onChange={(e) => updateClientInfo({ email: e.target.value })}
+              placeholder={t.clientInfo.emailPlaceholder}
             />
           </div>
           
@@ -88,6 +98,7 @@ const ClientInfoForm = () => {
               id="clientPhone"
               value={offer.client.phone}
               onChange={(e) => updateClientInfo({ phone: e.target.value })}
+              placeholder={t.clientInfo.phonePlaceholder}
             />
           </div>
         </div>

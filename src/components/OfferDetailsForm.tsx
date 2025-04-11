@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,9 +27,10 @@ const OfferDetailsForm = () => {
               value={offer.details.offerNumber || ''}
               onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
               placeholder="00000"
+              disabled
             />
             <p className="text-xs text-muted-foreground">
-              {t.offerDetails.offerNumberInfo || "Final number will be assigned when saving"}
+              {t.offerDetails.offerNumberInfo}
             </p>
           </div>
           
@@ -49,12 +51,15 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="offerDate">{t.offerDetails.date}</Label>
+            <Label htmlFor="offerDate" className="after:content-['*'] after:text-red-500 after:ml-0.5">
+              {t.offerDetails.date}
+            </Label>
             <Input
               id="offerDate"
               type="date"
               value={offer.details.date}
               onChange={(e) => updateOfferDetails({ date: e.target.value })}
+              required
             />
           </div>
           
@@ -65,6 +70,7 @@ const OfferDetailsForm = () => {
               type="date"
               value={offer.details.validUntil}
               onChange={(e) => updateOfferDetails({ validUntil: e.target.value })}
+              placeholder={t.offerDetails.validUntilPlaceholder}
             />
           </div>
         </div>
@@ -97,6 +103,7 @@ const OfferDetailsForm = () => {
               type="number"
               value={offer.details.vatRate}
               onChange={(e) => updateOfferDetails({ vatRate: Number(e.target.value) })}
+              placeholder="20"
             />
           </div>
           
@@ -107,6 +114,7 @@ const OfferDetailsForm = () => {
               type="number"
               value={offer.details.transportCost}
               onChange={(e) => updateOfferDetails({ transportCost: Number(e.target.value) })}
+              placeholder={t.offerDetails.transportCostPlaceholder}
             />
           </div>
           
@@ -117,6 +125,7 @@ const OfferDetailsForm = () => {
               type="number"
               value={offer.details.otherCosts}
               onChange={(e) => updateOfferDetails({ otherCosts: Number(e.target.value) })}
+              placeholder={t.offerDetails.otherCostsPlaceholder}
             />
           </div>
         </div>
