@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast";
@@ -7,6 +7,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import SaveOfferDialog from './SaveOfferDialog';
 import { useAuth } from '@/context/AuthContext';
 import { saveOfferToDatabase } from './management/offers/savedOffersService';
+import html2pdf from 'html2pdf.js';
 
 // Import refactored components
 import OfferHeader from './offer-preview/OfferHeader';
@@ -30,6 +31,7 @@ const OfferPreview = ({
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const { user } = useAuth();
+  const offerContentRef = useRef<HTMLDivElement>(null);
   
   // Use either external or internal state based on what's provided
   const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = useState(false);
@@ -41,14 +43,70 @@ const OfferPreview = ({
     
   const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
 
+  const getOfferFileName = () => {
+    const clientName = offer.client.name || 'Client';
+    const date = new Date().toLocaleDateString().replace(/\//g, '-');
+    return `Offer-${clientName}-${date}`;
+  };
+
   const handlePrint = () => {
-    // Добавяме print-content клас към body, за да улесним печата
+    // Запазваме оригиналното състояние на body
+    const originalOverflow = document.body.style.overflow;
+    
+    // Скриваме всичко преди печат
     document.body.classList.add('print-content');
+    document.body.style.overflow = 'visible';
+    
+    // Принтираме
     window.print();
-    // Премахваме класа след печат
+    
+    // Връщаме оригиналното състояние
     setTimeout(() => {
       document.body.classList.remove('print-content');
+      document.body.style.overflow = originalOverflow;
     }, 500);
+  };
+
+  const handleExportPDF = () => {
+    if (!offerContentRef.current) return;
+
+    const element = offerContentRef.current;
+    const filename = `${getOfferFileName()}.pdf`;
+    
+    const options = {
+      margin: 10,
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Добавяме временен клас за PDF експорт
+    element.classList.add('pdf-export');
+    
+    toast({
+      title: t.common.processing,
+      description: "Generating PDF...",
+    });
+
+    html2pdf().set(options).from(element).save().then(() => {
+      // Премахваме временния клас
+      element.classList.remove('pdf-export');
+      
+      toast({
+        title: t.common.success,
+        description: "PDF successfully generated",
+      });
+    }).catch((error) => {
+      console.error("PDF generation error:", error);
+      element.classList.remove('pdf-export');
+      
+      toast({
+        title: t.common.error,
+        description: "Failed to generate PDF",
+        variant: 'destructive',
+      });
+    });
   };
 
   const handleCopy = () => {
@@ -111,11 +169,12 @@ const OfferPreview = ({
       <ActionButtons 
         onSave={() => setIsSaveDialogOpen(true)}
         onPrint={handlePrint}
+        onExportPDF={handleExportPDF}
         onCopy={handleCopy}
       />
       
       <CardContent className="card-content">
-        <div className="print-container offer-preview-content">
+        <div ref={offerContentRef} className="print-container offer-preview-content">
           <OfferHeader offer={offer} />
           <ClientInfoSection client={offer.client} />
           <ProductsTable 

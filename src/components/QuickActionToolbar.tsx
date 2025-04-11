@@ -3,8 +3,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Copy, FileText, Save, Printer, Trash, Plus } from 'lucide-react';
+import { Copy, FileText, Save, Printer, Trash, Plus, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import html2pdf from 'html2pdf.js';
 
 interface QuickActionToolbarProps {
   onPreview: () => void;
@@ -12,9 +13,15 @@ interface QuickActionToolbarProps {
 }
 
 const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
-  const { resetOffer, addProduct } = useOffer();
+  const { resetOffer, addProduct, offer } = useOffer();
   const { t } = useLanguage();
   const { toast } = useToast();
+
+  const getOfferFileName = () => {
+    const clientName = offer.client.name || 'Client';
+    const date = new Date().toLocaleDateString().replace(/\//g, '-');
+    return `Offer-${clientName}-${date}`;
+  };
 
   const handleAddProduct = () => {
     addProduct({
@@ -42,13 +49,66 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
   const handlePrint = () => {
     onPreview();
     setTimeout(() => {
-      // Добавяме print-content клас към body, за да улесним печата
+      // Запазваме оригиналното състояние на body
+      const originalOverflow = document.body.style.overflow;
+      
+      // Скриваме всичко преди печат
       document.body.classList.add('print-content');
+      document.body.style.overflow = 'visible';
+      
+      // Принтираме
       window.print();
-      // Премахваме класа след печат
+      
+      // Връщаме оригиналното състояние
       setTimeout(() => {
         document.body.classList.remove('print-content');
+        document.body.style.overflow = originalOverflow;
       }, 500);
+    }, 500);
+  };
+
+  const handleExportPDF = () => {
+    onPreview();
+    setTimeout(() => {
+      const element = document.querySelector('.offer-preview-content');
+      if (!element) return;
+      
+      const filename = `${getOfferFileName()}.pdf`;
+      
+      const options = {
+        margin: 10,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+  
+      // Добавяме временен клас за PDF експорт
+      element.classList.add('pdf-export');
+      
+      toast({
+        title: t.common.processing,
+        description: "Generating PDF...",
+      });
+  
+      html2pdf().set(options).from(element).save().then(() => {
+        // Премахваме временния клас
+        element.classList.remove('pdf-export');
+        
+        toast({
+          title: t.common.success,
+          description: "PDF successfully generated",
+        });
+      }).catch((error) => {
+        console.error("PDF generation error:", error);
+        element.classList.remove('pdf-export');
+        
+        toast({
+          title: t.common.error,
+          description: "Failed to generate PDF",
+          variant: 'destructive',
+        });
+      });
     }, 500);
   };
 
@@ -101,6 +161,15 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           title={t.common.print}
         >
           <Printer className="h-5 w-5" />
+        </Button>
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={handleExportPDF}
+          title="Export PDF"
+        >
+          <FileDown className="h-5 w-5" />
         </Button>
         
         <Button 

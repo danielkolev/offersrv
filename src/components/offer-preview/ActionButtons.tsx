@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Printer, Copy, Save } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
+import { Printer, Copy, Save, FileDown } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface ActionButtonsProps {
   onSave: () => void;
   onPrint: () => void;
+  onExportPDF: () => void;
   onCopy: () => void;
 }
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({ onSave, onPrint, onCopy }) => {
+const ActionButtons: React.FC<ActionButtonsProps> = ({ onSave, onPrint, onExportPDF, onCopy }) => {
   const { t } = useLanguage();
   
   return (
@@ -21,6 +21,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onSave, onPrint, onCopy }
       </Button>
       <Button variant="outline" onClick={onSave} className="gap-2">
         <Save size={16} /> {t.savedOffers.saveOffer}
+      </Button>
+      <Button variant="outline" onClick={onExportPDF} className="gap-2">
+        <FileDown size={16} /> PDF
       </Button>
       <Button onClick={onPrint} className="gap-2">
         <Printer size={16} /> Print

@@ -90,7 +90,9 @@
   }
   
   body {
-    background-color: white;
+    background-color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .no-print {
@@ -105,17 +107,28 @@
   }
   
   /* Скриваме всичко освен съдържанието на офертата при печат */
-  body > *:not(.print-content) {
+  body > *:not(.print-container) {
     display: none !important;
+  }
+  
+  /* Гарантираме че Card компонентът се вижда */
+  .card {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
   }
   
   /* Показваме само съдържанието на офертата */
   .offer-preview-content {
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   /* Премахваме сенки и граници при печат */
-  .card, 
   .shadow, 
   .border {
     box-shadow: none !important;
@@ -126,5 +139,13 @@
   .card-content {
     padding: 0 !important;
     margin: 0 !important;
+  }
+  
+  /* Гарантираме че всички текстови елементи са видими */
+  h1, h2, h3, h4, p, span, div, table, tr, td, th {
+    color: black !important;
+    background-color: transparent !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
