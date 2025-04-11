@@ -68,5 +68,10 @@ export const enCommonTranslations: CommonTranslations = {
   quantity: 'Quantity',
   price: 'Price',
   status: 'Status',
-  type: 'Type'
+  type: 'Type',
+  // Adding missing translations
+  confirmation: 'Confirmation',
+  processing: 'Processing...',
+  comingSoon: 'Coming Soon',
+  featureInDevelopment: 'This feature is currently in development'
 };
