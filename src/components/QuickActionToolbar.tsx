@@ -42,7 +42,13 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
   const handlePrint = () => {
     onPreview();
     setTimeout(() => {
+      // Добавяме print-content клас към body, за да улесним печата
+      document.body.classList.add('print-content');
       window.print();
+      // Премахваме класа след печат
+      setTimeout(() => {
+        document.body.classList.remove('print-content');
+      }, 500);
     }, 500);
   };
 

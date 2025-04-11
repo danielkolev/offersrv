@@ -42,7 +42,13 @@ const OfferPreview = ({
   const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
 
   const handlePrint = () => {
+    // Добавяме print-content клас към body, за да улесним печата
+    document.body.classList.add('print-content');
     window.print();
+    // Премахваме класа след печат
+    setTimeout(() => {
+      document.body.classList.remove('print-content');
+    }, 500);
   };
 
   const handleCopy = () => {
@@ -108,7 +114,7 @@ const OfferPreview = ({
         onCopy={handleCopy}
       />
       
-      <CardContent>
+      <CardContent className="card-content">
         <div className="print-container offer-preview-content">
           <OfferHeader offer={offer} />
           <ClientInfoSection client={offer.client} />
@@ -127,7 +133,7 @@ const OfferPreview = ({
           />
           <NotesSection notes={offer.details.notes} />
           
-          <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t">
+          <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible">
             <p>{t.offer.thankYou}</p>
           </div>
         </div>

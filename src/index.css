@@ -100,5 +100,31 @@
   .print-container {
     width: 100%;
     max-width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Скриваме всичко освен съдържанието на офертата при печат */
+  body > *:not(.print-content) {
+    display: none !important;
+  }
+  
+  /* Показваме само съдържанието на офертата */
+  .offer-preview-content {
+    display: block !important;
+  }
+  
+  /* Премахваме сенки и граници при печат */
+  .card, 
+  .shadow, 
+  .border {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  /* Премахваме всички маргини и падинги на контейнера при печат */
+  .card-content {
+    padding: 0 !important;
+    margin: 0 !important;
   }
 }
