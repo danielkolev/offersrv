@@ -60,6 +60,7 @@ export const bgOfferTranslations: OfferTranslations = {
 export const bgOfferDetailsTranslations: OfferDetailsTranslations = {
   title: 'Детайли на офертата',
   offerNumber: 'Номер на офертата',
+  offerNumberInfo: 'Крайният номер ще бъде присвоен при записване',
   date: 'Дата',
   validUntil: 'Валиден до',
   showPartNumber: 'Покажи парт. номер',

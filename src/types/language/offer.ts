@@ -51,6 +51,7 @@ export interface OfferTranslations {
 export interface OfferDetailsTranslations {
   title: string;
   offerNumber: string;
+  offerNumberInfo: string; // Add the missing property here
   date: string;
   validUntil: string;
   showPartNumber: string;

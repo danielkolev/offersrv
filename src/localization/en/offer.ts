@@ -60,6 +60,7 @@ export const enOfferTranslations: OfferTranslations = {
 export const enOfferDetailsTranslations: OfferDetailsTranslations = {
   title: 'Offer Details',
   offerNumber: 'Offer Number',
+  offerNumberInfo: 'Final number will be assigned when saving',
   date: 'Date',
   validUntil: 'Valid Until',
   showPartNumber: 'Show Part Number',
