@@ -6,9 +6,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Printer, Copy } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from '@/context/LanguageContext';
 
 const OfferPreview = () => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
+  const { language, currency, t } = useLanguage();
   const { toast } = useToast();
 
   const handlePrint = () => {
@@ -58,7 +60,7 @@ const OfferPreview = () => {
               <p className="text-sm text-muted-foreground">
                 {offer.company.address}<br />
                 {offer.company.city}, {offer.company.country}<br />
-                VAT: {offer.company.vatNumber}
+                {t.clientInfo.vatNumber}: {offer.company.vatNumber}
               </p>
               <p className="text-sm mt-2">
                 {offer.company.phone}<br />
@@ -68,29 +70,29 @@ const OfferPreview = () => {
             </div>
             
             <div className="min-w-[250px] border rounded-md p-4 bg-offer-lightgray">
-              <h2 className="text-xl font-medium text-offer-blue">OFFER</h2>
+              <h2 className="text-xl font-medium text-offer-blue">{t.offer.offerLabel}</h2>
               <div className="grid grid-cols-2 gap-1 mt-2">
-                <p className="text-sm font-medium">Number:</p>
+                <p className="text-sm font-medium">{t.offer.number}</p>
                 <p className="text-sm text-right">{offer.details.offerNumber}</p>
                 
-                <p className="text-sm font-medium">Date:</p>
-                <p className="text-sm text-right">{formatDate(offer.details.date)}</p>
+                <p className="text-sm font-medium">{t.offer.date}</p>
+                <p className="text-sm text-right">{formatDate(offer.details.date, language)}</p>
                 
-                <p className="text-sm font-medium">Valid until:</p>
-                <p className="text-sm text-right">{formatDate(offer.details.validUntil)}</p>
+                <p className="text-sm font-medium">{t.offer.validUntil}</p>
+                <p className="text-sm text-right">{formatDate(offer.details.validUntil, language)}</p>
               </div>
             </div>
           </div>
           
           <div className="mb-8">
-            <h2 className="text-lg font-medium mb-2">To:</h2>
+            <h2 className="text-lg font-medium mb-2">{t.offer.toLabel}</h2>
             <div className="border-l-2 border-offer-blue pl-4">
               <h3 className="font-medium">{offer.client.name}</h3>
               <p className="text-sm">
-                Attn: {offer.client.contactPerson}<br />
+                {t.offer.attention} {offer.client.contactPerson}<br />
                 {offer.client.address}<br />
                 {offer.client.city}, {offer.client.country}<br />
-                VAT: {offer.client.vatNumber}
+                {t.clientInfo.vatNumber}: {offer.client.vatNumber}
               </p>
               <p className="text-sm mt-2">
                 {offer.client.phone}<br />
@@ -102,13 +104,13 @@ const OfferPreview = () => {
           <div className="mb-8">
             <div className="bg-offer-blue text-white py-2 px-4 rounded-t-md">
               <div className="grid grid-cols-12 gap-2">
-                <div className="col-span-5 font-medium">Item</div>
+                <div className="col-span-5 font-medium">{t.offer.item}</div>
                 {offer.details.showPartNumber && (
-                  <div className="col-span-2 font-medium">Part No.</div>
+                  <div className="col-span-2 font-medium">{t.offer.partNo}</div>
                 )}
-                <div className={`col-span-${offer.details.showPartNumber ? '1' : '3'} text-center font-medium`}>Qty</div>
-                <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} text-right font-medium`}>Unit Price</div>
-                <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} text-right font-medium`}>Total</div>
+                <div className={`col-span-${offer.details.showPartNumber ? '1' : '3'} text-center font-medium`}>{t.offer.qty}</div>
+                <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.unitPrice}</div>
+                <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.total}</div>
               </div>
             </div>
             
@@ -134,11 +136,11 @@ const OfferPreview = () => {
                   </div>
                   
                   <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} self-center text-right`}>
-                    {formatCurrency(product.unitPrice)}
+                    {formatCurrency(product.unitPrice, language, currency)}
                   </div>
                   
                   <div className={`col-span-${offer.details.showPartNumber ? '2' : '2'} self-center text-right font-medium`}>
-                    {formatCurrency(product.quantity * product.unitPrice)}
+                    {formatCurrency(product.quantity * product.unitPrice, language, currency)}
                   </div>
                 </div>
               ))}
@@ -148,44 +150,44 @@ const OfferPreview = () => {
           <div className="flex justify-end mb-8">
             <div className="w-full md:w-64">
               <div className="grid grid-cols-2 gap-1 border-b pb-2 mb-2">
-                <p className="font-medium">Subtotal:</p>
-                <p className="text-right">{formatCurrency(calculateSubtotal())}</p>
+                <p className="font-medium">{t.totals.subtotal}:</p>
+                <p className="text-right">{formatCurrency(calculateSubtotal(), language, currency)}</p>
                 
                 {offer.details.includeVat && (
                   <>
-                    <p className="font-medium">VAT ({offer.details.vatRate}%):</p>
-                    <p className="text-right">{formatCurrency(calculateVat())}</p>
+                    <p className="font-medium">{t.totals.vat} ({offer.details.vatRate}%):</p>
+                    <p className="text-right">{formatCurrency(calculateVat(), language, currency)}</p>
                   </>
                 )}
                 
                 {offer.details.transportCost > 0 && (
                   <>
-                    <p className="font-medium">Transport:</p>
-                    <p className="text-right">{formatCurrency(offer.details.transportCost)}</p>
+                    <p className="font-medium">{t.totals.transport}:</p>
+                    <p className="text-right">{formatCurrency(offer.details.transportCost, language, currency)}</p>
                   </>
                 )}
                 
                 {offer.details.otherCosts > 0 && (
                   <>
-                    <p className="font-medium">Other costs:</p>
-                    <p className="text-right">{formatCurrency(offer.details.otherCosts)}</p>
+                    <p className="font-medium">{t.totals.otherCosts}:</p>
+                    <p className="text-right">{formatCurrency(offer.details.otherCosts, language, currency)}</p>
                   </>
                 )}
               </div>
               
               <div className="grid grid-cols-2 gap-1">
-                <p className="font-bold text-lg">TOTAL:</p>
+                <p className="font-bold text-lg">{t.totals.totalAmount}:</p>
                 <p className="text-right font-bold text-lg text-offer-blue">
-                  {formatCurrency(calculateTotal())}
+                  {formatCurrency(calculateTotal(), language, currency)}
                 </p>
                 
                 {offer.details.includeVat ? (
                   <p className="col-span-2 text-right text-xs text-muted-foreground">
-                    (VAT included)
+                    {t.offer.vatIncluded}
                   </p>
                 ) : (
                   <p className="col-span-2 text-right text-xs text-muted-foreground">
-                    (VAT excluded)
+                    {t.offer.vatExcluded}
                   </p>
                 )}
               </div>
@@ -194,7 +196,7 @@ const OfferPreview = () => {
           
           {offer.details.notes && (
             <div className="mb-8">
-              <h3 className="font-medium mb-2">Notes:</h3>
+              <h3 className="font-medium mb-2">{t.offer.notes}</h3>
               <div className="border rounded-md p-4 bg-offer-lightgray whitespace-pre-line text-sm">
                 {offer.details.notes}
               </div>
@@ -202,7 +204,7 @@ const OfferPreview = () => {
           )}
           
           <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t">
-            <p>Thank you for your business!</p>
+            <p>{t.offer.thankYou}</p>
           </div>
         </div>
       </CardContent>

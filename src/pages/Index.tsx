@@ -9,6 +9,7 @@ import ProductsForm from '@/components/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
 import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import CurrencySwitcher from '@/components/CurrencySwitcher';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('edit');
@@ -21,7 +22,10 @@ const Index = () => {
           <h1 className="text-3xl font-bold text-offer-gray">
             {t.offerTitle}
           </h1>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-4">
+            <CurrencySwitcher />
+            <LanguageSwitcher />
+          </div>
         </div>
         
         <Tabs defaultValue="edit" value={activeTab} onValueChange={setActiveTab} className="w-full">

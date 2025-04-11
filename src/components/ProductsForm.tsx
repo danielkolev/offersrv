@@ -12,7 +12,7 @@ import { useLanguage } from '@/context/LanguageContext';
 
 const ProductsForm = () => {
   const { offer, addProduct, updateProduct, removeProduct } = useOffer();
-  const { t } = useLanguage();
+  const { language, currency, t } = useLanguage();
 
   const handleAddProduct = () => {
     addProduct({
@@ -102,7 +102,7 @@ const ProductsForm = () => {
             </div>
             
             <div className="text-right text-sm text-muted-foreground mt-2">
-              {t.products.total}: {formatCurrency(product.quantity * product.unitPrice)}
+              {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
             </div>
           </div>
         ))}

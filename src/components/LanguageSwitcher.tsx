@@ -16,7 +16,8 @@ const LanguageSwitcher = () => {
     <Button 
       variant="outline" 
       onClick={toggleLanguage}
-      className="flex items-center gap-2"
+      className="w-24 flex items-center justify-center gap-2"
+      size="sm"
     >
       {language === 'bg' ? '🇧🇬 BG' : '🇬🇧 EN'}
     </Button>

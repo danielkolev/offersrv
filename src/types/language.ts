@@ -1,5 +1,6 @@
 
 export type SupportedLanguage = 'en' | 'bg';
+export type SupportedCurrency = 'EUR' | 'BGN' | 'USD';
 
 export interface Translations {
   common: {
@@ -10,6 +11,7 @@ export interface Translations {
     save: string;
     print: string;
     add: string;
+    currency: string;
   };
   offerTitle: string;
   companyInfo: {
@@ -66,5 +68,22 @@ export interface Translations {
     transport: string;
     otherCosts: string;
     totalAmount: string;
+  };
+  offer: {
+    toLabel: string;
+    attention: string;
+    vatIncluded: string;
+    vatExcluded: string;
+    thankYou: string;
+    offerLabel: string;
+    number: string;
+    date: string;
+    validUntil: string;
+    item: string;
+    partNo: string;
+    qty: string;
+    unitPrice: string;
+    total: string;
+    notes: string;
   };
 }
