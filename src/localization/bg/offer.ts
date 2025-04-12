@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -34,6 +35,7 @@ export const bgOfferTranslations: OfferTranslations = {
   thankYou: 'Благодарим Ви за доверието!',
   language: 'Език',
   offerPreview: 'Преглед на оферта',
+  createOffer: 'Създай оферта',
   languageOptions: {
     bulgarian: 'Български',
     english: 'Английски'

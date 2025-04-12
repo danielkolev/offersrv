@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -10,7 +11,6 @@ import { Search, Save, Loader2, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
-import MainSidebar from '@/components/navigation/MainSidebar';
 
 const SavedOffersPage = () => {
   const { user } = useAuth();
@@ -135,55 +135,51 @@ const SavedOffersPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <MainSidebar />
-      
-      <div className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+    <div className="flex-1 p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+        
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            className="gap-2"
+            onClick={handleCreateNewOffer}
+          >
+            <PlusCircle className="h-4 w-4" />
+            {t.savedOffers.createNew}
+          </Button>
           
-          <div className="flex gap-2">
-            <Button 
-              variant="outline"
-              className="gap-2"
-              onClick={handleCreateNewOffer}
-            >
-              <PlusCircle className="h-4 w-4" />
-              {t.savedOffers.createNew}
-            </Button>
-            
-            <Button 
-              onClick={handleSaveOffer} 
-              className="gap-2"
-              disabled={isSaving}
-            >
-              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              {t.savedOffers.saveOffer}
-            </Button>
-          </div>
+          <Button 
+            onClick={handleSaveOffer} 
+            className="gap-2"
+            disabled={isSaving}
+          >
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            {t.savedOffers.saveOffer}
+          </Button>
         </div>
-        
-        <div className="relative mb-4">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t.savedOffers.searchPlaceholder}
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <SavedOffersList
-          savedOffers={savedOffers}
-          isLoading={isLoading}
-          searchTerm={searchTerm}
-          loadOffer={handleLoadOffer}
-          deleteOffer={handleDeleteOffer}
-          language={language}
-          currency={currency}
-          t={t}
+      </div>
+      
+      <div className="relative mb-4">
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder={t.savedOffers.searchPlaceholder}
+          className="pl-8"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+      
+      <SavedOffersList
+        savedOffers={savedOffers}
+        isLoading={isLoading}
+        searchTerm={searchTerm}
+        loadOffer={handleLoadOffer}
+        deleteOffer={handleDeleteOffer}
+        language={language}
+        currency={currency}
+        t={t}
+      />
     </div>
   );
 };

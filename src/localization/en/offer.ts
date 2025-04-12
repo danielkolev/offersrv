@@ -1,3 +1,4 @@
+
 import { 
   OfferTranslations, 
   OfferDetailsTranslations, 
@@ -34,6 +35,7 @@ export const enOfferTranslations: OfferTranslations = {
   thankYou: 'Thank you for your business!',
   language: 'Language',
   offerPreview: 'Offer Preview',
+  createOffer: 'Create Offer',
   languageOptions: {
     bulgarian: 'Bulgarian',
     english: 'English'

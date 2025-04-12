@@ -1,3 +1,4 @@
+
 export interface OfferTranslations {
   details: string;
   number: string;
@@ -29,6 +30,7 @@ export interface OfferTranslations {
     english: string;
   };
   offerPreview: string;
+  createOffer: string;
   // Templates translations
   templates: {
     title: string;

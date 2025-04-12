@@ -82,5 +82,9 @@ export const bgCommonTranslations: CommonTranslations = {
   finish: 'Завърши',
   // Adding missing translations for settings page
   unauthorized: 'Неоторизиран достъп',
-  manageAccount: 'Управление на акаунта'
+  manageAccount: 'Управление на акаунта',
+  // Adding new navigation translations
+  home: 'Начало',
+  collapseAll: 'Свий всички',
+  expandAll: 'Разгъни всички'
 };

@@ -82,5 +82,9 @@ export const enCommonTranslations: CommonTranslations = {
   finish: 'Finish',
   // Adding missing translations for settings page
   unauthorized: 'Unauthorized',
-  manageAccount: 'Manage Account'
+  manageAccount: 'Manage Account',
+  // Adding new navigation translations
+  home: 'Home',
+  collapseAll: 'Collapse All',
+  expandAll: 'Expand All'
 };

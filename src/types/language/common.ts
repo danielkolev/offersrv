@@ -81,4 +81,8 @@ export interface CommonTranslations {
   // New translations for settings page
   unauthorized: string;
   manageAccount: string;
+  // New navigation translations
+  home: string;
+  collapseAll: string;
+  expandAll: string;
 }

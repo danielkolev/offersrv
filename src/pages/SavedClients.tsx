@@ -31,7 +31,7 @@ const SavedClientsPage = () => {
   } = useClientsManagement(t);
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="flex-1 p-6">
       <ClientPageHeader 
         t={t} 
         onAddClient={handleOpenAddDialog} 
