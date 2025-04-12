@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -7,16 +6,18 @@ import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Save, Loader2, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Save, Loader2, PlusCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
+import MainSidebar from '@/components/navigation/MainSidebar';
 
 const SavedOffersPage = () => {
   const { user } = useAuth();
-  const { offer } = useOffer();
+  const { offer, resetOffer } = useOffer();
   const { toast } = useToast();
   const { t, language, currency } = useLanguage();
+  const navigate = useNavigate();
   const [savedOffers, setSavedOffers] = useState<SavedOffer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -124,52 +125,65 @@ const SavedOffersPage = () => {
     
     toast({
       title: t.common.success,
-      description: 'Offer loaded successfully',
+      description: t.savedOffers.offerLoaded,
     });
   };
 
+  const handleCreateNewOffer = () => {
+    resetOffer();
+    navigate('/');
+  };
+
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-2">
-          <Link to="/">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
+    <div className="flex min-h-screen">
+      <MainSidebar />
+      
+      <div className="flex-1 p-6">
+        <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+          
+          <div className="flex gap-2">
+            <Button 
+              variant="outline"
+              className="gap-2"
+              onClick={handleCreateNewOffer}
+            >
+              <PlusCircle className="h-4 w-4" />
+              {t.savedOffers.createNew}
+            </Button>
+            
+            <Button 
+              onClick={handleSaveOffer} 
+              className="gap-2"
+              disabled={isSaving}
+            >
+              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {t.savedOffers.saveOffer}
+            </Button>
+          </div>
         </div>
         
-        <Button 
-          onClick={handleSaveOffer} 
-          className="gap-2"
-          disabled={isSaving}
-        >
-          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {t.savedOffers.saveOffer}
-        </Button>
-      </div>
-      
-      <div className="relative mb-4">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t.savedOffers.searchPlaceholder}
-          className="pl-8"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="relative mb-4">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t.savedOffers.searchPlaceholder}
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <SavedOffersList
+          savedOffers={savedOffers}
+          isLoading={isLoading}
+          searchTerm={searchTerm}
+          loadOffer={handleLoadOffer}
+          deleteOffer={handleDeleteOffer}
+          language={language}
+          currency={currency}
+          t={t}
         />
       </div>
-      
-      <SavedOffersList
-        savedOffers={savedOffers}
-        isLoading={isLoading}
-        searchTerm={searchTerm}
-        loadOffer={handleLoadOffer}
-        deleteOffer={handleDeleteOffer}
-        language={language}
-        currency={currency}
-        t={t}
-      />
     </div>
   );
 };

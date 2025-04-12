@@ -45,7 +45,7 @@ const AccountButton = () => {
     setCompanySettingsOpen(true);
   };
   
-  // Future implementation: Navigate to the user profile page
+  // Navigate to the user profile page
   const goToUserProfile = () => {
     toast({
       title: t.common.comingSoon,
@@ -53,12 +53,9 @@ const AccountButton = () => {
     });
   };
   
-  // Future implementation: Navigate to the settings page
+  // Navigate to the settings page
   const goToSettings = () => {
-    toast({
-      title: t.common.comingSoon,
-      description: t.common.featureInDevelopment,
-    });
+    navigate('/settings');
   };
   
   return (

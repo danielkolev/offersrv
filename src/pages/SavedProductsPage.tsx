@@ -2,11 +2,11 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import ProductSearch from '@/components/management/products/ProductSearch';
-import CurrentProductsList from '@/components/management/products/CurrentProductsList';
 import SavedProductsList from '@/components/management/products/SavedProductsList';
 import ProductPageHeader from '@/components/management/products/ProductPageHeader';
 import ProductFormDialog from '@/components/management/products/ProductFormDialog';
 import { useProductsManagement } from '@/components/management/products/hooks/useProductsManagement';
+import MainSidebar from '@/components/navigation/MainSidebar';
 
 const SavedProductsPage = () => {
   const { t } = useLanguage();
@@ -32,41 +32,45 @@ const SavedProductsPage = () => {
   } = useProductsManagement(t);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <ProductPageHeader 
-        t={t} 
-        onAddProduct={handleOpenAddDialog} 
-        onSaveFromOffer={handleSaveFromOffer} 
-      />
+    <div className="flex min-h-screen">
+      <MainSidebar />
       
-      <ProductSearch
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        searchType={searchType}
-        setSearchType={setSearchType}
-      />
-      
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">{t.savedProducts.title}</h2>
-        <SavedProductsList
-          products={products}
-          filteredProducts={filteredProducts}
-          isLoading={isLoading}
-          onSelectProduct={handleSelectProduct}
-          onDeleteProduct={handleDeleteProduct}
-          onEditProduct={handleEditProduct}
+      <div className="flex-1 p-6">
+        <ProductPageHeader 
+          t={t} 
+          onAddProduct={handleOpenAddDialog} 
+          onSaveFromOffer={handleSaveFromOffer} 
+        />
+        
+        <ProductSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchType={searchType}
+          setSearchType={setSearchType}
+        />
+        
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold mb-2">{t.savedProducts.title}</h2>
+          <SavedProductsList
+            products={products}
+            filteredProducts={filteredProducts}
+            isLoading={isLoading}
+            onSelectProduct={handleSelectProduct}
+            onDeleteProduct={handleDeleteProduct}
+            onEditProduct={handleEditProduct}
+          />
+        </div>
+        
+        <ProductFormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          onSubmit={handleSaveProduct}
+          product={currentProduct}
+          isSubmitting={isSaving}
+          isEditMode={isEditMode}
+          t={t}
         />
       </div>
-      
-      <ProductFormDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onSubmit={handleSaveProduct}
-        product={currentProduct}
-        isSubmitting={isSaving}
-        isEditMode={isEditMode}
-        t={t}
-      />
     </div>
   );
 };

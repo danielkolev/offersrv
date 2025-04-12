@@ -23,13 +23,11 @@ const Settings = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <SettingsLayout>
-        <OfferTemplateSettings />
-        <OfferSettings />
-        <CompanyBankSettings />
-      </SettingsLayout>
-    </div>
+    <SettingsLayout>
+      <OfferTemplateSettings />
+      <OfferSettings />
+      <CompanyBankSettings />
+    </SettingsLayout>
   );
 };
 

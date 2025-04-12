@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import MainSidebar from '@/components/navigation/MainSidebar';
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -15,31 +16,35 @@ const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   const navigate = useNavigate();
   
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-offer-gray">
-          {t.settings.title}
-        </h1>
-        <Button 
-          variant="outline" 
-          onClick={() => navigate('/')}
-          className="flex items-center"
-        >
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          {t.common.back}
-        </Button>
-      </div>
+    <div className="flex min-h-screen">
+      <MainSidebar />
       
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.subtitle}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-8">
-            {children}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex-1 space-y-6 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.settings.title}
+          </h1>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/')}
+            className="flex items-center"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            {t.common.back}
+          </Button>
+        </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>{t.settings.subtitle}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-8">
+              {children}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
