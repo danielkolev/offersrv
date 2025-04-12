@@ -24,29 +24,30 @@ const OfferSidebar = () => {
   
   const isActive = (path: string) => location.pathname === path;
   
+  // Let's make sure we have fallback values if translations are missing
   const navItems = [
     {
-      name: t.common.home,
+      name: t.common?.home || "Home",
       path: '/',
       icon: Home
     },
     {
-      name: t.savedOffers.title,
+      name: t.savedOffers?.title || "Saved Offers",
       path: '/saved-offers',
       icon: BookmarkIcon
     },
     {
-      name: t.savedClients.title,
+      name: t.savedClients?.title || "Saved Clients",
       path: '/saved-clients',
       icon: UsersIcon
     },
     {
-      name: t.savedProducts.title,
+      name: t.savedProducts?.title || "Saved Products",
       path: '/saved-products',
       icon: PackageIcon
     },
     {
-      name: t.settings.title,
+      name: t.settings?.title || "Settings",
       path: '/settings',
       icon: Settings
     }
@@ -70,7 +71,7 @@ const OfferSidebar = () => {
                   <SidebarMenuButton asChild isActive={isActive('/')}>
                     <Link to="/">
                       <Home className="mr-2 h-4 w-4" />
-                      <span>{t.common.home}</span>
+                      <span>{t.common?.home || "Home"}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -92,7 +93,7 @@ const OfferSidebar = () => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t.common.manageAccount}</SidebarGroupLabel>
+          <SidebarGroupLabel>{t.common?.manageAccount || "Manage Account"}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
