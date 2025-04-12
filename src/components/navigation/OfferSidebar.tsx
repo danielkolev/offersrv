@@ -8,7 +8,11 @@ import SidebarSection from './SidebarSection';
 import GuestSidebar from './GuestSidebar';
 import { useSidebarNavigation } from './useSidebarNavigation';
 
-const OfferSidebar = () => {
+interface OfferSidebarProps {
+  collapsible?: 'offcanvas' | 'icon' | 'none';
+}
+
+const OfferSidebar = ({ collapsible = 'offcanvas' }: OfferSidebarProps) => {
   const location = useLocation();
   const { user } = useAuth();
   const { 
@@ -26,7 +30,7 @@ const OfferSidebar = () => {
   }
   
   return (
-    <Sidebar>
+    <Sidebar collapsible={collapsible}>
       <SidebarHeader />
       <SidebarContent>
         {/* Main Navigation */}
