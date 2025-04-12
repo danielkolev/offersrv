@@ -24,12 +24,7 @@ const ClientPageHeader = ({ t, onAddClient, onImportFromOffer }: ClientPageHeade
       </div>
       
       <div className="flex gap-2">
-        <Button 
-          onClick={onImportFromOffer} 
-          variant="outline"
-        >
-          {t.savedClients.importFromOffer}
-        </Button>
+        {/* Removed the "Import from Offer" button as it's not needed */}
         
         <Button 
           onClick={onAddClient} 

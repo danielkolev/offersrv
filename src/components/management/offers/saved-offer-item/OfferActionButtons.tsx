@@ -31,7 +31,7 @@ const OfferActionButtons = ({
   const handleEdit = () => {
     console.log('Loading offer:', savedOffer.id);
     loadOffer(savedOffer);
-    // Navigate is now called inside the loadOffer function
+    // We'll let the loadOffer function handle navigation
   };
   
   const handleDelete = () => {

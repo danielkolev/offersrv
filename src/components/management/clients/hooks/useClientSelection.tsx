@@ -1,4 +1,3 @@
-
 import { useOffer } from '@/context/offer/OfferContext';
 import { Client } from '@/types/database';
 import { ClientInfo } from '@/types/offer';
@@ -34,6 +33,7 @@ export const useClientSelection = (
     });
   };
 
+  // We'll keep this function for future reference if needed
   const handleImportFromOffer = () => {
     if (!offer.client.name) {
       toast({

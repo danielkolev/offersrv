@@ -38,7 +38,7 @@ const SavedProductsPage = () => {
       <ProductPageHeader 
         t={t} 
         onAddProduct={handleOpenAddDialog} 
-        onSaveFromOffer={handleSaveFromOffer} 
+        // Removed onSaveFromOffer prop to hide the button 
       />
       
       <div className="mb-4">
