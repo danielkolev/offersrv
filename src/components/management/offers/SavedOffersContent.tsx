@@ -15,7 +15,7 @@ import BackButton from '@/components/navigation/BackButton';
 
 const SavedOffersContent: React.FC = () => {
   const { user } = useAuth();
-  const { offer, resetOffer } = useOffer();
+  const { offer, setOffer, resetOffer } = useOffer();
   const { toast } = useToast();
   const { t, language, currency } = useLanguage();
   const navigate = useNavigate();
@@ -98,39 +98,27 @@ const SavedOffersContent: React.FC = () => {
   };
 
   const handleLoadOffer = (savedOffer: SavedOffer) => {
-    if (typeof window.updateCompanyInfo === 'function') {
-      window.updateCompanyInfo(savedOffer.offer_data.company);
-    }
+    console.log("Loading offer data:", savedOffer.offer_data);
     
-    if (typeof window.updateClientInfo === 'function') {
-      window.updateClientInfo(savedOffer.offer_data.client);
-    }
-    
-    if (typeof window.updateOfferDetails === 'function') {
-      window.updateOfferDetails(savedOffer.offer_data.details);
-    }
-    
-    if (typeof window.resetProducts === 'function') {
-      window.resetProducts(savedOffer.offer_data.products);
-    } else {
-      if (typeof window.clearProducts === 'function') {
-        window.clearProducts();
-      }
+    try {
+      // Directly set the entire offer object
+      setOffer(savedOffer.offer_data);
       
-      if (typeof window.addProduct === 'function') {
-        savedOffer.offer_data.products.forEach(product => {
-          window.addProduct(product);
-        });
-      }
+      toast({
+        title: t.common.success,
+        description: t.savedOffers.offerLoaded,
+      });
+      
+      // Navigate back to offer page after loading
+      navigate('/');
+    } catch (error) {
+      console.error("Error loading offer:", error);
+      toast({
+        title: t.common.error,
+        description: "Failed to load offer data",
+        variant: 'destructive',
+      });
     }
-    
-    toast({
-      title: t.common.success,
-      description: t.savedOffers.offerLoaded,
-    });
-    
-    // Navigate back to offer page after loading
-    navigate('/');
   };
 
   const handleCreateNewOffer = () => {

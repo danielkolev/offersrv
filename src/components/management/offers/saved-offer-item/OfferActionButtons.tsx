@@ -29,8 +29,9 @@ const OfferActionButtons = ({
   };
   
   const handleEdit = () => {
+    console.log('Loading offer:', savedOffer.id);
     loadOffer(savedOffer);
-    navigate('/');
+    // Navigate is now called inside the loadOffer function
   };
   
   const handleDelete = () => {
