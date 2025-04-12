@@ -15,5 +15,6 @@ export const savedProducts = {
   cancel: "Cancel",
   saveFromOffer: "Save from offer",
   noProductsFoundSearch: "No products found matching your search criteria.",
-  deleteConfirmation: "Are you sure you want to delete this product?"
+  deleteConfirmation: "Are you sure you want to delete this product?",
+  backToOffer: "Back to Offer"
 };

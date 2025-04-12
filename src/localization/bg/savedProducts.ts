@@ -15,5 +15,6 @@ export const savedProducts = {
   cancel: "Отказ",
   saveFromOffer: "Запази от оферта",
   noProductsFoundSearch: "Няма намерени продукти, отговарящи на критериите за търсене.",
-  deleteConfirmation: "Сигурни ли сте, че искате да изтриете този продукт?"
+  deleteConfirmation: "Сигурни ли сте, че искате да изтриете този продукт?",
+  backToOffer: "Обратно към офертата"
 };
