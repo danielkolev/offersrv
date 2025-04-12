@@ -4,6 +4,7 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { SavedOfferItemProps } from '../types';
 import { formatCurrencyValue } from './helpers';
 import OfferActionButtons from './OfferActionButtons';
+import { OfferDetails, ClientInfo } from '@/types/offer';
 
 const SavedOfferItem = ({ 
   savedOffer, 
@@ -15,9 +16,30 @@ const SavedOfferItem = ({
 }: SavedOfferItemProps) => {
   const { offer_data, created_at } = savedOffer;
   
-  // Safely handle missing or incomplete offer data
-  const offerDetails = offer_data?.details || {};
-  const offerClient = offer_data?.client || {};
+  // Safely handle missing or incomplete offer data with proper typing
+  const offerDetails: OfferDetails = offer_data?.details || {
+    offerNumber: '',
+    date: '',
+    validUntil: '',
+    showPartNumber: false,
+    includeVat: false,
+    vatRate: 0,
+    transportCost: 0,
+    otherCosts: 0,
+    notes: '',
+    offerLanguage: 'bg'
+  };
+  
+  const offerClient: ClientInfo = offer_data?.client || {
+    name: '',
+    contactPerson: '',
+    address: '',
+    city: '',
+    country: '',
+    vatNumber: '',
+    email: '',
+    phone: ''
+  };
 
   // Calculate the total amount from the offer data
   const calculateTotal = () => {
