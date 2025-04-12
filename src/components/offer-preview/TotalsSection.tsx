@@ -23,49 +23,60 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   total 
 }) => {
   const { language, currency, t } = useLanguage();
+  
+  // Default translations in case they're missing
+  const translations = {
+    subtotal: t?.totals?.subtotal || "Subtotal",
+    vat: t?.totals?.vat || "VAT",
+    transport: t?.totals?.transport || "Transport",
+    otherCosts: t?.totals?.otherCosts || "Other Costs",
+    totalAmount: t?.totals?.totalAmount || "Total Amount",
+    vatIncluded: t?.offer?.vatIncluded || "VAT included",
+    vatExcluded: t?.offer?.vatExcluded || "VAT not included"
+  };
 
   return (
     <div className="flex justify-end mb-8">
       <div className="w-full md:w-64">
         <div className="grid grid-cols-2 gap-1 border-b pb-2 mb-2">
-          <p className="font-medium">{t.totals.subtotal}:</p>
+          <p className="font-medium">{translations.subtotal}:</p>
           <p className="text-right">{formatCurrency(subtotal, language, currency)}</p>
           
           {includeVat && (
             <>
-              <p className="font-medium">{t.totals.vat} ({vatRate}%):</p>
+              <p className="font-medium">{translations.vat} ({vatRate}%):</p>
               <p className="text-right">{formatCurrency(vat, language, currency)}</p>
             </>
           )}
           
           {transportCost > 0 && (
             <>
-              <p className="font-medium">{t.totals.transport}:</p>
+              <p className="font-medium">{translations.transport}:</p>
               <p className="text-right">{formatCurrency(transportCost, language, currency)}</p>
             </>
           )}
           
           {otherCosts > 0 && (
             <>
-              <p className="font-medium">{t.totals.otherCosts}:</p>
+              <p className="font-medium">{translations.otherCosts}:</p>
               <p className="text-right">{formatCurrency(otherCosts, language, currency)}</p>
             </>
           )}
         </div>
         
         <div className="grid grid-cols-2 gap-1">
-          <p className="font-bold text-lg">{t.totals.totalAmount}:</p>
+          <p className="font-bold text-lg">{translations.totalAmount}:</p>
           <p className="text-right font-bold text-lg text-offer-blue">
             {formatCurrency(total, language, currency)}
           </p>
           
           {includeVat ? (
             <p className="col-span-2 text-right text-xs text-muted-foreground">
-              {t.offer.vatIncluded}
+              {translations.vatIncluded}
             </p>
           ) : (
             <p className="col-span-2 text-right text-xs text-muted-foreground">
-              {t.offer.vatExcluded}
+              {translations.vatExcluded}
             </p>
           )}
         </div>

@@ -22,6 +22,18 @@ export const offer = {
     bulgarian: "Български",
     english: "Английски"
   },
+  vatIncluded: "ДДС включено",
+  vatExcluded: "ДДС не е включено",
+  offerLabel: "ОФЕРТА",
+  toLabel: "ДО",
+  attention: "На вниманието на",
+  item: "Артикул",
+  partNo: "Номер",
+  qty: "Кол.",
+  unitPrice: "Ед. цена",
+  total: "Общо",
+  thankYou: "Благодарим Ви за доверието!",
+  validUntil: "Валидна до",
   templates: {
     title: "Шаблони",
     createNew: "Създай нов шаблон",
@@ -31,6 +43,14 @@ export const offer = {
     confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
     templateDeleted: "Шаблонът беше изтрит успешно",
     defaultTemplates: "Стандартни шаблони",
-    userTemplates: "Потребителски шаблони"
+    userTemplates: "Потребителски шаблони",
+    description: "Описание",
+    useTemplate: "Използвай шаблона",
+    createFromCurrent: "Създай от текущата",
+    templateName: "Име на шаблона",
+    saveAsTemplate: "Запази като шаблон",
+    templateSaved: "Шаблонът е запазен",
+    noTemplates: "Няма шаблони",
+    deleteTemplate: "Изтрий шаблона"
   },
 };

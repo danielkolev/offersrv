@@ -13,6 +13,7 @@ import { savedClients } from './savedClients';
 import { savedProducts } from './savedProducts';
 import { products } from './products';
 import { offerDetails } from './offerDetails';
+import { totals } from './totals';
 
 export const en = {
   auth,
@@ -28,7 +29,8 @@ export const en = {
   savedClients,
   savedProducts,
   products,
-  offerDetails
+  offerDetails,
+  totals
 };
 
 // Export as a named export for consistency
