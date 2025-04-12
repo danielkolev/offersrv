@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
@@ -41,6 +41,15 @@ const OfferAccordion = ({
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>("client");
 
+  // Force rerender when expandAll changes to ensure Collapsible state syncs properly
+  useEffect(() => {
+    // This is just to make sure the UI reflects the expandAll state
+    const sections = document.querySelectorAll('[data-state]');
+    sections.forEach(section => {
+      section.setAttribute('data-expanded', expandAll.toString());
+    });
+  }, [expandAll]);
+
   const handlePrint = () => {
     window.print();
   };
@@ -59,7 +68,16 @@ const OfferAccordion = ({
   };
 
   const handleToggleAll = () => {
-    setExpandAll(!expandAll);
+    // Use function form to ensure we get latest state
+    setExpandAll(prevState => !prevState);
+    
+    // If expanding all sections, set activeSection to null
+    // If collapsing, set it to the first section
+    if (!expandAll) {
+      setActiveSection(null);
+    } else {
+      setActiveSection("client");
+    }
   };
 
   if (!selectedCompanyId) {
@@ -136,12 +154,17 @@ const OfferAccordion = ({
       </div>
 
       <div className="bg-white rounded-lg shadow-sm">
-        <Collapsible open={expandAll} onOpenChange={setExpandAll}>
+        {/* We're using a custom implementation of the collapsible behavior */}
+        <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
           <Accordion
-            type="single"
-            collapsible
-            value={activeSection}
-            onValueChange={setActiveSection}
+            type={expandAll ? "multiple" : "single"}
+            collapsible={!expandAll}
+            value={expandAll ? sections.map(s => s.id) : activeSection ? [activeSection] : []}
+            onValueChange={(value) => {
+              if (!expandAll) {
+                setActiveSection(Array.isArray(value) && value.length > 0 ? value[0] : null);
+              }
+            }}
             className="w-full"
           >
             {sections.map((section, index) => (
@@ -149,6 +172,7 @@ const OfferAccordion = ({
                 key={section.id} 
                 value={section.id}
                 className="border-b last:border-b-0"
+                data-expanded={expandAll || activeSection === section.id}
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -164,7 +188,20 @@ const OfferAccordion = ({
                   {index < sections.length - 1 && (
                     <div className="flex justify-end mt-4">
                       <Button 
-                        onClick={() => setActiveSection(sections[index + 1].id)}
+                        onClick={() => {
+                          setActiveSection(sections[index + 1].id);
+                          if (expandAll) {
+                            // Do nothing, already expanded
+                          } else {
+                            // Scroll to next section
+                            setTimeout(() => {
+                              const nextSection = document.getElementById(sections[index + 1].id);
+                              if (nextSection) {
+                                nextSection.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }, 100);
+                          }
+                        }}
                         className="flex items-center gap-2"
                       >
                         {t?.common?.next || "Next"}
@@ -176,11 +213,7 @@ const OfferAccordion = ({
               </AccordionItem>
             ))}
           </Accordion>
-          
-          <CollapsibleContent className="w-full">
-            {/* This content is shown when all sections are expanded */}
-          </CollapsibleContent>
-        </Collapsible>
+        </div>
       </div>
       
       <div className="bg-white rounded-lg shadow-sm p-4 flex justify-end gap-2">
