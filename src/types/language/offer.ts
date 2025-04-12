@@ -1,6 +1,10 @@
-
 export interface OfferTranslations {
+  title: string;
+  createOffer: string;
+  offerDetails: string;
+  offerPreview: string;
   details: string;
+  backToOffer: string; // Added this property
   number: string;
   date: string;
   validUntil: string;
@@ -29,21 +33,19 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
-  offerPreview: string;
-  createOffer: string;
   // Templates translations
   templates: {
     title: string;
-    description: string;
-    useTemplate: string;
-    createFromCurrent: string;
-    templateName: string;
-    saveAsTemplate: string;
-    templateSaved: string;
-    noTemplates: string;
-    confirmDelete: string;
-    deleteTemplate: string;
-    templateDeleted: string;
+    description?: string;
+    useTemplate?: string;
+    createFromCurrent?: string;
+    templateName?: string;
+    saveAsTemplate?: string;
+    templateSaved?: string;
+    noTemplates?: string;
+    confirmDelete?: string;
+    deleteTemplate?: string;
+    templateDeleted?: string;
     defaultTemplates: string;
     userTemplates: string;
     createNew: string;
