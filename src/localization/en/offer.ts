@@ -13,6 +13,10 @@ export const offer = {
   notes: "Notes",
   status: "Status",
   createOffer: "Create Offer",
+  languageOptions: {
+    bulgarian: "Bulgarian",
+    english: "English"
+  },
   statuses: {
     draft: "Draft",
     sent: "Sent",

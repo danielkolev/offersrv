@@ -18,6 +18,10 @@ export const offer = {
   draft: "Чернова",
   offerPreview: "Преглед на офертата",
   createOffer: "Създаване на оферта",
+  languageOptions: {
+    bulgarian: "Български",
+    english: "Английски"
+  },
   templates: {
     title: "Шаблони",
     createNew: "Създай нов шаблон",

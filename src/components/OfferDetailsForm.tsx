@@ -16,12 +16,12 @@ const OfferDetailsForm = () => {
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>{t.offerDetails.title}</CardTitle>
+        <CardTitle>{t.offerDetails?.title || "Offer Details"}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="space-y-2">
-            <Label htmlFor="offerNumber">{t.offerDetails.offerNumber}</Label>
+            <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
             <Input
               id="offerNumber"
               value={offer.details.offerNumber || ''}
@@ -30,12 +30,12 @@ const OfferDetailsForm = () => {
               disabled
             />
             <p className="text-xs text-muted-foreground">
-              {t.offerDetails.offerNumberInfo}
+              {t.offerDetails?.offerNumberInfo || "This number is automatically generated"}
             </p>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="offerLanguage">{t.offerDetails.language}</Label>
+            <Label htmlFor="offerLanguage">{t.offerDetails?.language || "Offer Language"}</Label>
             <Select
               value={offer.details.offerLanguage}
               onValueChange={(value: 'bg' | 'en') => updateOfferDetails({ offerLanguage: value })}
@@ -44,15 +44,15 @@ const OfferDetailsForm = () => {
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="bg">{t.offer.languageOptions.bulgarian}</SelectItem>
-                <SelectItem value="en">{t.offer.languageOptions.english}</SelectItem>
+                <SelectItem value="bg">{t.offer?.languageOptions?.bulgarian || "Bulgarian"}</SelectItem>
+                <SelectItem value="en">{t.offer?.languageOptions?.english || "English"}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="offerDate" className="after:content-['*'] after:text-red-500 after:ml-0.5">
-              {t.offerDetails.date}
+              {t.offerDetails?.date || "Date"}
             </Label>
             <Input
               id="offerDate"
@@ -64,13 +64,13 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="offerValidUntil">{t.offerDetails.validUntil}</Label>
+            <Label htmlFor="offerValidUntil">{t.offerDetails?.validUntil || "Valid Until"}</Label>
             <Input
               id="offerValidUntil"
               type="date"
               value={offer.details.validUntil}
               onChange={(e) => updateOfferDetails({ validUntil: e.target.value })}
-              placeholder={t.offerDetails.validUntilPlaceholder}
+              placeholder={t.offerDetails?.validUntilPlaceholder || "Select expiration date"}
             />
           </div>
         </div>
@@ -82,7 +82,7 @@ const OfferDetailsForm = () => {
               checked={offer.details.showPartNumber}
               onCheckedChange={(checked) => updateOfferDetails({ showPartNumber: checked })}
             />
-            <Label htmlFor="showPartNumber">{t.offerDetails.showPartNumber}</Label>
+            <Label htmlFor="showPartNumber">{t.offerDetails?.showPartNumber || "Show Part Number"}</Label>
           </div>
           
           <div className="flex items-center space-x-2">
@@ -91,13 +91,13 @@ const OfferDetailsForm = () => {
               checked={offer.details.includeVat}
               onCheckedChange={(checked) => updateOfferDetails({ includeVat: checked })}
             />
-            <Label htmlFor="includeVat">{t.offerDetails.includeVat}</Label>
+            <Label htmlFor="includeVat">{t.offerDetails?.includeVat || "Include VAT"}</Label>
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="space-y-2">
-            <Label htmlFor="vatRate">{t.offerDetails.vatRate}</Label>
+            <Label htmlFor="vatRate">{t.offerDetails?.vatRate || "VAT Rate (%)"}</Label>
             <Input
               id="vatRate"
               type="number"
@@ -108,35 +108,35 @@ const OfferDetailsForm = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="transportCost">{t.offerDetails.transportCost}</Label>
+            <Label htmlFor="transportCost">{t.offerDetails?.transportCost || "Transport Cost"}</Label>
             <Input
               id="transportCost"
               type="number"
               value={offer.details.transportCost}
               onChange={(e) => updateOfferDetails({ transportCost: Number(e.target.value) })}
-              placeholder={t.offerDetails.transportCostPlaceholder}
+              placeholder={t.offerDetails?.transportCostPlaceholder || "0.00"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="otherCosts">{t.offerDetails.otherCosts}</Label>
+            <Label htmlFor="otherCosts">{t.offerDetails?.otherCosts || "Other Costs"}</Label>
             <Input
               id="otherCosts"
               type="number"
               value={offer.details.otherCosts}
               onChange={(e) => updateOfferDetails({ otherCosts: Number(e.target.value) })}
-              placeholder={t.offerDetails.otherCostsPlaceholder}
+              placeholder={t.offerDetails?.otherCostsPlaceholder || "0.00"}
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="offerNotes">{t.offerDetails.notes}</Label>
+          <Label htmlFor="offerNotes">{t.offerDetails?.notes || "Notes"}</Label>
           <Textarea
             id="offerNotes"
             value={offer.details.notes}
             onChange={(e) => updateOfferDetails({ notes: e.target.value })}
-            placeholder={t.offerDetails.notesPlaceholder}
+            placeholder={t.offerDetails?.notesPlaceholder || "Additional information or terms"}
             rows={4}
           />
         </div>
