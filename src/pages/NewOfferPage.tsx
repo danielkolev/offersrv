@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { OfferProvider } from '@/context/offer/OfferContext';
+import { OfferProvider, useOffer } from '@/context/offer';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import DraftStatusIndicator from '@/components/offer-draft/DraftStatusIndicator';
 
-const NewOfferPage = () => {
+const OfferContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { isDirty, isAutoSaving, lastSaved, autoSaveEnabled, saveDraft, toggleAutoSave } = useOffer();
   const [isLoadingCompanyData, setIsLoadingCompanyData] = React.useState(false);
   const [fetchError, setFetchError] = React.useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = React.useState<string | null>(null);
@@ -38,21 +40,36 @@ const NewOfferPage = () => {
   }
 
   return (
-    <OfferProvider>
-      <div className="container mx-auto py-8 px-4">
-        <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-offer-gray">
-            {t.offer.createOffer}
-          </h1>
-        </div>
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-offer-gray">
+          {t.offer.createOffer}
+        </h1>
         
-        <OfferAccordion 
-          isLoadingCompanyData={isLoadingCompanyData}
-          fetchError={fetchError}
-          selectedCompanyId={selectedCompanyId}
-          onSelectCompany={handleSelectCompany}
+        <DraftStatusIndicator 
+          isDirty={isDirty}
+          isAutoSaving={isAutoSaving}
+          lastSaved={lastSaved}
+          autoSaveEnabled={autoSaveEnabled}
+          onSaveDraft={saveDraft}
+          onToggleAutoSave={toggleAutoSave}
         />
       </div>
+      
+      <OfferAccordion 
+        isLoadingCompanyData={isLoadingCompanyData}
+        fetchError={fetchError}
+        selectedCompanyId={selectedCompanyId}
+        onSelectCompany={handleSelectCompany}
+      />
+    </div>
+  );
+};
+
+const NewOfferPage = () => {
+  return (
+    <OfferProvider>
+      <OfferContent />
     </OfferProvider>
   );
 };

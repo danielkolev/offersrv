@@ -34,6 +34,22 @@ export const offer = {
     bulgarian: "Bulgarian",
     english: "English"
   },
+  // Draft-related translations
+  saving: "Saving...",
+  saved: "Saved",
+  unsavedChanges: "Unsaved changes",
+  lastSaved: "Last saved {time}",
+  notSavedYet: "Not saved yet",
+  saveManually: "Save draft manually",
+  enableAutoSave: "Enable auto-save",
+  disableAutoSave: "Disable auto-save",
+  autoSaveEnabled: "Auto-save enabled",
+  autoSaveDisabled: "Auto-save disabled",
+  draftSaved: "Draft saved",
+  draftSavedDescription: "Your progress has been saved",
+  draftSaveError: "Failed to save draft",
+  draftLoaded: "Draft loaded",
+  draftRestoredDescription: "Your previous work has been restored",
   templates: {
     title: 'Offer Templates',
     description: 'Template Description',

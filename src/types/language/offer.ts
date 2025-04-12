@@ -34,6 +34,22 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
+  // Draft-related translations
+  saving: string;
+  saved: string;
+  unsavedChanges: string;
+  lastSaved: string;
+  notSavedYet: string;
+  saveManually: string;
+  enableAutoSave: string;
+  disableAutoSave: string;
+  autoSaveEnabled: string;
+  autoSaveDisabled: string;
+  draftSaved: string;
+  draftSavedDescription: string;
+  draftSaveError: string;
+  draftLoaded: string;
+  draftRestoredDescription: string;
   // Templates translations
   templates: {
     title: string;

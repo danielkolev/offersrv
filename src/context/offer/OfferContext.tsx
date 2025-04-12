@@ -1,91 +1,195 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { Offer, CompanyInfo, ClientInfo, Product, OfferDetails } from '../../types/offer';
 import { v4 as uuidv4 } from 'uuid';
 import { OfferContextType } from './types';
 import { defaultOffer } from './defaultValues';
 import { calculateSubtotal, calculateVat, calculateTotal } from './calculations';
+import { useAuth } from '@/context/AuthContext';
+import { saveDraftToDatabase, getLatestDraftFromDatabase, deleteDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/context/LanguageContext';
 
 const OfferContext = createContext<OfferContextType | undefined>(undefined);
 
+// Auto-save interval in milliseconds (5 seconds)
+const AUTO_SAVE_INTERVAL = 5000;
+
 export function OfferProvider({ children }: { children: ReactNode }) {
   const [offer, setOffer] = useState<Offer>(defaultOffer);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { t } = useLanguage();
+  const [isDirty, setIsDirty] = useState(false);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
-  const updateCompanyInfo = (info: Partial<CompanyInfo>) => {
+  // Load draft on initial mount
+  useEffect(() => {
+    const loadDraft = async () => {
+      if (user) {
+        try {
+          const draft = await getLatestDraftFromDatabase(user.id);
+          if (draft) {
+            setOffer(draft);
+            setLastSaved(new Date());
+            toast({
+              title: t.offer.draftLoaded,
+              description: t.offer.draftRestoredDescription,
+            });
+          }
+        } catch (error) {
+          console.error('Error loading draft:', error);
+        }
+      }
+    };
+
+    loadDraft();
+  }, [user]);
+
+  // Autosave effect
+  useEffect(() => {
+    if (!user || !autoSaveEnabled || !isDirty) return;
+
+    const autoSaveDraft = async () => {
+      setIsAutoSaving(true);
+      try {
+        await saveDraftToDatabase(user.id, offer);
+        setLastSaved(new Date());
+        setIsDirty(false);
+      } catch (error) {
+        console.error('Error auto-saving draft:', error);
+      } finally {
+        setIsAutoSaving(false);
+      }
+    };
+
+    const timer = setTimeout(autoSaveDraft, AUTO_SAVE_INTERVAL);
+    return () => clearTimeout(timer);
+  }, [offer, user, autoSaveEnabled, isDirty]);
+
+  // Mark as dirty when offer changes
+  useEffect(() => {
+    setIsDirty(true);
+  }, [offer]);
+
+  const updateCompanyInfo = useCallback((info: Partial<CompanyInfo>) => {
     setOffer((prev) => ({
       ...prev,
       company: { ...prev.company, ...info },
     }));
-  };
+  }, []);
 
-  const updateClientInfo = (info: Partial<ClientInfo>) => {
+  const updateClientInfo = useCallback((info: Partial<ClientInfo>) => {
     setOffer((prev) => ({
       ...prev,
       client: { ...prev.client, ...info },
     }));
-  };
+  }, []);
 
-  const updateOfferDetails = (details: Partial<OfferDetails>) => {
+  const updateOfferDetails = useCallback((details: Partial<OfferDetails>) => {
     setOffer((prev) => ({
       ...prev,
       details: { ...prev.details, ...details },
     }));
-  };
+  }, []);
 
-  const addProduct = (product: Omit<Product, 'id'>) => {
+  const addProduct = useCallback((product: Omit<Product, 'id'>) => {
     const newProduct = { ...product, id: uuidv4() };
     setOffer((prev) => ({
       ...prev,
       products: [...prev.products, newProduct],
     }));
-  };
+  }, []);
 
-  const updateProduct = (id: string, product: Partial<Product>) => {
+  const updateProduct = useCallback((id: string, product: Partial<Product>) => {
     setOffer((prev) => ({
       ...prev,
       products: prev.products.map((p) => (p.id === id ? { ...p, ...product } : p)),
     }));
-  };
+  }, []);
 
-  const removeProduct = (id: string) => {
+  const removeProduct = useCallback((id: string) => {
     setOffer((prev) => ({
       ...prev,
       products: prev.products.filter((p) => p.id !== id),
     }));
-  };
+  }, []);
   
-  const clearProducts = () => {
+  const clearProducts = useCallback(() => {
     setOffer((prev) => ({
       ...prev,
       products: [],
     }));
-  };
+  }, []);
   
-  const resetProducts = (products: Product[]) => {
+  const resetProducts = useCallback((products: Product[]) => {
     setOffer((prev) => ({
       ...prev,
       products: products,
     }));
-  };
+  }, []);
 
-  const calculateOfferSubtotal = () => {
+  const calculateOfferSubtotal = useCallback(() => {
     return calculateSubtotal(offer);
-  };
+  }, [offer]);
 
-  const calculateOfferVat = () => {
+  const calculateOfferVat = useCallback(() => {
     return calculateVat(offer);
-  };
+  }, [offer]);
 
-  const calculateOfferTotal = () => {
+  const calculateOfferTotal = useCallback(() => {
     return calculateTotal(offer);
-  };
+  }, [offer]);
 
-  const resetOffer = () => {
+  const resetOffer = useCallback(async () => {
     setOffer(defaultOffer);
-  };
+    // Clear any saved drafts when explicitly resetting
+    if (user) {
+      try {
+        await deleteDraftFromDatabase(user.id);
+      } catch (error) {
+        console.error('Error deleting draft:', error);
+      }
+    }
+  }, [user]);
+
+  // New function to manually save draft
+  const saveDraft = useCallback(async () => {
+    if (!user) return;
+    
+    setIsAutoSaving(true);
+    try {
+      await saveDraftToDatabase(user.id, offer);
+      setLastSaved(new Date());
+      setIsDirty(false);
+      toast({
+        title: t.offer.draftSaved,
+        description: t.offer.draftSavedDescription,
+      });
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      toast({
+        title: t.common.error,
+        description: t.offer.draftSaveError,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsAutoSaving(false);
+    }
+  }, [user, offer, t, toast]);
+
+  // New function to toggle auto-save
+  const toggleAutoSave = useCallback(() => {
+    setAutoSaveEnabled(prev => !prev);
+    toast({
+      title: autoSaveEnabled ? t.offer.autoSaveDisabled : t.offer.autoSaveEnabled,
+    });
+  }, [autoSaveEnabled, t, toast]);
 
   // New function to apply a template to the current offer
-  const applyTemplate = (template: Partial<Offer>) => {
+  const applyTemplate = useCallback((template: Partial<Offer>) => {
     setOffer((prev) => {
       const updatedOffer = { ...prev };
       
@@ -104,7 +208,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
       
       return updatedOffer;
     });
-  };
+  }, []);
 
   // Add functions to window for global access
   if (typeof window !== 'undefined') {
@@ -120,7 +224,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     <OfferContext.Provider
       value={{
         offer,
-        setOffer, // Add setOffer to the context value
+        setOffer,
         updateCompanyInfo,
         updateClientInfo,
         updateOfferDetails,
@@ -133,7 +237,13 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         calculateVat: calculateOfferVat,
         calculateTotal: calculateOfferTotal,
         resetOffer,
-        applyTemplate
+        applyTemplate,
+        isDirty,
+        isAutoSaving,
+        lastSaved,
+        autoSaveEnabled,
+        saveDraft,
+        toggleAutoSave
       }}
     >
       {children}

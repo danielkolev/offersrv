@@ -34,6 +34,22 @@ export const offer = {
     bulgarian: "Български",
     english: "Английски"
   },
+  // Draft-related translations
+  saving: "Запазване...",
+  saved: "Запазено",
+  unsavedChanges: "Незапазени промени",
+  lastSaved: "Последно запазено {time}",
+  notSavedYet: "Още не е запазено",
+  saveManually: "Запази ръчно чернова",
+  enableAutoSave: "Включи автоматично запазване",
+  disableAutoSave: "Изключи автоматично запазване",
+  autoSaveEnabled: "Автоматично запазване включено",
+  autoSaveDisabled: "Автоматично запазване изключено",
+  draftSaved: "Черновата е запазена",
+  draftSavedDescription: "Вашият прогрес е запазен",
+  draftSaveError: "Грешка при запазване на черновата",
+  draftLoaded: "Черновата е заредена",
+  draftRestoredDescription: "Вашата предишна работа е възстановена",
   templates: {
     title: 'Шаблони',
     description: 'Описание на шаблона',
