@@ -8,7 +8,7 @@ import { Translations } from '@/types/language';
 interface ProductPageHeaderProps {
   t: Translations;
   onAddProduct: () => void;
-  onSaveFromOffer: () => void;
+  onSaveFromOffer?: () => void; // Made optional with the ? operator
 }
 
 const ProductPageHeader = ({ t, onAddProduct, onSaveFromOffer }: ProductPageHeaderProps) => {
@@ -26,14 +26,16 @@ const ProductPageHeader = ({ t, onAddProduct, onSaveFromOffer }: ProductPageHead
       </div>
       
       <div className="flex gap-2">
-        <Button 
-          onClick={onSaveFromOffer} 
-          variant="outline"
-          className="gap-2"
-        >
-          <Save className="h-4 w-4" />
-          {t.savedProducts.saveFromOffer}
-        </Button>
+        {onSaveFromOffer && (
+          <Button 
+            onClick={onSaveFromOffer} 
+            variant="outline"
+            className="gap-2"
+          >
+            <Save className="h-4 w-4" />
+            {t.savedProducts.saveFromOffer}
+          </Button>
+        )}
         
         <Button 
           onClick={onAddProduct} 
