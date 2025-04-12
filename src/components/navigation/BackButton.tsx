@@ -9,7 +9,7 @@ interface BackButtonProps {
   to?: string;
 }
 
-const BackButton: React.FC<BackButtonProps> = ({ label, to }) => {
+const BackButton: React.FC<BackButtonProps> = ({ label = "Back", to }) => {
   const navigate = useNavigate();
   const lastOfferPath = localStorage.getItem('lastOfferPath') || '/new-offer';
   

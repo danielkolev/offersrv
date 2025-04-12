@@ -11,8 +11,9 @@ import { Search, Save, Loader2, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
+import BackButton from '@/components/navigation/BackButton';
 
-const SavedOffersPage = () => {
+const SavedOffersContent: React.FC = () => {
   const { user } = useAuth();
   const { offer, resetOffer } = useOffer();
   const { toast } = useToast();
@@ -127,6 +128,9 @@ const SavedOffersPage = () => {
       title: t.common.success,
       description: t.savedOffers.offerLoaded,
     });
+    
+    // Navigate back to offer page after loading
+    navigate('/');
   };
 
   const handleCreateNewOffer = () => {
@@ -135,9 +139,12 @@ const SavedOffersPage = () => {
   };
 
   return (
-    <div className="flex-1 p-6">
+    <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+        <div className="flex items-center gap-2">
+          <BackButton label={t.offer.backToOffer} />
+          <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
+        </div>
         
         <div className="flex gap-2">
           <Button 
@@ -184,4 +191,4 @@ const SavedOffersPage = () => {
   );
 };
 
-export default SavedOffersPage;
+export default SavedOffersContent;
