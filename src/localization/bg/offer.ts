@@ -25,6 +25,8 @@ export const offer = {
     noTemplatesFound: "Няма намерени шаблони. Създайте вашия първи шаблон!",
     noDescription: "Няма предоставено описание",
     confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
-    templateDeleted: "Шаблонът беше изтрит успешно"
+    templateDeleted: "Шаблонът беше изтрит успешно",
+    defaultTemplates: "Стандартни шаблони",
+    userTemplates: "Потребителски шаблони"
   },
 };

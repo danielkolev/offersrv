@@ -11,6 +11,7 @@ import { savedOffers } from './savedOffers';
 import { clientInfo } from './clientInfo';
 import { savedClients } from './savedClients';
 import { savedProducts } from './savedProducts';
+import { products } from './products';
 
 export const bg = {
   auth,
@@ -24,7 +25,8 @@ export const bg = {
   savedOffers,
   clientInfo,
   savedClients,
-  savedProducts
+  savedProducts,
+  products
 };
 
 // Export as a named export for consistency

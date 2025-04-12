@@ -48,8 +48,8 @@ const OfferAccordion = ({
   const handleSaveOffer = () => {
     if (!user) {
       toast({
-        title: t.common.error,
-        description: t.auth.notAuthenticated || "You need to be logged in",
+        title: t?.common?.error || "Error",
+        description: t?.auth?.notAuthenticated || "You need to be logged in",
         variant: 'destructive',
       });
       return;
@@ -65,21 +65,21 @@ const OfferAccordion = ({
   if (!selectedCompanyId) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6 text-center py-8">
-        {t.company.selectFirst}
+        {t?.company?.selectFirst || "Please select a company first"}
       </div>
     );
   }
 
   if (isLoadingCompanyData) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-6 text-center py-4">{t.common.loading}</div>
+      <div className="bg-white rounded-lg shadow-sm p-6 text-center py-4">{t?.common?.loading || "Loading..."}</div>
     );
   }
 
   if (fetchError) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6 text-center py-4 text-red-500">
-        {t.common.error}
+        {t?.common?.error || "Error"}
       </div>
     );
   }
@@ -87,22 +87,22 @@ const OfferAccordion = ({
   const sections = [
     {
       id: "client",
-      title: t.client.title,
+      title: t?.client?.title || "Client",
       content: <ClientInfoForm />
     },
     {
       id: "details",
-      title: t.offer.details,
+      title: t?.offer?.details || "Offer Details",
       content: <OfferDetailsForm />
     },
     {
       id: "products",
-      title: t.products.title,
+      title: t?.products?.title || "Products",
       content: <ProductsForm />
     },
     {
       id: "preview",
-      title: t.offer.offerPreview,
+      title: t?.offer?.offerPreview || "Offer Preview",
       content: (
         <OfferPreview 
           isSaveDialogOpen={isSaveDialogOpen}
@@ -115,7 +115,7 @@ const OfferAccordion = ({
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-sm p-4 mb-4 flex justify-between items-center">
-        <h2 className="text-xl font-semibold">{t.offer.createOffer}</h2>
+        <h2 className="text-xl font-semibold">{t?.offer?.createOffer || "Create Offer"}</h2>
         <Button
           variant="outline"
           onClick={handleToggleAll}
@@ -124,12 +124,12 @@ const OfferAccordion = ({
           {expandAll ? (
             <>
               <ChevronUp size={16} />
-              {t.common.collapseAll}
+              {t?.common?.collapseAll || "Collapse All"}
             </>
           ) : (
             <>
               <ChevronDown size={16} />
-              {t.common.expandAll}
+              {t?.common?.expandAll || "Expand All"}
             </>
           )}
         </Button>
@@ -167,7 +167,7 @@ const OfferAccordion = ({
                         onClick={() => setActiveSection(sections[index + 1].id)}
                         className="flex items-center gap-2"
                       >
-                        {t.common.next}
+                        {t?.common?.next || "Next"}
                         <ArrowRight size={16} />
                       </Button>
                     </div>
@@ -190,14 +190,14 @@ const OfferAccordion = ({
           className="flex items-center gap-2"
         >
           <Save size={16} />
-          {t.savedOffers.saveOffer}
+          {t?.savedOffers?.saveOffer || "Save Offer"}
         </Button>
         <Button
           onClick={handlePrint}
           className="flex items-center gap-2"
         >
           <Printer size={16} />
-          {t.common.print}
+          {t?.common?.print || "Print"}
         </Button>
       </div>
     </div>

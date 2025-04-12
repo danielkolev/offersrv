@@ -12,6 +12,7 @@ export const offer = {
   subject: "Subject",
   notes: "Notes",
   status: "Status",
+  createOffer: "Create Offer",
   statuses: {
     draft: "Draft",
     sent: "Sent",
@@ -26,6 +27,8 @@ export const offer = {
     noTemplatesFound: "No templates found. Create your first template!",
     noDescription: "No description provided",
     confirmDelete: "Are you sure you want to delete this template?",
-    templateDeleted: "Template has been deleted successfully"
+    templateDeleted: "Template has been deleted successfully",
+    defaultTemplates: "Default Templates",
+    userTemplates: "User Templates"
   },
 };
