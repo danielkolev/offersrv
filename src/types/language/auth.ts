@@ -8,9 +8,9 @@ export interface AuthTranslations {
   email: string;
   password: string;
   forgotPassword: string;
+  resetPassword: string;
   noAccount: string;
   hasAccount: string;
-  resetPassword: string;
   name: string;
   loginSuccess: string;
   registerSuccess: string;
