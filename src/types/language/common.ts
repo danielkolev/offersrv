@@ -1,4 +1,3 @@
-
 export interface CommonTranslations {
   offerForge: string;
   loading: string;
@@ -97,4 +96,7 @@ export interface CommonTranslations {
   newClient: string;
   newProduct: string;
   templates: string;
+  
+  // Add navigation property
+  navigation?: string;
 }
