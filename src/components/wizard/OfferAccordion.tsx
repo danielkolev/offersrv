@@ -154,7 +154,7 @@ const OfferAccordion = ({
       </div>
 
       <div className="bg-white rounded-lg shadow-sm">
-        {/* We're using a custom implementation of the collapsible behavior */}
+        {/* Fixed the layout shift by ensuring the headers have consistent layouts */}
         <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
           {expandAll ? (
             <Accordion
@@ -170,11 +170,11 @@ const OfferAccordion = ({
                   data-expanded="true"
                 >
                   <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
                         {index + 1}
                       </div>
-                      <h3 className="text-lg font-medium">{section.title}</h3>
+                      <h3 className="text-lg font-medium text-left">{section.title}</h3>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6 pt-2">
@@ -222,11 +222,11 @@ const OfferAccordion = ({
                   data-expanded={activeSection === section.id}
                 >
                   <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
                         {index + 1}
                       </div>
-                      <h3 className="text-lg font-medium">{section.title}</h3>
+                      <h3 className="text-lg font-medium text-left">{section.title}</h3>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6 pt-2">
