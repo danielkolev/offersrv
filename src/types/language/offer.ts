@@ -62,6 +62,7 @@ export interface SavedOffersTranslations {
   saveOffer: string;
   deleteOffer: string;
   offerSaved: string;
+  offerSavedWithDetails: string; // Added the missing property
   offerDeleted: string;
   noOffersFound: string;
   noOffersFoundSearch: string;
