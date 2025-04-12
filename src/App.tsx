@@ -12,7 +12,7 @@ import TemplatesPage from './pages/TemplatesPage';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import CompanyManagementPage from './pages/CompanyManagementPage';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import './App.css';
 
