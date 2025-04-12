@@ -9,11 +9,13 @@ import AccountButton from '@/components/AccountButton';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
+import HomePage from './HomePage';
 
 const Index = () => {
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
+  const [showOfferCreation, setShowOfferCreation] = useState(false);
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -137,9 +139,13 @@ const Index = () => {
     }
   }, [t, toast]);
 
+  const toggleOfferCreation = () => {
+    setShowOfferCreation(!showOfferCreation);
+  };
+
   return (
     <OfferProvider>
-      <div className="container mx-auto py-8 px-4">
+      <div className="flex-1 container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
           <h1 className="text-3xl font-bold text-offer-gray">
             {t.offerTitle}
@@ -151,14 +157,48 @@ const Index = () => {
           </div>
         </div>
         
-        <OfferAccordion 
-          isLoadingCompanyData={isLoadingCompanyData}
-          fetchError={fetchError}
-          selectedCompanyId={selectedCompanyId}
-          onSelectCompany={handleSelectCompany}
-        />
+        {showOfferCreation ? (
+          <div className="space-y-4">
+            <Button 
+              variant="outline"
+              onClick={toggleOfferCreation}
+              className="mb-4"
+            >
+              ← {t.common.back} {t.common.home}
+            </Button>
+            <OfferAccordion 
+              isLoadingCompanyData={isLoadingCompanyData}
+              fetchError={fetchError}
+              selectedCompanyId={selectedCompanyId}
+              onSelectCompany={handleSelectCompany}
+            />
+          </div>
+        ) : (
+          <HomePage />
+        )}
       </div>
     </OfferProvider>
+  );
+};
+
+// Add Button to the external scope
+const Button = ({ 
+  children, 
+  variant = "default", 
+  onClick, 
+  className = "" 
+}) => {
+  const btnClasses = variant === "outline" 
+    ? "border border-gray-300 hover:bg-gray-100" 
+    : "bg-blue-600 text-white hover:bg-blue-700";
+  
+  return (
+    <button
+      className={`px-4 py-2 rounded-md transition-colors ${btnClasses} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 };
 

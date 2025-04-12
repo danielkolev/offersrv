@@ -13,8 +13,15 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent
 } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home } from 'lucide-react';
+import { 
+  BookmarkIcon, 
+  UsersIcon, 
+  PackageIcon, 
+  Settings, 
+  Home, 
+  FileText, 
+  LayoutTemplate 
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const OfferSidebar = () => {
@@ -24,12 +31,15 @@ const OfferSidebar = () => {
   
   const isActive = (path: string) => location.pathname === path;
   
-  const navItems = [
+  const mainNavItems = [
     {
       name: t.common.home,
       path: '/',
       icon: Home
-    },
+    }
+  ];
+  
+  const managementNavItems = [
     {
       name: t.savedOffers.title,
       path: '/saved-offers',
@@ -44,7 +54,18 @@ const OfferSidebar = () => {
       name: t.savedProducts.title,
       path: '/saved-products',
       icon: PackageIcon
-    },
+    }
+  ];
+  
+  const templatesNavItems = [
+    {
+      name: t.offer.templates.title,
+      path: '/templates',
+      icon: LayoutTemplate
+    }
+  ];
+  
+  const settingsNavItems = [
     {
       name: t.settings.title,
       path: '/settings',
@@ -91,11 +112,80 @@ const OfferSidebar = () => {
         </div>
       </SidebarHeader>
       <SidebarContent>
+        {/* Main Navigation */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainNavItems.map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton 
+                    asChild
+                    isActive={isActive(item.path)}
+                    tooltip={item.name}
+                  >
+                    <Link to={item.path}>
+                      <item.icon className="mr-2 h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        {/* Management Section */}
         <SidebarGroup>
           <SidebarGroupLabel>{t.common.manageAccount}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {managementNavItems.map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton 
+                    asChild
+                    isActive={isActive(item.path)}
+                    tooltip={item.name}
+                  >
+                    <Link to={item.path}>
+                      <item.icon className="mr-2 h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        {/* Templates Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>{t.offer.templates.title}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {templatesNavItems.map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton 
+                    asChild
+                    isActive={isActive(item.path)}
+                    tooltip={item.name}
+                  >
+                    <Link to={item.path}>
+                      <item.icon className="mr-2 h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        {/* Settings Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>{t.settings.title}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {settingsNavItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     asChild
