@@ -1,37 +1,36 @@
 
-import { CommonTranslations } from './common';
-import { AuthTranslations } from './auth';
-import { UserTranslations } from './user';
-import { CompanyTranslations } from './company';
-import { ClientTranslations, ClientInfoTranslations, CompanyInfoTranslations, SavedClientsTranslations } from './client';
-import { 
-  OfferTranslations, 
-  OfferDetailsTranslations, 
-  ProductsTranslations, 
-  TotalsTranslations,
-  SavedOffersTranslations,
-  SavedProductsTranslations 
-} from './offer';
-import { SettingsTranslations } from './settings';
+import { AuthType } from './auth';
+import { ClientType } from './client';
+import { CommonType } from './common';
+import { CompanyType } from './company';
+import { OfferType } from './offer';
+import { SettingsType } from './settings';
+import { UserType } from './user';
 
-export interface Translations {
-  offerTitle: string;
-  common: CommonTranslations;
-  auth: AuthTranslations;
-  user: UserTranslations;
-  company: CompanyTranslations;
-  client: ClientTranslations;
-  clientInfo: ClientInfoTranslations;
-  companyInfo: CompanyInfoTranslations;
-  offer: OfferTranslations;
-  offerDetails: OfferDetailsTranslations;
-  products: ProductsTranslations;
-  totals: TotalsTranslations;
-  savedOffers: SavedOffersTranslations;
-  savedClients: SavedClientsTranslations;
-  savedProducts: SavedProductsTranslations;
-  settings: SettingsTranslations;
+export interface HomeType {
+  quickActions: string;
+  createOfferDescription: string;
+  createClientDescription: string;
+  createProductDescription: string;
+  templatesDescription: string;
+  noRecentOffers: string;
+  noRecentClients: string;
 }
 
-// Re-export the types with proper syntax for isolatedModules
-export type { Language, SupportedLanguage, SupportedCurrency } from './base';
+export interface SavedOffersType {
+  title: string;
+  saveOffer: string;
+  recentOffers: string;
+}
+
+export interface LanguageType {
+  auth: AuthType;
+  client: ClientType;
+  common: CommonType;
+  company: CompanyType;
+  offer: OfferType;
+  settings: SettingsType;
+  user: UserType;
+  home: HomeType;
+  savedOffers: SavedOffersType;
+}

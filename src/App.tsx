@@ -10,13 +10,15 @@ import NotFound from "./pages/NotFound";
 import SavedOffersPage from "./pages/SavedOffers";
 import SavedClientsPage from "./pages/SavedClients";
 import SavedProductsPage from "./pages/SavedProductsPage";
+import TemplatesPage from "./pages/TemplatesPage";
 import Settings from "./pages/Settings";
+import NewOfferPage from "./pages/NewOfferPage";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
 import { OfferProvider } from "./context/offer/OfferContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { SidebarProvider } from "./components/ui/sidebar";
-import OfferSidebar from "./components/navigation/OfferSidebar";
+import MainSidebar from "./components/navigation/MainSidebar";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +33,7 @@ const App = () => (
             <BrowserRouter>
               <SidebarProvider>
                 <div className="flex min-h-screen w-full">
-                  <OfferSidebar />
+                  <MainSidebar />
                   <div className="flex-1">
                     <Routes>
                       <Route
@@ -39,6 +41,14 @@ const App = () => (
                         element={
                           <ProtectedRoute>
                             <Index />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/new-offer"
+                        element={
+                          <ProtectedRoute>
+                            <NewOfferPage />
                           </ProtectedRoute>
                         }
                       />
@@ -63,6 +73,14 @@ const App = () => (
                         element={
                           <ProtectedRoute>
                             <SavedProductsPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/templates"
+                        element={
+                          <ProtectedRoute>
+                            <TemplatesPage />
                           </ProtectedRoute>
                         }
                       />

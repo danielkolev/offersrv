@@ -1,40 +1,22 @@
 
-import { Translations } from '@/types/language';
-import { bgCommonTranslations } from './common';
-import { bgAuthTranslations } from './auth';
-import { bgUserTranslations } from './user';
-import { bgCompanyTranslations } from './company';
-import { 
-  bgClientTranslations, 
-  bgClientInfoTranslations, 
-  bgCompanyInfoTranslations,
-  bgSavedClientsTranslations
-} from './client';
-import { 
-  bgOfferTranslations, 
-  bgOfferDetailsTranslations, 
-  bgProductsTranslations, 
-  bgTotalsTranslations,
-  bgSavedOffersTranslations,
-  bgSavedProductsTranslations
-} from './offer';
-import { bgSettingsTranslations } from './settings';
+import { auth } from './auth';
+import { client } from './client';
+import { common } from './common';
+import { company } from './company';
+import { offer } from './offer';
+import { settings } from './settings';
+import { user } from './user';
+import { home } from './home';
+import { savedOffers } from './savedOffers';
 
-export const bgTranslations: Translations = {
-  offerTitle: 'Създай професионални оферти мигновено',
-  common: bgCommonTranslations,
-  auth: bgAuthTranslations,
-  user: bgUserTranslations,
-  company: bgCompanyTranslations,
-  client: bgClientTranslations,
-  clientInfo: bgClientInfoTranslations,
-  companyInfo: bgCompanyInfoTranslations,
-  offer: bgOfferTranslations,
-  offerDetails: bgOfferDetailsTranslations,
-  products: bgProductsTranslations,
-  totals: bgTotalsTranslations,
-  savedOffers: bgSavedOffersTranslations,
-  savedClients: bgSavedClientsTranslations,
-  savedProducts: bgSavedProductsTranslations,
-  settings: bgSettingsTranslations
+export const bg = {
+  auth,
+  client,
+  common,
+  company,
+  offer,
+  settings,
+  user,
+  home,
+  savedOffers
 };
