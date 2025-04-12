@@ -42,6 +42,7 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
         name: offerName,
       };
       
+      // This will also check and save new clients and products
       const savedOffer = await saveOfferToDatabase(user.id, offerToSave);
       
       // Update the current offer with the server-assigned offer number
@@ -49,13 +50,10 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
       
       toast({
         title: t.common.success,
-        description: t.savedOffers.offerSaved,
+        description: t.savedOffers.offerSavedWithDetails,
       });
       
       setIsSaveDialogOpen(false);
-      
-      // Optionally navigate to saved offers page to see the new offer
-      // navigate('/saved-offers');
     } catch (error: any) {
       console.error('Error saving offer:', error);
       toast({

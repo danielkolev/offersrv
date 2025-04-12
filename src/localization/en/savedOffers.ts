@@ -6,6 +6,7 @@ export const savedOffers = {
   loadOffer: "Load Offer",
   deleteOffer: "Delete Offer",
   offerSaved: "Offer has been saved successfully",
+  offerSavedWithDetails: "Offer has been saved successfully. Any new clients and products have also been added to your database.",
   offerDeleted: "Offer has been deleted successfully",
   offerLoaded: "Offer has been loaded successfully",
   noOffersFound: "No offers found. Create your first offer!",
