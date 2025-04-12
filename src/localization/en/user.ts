@@ -21,7 +21,8 @@ export const enUserTranslations: UserTranslations = {
   updateError: 'Error updating profile',
   passwordMismatch: 'Passwords do not match',
   passwordChangeSuccess: 'Password changed successfully',
-  passwordChangeError: 'Error changing password'
+  passwordChangeError: 'Error changing password',
+  accountCreated: 'Account created'
 };
 
 // Export for use in the main language file

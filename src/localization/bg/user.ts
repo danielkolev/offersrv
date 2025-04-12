@@ -21,7 +21,8 @@ export const bgUserTranslations: UserTranslations = {
   updateError: 'Грешка при актуализиране на профила',
   passwordMismatch: 'Паролите не съвпадат',
   passwordChangeSuccess: 'Паролата е променена успешно',
-  passwordChangeError: 'Грешка при промяна на паролата'
+  passwordChangeError: 'Грешка при промяна на паролата',
+  accountCreated: 'Акаунтът е създаден на'
 };
 
 // Export for use in the main language file

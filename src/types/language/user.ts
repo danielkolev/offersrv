@@ -20,4 +20,5 @@ export interface UserTranslations {
   passwordMismatch: string;
   passwordChangeSuccess: string;
   passwordChangeError: string;
+  accountCreated: string;
 }
