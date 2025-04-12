@@ -37,5 +37,10 @@ export const common = {
   manageAccount: "Manage Account",
   unauthorized: "Unauthorized",
   expandAll: "Expand All",
-  collapseAll: "Collapse All"
+  collapseAll: "Collapse All",
+  account: "Account",
+  comingSoon: "Coming Soon",
+  featureInDevelopment: "This feature is under development",
+  currency: "Currency",
+  saving: "Saving..."
 };

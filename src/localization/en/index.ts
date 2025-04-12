@@ -8,6 +8,7 @@ import { settings } from './settings';
 import { user } from './user';
 import { home } from './home';
 import { savedOffers } from './savedOffers';
+import { clientInfo } from './clientInfo';
 
 export const en = {
   auth,
@@ -18,7 +19,8 @@ export const en = {
   settings,
   user,
   home,
-  savedOffers
+  savedOffers,
+  clientInfo
 };
 
 // Export as a named export for consistency

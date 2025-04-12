@@ -37,5 +37,10 @@ export const common = {
   manageAccount: "Управление на акаунта",
   unauthorized: "Неупълномощен",
   expandAll: "Разгъни всички",
-  collapseAll: "Свий всички"
+  collapseAll: "Свий всички",
+  account: "Акаунт",
+  comingSoon: "Очаквайте скоро",
+  featureInDevelopment: "Тази функционалност е в процес на разработка",
+  currency: "Валута",
+  saving: "Запазване..."
 };

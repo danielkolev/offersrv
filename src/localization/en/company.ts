@@ -54,3 +54,6 @@ export const enCompanyTranslations: CompanyTranslations = {
   // Adding title translation
   title: 'Company'
 };
+
+// Export for use in the main language file
+export const company = enCompanyTranslations;

@@ -23,3 +23,6 @@ export const enUserTranslations: UserTranslations = {
   passwordChangeSuccess: 'Password changed successfully',
   passwordChangeError: 'Error changing password'
 };
+
+// Export for use in the main language file
+export const user = enUserTranslations;

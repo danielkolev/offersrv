@@ -1,3 +1,4 @@
+
 export const offer = {
   title: "Offer",
   offerTitle: "Create Offer",

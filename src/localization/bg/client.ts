@@ -1,3 +1,4 @@
+
 export const client = {
   title: "Клиент",
   firstName: "Име",

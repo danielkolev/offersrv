@@ -23,3 +23,6 @@ export const bgUserTranslations: UserTranslations = {
   passwordChangeSuccess: 'Паролата е променена успешно',
   passwordChangeError: 'Грешка при промяна на паролата'
 };
+
+// Export for use in the main language file
+export const user = bgUserTranslations;

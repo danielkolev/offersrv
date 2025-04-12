@@ -49,3 +49,6 @@ export const enSettingsTranslations: SettingsTranslations = {
   errorLoadingSettings: 'Error loading settings',
   errorSavingSettings: 'Error saving settings'
 };
+
+// Export for use in the main language file
+export const settings = enSettingsTranslations;

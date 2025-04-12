@@ -49,3 +49,6 @@ export const bgSettingsTranslations: SettingsTranslations = {
   errorLoadingSettings: 'Грешка при зареждане на настройките',
   errorSavingSettings: 'Грешка при запазване на настройките'
 };
+
+// Export for use in the main language file
+export const settings = bgSettingsTranslations;

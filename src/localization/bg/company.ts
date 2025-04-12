@@ -54,3 +54,6 @@ export const bgCompanyTranslations: CompanyTranslations = {
   // Adding title translation
   title: 'Фирма'
 };
+
+// Export for use in the main language file
+export const company = bgCompanyTranslations;
