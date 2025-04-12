@@ -41,14 +41,18 @@ const HomeContent = () => {
       if (offersError) throw offersError;
       
       // Transform the offers data to include the required display fields
-      const transformedOffers = (offers as SavedOfferData[])?.map(offer => {
-        const offerData = offer.offer_data || {};
+      const transformedOffers = offers?.map(offer => {
+        // Cast offer_data to Offer type after parsing it (if it's a string)
+        const offerData = typeof offer.offer_data === 'string' 
+          ? JSON.parse(offer.offer_data) as Offer
+          : offer.offer_data as unknown as Offer;
+
         return {
           id: offer.id,
           created_at: offer.created_at,
           client_name: offerData.client?.name || 'Unknown Client',
           offer_number: offerData.details?.offerNumber || `#${offer.id.slice(0, 8)}`,
-          total_amount: offerData.details?.includeVat 
+          total_amount: offerData.details?.includeVat && offerData.products && offerData.details?.vatRate
             ? (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice * (1 + offerData.details.vatRate / 100)), 0) 
             : (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice), 0)
         };
