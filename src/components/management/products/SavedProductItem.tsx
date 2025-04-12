@@ -47,7 +47,7 @@ const SavedProductItem = ({ product, onSelect, onDelete, onEdit }: SavedProductI
             className="gap-1"
           >
             <Plus className="h-3 w-3" />
-            {t.savedProducts.selectProduct}
+            {t?.products?.selectProduct || "Select"}
           </Button>
           
           <Button 
@@ -71,18 +71,18 @@ const SavedProductItem = ({ product, onSelect, onDelete, onEdit }: SavedProductI
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t.common.confirmation}</AlertDialogTitle>
+                <AlertDialogTitle>{t?.common?.confirmation || "Confirmation"}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {t.savedProducts.deleteConfirmation}
+                  {t?.savedProducts?.confirmDelete || "Are you sure you want to delete this product?"}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+                <AlertDialogCancel>{t?.common?.cancel || "Cancel"}</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={() => onDelete(product.id)}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  {t.common.delete}
+                  {t?.common?.delete || "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

@@ -36,7 +36,7 @@ const SavedProductsList = ({
   if (filteredProducts.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        {t.savedProducts.noProductsFound}
+        {t?.savedProducts?.noProductsFound || "No products found. Add your first product!"}
       </div>
     );
   }
@@ -45,10 +45,10 @@ const SavedProductsList = ({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t.products.name}</TableHead>
-          <TableHead>{t.products.partNumber}</TableHead>
-          <TableHead className="text-right">{t.products.unitPrice}</TableHead>
-          <TableHead className="text-right">{t.common.actions}</TableHead>
+          <TableHead>{t?.products?.name || "Name"}</TableHead>
+          <TableHead>{t?.products?.partNumber || "Part Number"}</TableHead>
+          <TableHead className="text-right">{t?.products?.unitPrice || "Unit Price"}</TableHead>
+          <TableHead className="text-right">{t?.common?.actions || "Actions"}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
