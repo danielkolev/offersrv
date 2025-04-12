@@ -18,7 +18,7 @@ function App() {
   return (
     <OfferProvider>
       <Router>
-        <div className="flex min-h-screen w-full">
+        <div className="flex min-h-screen">
           <MainSidebar />
           <main className="flex-1 w-full overflow-auto p-6">
             <Routes>
