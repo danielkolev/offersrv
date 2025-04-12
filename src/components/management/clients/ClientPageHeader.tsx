@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { UserPlus, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
 import { Translations } from '@/types/language';
+import BackButton from '@/components/navigation/BackButton';
 
 interface ClientPageHeaderProps {
   t: Translations;
@@ -15,17 +15,11 @@ const ClientPageHeader = ({ t, onAddClient, onImportFromOffer }: ClientPageHeade
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-2">
-        <Link to="/">
-          <Button variant="outline" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <BackButton label={t.common.back} to="/" />
         <h1 className="text-2xl font-bold">{t.savedClients.title}</h1>
       </div>
       
       <div className="flex gap-2">
-        {/* Removed the "Import from Offer" button as it's not needed */}
-        
         <Button 
           onClick={onAddClient} 
           className="gap-2"

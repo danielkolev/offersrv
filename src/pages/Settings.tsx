@@ -4,6 +4,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import OfferSettings from '@/components/settings/OfferSettings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import BackButton from '@/components/navigation/BackButton';
 
 const Settings = () => {
   const { t } = useLanguage();
@@ -23,9 +24,12 @@ const Settings = () => {
   return (
     <div className="flex-1 space-y-6 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-offer-gray">
-          {t.settings.title}
-        </h1>
+        <div className="flex items-center gap-2">
+          <BackButton label={t.common.back} to="/" />
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.settings.title}
+          </h1>
+        </div>
       </div>
       
       <Card>

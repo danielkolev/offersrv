@@ -101,7 +101,7 @@ const SavedOffersContent: React.FC = () => {
     console.log("Loading offer data:", savedOffer.offer_data);
     
     try {
-      // Directly set the entire offer object
+      // Set the offer data
       setOffer(savedOffer.offer_data);
       
       toast({
@@ -109,8 +109,8 @@ const SavedOffersContent: React.FC = () => {
         description: t.savedOffers.offerLoaded,
       });
       
-      // Navigate back to offer page after loading
-      navigate('/');
+      // Navigate to the edit page
+      navigate('/new-offer');
     } catch (error) {
       console.error("Error loading offer:", error);
       toast({
@@ -130,7 +130,7 @@ const SavedOffersContent: React.FC = () => {
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2">
-          <BackButton label={t.offer.backToOffer} />
+          <BackButton label={t.common.back} to="/" />
           <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
         </div>
         

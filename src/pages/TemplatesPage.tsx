@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTemplateManagement } from '@/hooks/use-template-management';
+import BackButton from '@/components/navigation/BackButton';
 
 const TemplatesPage = () => {
   const { t } = useLanguage();
@@ -25,9 +26,12 @@ const TemplatesPage = () => {
   return (
     <div className="flex-1 space-y-6 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-offer-gray">
-          {t.offer.templates.title}
-        </h1>
+        <div className="flex items-center gap-2">
+          <BackButton label={t.common.back} to="/" />
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.offer.templates.title}
+          </h1>
+        </div>
         <Button onClick={() => createTemplate('New Template', '')}>
           {t.offer.templates.createNew}
         </Button>

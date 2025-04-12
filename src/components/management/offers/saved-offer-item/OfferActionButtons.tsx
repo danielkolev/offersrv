@@ -29,9 +29,9 @@ const OfferActionButtons = ({
   };
   
   const handleEdit = () => {
-    console.log('Loading offer:', savedOffer.id);
+    console.log('Loading offer for editing:', savedOffer.id);
     loadOffer(savedOffer);
-    // We'll let the loadOffer function handle navigation
+    // The loadOffer function now handles navigation
   };
   
   const handleDelete = () => {

@@ -8,6 +8,7 @@ import CompanySelector from '@/components/company/CompanySelector';
 import CompanyInfoSettings from '@/components/account/CompanyInfoSettings';
 import CompanyManager from '@/components/company/CompanyManager';
 import CompanyBankSettings from '@/components/settings/CompanyBankSettings';
+import BackButton from '@/components/navigation/BackButton';
 
 const CompanyManagementPage = () => {
   const { t } = useLanguage();
@@ -32,9 +33,12 @@ const CompanyManagementPage = () => {
   return (
     <div className="flex-1 space-y-6 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-offer-gray">
-          {t.company.manage}
-        </h1>
+        <div className="flex items-center gap-2">
+          <BackButton label={t.common.back} to="/" />
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.company.manage}
+          </h1>
+        </div>
       </div>
       
       <div className="mb-6">
