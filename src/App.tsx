@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import CompanyManagementPage from './pages/CompanyManagementPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import MainSidebar from './components/navigation/MainSidebar';
 
 import './App.css';
 
@@ -23,68 +24,73 @@ function App() {
     <AuthProvider>
       <LanguageProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route
-              path="/new-offer"
-              element={
-                <ProtectedRoute>
-                  <NewOfferPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/saved-offers"
-              element={
-                <ProtectedRoute>
-                  <SavedOffersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/saved-clients"
-              element={
-                <ProtectedRoute>
-                  <SavedClientsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/saved-products"
-              element={
-                <ProtectedRoute>
-                  <SavedProductsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/templates"
-              element={
-                <ProtectedRoute>
-                  <TemplatesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/company-management"
-              element={
-                <ProtectedRoute>
-                  <CompanyManagementPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
+          <div className="flex min-h-screen">
+            <MainSidebar />
+            <div className="flex-1">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route
+                  path="/new-offer"
+                  element={
+                    <ProtectedRoute>
+                      <NewOfferPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/saved-offers"
+                  element={
+                    <ProtectedRoute>
+                      <SavedOffersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/saved-clients"
+                  element={
+                    <ProtectedRoute>
+                      <SavedClientsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/saved-products"
+                  element={
+                    <ProtectedRoute>
+                      <SavedProductsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/templates"
+                  element={
+                    <ProtectedRoute>
+                      <TemplatesPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/company-management"
+                  element={
+                    <ProtectedRoute>
+                      <CompanyManagementPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+            </div>
+          </div>
         </BrowserRouter>
       </LanguageProvider>
     </AuthProvider>
