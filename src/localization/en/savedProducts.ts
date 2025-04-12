@@ -14,5 +14,6 @@ export const savedProducts = {
   selectProduct: "Select",
   cancel: "Cancel",
   saveFromOffer: "Save from offer",
-  noProductsFoundSearch: "No products found matching your search criteria."
+  noProductsFoundSearch: "No products found matching your search criteria.",
+  deleteConfirmation: "Are you sure you want to delete this product?"
 };

@@ -1,4 +1,3 @@
-
 export interface OfferTranslations {
   details: string;
   number: string;
