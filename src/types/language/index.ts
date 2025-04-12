@@ -1,11 +1,12 @@
 
-import { AuthType } from './auth';
-import { ClientType } from './client';
-import { CommonType } from './common';
-import { CompanyType } from './company';
-import { OfferType } from './offer';
-import { SettingsType } from './settings';
-import { UserType } from './user';
+import { AuthTranslations } from './auth';
+import { ClientTranslations, SavedClientsTranslations, ClientInfoTranslations } from './client';
+import { CommonTranslations } from './common';
+import { CompanyTranslations } from './company';
+import { OfferTranslations, SavedOffersTranslations, SavedProductsTranslations, ProductsTranslations } from './offer';
+import { SettingsTranslations } from './settings';
+import { UserTranslations } from './user';
+import { SupportedLanguage, SupportedCurrency, Translations } from './base';
 
 export interface HomeType {
   quickActions: string;
@@ -23,14 +24,21 @@ export interface SavedOffersType {
   recentOffers: string;
 }
 
-export interface LanguageType {
-  auth: AuthType;
-  client: ClientType;
-  common: CommonType;
-  company: CompanyType;
-  offer: OfferType;
-  settings: SettingsType;
-  user: UserType;
-  home: HomeType;
-  savedOffers: SavedOffersType;
-}
+export type AuthType = AuthTranslations;
+export type ClientType = ClientTranslations;
+export type CommonType = CommonTranslations;
+export type CompanyType = CompanyTranslations;
+export type OfferType = OfferTranslations;
+export type SettingsType = SettingsTranslations;
+export type UserType = UserTranslations;
+
+export type {
+  SupportedLanguage,
+  SupportedCurrency,
+  Translations,
+  SavedClientsTranslations,
+  ClientInfoTranslations,
+  SavedOffersTranslations,
+  SavedProductsTranslations,
+  ProductsTranslations
+};

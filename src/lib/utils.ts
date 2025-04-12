@@ -1,7 +1,7 @@
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { SupportedLanguage, SupportedCurrency } from "@/types/language"
+import { SupportedLanguage, SupportedCurrency } from "@/types/language/base"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

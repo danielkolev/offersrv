@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { SupportedLanguage, SupportedCurrency, Translations } from '@/types/language';
+import { SupportedLanguage, SupportedCurrency, Translations } from '@/types/language/base';
 import { translations } from '@/localization';
 
 interface LanguageContextType {

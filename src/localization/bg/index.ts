@@ -20,3 +20,6 @@ export const bg = {
   home,
   savedOffers
 };
+
+// Export as a named export for consistency
+export const bgTranslations = bg;

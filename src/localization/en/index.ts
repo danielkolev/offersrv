@@ -20,3 +20,6 @@ export const en = {
   home,
   savedOffers
 };
+
+// Export as a named export for consistency
+export const enTranslations = en;

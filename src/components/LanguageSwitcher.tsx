@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useLanguage } from '@/context/LanguageContext';
-import { SupportedLanguage } from '@/types/language';
+import { SupportedLanguage } from '@/types/language/base';
 
 const LanguageSwitcher = () => {
   const { language, setLanguage, t } = useLanguage();

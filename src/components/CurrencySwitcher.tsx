@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { SupportedCurrency } from '@/types/language';
+import { SupportedCurrency } from '@/types/language/base';
 import { Button } from '@/components/ui/button';
 import { 
   Select,
