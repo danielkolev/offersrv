@@ -6,10 +6,9 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CurrencySwitcher from '@/components/CurrencySwitcher';
 import { useAuth } from '@/context/AuthContext';
 import AccountButton from '@/components/AccountButton';
-import ManagePanel from '@/components/management/ManagePanel';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import OfferWizard from '@/components/wizard/OfferWizard';
+import OfferAccordion from '@/components/wizard/OfferAccordion';
 
 const Index = () => {
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -142,16 +141,9 @@ const Index = () => {
     <OfferProvider>
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
-          <div className="flex items-center">
-            <img 
-              src="/logo.svg" 
-              alt="Offer Forge Logo" 
-              className="h-8 mr-3" 
-            />
-            <h1 className="text-3xl font-bold text-offer-gray">
-              {t.offerTitle}
-            </h1>
-          </div>
+          <h1 className="text-3xl font-bold text-offer-gray">
+            {t.offerTitle}
+          </h1>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <CurrencySwitcher />
             <LanguageSwitcher />
@@ -159,9 +151,7 @@ const Index = () => {
           </div>
         </div>
         
-        {user && <ManagePanel />}
-        
-        <OfferWizard 
+        <OfferAccordion 
           isLoadingCompanyData={isLoadingCompanyData}
           fetchError={fetchError}
           selectedCompanyId={selectedCompanyId}

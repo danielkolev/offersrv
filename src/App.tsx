@@ -15,6 +15,8 @@ import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
 import { OfferProvider } from "./context/offer/OfferContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { SidebarProvider } from "./components/ui/sidebar";
+import OfferSidebar from "./components/navigation/OfferSidebar";
 
 const queryClient = new QueryClient();
 
@@ -27,50 +29,57 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Index />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/saved-offers"
-                  element={
-                    <ProtectedRoute>
-                      <SavedOffersPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/saved-clients"
-                  element={
-                    <ProtectedRoute>
-                      <SavedClientsPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/saved-products"
-                  element={
-                    <ProtectedRoute>
-                      <SavedProductsPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <ProtectedRoute>
-                      <Settings />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <SidebarProvider>
+                <div className="flex min-h-screen w-full">
+                  <OfferSidebar />
+                  <div className="flex-1">
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={
+                          <ProtectedRoute>
+                            <Index />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/saved-offers"
+                        element={
+                          <ProtectedRoute>
+                            <SavedOffersPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/saved-clients"
+                        element={
+                          <ProtectedRoute>
+                            <SavedClientsPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/saved-products"
+                        element={
+                          <ProtectedRoute>
+                            <SavedProductsPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/settings"
+                        element={
+                          <ProtectedRoute>
+                            <Settings />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </div>
+                </div>
+              </SidebarProvider>
             </BrowserRouter>
           </OfferProvider>
         </AuthProvider>
