@@ -34,3 +34,6 @@ export const enAuthTranslations: AuthTranslations = {
   welcomeSubtitle: 'Enter your credentials to continue',
   notAuthenticated: 'You need to be logged in'
 };
+
+// Export for use in the main language file
+export const auth = enAuthTranslations;

@@ -34,3 +34,6 @@ export const bgAuthTranslations: AuthTranslations = {
   welcomeSubtitle: 'Въведете данните си, за да продължите',
   notAuthenticated: 'Трябва да сте влезли в системата'
 };
+
+// Export for use in the main language file
+export const auth = bgAuthTranslations;
