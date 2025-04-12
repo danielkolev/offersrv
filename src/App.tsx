@@ -18,9 +18,9 @@ function App() {
   return (
     <OfferProvider>
       <Router>
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen w-full relative">
           <MainSidebar />
-          <main className="flex-1 w-full p-6">
+          <main className="flex-1 w-full p-6 ml-0 md:ml-[3rem]">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/offer" element={<Index />} />
