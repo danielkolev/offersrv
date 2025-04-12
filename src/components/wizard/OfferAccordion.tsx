@@ -156,43 +156,35 @@ const OfferAccordion = ({
       <div className="bg-white rounded-lg shadow-sm">
         {/* We're using a custom implementation of the collapsible behavior */}
         <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
-          <Accordion
-            type={expandAll ? "multiple" : "single"}
-            collapsible={!expandAll}
-            value={expandAll ? sections.map(s => s.id) : activeSection ? [activeSection] : []}
-            onValueChange={(value) => {
-              if (!expandAll) {
-                setActiveSection(Array.isArray(value) && value.length > 0 ? value[0] : null);
-              }
-            }}
-            className="w-full"
-          >
-            {sections.map((section, index) => (
-              <AccordionItem 
-                key={section.id} 
-                value={section.id}
-                className="border-b last:border-b-0"
-                data-expanded={expandAll || activeSection === section.id}
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
-                      {index + 1}
+          {expandAll ? (
+            <Accordion
+              type="multiple"
+              value={sections.map(s => s.id)}
+              className="w-full"
+            >
+              {sections.map((section, index) => (
+                <AccordionItem 
+                  key={section.id} 
+                  value={section.id}
+                  className="border-b last:border-b-0"
+                  data-expanded="true"
+                >
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                        {index + 1}
+                      </div>
+                      <h3 className="text-lg font-medium">{section.title}</h3>
                     </div>
-                    <h3 className="text-lg font-medium">{section.title}</h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-6 pt-2">
-                  {section.content}
-                  
-                  {index < sections.length - 1 && (
-                    <div className="flex justify-end mt-4">
-                      <Button 
-                        onClick={() => {
-                          setActiveSection(sections[index + 1].id);
-                          if (expandAll) {
-                            // Do nothing, already expanded
-                          } else {
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6 pt-2">
+                    {section.content}
+                    
+                    {index < sections.length - 1 && (
+                      <div className="flex justify-end mt-4">
+                        <Button 
+                          onClick={() => {
+                            setActiveSection(sections[index + 1].id);
                             // Scroll to next section
                             setTimeout(() => {
                               const nextSection = document.getElementById(sections[index + 1].id);
@@ -200,19 +192,71 @@ const OfferAccordion = ({
                                 nextSection.scrollIntoView({ behavior: 'smooth' });
                               }
                             }, 100);
-                          }
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        {t?.common?.next || "Next"}
-                        <ArrowRight size={16} />
-                      </Button>
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          {t?.common?.next || "Next"}
+                          <ArrowRight size={16} />
+                        </Button>
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          ) : (
+            <Accordion
+              type="single"
+              collapsible={true}
+              value={activeSection ? activeSection : undefined}
+              onValueChange={(value) => {
+                setActiveSection(value);
+              }}
+              className="w-full"
+            >
+              {sections.map((section, index) => (
+                <AccordionItem 
+                  key={section.id} 
+                  value={section.id}
+                  className="border-b last:border-b-0"
+                  data-expanded={activeSection === section.id}
+                >
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                        {index + 1}
+                      </div>
+                      <h3 className="text-lg font-medium">{section.title}</h3>
                     </div>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6 pt-2">
+                    {section.content}
+                    
+                    {index < sections.length - 1 && (
+                      <div className="flex justify-end mt-4">
+                        <Button 
+                          onClick={() => {
+                            setActiveSection(sections[index + 1].id);
+                            // Scroll to next section
+                            setTimeout(() => {
+                              const nextSection = document.getElementById(sections[index + 1].id);
+                              if (nextSection) {
+                                nextSection.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }, 100);
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          {t?.common?.next || "Next"}
+                          <ArrowRight size={16} />
+                        </Button>
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
         </div>
       </div>
       
