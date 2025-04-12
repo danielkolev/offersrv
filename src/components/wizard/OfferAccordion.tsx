@@ -14,6 +14,11 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp, ArrowRight, Printer, Save } from 'lucide-react';
 
 interface OfferAccordionProps {
@@ -54,13 +59,6 @@ const OfferAccordion = ({
   };
 
   const handleToggleAll = () => {
-    if (expandAll) {
-      // Collapse all sections
-      setActiveSection(null);
-    } else {
-      // Expand all sections by using "all" as a special value
-      setActiveSection("all");
-    }
     setExpandAll(!expandAll);
   };
 
@@ -138,55 +136,51 @@ const OfferAccordion = ({
       </div>
 
       <div className="bg-white rounded-lg shadow-sm">
-        <Accordion
-          type="multiple"
-          value={activeSection === "all" ? sections.map(s => s.id) : activeSection ? [activeSection] : []}
-          onValueChange={(value) => {
-            if (value.length === 0) {
-              setActiveSection(null);
-              setExpandAll(false);
-            } else if (value.length === sections.length) {
-              setActiveSection("all");
-              setExpandAll(true);
-            } else {
-              setActiveSection(value[value.length - 1]);
-              setExpandAll(false);
-            }
-          }}
-          className="w-full"
-        >
-          {sections.map((section, index) => (
-            <AccordionItem 
-              key={section.id} 
-              value={section.id}
-              className="border-b last:border-b-0"
-            >
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
-                    {index + 1}
+        <Collapsible open={expandAll} onOpenChange={setExpandAll}>
+          <Accordion
+            type="single"
+            collapsible
+            value={activeSection}
+            onValueChange={setActiveSection}
+            className="w-full"
+          >
+            {sections.map((section, index) => (
+              <AccordionItem 
+                key={section.id} 
+                value={section.id}
+                className="border-b last:border-b-0"
+              >
+                <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                      {index + 1}
+                    </div>
+                    <h3 className="text-lg font-medium">{section.title}</h3>
                   </div>
-                  <h3 className="text-lg font-medium">{section.title}</h3>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6 pt-2">
-                {section.content}
-                
-                {index < sections.length - 1 && (
-                  <div className="flex justify-end mt-4">
-                    <Button 
-                      onClick={() => setActiveSection(sections[index + 1].id)}
-                      className="flex items-center gap-2"
-                    >
-                      {t.common.next}
-                      <ArrowRight size={16} />
-                    </Button>
-                  </div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6 pt-2">
+                  {section.content}
+                  
+                  {index < sections.length - 1 && (
+                    <div className="flex justify-end mt-4">
+                      <Button 
+                        onClick={() => setActiveSection(sections[index + 1].id)}
+                        className="flex items-center gap-2"
+                      >
+                        {t.common.next}
+                        <ArrowRight size={16} />
+                      </Button>
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          
+          <CollapsibleContent className="w-full">
+            {/* This content is shown when all sections are expanded */}
+          </CollapsibleContent>
+        </Collapsible>
       </div>
       
       <div className="bg-white rounded-lg shadow-sm p-4 flex justify-end gap-2">
