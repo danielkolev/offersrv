@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, ArrowLeft, Save } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus, Save } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Translations } from '@/types/language';
 
 interface ProductPageHeaderProps {
@@ -12,14 +12,16 @@ interface ProductPageHeaderProps {
 }
 
 const ProductPageHeader = ({ t, onAddProduct, onSaveFromOffer }: ProductPageHeaderProps) => {
+  const navigate = useNavigate();
+  const lastOfferPath = localStorage.getItem('lastOfferPath') || '/new-offer';
+  
+  const handleBackToOffer = () => {
+    navigate(lastOfferPath);
+  };
+  
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-2">
-        <Link to="/">
-          <Button variant="outline" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
         <h1 className="text-2xl font-bold">{t.savedProducts.title}</h1>
       </div>
       

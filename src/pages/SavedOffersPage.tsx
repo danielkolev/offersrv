@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer, OfferProvider } from '@/context/offer/OfferContext';
@@ -7,10 +6,11 @@ import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Save, Loader2, ArrowLeft, PlusCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Search, Save, Loader2, PlusCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
+import BackButton from '@/components/navigation/BackButton';
 
 const SavedOffersContent = () => {
   const { user } = useAuth();
@@ -138,11 +138,7 @@ const SavedOffersContent = () => {
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2">
-          <Link to="/">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
+          <BackButton label={t.offer.backToOffer} />
           <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
         </div>
         

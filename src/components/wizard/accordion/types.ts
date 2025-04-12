@@ -13,3 +13,17 @@ export interface OfferAccordionProps {
   selectedCompanyId: string | null;
   onSelectCompany: (companyId: string) => void;
 }
+
+export interface OfferActionButtonsProps {
+  onSave: () => void;
+  onPrint: () => void;
+}
+
+export interface LoadingErrorStatesProps {
+  isLoading: boolean;
+  hasError: boolean;
+}
+
+export interface NoCompanySelectedProps {
+  message?: string;
+}
