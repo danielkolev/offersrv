@@ -17,4 +17,7 @@ export const client = {
   clientDetails: "Client Details",
   noClientsFound: "No clients found. Add your first client!",
   recentClients: "Recent Clients",
+  // Add the missing properties
+  name: "Name",
+  contactPerson: "Contact Person",
 };

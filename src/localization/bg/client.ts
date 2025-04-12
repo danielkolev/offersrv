@@ -13,4 +13,7 @@ export const client = {
   vatNumber: "ДДС номер",
   additionalInfo: "Допълнителна информация",
   recentClients: "Скорошни клиенти",
+  // Add the missing properties
+  name: "Име",
+  contactPerson: "Лице за контакт",
 };

@@ -19,11 +19,8 @@ export interface HomeType {
   noRecentClients: string;
 }
 
-export interface SavedOffersType {
-  title: string;
-  saveOffer: string;
-  recentOffers: string;
-}
+// Update this interface to match SavedOffersTranslations
+export interface SavedOffersType extends SavedOffersTranslations {}
 
 export type AuthType = AuthTranslations;
 export type ClientType = ClientTranslations;
