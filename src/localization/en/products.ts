@@ -16,5 +16,6 @@ export const products = {
   noProducts: "No products added yet",
   selectProduct: "Select Product",
   selectExisting: "Select Existing Product",
-  productName: "Product Name"
+  productName: "Product Name",
+  unitPlaceholder: "Unit of measurement"
 };

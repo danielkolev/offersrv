@@ -20,7 +20,7 @@ export interface HomeType {
 }
 
 // Update this interface to match SavedOffersTranslations
-export interface SavedOffersType extends SavedOffersTranslations {}
+export type SavedOffersType = SavedOffersTranslations;
 
 export type AuthType = AuthTranslations;
 export type ClientType = ClientTranslations;

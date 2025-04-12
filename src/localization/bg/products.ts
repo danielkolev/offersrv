@@ -16,5 +16,6 @@ export const products = {
   noProducts: "Няма добавени продукти",
   selectProduct: "Избери продукт",
   selectExisting: "Избери съществуващ продукт",
-  productName: "Име на продукта"
+  productName: "Име на продукта",
+  unitPlaceholder: "Мерна единица"
 };

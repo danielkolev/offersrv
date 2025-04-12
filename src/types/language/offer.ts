@@ -1,3 +1,4 @@
+
 export interface OfferTranslations {
   details: string;
   number: string;
@@ -121,6 +122,7 @@ export interface SavedOffersTranslations {
   createNew: string;
   offerLoaded: string;
   viewOffer: string;
+  recentOffers: string;
 }
 
 export interface SavedProductsTranslations {
