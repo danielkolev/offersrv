@@ -37,18 +37,44 @@ export const clearDraftFromLocalStorage = (): void => {
 // Save draft to database for persistent storage
 export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise<void> => {
   try {
-    const { error } = await supabase
-      .from('offer_drafts')
-      .upsert({
-        user_id: userId,
-        offer_data: offer as any,
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id'
-      });
+    // First check if there's already a draft for this user
+    const { data: existingDrafts, error: fetchError } = await supabase
+      .from('saved_offers')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_draft', true);
       
-    if (error) {
-      throw error;
+    if (fetchError) {
+      throw fetchError;
+    }
+    
+    if (existingDrafts && existingDrafts.length > 0) {
+      // Update existing draft
+      const { error } = await supabase
+        .from('saved_offers')
+        .update({
+          offer_data: offer as any,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingDrafts[0].id);
+        
+      if (error) {
+        throw error;
+      }
+    } else {
+      // Insert new draft
+      const { error } = await supabase
+        .from('saved_offers')
+        .insert({
+          user_id: userId,
+          offer_data: offer as any,
+          is_draft: true,
+          name: 'Draft Offer'
+        });
+        
+      if (error) {
+        throw error;
+      }
     }
   } catch (error) {
     console.error('Error saving draft to database:', error);
@@ -61,17 +87,19 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
 export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer | null> => {
   try {
     const { data, error } = await supabase
-      .from('offer_drafts')
+      .from('saved_offers')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .eq('is_draft', true)
+      .order('updated_at', { ascending: false })
+      .limit(1);
       
     if (error) {
       throw error;
     }
     
-    if (data) {
-      return data.offer_data as unknown as Offer;
+    if (data && data.length > 0) {
+      return data[0].offer_data as unknown as Offer;
     }
     
     return null;
@@ -86,9 +114,10 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
 export const deleteDraftFromDatabase = async (userId: string): Promise<void> => {
   try {
     const { error } = await supabase
-      .from('offer_drafts')
+      .from('saved_offers')
       .delete()
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .eq('is_draft', true);
       
     if (error) {
       throw error;
