@@ -20,7 +20,7 @@ function App() {
       <Router>
         <div className="flex min-h-screen w-full">
           <MainSidebar />
-          <div className="flex-1 w-full max-w-full overflow-auto">
+          <main className="flex-1 w-full overflow-auto p-6">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/offer" element={<Index />} />
@@ -67,7 +67,7 @@ function App() {
               />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </Router>
     </OfferProvider>
