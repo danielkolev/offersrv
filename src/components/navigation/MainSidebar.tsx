@@ -2,7 +2,6 @@
 import React from 'react';
 import { 
   SidebarProvider, 
-  Sidebar,
   SidebarTrigger
 } from '@/components/ui/sidebar';
 import OfferSidebar from './OfferSidebar';
