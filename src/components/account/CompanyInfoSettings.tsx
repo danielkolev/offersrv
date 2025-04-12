@@ -36,11 +36,11 @@ const CompanyInfoSettings = ({ companyId, onUpdate }: CompanyInfoProps) => {
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>{t.companyInfo.title}</CardTitle>
+        <CardTitle>{t.company?.title || 'Company Information'}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="flex justify-center py-4">{t.common.loading}</div>
+          <div className="flex justify-center py-4">{t.common?.loading || 'Loading...'}</div>
         ) : (
           <>
             <CompanyLanguageTabs 
@@ -71,7 +71,7 @@ const CompanyInfoSettings = ({ companyId, onUpdate }: CompanyInfoProps) => {
                 disabled={isLoading || isSaving}
               >
                 <Save className="mr-2 h-4 w-4" />
-                {isSaving ? t.common.processing : t.company.updateButton}
+                {isSaving ? (t.common?.processing || 'Processing...') : (t.company?.updateButton || 'Update Company')}
               </Button>
             </div>
           </>

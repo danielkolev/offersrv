@@ -1,24 +1,24 @@
 
-export type Language = 'en' | 'bg';
-export type SupportedLanguage = Language;
-export type SupportedCurrency = 'BGN' | 'EUR' | 'USD';
+import { AuthType, ClientType, CommonType, CompanyType, OfferType, SettingsType, UserType, HomeType, SavedOffersType, SavedClientsTranslations, ClientInfoTranslations, SavedProductsTranslations, ProductsTranslations, CompanyInfoType } from './index';
+
+export type SupportedLanguage = 'en' | 'bg';
+export type SupportedCurrency = 'USD' | 'EUR' | 'BGN';
 
 export interface Translations {
-  auth: any;
-  client: any;
-  common: any;
-  company: any;
-  offer: any;
-  settings: any;
-  user: any;
-  home: any;
-  savedOffers: any;
-  products?: any; // Adding this for product-related translations
-  savedProducts?: any; // Adding this for saved products translations
-  savedClients?: any; // Adding this for saved clients translations
-  dashboard?: any; // For dashboard translations
-  clientInfo?: any; // For client info form translations
-  companyInfo?: any; // For company info form translations
-  offerDetails?: any; // For offer details form translations
-  totals?: any; // For totals section translations
+  auth: AuthType;
+  client: ClientType;
+  common: CommonType;
+  company: CompanyType;
+  offer: OfferType;
+  settings: SettingsType;
+  user: UserType;
+  home: HomeType;
+  savedOffers: SavedOffersType;
+  clientInfo: ClientInfoTranslations;
+  savedClients: SavedClientsTranslations;
+  savedProducts: SavedProductsTranslations;
+  products: ProductsTranslations;
+  offerDetails: any; // Using any until we create a proper type
+  totals: any; // Using any until we create a proper type
+  companyInfo: CompanyInfoType;
 }

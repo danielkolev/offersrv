@@ -7,6 +7,7 @@ import { OfferTranslations, SavedOffersTranslations, SavedProductsTranslations, 
 import { SettingsTranslations } from './settings';
 import { UserTranslations } from './user';
 import { SupportedLanguage, SupportedCurrency, Translations } from './base';
+import { CompanyInfoTranslations } from './companyInfo';
 
 export interface HomeType {
   quickActions: string;
@@ -31,6 +32,7 @@ export type CompanyType = CompanyTranslations;
 export type OfferType = OfferTranslations;
 export type SettingsType = SettingsTranslations;
 export type UserType = UserTranslations;
+export type CompanyInfoType = CompanyInfoTranslations;
 
 export type {
   SupportedLanguage,
