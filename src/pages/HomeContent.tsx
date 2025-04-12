@@ -1,15 +1,54 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import QuickActionCards from '@/components/home/QuickActionCards';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 const HomeContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const [recentOffers, setRecentOffers] = useState([]);
+  const [recentClients, setRecentClients] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchRecentItems();
+    }
+  }, [user]);
+
+  const fetchRecentItems = async () => {
+    setIsLoading(true);
+    try {
+      // Fetch recent offers (adjust table name as needed)
+      const { data: offers, error: offersError } = await supabase
+        .from('offers')
+        .select('id, client_name, offer_number, created_at, total_amount')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (offersError) throw offersError;
+      setRecentOffers(offers || []);
+
+      // Fetch recent clients (adjust table name as needed)
+      const { data: clients, error: clientsError } = await supabase
+        .from('clients')
+        .select('id, name, email, created_at')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (clientsError) throw clientsError;
+      setRecentClients(clients || []);
+    } catch (error) {
+      console.error('Error fetching recent items:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -32,7 +71,9 @@ const HomeContent = () => {
       
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">{t.home.quickActions}</h2>
-        <QuickActionCards />
+        <div className="flex justify-center">
+          <QuickActionCards />
+        </div>
       </section>
       
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -50,9 +91,33 @@ const HomeContent = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8 text-gray-500">
-              {t.home.noRecentOffers}
-            </div>
+            {isLoading ? (
+              <div className="text-center py-4">
+                <div className="animate-pulse space-y-2">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-10 bg-gray-200 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            ) : recentOffers.length > 0 ? (
+              <ul className="divide-y">
+                {recentOffers.map((offer) => (
+                  <li key={offer.id} className="py-2">
+                    <div className="flex justify-between">
+                      <span className="font-medium">{offer.client_name || 'Client'}</span>
+                      <span className="text-gray-500">{new Date(offer.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {offer.offer_number || `Offer #${offer.id.slice(0, 8)}`}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                {t.home.noRecentOffers}
+              </div>
+            )}
           </CardContent>
         </Card>
         
@@ -70,9 +135,33 @@ const HomeContent = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8 text-gray-500">
-              {t.home.noRecentClients}
-            </div>
+            {isLoading ? (
+              <div className="text-center py-4">
+                <div className="animate-pulse space-y-2">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-10 bg-gray-200 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            ) : recentClients.length > 0 ? (
+              <ul className="divide-y">
+                {recentClients.map((client) => (
+                  <li key={client.id} className="py-2">
+                    <div className="flex justify-between">
+                      <span className="font-medium">{client.name || 'Unknown'}</span>
+                      <span className="text-gray-500">{new Date(client.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {client.email || 'No email'}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                {t.home.noRecentClients}
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>

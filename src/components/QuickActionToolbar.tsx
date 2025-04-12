@@ -102,12 +102,13 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 no-print">
-      <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2 flex gap-2">
+      <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2 flex justify-center items-center gap-2">
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={handleAddProduct}
           title={t.products.addProduct}
+          className="hover:bg-blue-50"
         >
           <Plus className="h-5 w-5" />
         </Button>
@@ -117,6 +118,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           size="icon" 
           onClick={onPreview} 
           title={t.common.preview}
+          className="hover:bg-blue-50"
         >
           <FileText className="h-5 w-5" />
         </Button>
@@ -127,6 +129,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
             size="icon" 
             onClick={onSave}
             title={t.savedOffers.saveOffer}
+            className="hover:bg-blue-50"
           >
             <Save className="h-5 w-5" />
           </Button>
@@ -137,6 +140,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           size="icon" 
           onClick={handlePrint}
           title={t.common.print}
+          className="hover:bg-blue-50"
         >
           <Printer className="h-5 w-5" />
         </Button>
@@ -146,6 +150,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           size="icon" 
           onClick={handleExportPDF}
           title="Export PDF"
+          className="hover:bg-blue-50"
         >
           <FileDown className="h-5 w-5" />
         </Button>
@@ -155,6 +160,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           size="icon" 
           onClick={handleCopyOffer}
           title={t.common.copy}
+          className="hover:bg-blue-50"
         >
           <Copy className="h-5 w-5" />
         </Button>
@@ -163,7 +169,7 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
           variant="ghost" 
           size="icon" 
           onClick={handleReset}
-          className="hover:text-red-500"
+          className="hover:bg-red-50 text-red-500"
           title={t.common.reset}
         >
           <Trash className="h-5 w-5" />

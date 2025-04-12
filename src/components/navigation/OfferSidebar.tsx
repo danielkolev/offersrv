@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -14,17 +14,34 @@ import {
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home } from 'lucide-react';
+import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import CompanyManager from '@/components/company/CompanyManager';
 
 const OfferSidebar = () => {
   const { t } = useLanguage();
   const location = useLocation();
   const { user } = useAuth();
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   
   const isActive = (path: string) => location.pathname === path;
   
-  // Let's make sure we have fallback values if translations are missing
+  const handleSelectCompany = (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    // In a real implementation, you'd store this in localStorage or context
+    localStorage.setItem('selectedCompanyId', companyId);
+  };
+  
+  // Load selected company from localStorage on initial load
+  useEffect(() => {
+    const storedCompanyId = localStorage.getItem('selectedCompanyId');
+    if (storedCompanyId) {
+      setSelectedCompanyId(storedCompanyId);
+    }
+  }, []);
+  
+  // Navigation items
   const navItems = [
     {
       name: t.common?.home || "Home",
@@ -45,6 +62,11 @@ const OfferSidebar = () => {
       name: t.savedProducts?.title || "Saved Products",
       path: '/saved-products',
       icon: PackageIcon
+    },
+    {
+      name: t.company?.manage || "Manage Companies",
+      path: '/company-management',
+      icon: Building
     },
     {
       name: t.settings?.title || "Settings",
@@ -90,10 +112,15 @@ const OfferSidebar = () => {
           <img src="/logo.svg" alt="Offer Forge Logo" className="h-6" />
           <span className="font-bold text-xl">Offer Forge</span>
         </div>
+        
+        {/* Company selector below the logo */}
+        <div className="mt-4 mb-2">
+          <CompanyManager onSelectCompany={handleSelectCompany} />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t.common?.manageAccount || "Manage Account"}</SidebarGroupLabel>
+          <SidebarGroupLabel>{t.common?.navigation || "Navigation"}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (

@@ -45,9 +45,9 @@ const QuickActionCards = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl mx-auto">
       {actions.map((action, index) => (
-        <Card key={index} className="border rounded-lg shadow-sm">
+        <Card key={index} className="border rounded-lg shadow-sm flex flex-col h-full">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-full ${action.color}`}>
@@ -56,10 +56,10 @@ const QuickActionCards = () => {
               <CardTitle className="text-lg">{action.title}</CardTitle>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-grow">
             <CardDescription className="text-sm">{action.description}</CardDescription>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="pt-2">
             <Button asChild className="w-full">
               <Link to={action.path}>
                 <span>{action.buttonText}</span>
