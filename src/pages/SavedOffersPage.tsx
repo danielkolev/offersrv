@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useOffer } from '@/context/offer/OfferContext';
+import { useOffer, OfferProvider } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
@@ -12,7 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
 
-const SavedOffersPage = () => {
+const SavedOffersContent = () => {
   const { user } = useAuth();
   const { offer, resetOffer } = useOffer();
   const { toast } = useToast();
@@ -188,6 +188,15 @@ const SavedOffersPage = () => {
         t={t}
       />
     </div>
+  );
+};
+
+// Main component that wraps the content with OfferProvider
+const SavedOffersPage = () => {
+  return (
+    <OfferProvider>
+      <SavedOffersContent />
+    </OfferProvider>
   );
 };
 
