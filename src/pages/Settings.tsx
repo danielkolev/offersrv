@@ -2,9 +2,7 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-import OfferTemplateSettings from '@/components/settings/OfferTemplateSettings';
 import OfferSettings from '@/components/settings/OfferSettings';
-import CompanyBankSettings from '@/components/settings/CompanyBankSettings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Settings = () => {
@@ -36,9 +34,7 @@ const Settings = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-8">
-            <OfferTemplateSettings />
             <OfferSettings />
-            <CompanyBankSettings />
           </div>
         </CardContent>
       </Card>

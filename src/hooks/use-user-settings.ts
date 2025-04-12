@@ -26,14 +26,37 @@ interface UseUserSettingsReturn {
   saveSettings: <T>(settingsType: 'offer_settings' | 'bank_details', values: T) => Promise<void>;
 }
 
+// Default settings to use when none exist or when there's an error
+const defaultOfferSettings: OfferSettingsValues = {
+  usePrefix: false,
+  prefix: 'OF-',
+  suffixYear: true,
+  defaultVatRate: 20
+};
+
+const defaultBankSettings: BankDetailsValues = {
+  showBankDetails: false,
+  bankName: '',
+  iban: '',
+  swift: '',
+  additionalInfo: ''
+};
+
 export function useUserSettings(): UseUserSettingsReturn {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
+  const [hasErrored, setHasErrored] = useState(false);
 
   const loadSettings = async <T>(settingsType: 'offer_settings' | 'bank_details'): Promise<T | null> => {
     if (!user) return null;
+    
+    // If we've already encountered an error, return defaults to prevent continuous API calls
+    if (hasErrored) {
+      console.log("Using default settings due to previous error");
+      return (settingsType === 'offer_settings' ? defaultOfferSettings : defaultBankSettings) as unknown as T;
+    }
     
     setIsLoading(true);
     try {
@@ -52,15 +75,19 @@ export function useUserSettings(): UseUserSettingsReturn {
         return data[settingsType] as T;
       }
       
-      return null;
+      // If no settings found, return defaults
+      return (settingsType === 'offer_settings' ? defaultOfferSettings : defaultBankSettings) as unknown as T;
     } catch (error) {
       console.error(`Error loading ${settingsType}:`, error);
+      setHasErrored(true);
       toast({
         title: t.common.error,
         description: t.settings.errorLoadingSettings,
         variant: 'destructive'
       });
-      return null;
+      
+      // Return default settings on error
+      return (settingsType === 'offer_settings' ? defaultOfferSettings : defaultBankSettings) as unknown as T;
     } finally {
       setIsLoading(false);
     }

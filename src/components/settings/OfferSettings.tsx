@@ -11,25 +11,50 @@ const OfferSettings = () => {
   const { user } = useAuth();
   const { isLoading, loadSettings, saveSettings } = useUserSettings();
   const [initialData, setInitialData] = React.useState<OfferSettingsValues | null>(null);
+  const [fetchAttempted, setFetchAttempted] = React.useState(false);
   
   const loadAndSetSettings = async () => {
     if (!user) return null;
-    const settings = await loadSettings<OfferSettingsValues>('offer_settings');
-    setInitialData(settings);
-    return settings;
+    
+    try {
+      const settings = await loadSettings<OfferSettingsValues>('offer_settings');
+      setInitialData(settings);
+      return settings;
+    } catch (error) {
+      console.error("Error in loadAndSetSettings:", error);
+      // We'll still return the default settings from loadSettings
+      const defaultSettings = {
+        usePrefix: false,
+        prefix: 'OF-',
+        suffixYear: true,
+        defaultVatRate: 20
+      };
+      setInitialData(defaultSettings);
+      return defaultSettings;
+    } finally {
+      setFetchAttempted(true);
+    }
   };
   
   useEffect(() => {
-    if (user) {
+    if (user && !fetchAttempted) {
       loadAndSetSettings();
     }
-  }, [user]);
+  }, [user, fetchAttempted]);
   
   const form = useOfferSettingsForm(initialData, loadAndSetSettings);
   
   const onSubmit = async (values: OfferSettingsValues) => {
     await saveSettings('offer_settings', values);
   };
+
+  if (!initialData && isLoading) {
+    return (
+      <div className="py-4 text-center">
+        {t.common.loading}
+      </div>
+    );
+  }
 
   return (
     <div className="mb-8 pb-8 border-b">
