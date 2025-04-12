@@ -51,7 +51,7 @@ const HomePage = () => {
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">{t.savedClients.addClient}</CardTitle>
+            <CardTitle className="text-lg">{t.savedClients.addNewClient}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
@@ -60,7 +60,7 @@ const HomePage = () => {
             <Button asChild variant="outline" className="w-full gap-2">
               <Link to="/saved-clients">
                 <Users className="h-4 w-4" />
-                <span>{t.savedClients.addClient}</span>
+                <span>{t.savedClients.addNewClient}</span>
               </Link>
             </Button>
           </CardContent>
