@@ -371,6 +371,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          is_draft: boolean | null
           is_template: boolean | null
           name: string | null
           offer_data: Json
@@ -381,6 +382,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data: Json
@@ -391,6 +393,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data?: Json
