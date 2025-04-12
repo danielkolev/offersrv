@@ -1,29 +1,20 @@
 
-export const offer = {
-  title: "Оферта",
-  offerTitle: "Създаване на оферта",
+import { OfferTranslations } from '@/types/language/offer';
+
+export const offer: OfferTranslations = {
   details: "Детайли на офертата",
-  offerNumber: "Номер на офертата",
-  offerDate: "Дата на офертата",
-  dueDate: "Валидна до",
-  currency: "Валута",
-  offerLanguage: "Език на офертата",
-  subject: "Относно",
+  number: "Номер на оферта",
+  date: "Дата",
+  validUntil: "Валидна до",
   notes: "Бележки",
-  termsAndConditions: "Условия",
+  terms: "Общи условия",
   status: "Статус",
-  accepted: "Приета",
-  rejected: "Отхвърлена",
-  pending: "В очакване",
-  draft: "Чернова",
-  offerPreview: "Преглед на офертата",
-  createOffer: "Създаване на оферта",
-  languageOptions: {
-    bulgarian: "Български",
-    english: "Английски"
+  statuses: {
+    draft: "Чернова",
+    sent: "Изпратена",
+    accepted: "Приета",
+    rejected: "Отхвърлена"
   },
-  vatIncluded: "ДДС включено",
-  vatExcluded: "ДДС не е включено",
   offerLabel: "ОФЕРТА",
   toLabel: "ДО",
   attention: "На вниманието на",
@@ -32,25 +23,33 @@ export const offer = {
   qty: "Кол.",
   unitPrice: "Ед. цена",
   total: "Общо",
+  vatIncluded: "С включено ДДС",
+  vatExcluded: "Без ДДС",
   thankYou: "Благодарим Ви за доверието!",
-  validUntil: "Валидна до",
+  language: "Език на офертата",
+  languageOptions: {
+    bulgarian: "Български",
+    english: "Английски"
+  },
+  offerPreview: "Преглед на офертата",
+  createOffer: "Създай оферта",
   templates: {
     title: "Шаблони",
-    createNew: "Създай нов шаблон",
-    availableTemplates: "Налични шаблони",
+    description: "Управление на шаблони за оферти",
+    useTemplate: "Използвай шаблон",
+    createFromCurrent: "Създай от текущата",
+    templateName: "Име на шаблон",
+    saveAsTemplate: "Запази като шаблон",
+    templateSaved: "Шаблонът е запазен успешно",
+    noTemplates: "Няма намерени шаблони",
     noTemplatesFound: "Няма намерени шаблони. Създайте вашия първи шаблон!",
-    noDescription: "Няма предоставено описание",
     confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
-    templateDeleted: "Шаблонът беше изтрит успешно",
+    deleteTemplate: "Изтрий шаблон",
+    templateDeleted: "Шаблонът е изтрит успешно",
     defaultTemplates: "Стандартни шаблони",
     userTemplates: "Потребителски шаблони",
-    description: "Описание",
-    useTemplate: "Използвай шаблона",
-    createFromCurrent: "Създай от текущата",
-    templateName: "Име на шаблона",
-    saveAsTemplate: "Запази като шаблон",
-    templateSaved: "Шаблонът е запазен",
-    noTemplates: "Няма шаблони",
-    deleteTemplate: "Изтрий шаблона"
-  },
+    createNew: "Създай нов шаблон",
+    availableTemplates: "Налични шаблони",
+    noDescription: "Няма предоставено описание"
+  }
 };

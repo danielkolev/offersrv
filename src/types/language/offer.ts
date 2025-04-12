@@ -46,6 +46,10 @@ export interface OfferTranslations {
     templateDeleted: string;
     defaultTemplates: string;
     userTemplates: string;
+    createNew: string;
+    availableTemplates: string;
+    noTemplatesFound: string;
+    noDescription: string;
   };
 }
 
@@ -136,5 +140,5 @@ export interface SavedProductsTranslations {
   selectProduct: string;
   cancel: string;
   saveFromOffer: string;
-  deleteConfirmation?: string;
+  deleteConfirmation: string;
 }

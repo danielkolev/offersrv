@@ -1,12 +1,27 @@
 
 export const savedClients = {
   title: "Запазени клиенти",
+  createClient: "Създай клиент",
   createNew: "Създай нов клиент",
   editClient: "Редактирай клиент",
+  updateClient: "Обнови клиент",
+  addNewClient: "Добави нов клиент",
   deleteClient: "Изтрий клиент",
   confirmDelete: "Сигурни ли сте, че искате да изтриете този клиент?",
   clientDeleted: "Клиентът е изтрит успешно",
+  clientUpdatedSuccess: "Клиентът е обновен успешно",
+  clientAddedSuccess: "Клиентът е добавен успешно",
+  clientDeletedSuccess: "Клиентът е изтрит успешно",
+  clientLoaded: "Клиентът е зареден успешно",
   noClientsFound: "Няма намерени клиенти. Добавете вашия първи клиент!",
+  noClientsFoundSearch: "Няма клиенти, съответстващи на критериите за търсене",
   search: "Търсене на клиенти",
-  searchPlaceholder: "Търсене по име, имейл или компания"
+  searchPlaceholder: "Търсене по име, имейл или компания",
+  searchByName: "Търсене по име",
+  searchByVat: "Търсене по ДДС номер",
+  selectClient: "Избери клиент",
+  cancel: "Отказ",
+  importFromOffer: "Импортиране от оферта",
+  deleteConfirmation: "Сигурни ли сте, че искате да изтриете този клиент?",
+  recentClients: "Скорошни клиенти"
 };

@@ -1,31 +1,20 @@
 
-export const offer = {
-  title: "Offer",
-  offerTitle: "Create Offer",
+import { OfferTranslations } from '@/types/language/offer';
+
+export const offer: OfferTranslations = {
   details: "Offer Details",
-  offerPreview: "Offer Preview",
   number: "Offer Number",
-  date: "Offer Date",
-  expirationDate: "Expiration Date",
-  currency: "Currency",
-  language: "Language",
-  subject: "Subject",
+  date: "Date",
+  validUntil: "Valid Until",
   notes: "Notes",
+  terms: "Terms and Conditions",
   status: "Status",
-  createOffer: "Create Offer",
-  languageOptions: {
-    bulgarian: "Bulgarian",
-    english: "English"
-  },
   statuses: {
     draft: "Draft",
     sent: "Sent",
-    viewed: "Viewed",
     accepted: "Accepted",
-    rejected: "Rejected",
+    rejected: "Rejected"
   },
-  vatIncluded: "VAT included",
-  vatExcluded: "VAT not included",
   offerLabel: "OFFER",
   toLabel: "TO",
   attention: "Attention",
@@ -34,25 +23,33 @@ export const offer = {
   qty: "Qty",
   unitPrice: "Unit Price",
   total: "Total",
+  vatIncluded: "VAT Included",
+  vatExcluded: "VAT Excluded",
   thankYou: "Thank you for your business!",
-  validUntil: "Valid Until",
+  language: "Offer Language",
+  languageOptions: {
+    bulgarian: "Bulgarian",
+    english: "English"
+  },
+  offerPreview: "Offer Preview",
+  createOffer: "Create Offer",
   templates: {
     title: "Templates",
-    createNew: "Create New Template",
-    availableTemplates: "Available Templates",
-    noTemplatesFound: "No templates found. Create your first template!",
-    noDescription: "No description provided",
-    confirmDelete: "Are you sure you want to delete this template?",
-    templateDeleted: "Template has been deleted successfully",
-    defaultTemplates: "Default Templates",
-    userTemplates: "User Templates",
-    description: "Description",
+    description: "Manage your offer templates",
     useTemplate: "Use Template",
     createFromCurrent: "Create from Current",
     templateName: "Template Name",
     saveAsTemplate: "Save as Template",
-    templateSaved: "Template Saved",
-    noTemplates: "No Templates",
-    deleteTemplate: "Delete Template"
-  },
+    templateSaved: "Template saved successfully",
+    noTemplates: "No templates found",
+    noTemplatesFound: "No templates found. Create your first template!",
+    confirmDelete: "Are you sure you want to delete this template?",
+    deleteTemplate: "Delete Template",
+    templateDeleted: "Template deleted successfully",
+    defaultTemplates: "Default Templates",
+    userTemplates: "User Templates",
+    createNew: "Create New Template",
+    availableTemplates: "Available Templates",
+    noDescription: "No description provided"
+  }
 };

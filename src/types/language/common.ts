@@ -85,4 +85,16 @@ export interface CommonTranslations {
   home: string;
   collapseAll: string;
   expandAll: string;
+  // Additional items needed
+  create: string;
+  view: string;
+  add: string;
+  update: string;
+  viewAll: string;
+  welcome: string;
+  dashboard: string;
+  newOffer: string;
+  newClient: string;
+  newProduct: string;
+  templates: string;
 }

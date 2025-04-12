@@ -2,5 +2,23 @@
 export const savedOffers = {
   title: "Запазени оферти",
   saveOffer: "Запази оферта",
-  recentOffers: "Скорошни оферти"
+  recentOffers: "Скорошни оферти",
+  loadOffer: "Зареди оферта",
+  deleteOffer: "Изтрий оферта",
+  offerSaved: "Офертата е запазена успешно",
+  offerDeleted: "Офертата е изтрита успешно",
+  offerLoaded: "Офертата е заредена успешно",
+  noOffersFound: "Няма намерени оферти. Създайте вашата първа оферта!",
+  noOffersFoundSearch: "Няма оферти, съответстващи на критериите за търсене",
+  confirmDelete: "Сигурни ли сте, че искате да изтриете тази оферта?",
+  date: "Дата",
+  client: "Клиент",
+  amount: "Сума",
+  actions: "Действия",
+  search: "Търсене на оферти",
+  searchPlaceholder: "Търсене по име на клиент или номер на оферта",
+  clientName: "Име на клиент",
+  offerNumber: "Номер на оферта",
+  createNew: "Създай нова оферта",
+  viewOffer: "Преглед на оферта"
 };

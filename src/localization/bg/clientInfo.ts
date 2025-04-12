@@ -21,5 +21,7 @@ export const clientInfo: ClientInfoTranslations = {
   emailPlaceholder: 'Въведете имейл адрес',
   phonePlaceholder: 'Въведете телефонен номер',
   websitePlaceholder: 'Въведете URL адрес на уебсайт',
-  selectClient: 'Изберете клиент'
+  selectClient: 'Изберете клиент',
+  selectExisting: 'Изберете съществуващ клиент',
+  searchClients: 'Търсене на клиенти'
 };

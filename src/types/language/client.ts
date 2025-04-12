@@ -18,15 +18,32 @@ export interface ClientTranslations {
   updateClient?: string;
   clientDetails?: string;
   noClientsFound?: string;
+  name: string;
+  contactPerson: string;
 }
 
 export interface SavedClientsTranslations {
   title: string;
   createClient: string;
   noClientsFound: string;
+  noClientsFoundSearch: string;
   searchPlaceholder: string;
   confirmDelete: string;
   clientDeleted: string;
+  deleteConfirmation: string;
+  selectClient: string;
+  cancel: string;
+  updateClient: string;
+  addNewClient: string;
+  editClient: string;
+  importFromOffer: string;
+  searchByName: string;
+  searchByVat: string;
+  clientUpdatedSuccess: string;
+  clientAddedSuccess: string;
+  clientDeletedSuccess: string;
+  clientLoaded: string;
+  recentClients: string;
 }
 
 export interface ClientInfoTranslations {
@@ -50,4 +67,6 @@ export interface ClientInfoTranslations {
   phonePlaceholder: string;
   websitePlaceholder?: string;
   selectClient: string;
+  selectExisting: string;
+  searchClients: string;
 }

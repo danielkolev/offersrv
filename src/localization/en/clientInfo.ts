@@ -21,5 +21,7 @@ export const clientInfo: ClientInfoTranslations = {
   emailPlaceholder: 'Enter email address',
   phonePlaceholder: 'Enter phone number',
   websitePlaceholder: 'Enter website URL',
-  selectClient: 'Select Client'
+  selectClient: 'Select Client',
+  selectExisting: 'Select Existing Client',
+  searchClients: 'Search clients'
 };
