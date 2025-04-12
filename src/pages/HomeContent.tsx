@@ -7,11 +7,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { Offer } from '@/types/offer';
+
+interface SavedOfferData {
+  id: string;
+  created_at: string;
+  offer_data: Offer;
+  name?: string;
+}
 
 const HomeContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const [recentOffers, setRecentOffers] = useState([]);
+  const [recentOffers, setRecentOffers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,14 +41,16 @@ const HomeContent = () => {
       if (offersError) throw offersError;
       
       // Transform the offers data to include the required display fields
-      const transformedOffers = offers?.map(offer => {
+      const transformedOffers = (offers as SavedOfferData[])?.map(offer => {
         const offerData = offer.offer_data || {};
         return {
           id: offer.id,
           created_at: offer.created_at,
           client_name: offerData.client?.name || 'Unknown Client',
           offer_number: offerData.details?.offerNumber || `#${offer.id.slice(0, 8)}`,
-          total_amount: offerData.total || 0
+          total_amount: offerData.details?.includeVat 
+            ? (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice * (1 + offerData.details.vatRate / 100)), 0) 
+            : (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice), 0)
         };
       }) || [];
       
