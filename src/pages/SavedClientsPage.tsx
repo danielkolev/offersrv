@@ -1,13 +1,14 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { OfferProvider } from '@/context/offer/OfferContext';
 import SavedClientsList from '@/components/management/clients/SavedClientsList';
 import ClientSearch from '@/components/management/clients/ClientSearch';
 import ClientFormDialog from '@/components/management/clients/ClientFormDialog';
 import ClientPageHeader from '@/components/management/clients/ClientPageHeader';
 import { useClientsManagement } from '@/components/management/clients/hooks/useClientsManagement';
 
-const SavedClientsPage = () => {
+const SavedClientsContent = () => {
   const { t } = useLanguage();
   const {
     filteredClients,
@@ -66,6 +67,15 @@ const SavedClientsPage = () => {
         t={t}
       />
     </div>
+  );
+};
+
+// Main component that wraps the content with OfferProvider
+const SavedClientsPage = () => {
+  return (
+    <OfferProvider>
+      <SavedClientsContent />
+    </OfferProvider>
   );
 };
 
