@@ -23,9 +23,9 @@ const HomeContent = () => {
   const fetchRecentOffers = async () => {
     setIsLoading(true);
     try {
-      // Fetch recent offers
+      // Fetch recent offers from saved_offers table
       const { data: offers, error: offersError } = await supabase
-        .from('offers')
+        .from('saved_offers')
         .select('id, created_at, offer_data')
         .order('created_at', { ascending: false })
         .limit(5);
