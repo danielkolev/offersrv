@@ -35,11 +35,11 @@ export function useProductUnits() {
       setIsLoading(true);
       setError(null);
       
-      // Using raw SQL query instead of table name directly since the custom_units
-      // might not be in the TypeScript definitions yet
+      // Use direct table access instead of RPC function
       const { data, error } = await supabase
-        .rpc('get_custom_units', { user_id_param: user?.id })
-        .select();
+        .from('custom_units')
+        .select('id, name, name_en')
+        .eq('user_id', user?.id);
         
       if (error) throw error;
       

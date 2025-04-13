@@ -39,10 +39,11 @@ const CustomUnitsSettings = () => {
       setIsLoading(true);
       setError(null);
       
-      // Using stored procedure instead of direct table access
+      // Use direct table access instead of RPC function
       const { data, error } = await supabase
-        .rpc('get_custom_units', { user_id_param: user?.id })
-        .select();
+        .from('custom_units')
+        .select('id, name, name_en')
+        .eq('user_id', user?.id);
         
       if (error) throw error;
       
@@ -74,13 +75,15 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Using stored procedure instead of direct table access
+      // Use direct table insert instead of RPC function
       const { data, error } = await supabase
-        .rpc('add_custom_unit', { 
-          user_id_param: user?.id,
-          name_param: newUnit.name,
-          name_en_param: newUnit.name_en
-        });
+        .from('custom_units')
+        .insert({
+          user_id: user?.id,
+          name: newUnit.name,
+          name_en: newUnit.name_en
+        })
+        .select();
         
       if (error) throw error;
       
@@ -108,12 +111,12 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Using stored procedure instead of direct table access
+      // Use direct table delete instead of RPC function
       const { error } = await supabase
-        .rpc('delete_custom_unit', { 
-          unit_id_param: id,
-          user_id_param: user?.id 
-        });
+        .from('custom_units')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user?.id);
         
       if (error) throw error;
       
