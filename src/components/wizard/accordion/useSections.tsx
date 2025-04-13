@@ -3,7 +3,7 @@ import React from 'react';
 import CompanyInfoForm from '@/components/CompanyInfoForm';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
-import ProductsForm from '@/components/ProductsForm';
+import ProductsForm from '@/components/products/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
 import { useLanguage } from '@/context/LanguageContext';
 
