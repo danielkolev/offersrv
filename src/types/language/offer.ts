@@ -18,7 +18,7 @@ export interface OfferTranslations {
   lastEdited: string;  // Added for last edited date display
   statuses: {
     draft: string;
-    saved: string; // Added saved status
+    saved: string; // This property was added in the diff but wasn't properly updated in all places
     sent: string;
     accepted: string;
     rejected: string;
