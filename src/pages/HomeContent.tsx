@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer';
 import { formatDistanceToNow } from 'date-fns';
 import { bg, enUS } from 'date-fns/locale';
+import DraftIndicator from '@/components/offer-draft/DraftIndicator';
 
 const HomeContent = () => {
   const { t, language, currency } = useLanguage();
@@ -76,8 +77,12 @@ const HomeContent = () => {
 
   return (
     <div className="space-y-8">
+      <section className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">{t.home.quickActions}</h2>
+        <DraftIndicator />
+      </section>
+      
       <section>
-        <h2 className="text-xl font-semibold mb-4">{t.home.quickActions}</h2>
         <QuickActionCards />
       </section>
 

@@ -21,7 +21,7 @@ export const DraftIndicator = () => {
   const navigate = useNavigate();
   const [hasDraft, setHasDraft] = useState(false);
   
-  // Проверка за наличие на чернова при зареждане на компонента
+  // Check for draft presence when component loads
   useEffect(() => {
     const checkForDraft = async () => {
       if (!user) return;
@@ -37,9 +37,13 @@ export const DraftIndicator = () => {
     };
     
     checkForDraft();
+    
+    // Re-check every 30 seconds in case a draft is created in another tab
+    const interval = setInterval(checkForDraft, 30000);
+    return () => clearInterval(interval);
   }, [user]);
 
-  // Не показваме индикатора, ако няма чернова или потребителят не е правил промени
+  // Don't show indicator if there's no draft and user hasn't interacted
   if (!hasUserInteracted && !hasDraft) {
     return null;
   }
@@ -49,21 +53,21 @@ export const DraftIndicator = () => {
       try {
         const draftOffer = await getLatestDraftFromDatabase(user.id);
         if (draftOffer) {
-          // Зареждаме чернова директно в контекста
+          // Load draft directly into context
           setOffer(draftOffer);
         }
       } catch (error) {
         console.error("Error loading draft:", error);
       }
     }
-    // Навигиране към страницата за нова оферта
+    // Navigate to new offer page
     navigate('/new-offer');
   };
 
   const formatLastSaved = () => {
     if (!lastSaved) return t.offer.notSavedYet;
     
-    // Опростена информация за последното запазване
+    // Simplified last saved info
     const now = new Date();
     const diffMs = now.getTime() - lastSaved.getTime();
     const diffMins = Math.round(diffMs / 60000);

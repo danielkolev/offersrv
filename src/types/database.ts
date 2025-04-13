@@ -9,10 +9,10 @@ export interface SavedOffer {
   offer_data: Offer;
   meta_info?: any;
   is_template?: boolean;
-  is_draft?: boolean; // Флаг за чернови оферти
+  is_draft?: boolean; // Flag for draft offers
   name?: string;
-  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Поле за статус за филтриране
-  draft_code?: string; // Код за идентификация на чернова
+  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Status field for filtering
+  draft_code?: string; // Code for draft identification
   description?: string;
 }
 

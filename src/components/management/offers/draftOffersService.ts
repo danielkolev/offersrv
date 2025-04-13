@@ -71,6 +71,8 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           offer_data: offer as any,
           updated_at: new Date().toISOString(),
           draft_code: draftCode,
+          // Set status to draft for filtering and sorting
+          status: 'draft',
           // Force a temporary placeholder for offer number in drafts
           // We'll set this to "DRAFT-XXX" in the display instead of using actual numbers
           name: `Draft: ${offer.client.name || 'Untitled'}`
@@ -78,6 +80,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
         .eq('id', existingDrafts[0].id);
         
       if (error) {
+        console.error('Error updating draft:', error);
         throw error;
       }
     } else {
@@ -89,10 +92,12 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           offer_data: offer as any,
           is_draft: true,
           draft_code: draftCode,
+          status: 'draft',
           name: `Draft: ${offer.client.name || 'Untitled'}`
         });
         
       if (error) {
+        console.error('Error inserting draft:', error);
         throw error;
       }
     }
@@ -100,6 +105,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
     console.error('Error saving draft to database:', error);
     // Save to local storage as backup if database save fails
     saveDraftToLocalStorage(offer);
+    throw error; // Re-throw for the caller to handle
   }
 };
 

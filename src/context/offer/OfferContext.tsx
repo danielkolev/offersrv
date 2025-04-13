@@ -74,6 +74,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         setIsDirty(false);
       } catch (error) {
         console.error('Error auto-saving draft:', error);
+        // Silent error handling for auto-save - don't show toast for every failed autosave
       } finally {
         setIsAutoSaving(false);
       }
