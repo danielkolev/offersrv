@@ -1,3 +1,4 @@
+
 export const common = {
   offerForge: "OfferForge",
   save: "Save",
@@ -96,6 +97,7 @@ export const common = {
   processing: "Processing",
   step: "Step",
   of: "of",
-  // Add navigation translation
-  navigation: "Navigation"
+  navigation: "Navigation",
+  // Add the missing translation
+  noName: "Unnamed offer"
 };

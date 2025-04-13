@@ -1,4 +1,3 @@
-
 export interface OfferTranslations {
   title: string;
   createOffer: string;
@@ -78,7 +77,7 @@ export interface SavedOffersTranslations {
   saveOffer: string;
   deleteOffer: string;
   offerSaved: string;
-  offerSavedWithDetails: string; // Added the missing property
+  offerSavedWithDetails: string;
   offerDeleted: string;
   noOffersFound: string;
   noOffersFoundSearch: string;
@@ -116,6 +115,8 @@ export interface ProductsTranslations {
   selectProduct: string;
   unit: string;
   unitPlaceholder: string;
+  // Add the missing translation key
+  items: string;
 }
 
 export interface SavedProductsTranslations {
@@ -135,5 +136,5 @@ export interface SavedProductsTranslations {
   cancel: string;
   saveFromOffer: string;
   deleteConfirmation: string;
-  backToOffer: string; // Added this line
+  backToOffer: string;
 }

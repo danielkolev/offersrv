@@ -17,5 +17,7 @@ export const products = {
   selectProduct: "Select Product",
   selectExisting: "Select Existing Product",
   productName: "Product Name",
-  unitPlaceholder: "Unit of measurement"
+  unitPlaceholder: "Unit of measurement",
+  // Add the missing translation
+  items: "items"
 };

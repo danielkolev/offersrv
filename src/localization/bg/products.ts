@@ -17,5 +17,7 @@ export const products = {
   selectProduct: "Избери продукт",
   selectExisting: "Избери съществуващ продукт",
   productName: "Име на продукта",
-  unitPlaceholder: "Мерна единица"
+  unitPlaceholder: "Мерна единица",
+  // Add the missing translation
+  items: "продукта"
 };

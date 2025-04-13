@@ -1,3 +1,4 @@
+
 export interface CommonTranslations {
   offerForge: string;
   loading: string;
@@ -99,4 +100,7 @@ export interface CommonTranslations {
   
   // Add navigation property
   navigation?: string;
+  
+  // Add missing translation key
+  noName: string;
 }
