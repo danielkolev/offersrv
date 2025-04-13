@@ -3,7 +3,10 @@ import { AuthTranslations } from './auth';
 import { ClientTranslations, SavedClientsTranslations, ClientInfoTranslations } from './client';
 import { CommonTranslations } from './common';
 import { CompanyTranslations } from './company';
-import { OfferTranslations, SavedOffersTranslations, SavedProductsTranslations, ProductsTranslations } from './offer';
+import { OfferTranslations } from './offer';
+import { SavedOffersTranslations } from './savedOffers';
+import { SavedProductsTranslations } from './savedProducts';
+import { ProductsTranslations } from './products';
 import { SettingsTranslations } from './settings';
 import { UserTranslations } from './user';
 import { SupportedLanguage, SupportedCurrency, Translations } from './base';
@@ -19,25 +22,23 @@ export interface HomeType {
   noRecentClients: string;
 }
 
-// Update this interface to match SavedOffersTranslations
-export type SavedOffersType = SavedOffersTranslations;
-
-export type AuthType = AuthTranslations;
-export type ClientType = ClientTranslations;
-export type CommonType = CommonTranslations;
-export type CompanyType = CompanyTranslations;
-export type OfferType = OfferTranslations;
-export type SettingsType = SettingsTranslations;
-export type UserType = UserTranslations;
-export type CompanyInfoType = CompanyInfoTranslations;
-
+// Export all types for easy access
 export type {
   SupportedLanguage,
   SupportedCurrency,
   Translations,
+  AuthTranslations,
+  ClientTranslations,
+  CommonTranslations,
+  CompanyTranslations,
+  OfferTranslations,
+  SettingsTranslations,
+  UserTranslations,
+  CompanyInfoTranslations,
+  HomeType,
+  SavedOffersTranslations,
   SavedClientsTranslations,
   ClientInfoTranslations,
-  SavedOffersTranslations,
   SavedProductsTranslations,
   ProductsTranslations
 };

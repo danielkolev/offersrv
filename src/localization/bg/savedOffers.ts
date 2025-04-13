@@ -1,5 +1,7 @@
 
-export const savedOffers = {
+import { SavedOffersTranslations } from '@/types/language/savedOffers';
+
+export const savedOffers: SavedOffersTranslations = {
   title: "Запазени оферти",
   saveOffer: "Запази оферта",
   recentOffers: "Скорошни оферти",
@@ -22,7 +24,6 @@ export const savedOffers = {
   offerNumber: "Номер на оферта",
   createNew: "Създай нова оферта",
   viewOffer: "Преглед на оферта",
-  // Added missing properties
   noOffers: "Няма оферти",
   filter: "Филтриране на оферти"
 };

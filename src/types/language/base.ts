@@ -1,24 +1,39 @@
 
-import { AuthType, ClientType, CommonType, CompanyType, OfferType, SettingsType, UserType, HomeType, SavedOffersType, SavedClientsTranslations, ClientInfoTranslations, SavedProductsTranslations, ProductsTranslations, CompanyInfoType } from './index';
+import { 
+  AuthTranslations,
+  ClientTranslations,
+  CommonTranslations,
+  CompanyTranslations,
+  OfferTranslations,
+  SettingsTranslations,
+  UserTranslations,
+  HomeType,
+  SavedOffersTranslations,
+  SavedClientsTranslations,
+  ClientInfoTranslations,
+  SavedProductsTranslations,
+  ProductsTranslations,
+  CompanyInfoTranslations
+} from './index';
 
 export type SupportedLanguage = 'en' | 'bg';
 export type SupportedCurrency = 'USD' | 'EUR' | 'BGN';
 
 export interface Translations {
-  auth: AuthType;
-  client: ClientType;
-  common: CommonType;
-  company: CompanyType;
-  offer: OfferType;
-  settings: SettingsType;
-  user: UserType;
+  auth: AuthTranslations;
+  client: ClientTranslations;
+  common: CommonTranslations;
+  company: CompanyTranslations;
+  offer: OfferTranslations;
+  settings: SettingsTranslations;
+  user: UserTranslations;
   home: HomeType;
-  savedOffers: SavedOffersType;
+  savedOffers: SavedOffersTranslations;
   clientInfo: ClientInfoTranslations;
   savedClients: SavedClientsTranslations;
   savedProducts: SavedProductsTranslations;
   products: ProductsTranslations;
   offerDetails: any; // Using any until we create a proper type
   totals: any; // Using any until we create a proper type
-  companyInfo: CompanyInfoType;
+  companyInfo: CompanyInfoTranslations;
 }

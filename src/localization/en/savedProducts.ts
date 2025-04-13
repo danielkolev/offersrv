@@ -1,5 +1,7 @@
 
-export const savedProducts = {
+import { SavedProductsTranslations } from '@/types/language/savedProducts';
+
+export const savedProducts: SavedProductsTranslations = {
   title: "Saved Products",
   addProduct: "Add Product",
   editProduct: "Edit Product",
@@ -17,6 +19,5 @@ export const savedProducts = {
   noProductsFoundSearch: "No products found matching your search criteria.",
   deleteConfirmation: "Are you sure you want to delete this product?",
   backToOffer: "Back to Offer",
-  // Added missing property
   noProducts: "No products"
 };

@@ -1,5 +1,7 @@
 
-export const products = {
+import { ProductsTranslations } from '@/types/language/products';
+
+export const products: ProductsTranslations = {
   title: "Products",
   name: "Name",
   description: "Description",

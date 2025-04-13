@@ -1,5 +1,7 @@
 
-export const savedOffers = {
+import { SavedOffersTranslations } from '@/types/language/savedOffers';
+
+export const savedOffers: SavedOffersTranslations = {
   title: "Saved Offers",
   saveOffer: "Save Offer",
   recentOffers: "Recent Offers",
@@ -22,7 +24,6 @@ export const savedOffers = {
   offerNumber: "Offer Number",
   createNew: "Create New Offer",
   viewOffer: "View Offer",
-  // Added missing properties
   noOffers: "No offers",
   filter: "Filter offers"
 };

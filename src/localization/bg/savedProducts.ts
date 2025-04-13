@@ -1,5 +1,7 @@
 
-export const savedProducts = {
+import { SavedProductsTranslations } from '@/types/language/savedProducts';
+
+export const savedProducts: SavedProductsTranslations = {
   title: "Запазени продукти",
   addProduct: "Добави продукт",
   editProduct: "Редактирай продукт",
@@ -17,6 +19,5 @@ export const savedProducts = {
   noProductsFoundSearch: "Няма намерени продукти, отговарящи на критериите за търсене.",
   deleteConfirmation: "Сигурни ли сте, че искате да изтриете този продукт?",
   backToOffer: "Обратно към офертата",
-  // Added missing property
   noProducts: "Няма продукти"
 };
