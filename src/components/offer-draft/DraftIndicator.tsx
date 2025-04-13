@@ -2,9 +2,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOffer } from '@/context/offer';
-import { FilePenLine, X } from 'lucide-react';
+import { FileEdit } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
@@ -47,27 +47,26 @@ export const DraftIndicator = () => {
   };
   
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              onClick={handleNavigateToOffer}
-              className="bg-primary text-white shadow-lg flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:bg-primary/90"
-            >
-              <FilePenLine size={18} />
-              <span className="text-sm font-medium">{t.offer.draftInProgress}</span>
-              <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                {formatLastSaved()}
-              </span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{t.offer.returnToDraft}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge 
+            variant="outline" 
+            className="cursor-pointer bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 flex items-center gap-1.5"
+            onClick={handleNavigateToOffer}
+          >
+            <FileEdit size={14} />
+            <span>{t.offer.draftInProgress}</span>
+            <span className="text-xs bg-amber-100 px-1.5 py-0.5 rounded-full">
+              {formatLastSaved()}
+            </span>
+          </Badge>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{t.offer.returnToDraft}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 

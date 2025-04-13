@@ -19,7 +19,6 @@ import NotFound from './pages/NotFound';
 import CompanyManagementPage from './pages/CompanyManagementPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainSidebar from './components/navigation/MainSidebar';
-import DraftIndicator from './components/offer-draft/DraftIndicator';
 
 import './App.css';
 
@@ -35,18 +34,6 @@ const RouteTracker = () => {
   }, [location]);
   
   return null;
-};
-
-// Component that determines if draft indicator should be shown
-const DraftIndicatorWrapper = () => {
-  const location = useLocation();
-  
-  // Hide the draft indicator on the pages where the offer is being edited
-  if (location.pathname === '/new-offer') {
-    return null;
-  }
-  
-  return <DraftIndicator />;
 };
 
 function App() {
@@ -124,7 +111,6 @@ function App() {
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />
-                    <DraftIndicatorWrapper />
                   </div>
                 </div>
               </div>
