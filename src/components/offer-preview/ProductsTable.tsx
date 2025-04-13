@@ -7,13 +7,14 @@ import { formatCurrency } from '@/lib/utils';
 interface ProductsTableProps {
   products: Product[];
   showPartNumber: boolean;
+  displayLanguage?: string; // Add a displayLanguage prop
 }
 
-const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber }) => {
+const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber, displayLanguage }) => {
   const { language, currency, t } = useLanguage();
   
-  // Use the offer language instead of UI language for table headers
-  const offerLanguage = products[0]?.offerLanguage || language;
+  // Use displayLanguage prop or fall back to context language
+  const tableLanguage = displayLanguage || language;
 
   return (
     <div className="mb-6">
@@ -47,12 +48,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l-2 border-gray-200">
                   <p className="text-xs font-medium text-muted-foreground mb-1">
-                    {offerLanguage === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
+                    {tableLanguage === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
                   </p>
                   {product.bundledProducts.map(item => (
                     <div key={item.id} className="text-xs flex justify-between">
                       <span>{item.name} x{item.quantity}</span>
-                      <span>{formatCurrency(item.unitPrice * item.quantity, offerLanguage, currency)}</span>
+                      <span>{formatCurrency(item.unitPrice * item.quantity, tableLanguage, currency)}</span>
                     </div>
                   ))}
                 </div>
@@ -62,7 +63,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l border-gray-200">
                   <p className="text-xs text-muted-foreground">
-                    {offerLanguage === 'bg' 
+                    {tableLanguage === 'bg' 
                       ? `Пакетът включва ${product.bundledProducts.length} артикула` 
                       : `Bundle includes ${product.bundledProducts.length} items`}
                   </p>
@@ -81,11 +82,11 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
             
             {/* Unit price column - make it bold like the total price */}
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium`}>
-              {formatCurrency(product.unitPrice, offerLanguage, currency)}
+              {formatCurrency(product.unitPrice, tableLanguage, currency)}
             </div>
             
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium text-sm`}>
-              {formatCurrency(product.quantity * product.unitPrice, offerLanguage, currency)}
+              {formatCurrency(product.quantity * product.unitPrice, tableLanguage, currency)}
             </div>
           </div>
         ))}

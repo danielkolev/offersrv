@@ -2,6 +2,7 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
+import { SupportedLanguage } from '@/types/language';
 
 interface TotalsSectionProps {
   subtotal: number;
@@ -11,6 +12,7 @@ interface TotalsSectionProps {
   transportCost: number;
   otherCosts: number;
   total: number;
+  language?: SupportedLanguage; // Make language optional
 }
 
 const TotalsSection: React.FC<TotalsSectionProps> = ({ 
@@ -20,10 +22,14 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   includeVat, 
   transportCost, 
   otherCosts, 
-  total 
+  total,
+  language: displayLanguage // Accept the language prop
 }) => {
   const { language, currency, t } = useLanguage();
   
+  // Use the provided language or fall back to the context language
+  const currentLanguage = displayLanguage || language;
+
   const translations = {
     subtotal: t?.totals?.subtotal || "Subtotal",
     vat: t?.totals?.vat || "VAT",
@@ -39,22 +45,22 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
       <div className="w-full md:w-60 bg-gray-50 p-3 rounded-md">
         <div className="grid grid-cols-2 gap-1 border-b pb-2 mb-2 text-sm">
           <p className="font-medium">{translations.subtotal}:</p>
-          <p className="text-right">{formatCurrency(subtotal, language, currency)}</p>
+          <p className="text-right">{formatCurrency(subtotal, currentLanguage, currency)}</p>
           
           <p className="font-medium">{translations.vat} ({vatRate}%):</p>
-          <p className="text-right">{formatCurrency(vat, language, currency)}</p>
+          <p className="text-right">{formatCurrency(vat, currentLanguage, currency)}</p>
           
           {transportCost > 0 && (
             <>
               <p className="font-medium">{translations.transport}:</p>
-              <p className="text-right">{formatCurrency(transportCost, language, currency)}</p>
+              <p className="text-right">{formatCurrency(transportCost, currentLanguage, currency)}</p>
             </>
           )}
           
           {otherCosts > 0 && (
             <>
               <p className="font-medium">{translations.otherCosts}:</p>
-              <p className="text-right">{formatCurrency(otherCosts, language, currency)}</p>
+              <p className="text-right">{formatCurrency(otherCosts, currentLanguage, currency)}</p>
             </>
           )}
         </div>
@@ -62,7 +68,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
         <div className="grid grid-cols-2 gap-1">
           <p className="font-bold">{translations.totalAmount}:</p>
           <p className="text-right font-bold text-offer-blue">
-            {formatCurrency(total, language, currency)}
+            {formatCurrency(total, currentLanguage, currency)}
           </p>
           
           <p className="col-span-2 text-right text-xs text-muted-foreground">

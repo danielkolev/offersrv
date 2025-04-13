@@ -116,12 +116,11 @@ const OfferPreview = ({
           </div>
           
           <ProductsTable 
-            products={offer.products.map(product => ({
-              ...product,
-              offerLanguage: displayLanguage
-            }))} 
-            showPartNumber={offer.details.showPartNumber} 
+            products={offer.products} 
+            showPartNumber={offer.details.showPartNumber}
+            displayLanguage={displayLanguage}
           />
+          
           <TotalsSection 
             subtotal={calculateSubtotal()}
             vat={calculateVat()}
@@ -132,6 +131,7 @@ const OfferPreview = ({
             total={calculateTotal()}
             language={displayLanguage}
           />
+          
           <NotesSection notes={offer.details.notes} />
           
           <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible">
