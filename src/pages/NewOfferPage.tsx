@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { OfferProvider } from '@/context/offer';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
-const OfferContent = () => {
+const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -90,14 +89,6 @@ const OfferContent = () => {
         onSelectCompany={handleSelectCompany}
       />
     </div>
-  );
-};
-
-const NewOfferPage = () => {
-  return (
-    <OfferProvider>
-      <OfferContent />
-    </OfferProvider>
   );
 };
 

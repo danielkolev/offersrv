@@ -19,12 +19,14 @@ interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
   setIsSaveDialogOpen?: (isOpen: boolean) => void;
   mode?: 'edit' | 'view';
+  templateSettings?: any; // Add template settings prop
 }
 
 const OfferPreview = ({ 
   isSaveDialogOpen: externalIsSaveDialogOpen, 
   setIsSaveDialogOpen: externalSetIsSaveDialogOpen,
-  mode = 'edit'
+  mode = 'edit',
+  templateSettings
 }: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
   const { t, language } = useLanguage();
@@ -103,7 +105,9 @@ const OfferPreview = ({
           <NotesSection notes={offer.details.notes} />
           
           <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible">
-            <p>{offer.details.offerLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!'}</p>
+            <p>{offer.details.offerLanguage === 'bg' 
+                ? 'Благодарим Ви за доверието!' 
+                : 'Thank you for your business!'}</p>
           </div>
         </div>
       </CardContent>

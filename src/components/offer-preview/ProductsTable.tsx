@@ -43,7 +43,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {/* Display bundled products */}
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l-2 border-gray-200">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Bundle includes:</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">
+                    {language === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
+                  </p>
                   {product.bundledProducts.map(item => (
                     <div key={item.id} className="text-xs flex justify-between">
                       <span>{item.name} x{item.quantity}</span>
@@ -57,7 +59,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l border-gray-200">
                   <p className="text-xs text-muted-foreground">
-                    Bundle includes {product.bundledProducts.length} items
+                    {language === 'bg' 
+                      ? `Пакетът включва ${product.bundledProducts.length} артикула` 
+                      : `Bundle includes ${product.bundledProducts.length} items`}
                   </p>
                 </div>
               )}
@@ -67,15 +71,14 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               <div className="col-span-2 self-center text-sm">{product.partNumber || '-'}</div>
             )}
             
+            {/* Quantity column - show unit only if defined and not 'pcs' */}
             <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center text-sm`}>
-              {product.quantity} {product.unit && product.unit !== 'pcs' ? product.unit : ''}
+              {product.quantity}{product.unit && product.unit !== 'pcs' ? ` ${product.unit}` : ''}
             </div>
             
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm`}>
+            {/* Unit price column - make it bold like the total price and remove the "/ unit" suffix */}
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium`}>
               {formatCurrency(product.unitPrice, language, currency)}
-              {product.unit && product.unit !== 'pcs' && !product.isBundle && (
-                <span className="text-xs ml-1">/ {product.unit}</span>
-              )}
             </div>
             
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium text-sm`}>
