@@ -40,11 +40,15 @@ export interface SavedClientsTranslations {
   importFromOffer: string;
   searchByName: string;
   searchByVat: string;
+  searchByEik: string; // Added searchByEik property
   clientUpdatedSuccess: string;
   clientAddedSuccess: string;
   clientDeletedSuccess: string;
   clientLoaded: string;
   recentClients: string;
+  createNew: string; // This might be required based on translations
+  deleteClient: string; // This might be required based on translations
+  search: string; // This might be required based on translations
 }
 
 export interface ClientInfoTranslations {

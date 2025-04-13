@@ -19,7 +19,7 @@ export const savedClients = {
   searchPlaceholder: "Търсене по име, имейл или компания",
   searchByName: "Търсене по име",
   searchByVat: "Търсене по ДДС номер",
-  searchByEik: "Търсене по ЕИК",
+  searchByEik: "Търсене по ЕИК", // Ensuring it exists here
   selectClient: "Избери клиент",
   cancel: "Отказ",
   importFromOffer: "Импортиране от оферта",
