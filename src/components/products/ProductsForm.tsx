@@ -20,6 +20,7 @@ const ProductsForm = () => {
     newBundleProduct,
     setNewBundleProduct,
     handleAddProduct,
+    addExistingProduct, // Renamed to be more explicit
     updateProduct,
     removeProduct,
     openBundleDialog,
@@ -34,7 +35,7 @@ const ProductsForm = () => {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.products.title}</CardTitle>
         <div className="flex gap-2">
-          <ProductSelector onSelectProduct={product => handleAddProduct()} buttonText={t.products.selectExisting} />
+          <ProductSelector onSelectProduct={addExistingProduct} buttonText={t.products.selectExisting} />
           <Button onClick={() => handleAddProduct(true)} variant="outline" className="gap-2">
             <PackageOpen size={16} /> Add Bundle
           </Button>

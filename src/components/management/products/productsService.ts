@@ -80,5 +80,6 @@ export const convertToOfferProduct = (savedProduct: SavedProduct): Omit<Product,
     partNumber: savedProduct.part_number || undefined,
     quantity: 1,
     unitPrice: savedProduct.unit_price,
+    unit: 'pieces', // Set a default unit
   };
 };

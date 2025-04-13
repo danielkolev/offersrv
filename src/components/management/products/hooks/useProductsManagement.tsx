@@ -182,7 +182,10 @@ export const useProductsManagement = (t: Translations) => {
   };
 
   const handleSelectProduct = (savedProduct: SavedProduct) => {
+    // Convert saved product to offer product format
     const product = convertToOfferProduct(savedProduct);
+    
+    // Add the product to the offer
     addProduct(product);
     
     toast({

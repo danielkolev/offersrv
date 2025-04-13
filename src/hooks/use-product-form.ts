@@ -31,6 +31,12 @@ export function useProductForm() {
     });
   };
 
+  // New function to handle adding an existing product directly
+  const addExistingProduct = (product: Omit<Product, 'id'>) => {
+    // Add the product directly without modification
+    addProduct(product);
+  };
+
   const openBundleDialog = (productId: string) => {
     setSelectedProductId(productId);
     const product = offer.products.find(p => p.id === productId);
@@ -99,6 +105,7 @@ export function useProductForm() {
     newBundleProduct,
     setNewBundleProduct,
     handleAddProduct,
+    addExistingProduct, // Export the new function
     updateProduct,
     removeProduct,
     openBundleDialog,
