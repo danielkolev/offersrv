@@ -107,8 +107,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 value={product.unit || defaultUnit}
                 onValueChange={(value) => updateProduct(product.id, { unit: value })}
               >
-                <SelectTrigger id={`product-unit-${index}`} className="w-full" placeholder={t.products.unitPlaceholder}>
-                  <SelectValue placeholder={t.products.unitPlaceholder} />
+                <SelectTrigger id={`product-unit-${index}`} className="w-full">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {units.map(unit => (
