@@ -8,14 +8,21 @@ interface UseClientSearchProps {
 
 export const useClientSearch = ({ clients }: UseClientSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState<'name' | 'vat'>('name');
+  const [searchType, setSearchType] = useState<'name' | 'vat' | 'eik'>('name');
 
   const filteredClients = useMemo(() => {
     return clients.filter(client => {
-      if (searchType === 'name') {
-        return client.name.toLowerCase().includes(searchTerm.toLowerCase());
-      } else {
-        return client.vat_number?.toLowerCase().includes(searchTerm.toLowerCase());
+      if (searchTerm === '') return true;
+      
+      switch (searchType) {
+        case 'name':
+          return client.name.toLowerCase().includes(searchTerm.toLowerCase());
+        case 'vat':
+          return client.vat_number?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+        case 'eik':
+          return client.eik_number?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+        default:
+          return true;
       }
     });
   }, [clients, searchTerm, searchType]);

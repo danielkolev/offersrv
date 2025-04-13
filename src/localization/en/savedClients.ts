@@ -19,6 +19,7 @@ export const savedClients = {
   searchPlaceholder: "Search by name, email or company",
   searchByName: "Search by name",
   searchByVat: "Search by VAT",
+  searchByEik: "Search by EIK",
   selectClient: "Select Client",
   cancel: "Cancel",
   importFromOffer: "Import from Offer",

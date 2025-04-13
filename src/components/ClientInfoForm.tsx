@@ -76,24 +76,26 @@ const ClientInfoForm = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="clientVat">{t.clientInfo.vatNumber}</Label>
-            <Input
-              id="clientVat"
-              value={offer.client.vatNumber}
-              onChange={(e) => updateClientInfo({ vatNumber: e.target.value })}
-              placeholder={t.clientInfo.vatNumberPlaceholder}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="clientEik">{t.clientInfo.eikNumber}</Label>
-            <Input
-              id="clientEik"
-              value={offer.client.eikNumber || ''}
-              onChange={(e) => updateClientInfo({ eikNumber: e.target.value })}
-              placeholder={t.clientInfo.eikNumberPlaceholder}
-            />
+          <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="clientVat">{t.clientInfo.vatNumber}</Label>
+              <Input
+                id="clientVat"
+                value={offer.client.vatNumber}
+                onChange={(e) => updateClientInfo({ vatNumber: e.target.value })}
+                placeholder={t.clientInfo.vatNumberPlaceholder}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="clientEik">{t.clientInfo.eikNumber}</Label>
+              <Input
+                id="clientEik"
+                value={offer.client.eikNumber || ''}
+                onChange={(e) => updateClientInfo({ eikNumber: e.target.value })}
+                placeholder={t.clientInfo.eikNumberPlaceholder}
+              />
+            </div>
           </div>
           
           <div className="space-y-2">

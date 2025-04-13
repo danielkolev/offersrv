@@ -52,6 +52,7 @@ const ClientSelector = ({ onSelectClient }: ClientSelectorProps) => {
       city: client.city || '',
       country: client.country || '',
       vatNumber: client.vat_number || '',
+      eikNumber: client.eik_number || '',
       email: client.email || '',
       phone: client.phone || '',
     };
@@ -62,7 +63,8 @@ const ClientSelector = ({ onSelectClient }: ClientSelectorProps) => {
 
   const filteredClients = clients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (client.vat_number && client.vat_number.toLowerCase().includes(searchTerm.toLowerCase()))
+    (client.vat_number && client.vat_number.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (client.eik_number && client.eik_number.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -107,6 +109,11 @@ const ClientSelector = ({ onSelectClient }: ClientSelectorProps) => {
                   {client.vat_number && (
                     <div className="text-sm text-muted-foreground">
                       {t.clientInfo.vatNumber}: {client.vat_number}
+                    </div>
+                  )}
+                  {client.eik_number && (
+                    <div className="text-sm text-muted-foreground">
+                      {t.clientInfo.eikNumber}: {client.eik_number}
                     </div>
                   )}
                   {client.contact_person && (
