@@ -87,7 +87,13 @@ export const useClientOperations = (
           phone: formData.phone,
         });
         
-        setClients(prev => [...prev, newClient].sort((a, b) => a.name.localeCompare(b.name)));
+        // Make sure we have all fields required by Client type
+        const clientWithAllFields: Client = {
+          ...newClient,
+          eik_number: newClient.eik_number || null,
+        };
+        
+        setClients(prev => [...prev, clientWithAllFields].sort((a, b) => a.name.localeCompare(b.name)));
         
         toast({
           title: t.common.success,

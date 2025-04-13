@@ -13,7 +13,11 @@ export const fetchClients = async (): Promise<Client[]> => {
     throw error;
   }
   
-  return data || [];
+  // Make sure each returned client has at least a null eik_number field
+  return (data || []).map(client => ({
+    ...client,
+    eik_number: client.eik_number || null
+  }));
 };
 
 export const saveClient = async (userId: string, clientInfo: ClientInfo) => {
