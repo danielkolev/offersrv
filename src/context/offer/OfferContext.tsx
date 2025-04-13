@@ -24,6 +24,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Load draft on initial mount
   useEffect(() => {
@@ -34,6 +35,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
           if (draft) {
             setOffer(draft);
             setLastSaved(new Date());
+            setHasUserInteracted(true);
             toast({
               title: t.offer.draftLoaded,
               description: t.offer.draftRestoredDescription,
@@ -50,7 +52,8 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
   // Autosave effect
   useEffect(() => {
-    if (!user || !autoSaveEnabled || !isDirty) return;
+    // Only auto-save if the user has actually interacted with the offer
+    if (!user || !autoSaveEnabled || !isDirty || !hasUserInteracted) return;
 
     const autoSaveDraft = async () => {
       setIsAutoSaving(true);
@@ -67,69 +70,88 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
     const timer = setTimeout(autoSaveDraft, AUTO_SAVE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [offer, user, autoSaveEnabled, isDirty]);
+  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted]);
 
-  // Mark as dirty when offer changes
+  // Mark as dirty when offer changes, and set that user has interacted
   useEffect(() => {
-    setIsDirty(true);
-  }, [offer]);
+    // We use a custom equality check to prevent triggering on initial load
+    // Only mark as dirty if this isn't the first render and hasUserInteracted is true
+    if (hasUserInteracted) {
+      setIsDirty(true);
+    }
+  }, [offer, hasUserInteracted]);
+
+  // Helper function for all update functions to set hasUserInteracted flag
+  const markUserInteraction = useCallback(() => {
+    if (!hasUserInteracted) {
+      setHasUserInteracted(true);
+    }
+  }, [hasUserInteracted]);
 
   const updateCompanyInfo = useCallback((info: Partial<CompanyInfo>) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       company: { ...prev.company, ...info },
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const updateClientInfo = useCallback((info: Partial<ClientInfo>) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       client: { ...prev.client, ...info },
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const updateOfferDetails = useCallback((details: Partial<OfferDetails>) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       details: { ...prev.details, ...details },
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const addProduct = useCallback((product: Omit<Product, 'id'>) => {
+    markUserInteraction();
     const newProduct = { ...product, id: uuidv4() };
     setOffer((prev) => ({
       ...prev,
       products: [...prev.products, newProduct],
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const updateProduct = useCallback((id: string, product: Partial<Product>) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       products: prev.products.map((p) => (p.id === id ? { ...p, ...product } : p)),
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const removeProduct = useCallback((id: string) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       products: prev.products.filter((p) => p.id !== id),
     }));
-  }, []);
+  }, [markUserInteraction]);
   
   const clearProducts = useCallback(() => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       products: [],
     }));
-  }, []);
+  }, [markUserInteraction]);
   
   const resetProducts = useCallback((products: Product[]) => {
+    markUserInteraction();
     setOffer((prev) => ({
       ...prev,
       products: products,
     }));
-  }, []);
+  }, [markUserInteraction]);
 
   const calculateOfferSubtotal = useCallback(() => {
     return calculateSubtotal(offer);
@@ -145,6 +167,8 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
   const resetOffer = useCallback(async () => {
     setOffer(defaultOffer);
+    setHasUserInteracted(false);
+    setIsDirty(false);
     // Clear any saved drafts when explicitly resetting
     if (user) {
       try {
@@ -161,13 +185,16 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     
     setIsAutoSaving(true);
     try {
-      await saveDraftToDatabase(user.id, offer);
-      setLastSaved(new Date());
-      setIsDirty(false);
-      toast({
-        title: t.offer.draftSaved,
-        description: t.offer.draftSavedDescription,
-      });
+      // Only save if user has interacted with the offer
+      if (hasUserInteracted) {
+        await saveDraftToDatabase(user.id, offer);
+        setLastSaved(new Date());
+        setIsDirty(false);
+        toast({
+          title: t.offer.draftSaved,
+          description: t.offer.draftSavedDescription,
+        });
+      }
     } catch (error) {
       console.error('Error saving draft:', error);
       toast({
@@ -178,7 +205,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsAutoSaving(false);
     }
-  }, [user, offer, t, toast]);
+  }, [user, offer, t, toast, hasUserInteracted]);
 
   // New function to toggle auto-save
   const toggleAutoSave = useCallback(() => {
@@ -190,6 +217,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
   // New function to apply a template to the current offer
   const applyTemplate = useCallback((template: Partial<Offer>) => {
+    markUserInteraction();
     setOffer((prev) => {
       const updatedOffer = { ...prev };
       
@@ -208,7 +236,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
       
       return updatedOffer;
     });
-  }, []);
+  }, [markUserInteraction]);
 
   // Add functions to window for global access
   if (typeof window !== 'undefined') {
@@ -243,7 +271,8 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         lastSaved,
         autoSaveEnabled,
         saveDraft,
-        toggleAutoSave
+        toggleAutoSave,
+        hasUserInteracted
       }}
     >
       {children}

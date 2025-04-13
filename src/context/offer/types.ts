@@ -24,6 +24,7 @@ export interface OfferContextType {
   autoSaveEnabled: boolean;
   saveDraft: () => Promise<void>;
   toggleAutoSave: () => void;
+  hasUserInteracted: boolean;
 }
 
 // Extend Window interface

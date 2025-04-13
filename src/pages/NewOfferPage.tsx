@@ -11,7 +11,16 @@ const OfferContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { isDirty, isAutoSaving, lastSaved, autoSaveEnabled, saveDraft, toggleAutoSave } = useOffer();
+  const { 
+    isDirty, 
+    isAutoSaving, 
+    lastSaved, 
+    autoSaveEnabled, 
+    saveDraft, 
+    toggleAutoSave,
+    hasUserInteracted 
+  } = useOffer();
+  
   const [isLoadingCompanyData, setIsLoadingCompanyData] = React.useState(false);
   const [fetchError, setFetchError] = React.useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = React.useState<string | null>(null);
@@ -46,14 +55,17 @@ const OfferContent = () => {
           {t.offer.createOffer}
         </h1>
         
-        <DraftStatusIndicator 
-          isDirty={isDirty}
-          isAutoSaving={isAutoSaving}
-          lastSaved={lastSaved}
-          autoSaveEnabled={autoSaveEnabled}
-          onSaveDraft={saveDraft}
-          onToggleAutoSave={toggleAutoSave}
-        />
+        {/* Показва индикатора само ако потребителят е взаимодействал с офертата */}
+        {hasUserInteracted && (
+          <DraftStatusIndicator 
+            isDirty={isDirty}
+            isAutoSaving={isAutoSaving}
+            lastSaved={lastSaved}
+            autoSaveEnabled={autoSaveEnabled}
+            onSaveDraft={saveDraft}
+            onToggleAutoSave={toggleAutoSave}
+          />
+        )}
       </div>
       
       <OfferAccordion 
