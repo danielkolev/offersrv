@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Offer } from '@/types/offer';
+import { SavedOffer } from '@/types/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const DRAFT_OFFER_KEY = 'draft_offer';
@@ -59,7 +60,8 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
     
     if (existingDrafts && existingDrafts.length > 0) {
       // Use existing draft_code or generate a new one
-      draftCode = existingDrafts[0].draft_code || draftCode;
+      const existingDraft = existingDrafts[0] as SavedOffer;
+      draftCode = existingDraft.draft_code || draftCode;
       
       // Update existing draft, keeping the draft_code
       const { error } = await supabase
