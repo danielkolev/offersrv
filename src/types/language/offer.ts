@@ -1,48 +1,4 @@
 
-export interface OfferTemplatesTranslations {
-  title: string;
-  description: string;
-  empty: string;
-  create: string;
-  delete: string;
-  confirmDelete: string;
-  templateDeleted: string;
-  apply: string;
-  createNew: string;
-  name: string;
-  namePlaceholder: string;
-  descriptionPlaceholder: string;
-  save: string;
-  cancel: string;
-  saved: string;
-  error: string;
-  defaultTemplates: string;
-  userTemplates: string;
-  templateName: string;
-  noTemplates: string;
-  templateSaved: string;
-  useTemplate: string;
-  createFromCurrent: string;
-  saveAsTemplate: string;
-  noDescription: string;
-  availableTemplates: string;
-  noTemplatesFound: string;
-  templatePreview: string;
-  setAsDefault: string;
-  resetToDefault: string;
-  defaultTemplate: string;
-  sampleTemplates: string;
-  textColor: string;
-  backgroundColor: string;
-  designTemplateType: string;
-  designTemplates: {
-    classic: string;
-    modernDark: string;
-    gradient: string;
-    businessPro: string;
-  };
-}
-
 export interface OfferTranslations {
   createOffer: string;
   saveOffer: string;
@@ -77,6 +33,8 @@ export interface OfferTranslations {
   previewTitle: string;
   previewDescription: string;
   partNo: string;
+  
+  // Status related translations
   status: string;
   draftStatus: string;
   draftStatusInfo: string;
@@ -87,8 +45,12 @@ export interface OfferTranslations {
     accepted: string;
     rejected: string;
   };
+  
+  // Time related translations
   createdAt: string;
   lastEdited: string;
+  
+  // Draft related translations
   draftLoaded: string;
   draftRestoredDescription: string;
   draftSaved: string;
@@ -105,12 +67,64 @@ export interface OfferTranslations {
   disableAutoSave: string;
   draftInProgress: string;
   returnToDraft: string;
+  noContentToSave: string;
+  addContentToSave: string;
+  
+  // Client info related translations
   toLabel: string;
   attention: string;
+  
+  // Language options
   languageOptions: {
     bulgarian: string;
     english: string;
   };
-  templates: OfferTemplatesTranslations;
+  
+  // Templates related translations
+  templates: {
+    title: string;
+    description: string;
+    empty: string;
+    create: string;
+    delete: string;
+    confirmDelete: string;
+    templateDeleted: string;
+    apply: string;
+    createNew: string;
+    name: string;
+    namePlaceholder: string;
+    descriptionPlaceholder: string;
+    save: string;
+    cancel: string;
+    saved: string;
+    error: string;
+    defaultTemplates: string;
+    userTemplates: string;
+    templateName: string;
+    noTemplates: string;
+    templateSaved: string;
+    useTemplate: string;
+    createFromCurrent: string;
+    saveAsTemplate: string;
+    noDescription: string;
+    availableTemplates: string;
+    noTemplatesFound: string;
+    templatePreview: string;
+    setAsDefault: string;
+    resetToDefault: string;
+    defaultTemplate: string;
+    sampleTemplates: string;
+    textColor: string;
+    backgroundColor: string;
+    designTemplateType: string;
+    designTemplates: {
+      classic: string;
+      modernDark: string;
+      gradient: string;
+      businessPro: string;
+    }
+  };
+  
+  // Preview related translations
   offerPreview: string;
 }

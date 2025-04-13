@@ -14,6 +14,26 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+// Helper to check if a draft has meaningful content
+const hasMeaningfulContent = (draft: any): boolean => {
+  if (!draft) return false;
+  
+  // Check if client has at least a name
+  const hasClientInfo = draft.client?.name && draft.client.name.trim() !== '';
+  
+  // Check if there are any products
+  const hasProducts = draft.products && draft.products.length > 0;
+  
+  // Check if there are meaningful offer details (notes, custom number, etc.)
+  const hasOfferDetails = 
+    (draft.details?.notes && draft.details.notes.trim() !== '') || 
+    (draft.details?.offerNumber && 
+     draft.details.offerNumber !== '00000' && 
+     draft.details.offerNumber.trim() !== '');
+  
+  return hasClientInfo || hasProducts || hasOfferDetails;
+};
+
 export const DraftIndicator = () => {
   const { hasUserInteracted, lastSaved, setOffer } = useOffer();
   const { user } = useAuth();
@@ -28,8 +48,11 @@ export const DraftIndicator = () => {
       
       try {
         const draftOffer = await getLatestDraftFromDatabase(user.id);
-        if (draftOffer) {
+        // Only set hasDraft to true if the draft has meaningful content
+        if (draftOffer && hasMeaningfulContent(draftOffer)) {
           setHasDraft(true);
+        } else {
+          setHasDraft(false);
         }
       } catch (error) {
         console.error("Error checking for draft:", error);
@@ -52,7 +75,7 @@ export const DraftIndicator = () => {
     if (user && hasDraft) {
       try {
         const draftOffer = await getLatestDraftFromDatabase(user.id);
-        if (draftOffer) {
+        if (draftOffer && hasMeaningfulContent(draftOffer)) {
           // Load draft directly into context
           setOffer(draftOffer);
         }

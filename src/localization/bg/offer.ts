@@ -1,17 +1,16 @@
-
 import { OfferTranslations } from '@/types/language/offer';
 
 export const offer: OfferTranslations = {
-  createOffer: "Създаване на оферта",
-  saveOffer: "Запазване на оферта",
-  confirmSave: "Потвърждаване",
-  saveDescription: "Моля, въведете име за офертата и изберете как искате да я запазите.",
+  createOffer: "Създай оферта",
+  saveOffer: "Запази оферта",
+  confirmSave: "Потвърди",
+  saveDescription: "Моля, въведете име за вашата оферта и изберете как искате да я запазите.",
   offerName: "Име на офертата",
   saveAsTemplate: "Запази като шаблон",
   saveAsDraft: "Запази като чернова",
   saveAsFinalized: "Запази като финализирана",
   savedSuccessfully: "Офертата е запазена успешно",
-  saveFailed: "Грешка при запазване на офертата",
+  saveFailed: "Неуспешно запазване на офертата",
   clearConfirm: "Сигурни ли сте, че искате да изчистите тази оферта? Всички данни ще бъдат загубени.",
   currency: "Валута",
   fromTemplate: "От шаблон",
@@ -20,26 +19,26 @@ export const offer: OfferTranslations = {
   toCompany: "До",
   date: "Дата",
   validUntil: "Валидна до",
-  reference: "Референция",
-  notes: "Забележки",
+  reference: "Референтен номер",
+  notes: "Бележки",
   item: "Артикул",
-  qty: "К-во",
-  unit: "Мярка",
-  unitPrice: "Ед. цена",
+  qty: "Количество",
+  unit: "Единица",
+  unitPrice: "Цена за единица",
   total: "Общо",
-  saved: "Записана",
+  saved: "Запазено",
   subtotal: "Междинна сума",
   vat: "ДДС",
   totalAmount: "Обща сума",
   includeVat: "Включи ДДС",
   previewTitle: "Преглед на офертата",
-  previewDescription: "Прегледайте офертата преди запазване",
-  partNo: "Продуктов код",
+  previewDescription: "Прегледайте офертата преди да я запазите",
+  partNo: "Партиден №",
   
   // Status related translations
   status: "Статус",
   draftStatus: "Статус",
-  draftStatusInfo: "Номер ще бъде присвоен при запазване",
+  draftStatusInfo: "Номерът ще бъде присвоен при запазване",
   statuses: {
     draft: "Чернова",
     saved: "Запазена",
@@ -50,7 +49,7 @@ export const offer: OfferTranslations = {
   
   // Time related translations
   createdAt: "Създадена",
-  lastEdited: "Последна редакция",
+  lastEdited: "Последно редактирана",
   
   // Draft related translations
   draftLoaded: "Черновата е заредена",
@@ -58,8 +57,8 @@ export const offer: OfferTranslations = {
   draftSaved: "Черновата е запазена",
   draftSavedDescription: "Вашата чернова е запазена успешно",
   draftSaveError: "Грешка при запазване на черновата",
-  notSavedYet: "Още не е запазена",
-  lastSaved: "Последно запазване: {time}",
+  notSavedYet: "Все още не е запазена",
+  lastSaved: "Последно запазена: {time}",
   saving: "Запазване...",
   unsavedChanges: "Незапазени промени",
   saveManually: "Запази ръчно",
@@ -67,12 +66,12 @@ export const offer: OfferTranslations = {
   autoSaveDisabled: "Автоматичното запазване е изключено",
   enableAutoSave: "Включи автоматично запазване",
   disableAutoSave: "Изключи автоматично запазване",
-  draftInProgress: "Има незавършена чернова",
-  returnToDraft: "Връщане към черновата",
+  draftInProgress: "Черновата е в процес на работа",
+  returnToDraft: "Върнете се към черновата",
   
   // Client info related translations
   toLabel: "До",
-  attention: "Лице за контакт:",
+  attention: "Внимание:",
   
   // Language options
   languageOptions: {
@@ -99,8 +98,8 @@ export const offer: OfferTranslations = {
     saved: "Шаблонът е запазен",
     error: "Грешка при запазване на шаблона",
     defaultTemplates: "Стандартни шаблони",
-    userTemplates: "Вашите шаблони",
-    templateName: "Име на шаблона",
+    userTemplates: "Ваши шаблони",
+    templateName: "Име на шаблон",
     noTemplates: "Няма налични шаблони",
     templateSaved: "Шаблонът е запазен успешно",
     useTemplate: "Използвай шаблон",
@@ -108,11 +107,11 @@ export const offer: OfferTranslations = {
     saveAsTemplate: "Запази като шаблон",
     noDescription: "Няма описание",
     availableTemplates: "Налични шаблони",
-    noTemplatesFound: "Няма намерени шаблони",
+    noTemplatesFound: "Не са намерени шаблони",
     templatePreview: "Преглед на шаблона",
-    setAsDefault: "Задай като основен",
-    resetToDefault: "Върни към основен",
-    defaultTemplate: "Основен шаблон",
+    setAsDefault: "Задай като стандартен",
+    resetToDefault: "Възстанови стандартния",
+    defaultTemplate: "Стандартен шаблон",
     sampleTemplates: "Примерни шаблони",
     textColor: "Цвят на текста",
     backgroundColor: "Цвят на фона",
@@ -120,11 +119,15 @@ export const offer: OfferTranslations = {
     designTemplates: {
       classic: "Класически",
       modernDark: "Модерен тъмен",
-      gradient: "Градиент",
+      gradient: "Градинент",
       businessPro: "Бизнес Про"
     }
   },
   
   // Preview related translations
-  offerPreview: "Преглед на офертата"
+  offerPreview: "Преглед на офертата",
+
+  // Нови полета
+  noContentToSave: "Няма съдържание за запазване",
+  addContentToSave: "Добавете клиент или продукти, за да запазите като чернова",
 };

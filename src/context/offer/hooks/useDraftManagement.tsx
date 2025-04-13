@@ -26,6 +26,24 @@ export interface DraftActions {
   resetDraftState: () => Promise<void>;
 }
 
+// Helper to check if an offer has meaningful content
+const hasMeaningfulContent = (offer: Offer): boolean => {
+  // Check if client has at least a name
+  const hasClientInfo = offer.client.name && offer.client.name.trim() !== '';
+  
+  // Check if there are any products
+  const hasProducts = offer.products && offer.products.length > 0;
+  
+  // Check if there are meaningful offer details (notes, custom number, etc.)
+  const hasOfferDetails = 
+    (offer.details.notes && offer.details.notes.trim() !== '') || 
+    (offer.details.offerNumber && 
+     offer.details.offerNumber !== '00000' && 
+     offer.details.offerNumber.trim() !== '');
+  
+  return hasClientInfo || hasProducts || hasOfferDetails;
+};
+
 export function useDraftManagement(
   offer: Offer,
   setOffer: React.Dispatch<React.SetStateAction<Offer>>
@@ -40,6 +58,8 @@ export function useDraftManagement(
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [createdAt, setCreatedAt] = useState<Date>(new Date());
+  // New state to track if we have meaningful content
+  const [hasMeaningfulChanges, setHasMeaningfulChanges] = useState(false);
 
   // Load draft on initial mount
   useEffect(() => {
@@ -48,17 +68,24 @@ export function useDraftManagement(
         try {
           const draft = await getLatestDraftFromDatabase(user.id);
           if (draft) {
-            setOffer(draft);
-            setLastSaved(new Date());
-            setHasUserInteracted(true);
-            // If the draft has a creation date, use it
-            if (draft.createdAt) {
-              setCreatedAt(new Date(draft.createdAt));
+            // Only load drafts that have meaningful content
+            if (hasMeaningfulContent(draft)) {
+              setOffer(draft);
+              setLastSaved(new Date());
+              setHasUserInteracted(true);
+              setHasMeaningfulChanges(true);
+              // If the draft has a creation date, use it
+              if (draft.createdAt) {
+                setCreatedAt(new Date(draft.createdAt));
+              }
+              toast({
+                title: t.offer.draftLoaded,
+                description: t.offer.draftRestoredDescription,
+              });
+            } else {
+              // If draft doesn't have meaningful content, delete it
+              await deleteDraftFromDatabase(user.id);
             }
-            toast({
-              title: t.offer.draftLoaded,
-              description: t.offer.draftRestoredDescription,
-            });
           }
         } catch (error) {
           console.error('Error loading draft:', error);
@@ -69,10 +96,23 @@ export function useDraftManagement(
     loadDraft();
   }, [user, setOffer, t, toast]);
 
+  // Check for meaningful changes whenever the offer changes
+  useEffect(() => {
+    if (hasUserInteracted) {
+      const meaningful = hasMeaningfulContent(offer);
+      setHasMeaningfulChanges(meaningful);
+    }
+  }, [offer, hasUserInteracted]);
+
   // Autosave effect
   useEffect(() => {
-    // Only auto-save if the user has actually interacted with the offer
-    if (!user || !autoSaveEnabled || !isDirty || !hasUserInteracted) return;
+    // Only auto-save if:
+    // 1. User is logged in
+    // 2. Auto-save is enabled
+    // 3. We have unsaved changes
+    // 4. User has interacted with the offer
+    // 5. There are meaningful changes to save
+    if (!user || !autoSaveEnabled || !isDirty || !hasUserInteracted || !hasMeaningfulChanges) return;
 
     const autoSaveDraft = async () => {
       setIsAutoSaving(true);
@@ -97,11 +137,10 @@ export function useDraftManagement(
 
     const timer = setTimeout(autoSaveDraft, AUTO_SAVE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted, createdAt]);
+  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted, hasMeaningfulChanges, createdAt]);
 
   // Mark as dirty when offer changes, and set that user has interacted
   useEffect(() => {
-    // We use a custom equality check to prevent triggering on initial load
     // Only mark as dirty if this isn't the first render and hasUserInteracted is true
     if (hasUserInteracted) {
       setIsDirty(true);
@@ -121,8 +160,8 @@ export function useDraftManagement(
     
     setIsAutoSaving(true);
     try {
-      // Only save if user has interacted with the offer
-      if (hasUserInteracted) {
+      // Only save if user has interacted with the offer AND there are meaningful changes
+      if (hasUserInteracted && hasMeaningfulChanges) {
         // Add creation and last edited timestamps
         const draftToSave = {
           ...offer,
@@ -137,6 +176,12 @@ export function useDraftManagement(
           title: t.offer.draftSaved,
           description: t.offer.draftSavedDescription,
         });
+      } else if (hasUserInteracted && !hasMeaningfulChanges) {
+        // If user interacted but no meaningful changes, show different message
+        toast({
+          title: t.offer.noContentToSave,
+          description: t.offer.addContentToSave,
+        });
       }
     } catch (error) {
       console.error('Error saving draft:', error);
@@ -148,7 +193,7 @@ export function useDraftManagement(
     } finally {
       setIsAutoSaving(false);
     }
-  }, [user, offer, t, toast, hasUserInteracted, createdAt]);
+  }, [user, offer, t, toast, hasUserInteracted, hasMeaningfulChanges, createdAt]);
 
   // New function to toggle auto-save
   const toggleAutoSave = useCallback(() => {
@@ -162,6 +207,7 @@ export function useDraftManagement(
   const resetDraftState = useCallback(async () => {
     setHasUserInteracted(false);
     setIsDirty(false);
+    setHasMeaningfulChanges(false);
     // Clear any saved drafts when explicitly resetting
     if (user) {
       try {

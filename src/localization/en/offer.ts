@@ -69,6 +69,8 @@ export const offer: OfferTranslations = {
   disableAutoSave: "Disable auto save",
   draftInProgress: "Draft in progress",
   returnToDraft: "Return to draft",
+  noContentToSave: "Nothing to save",
+  addContentToSave: "Add client or products to save as draft",
   
   // Client info related translations
   toLabel: "To",

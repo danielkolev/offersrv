@@ -12,8 +12,29 @@ const generateDraftCode = (): string => {
   return `DRAFT-${uuidv4().substring(0, 8)}`;
 };
 
+// Helper to check if an offer has meaningful content worth saving
+const hasMeaningfulContent = (offer: Offer): boolean => {
+  // Check if client has at least a name
+  const hasClientInfo = offer.client?.name && offer.client.name.trim() !== '';
+  
+  // Check if there are any products
+  const hasProducts = offer.products && offer.products.length > 0;
+  
+  // Check if there are meaningful offer details (notes, custom number, etc.)
+  const hasOfferDetails = 
+    (offer.details?.notes && offer.details.notes.trim() !== '') || 
+    (offer.details?.offerNumber && 
+     offer.details.offerNumber !== '00000' && 
+     offer.details.offerNumber.trim() !== '');
+  
+  return hasClientInfo || hasProducts || hasOfferDetails;
+};
+
 // Save draft to local storage for temporary storage
 export const saveDraftToLocalStorage = (offer: Offer): void => {
+  // Only save if there's meaningful content
+  if (!hasMeaningfulContent(offer)) return;
+  
   try {
     localStorage.setItem(DRAFT_OFFER_KEY, JSON.stringify(offer));
   } catch (error) {
@@ -44,6 +65,12 @@ export const clearDraftFromLocalStorage = (): void => {
 
 // Save draft to database for persistent storage
 export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise<void> => {
+  // Skip saving if there's no meaningful content
+  if (!hasMeaningfulContent(offer)) {
+    console.log('Skipping draft save - no meaningful content');
+    return;
+  }
+  
   try {
     // No client or product saving for drafts
     
@@ -128,7 +155,16 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
     
     if (data && data.length > 0) {
       // Explicit casting to handle type conversion from Json to Offer
-      return (data[0].offer_data as unknown) as Offer;
+      const offerData = (data[0].offer_data as unknown) as Offer;
+      
+      // Check if the draft has meaningful content
+      if (hasMeaningfulContent(offerData)) {
+        return offerData;
+      } else {
+        // If draft doesn't have meaningful content, delete it
+        await deleteDraftFromDatabase(userId);
+        return null;
+      }
     }
     
     return null;
