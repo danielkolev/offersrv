@@ -61,7 +61,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
     
     if (existingDrafts && existingDrafts.length > 0) {
       // Use existing draft_code or generate a new one
-      const existingDraft = existingDrafts[0] as unknown as SavedOffer;
+      const existingDraft = existingDrafts[0];
       draftCode = existingDraft.draft_code || draftCode;
       
       // Update existing draft, keeping the draft_code
@@ -72,7 +72,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           updated_at: new Date().toISOString(),
           draft_code: draftCode,
           // Set status to draft for filtering and sorting
-          status: 'draft',
+          status: 'draft' as SavedOffer['status'],
           // Force a temporary placeholder for offer number in drafts
           // We'll set this to "DRAFT-XXX" in the display instead of using actual numbers
           name: `Draft: ${offer.client.name || 'Untitled'}`
@@ -92,7 +92,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           offer_data: offer as any,
           is_draft: true,
           draft_code: draftCode,
-          status: 'draft',
+          status: 'draft' as SavedOffer['status'],
           name: `Draft: ${offer.client.name || 'Untitled'}`
         });
         

@@ -14,11 +14,22 @@ export const fetchSavedOffers = async (): Promise<SavedOffer[]> => {
     throw error;
   }
   
-  // Convert the data to match our SavedOffer type
-  const typedOffers: SavedOffer[] = data?.map(item => ({
-    ...item,
-    offer_data: item.offer_data as unknown as Offer
-  })) || [];
+  // Convert the data to match our SavedOffer type with proper type validation
+  const typedOffers: SavedOffer[] = data?.map(item => {
+    // Validate status is one of the allowed values
+    let status: SavedOffer['status'] = 'draft';
+    if (item.status === 'sent' || item.status === 'accepted' || item.status === 'rejected') {
+      status = item.status;
+    } else if (item.is_draft) {
+      status = 'draft';
+    }
+    
+    return {
+      ...item,
+      status,
+      offer_data: item.offer_data as unknown as Offer
+    };
+  }) || [];
   
   return typedOffers;
 };
@@ -41,7 +52,8 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
     .insert({
       user_id: userId,
       offer_data: offer as any, // Cast to any to bypass type checking
-      name: offerName // Store the name in the separate column
+      name: offerName, // Store the name in the separate column
+      status: 'sent' as SavedOffer['status'] // Explicitly set a valid status
     })
     .select('*');
     
@@ -50,10 +62,17 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
     throw error;
   }
   
-  // Convert the returned data to match our SavedOffer type
-  const newOffer = {
-    ...data[0],
-    offer_data: data[0].offer_data as unknown as Offer
+  // Convert the returned data to match our SavedOffer type with status validation
+  const rawOffer = data[0];
+  let status: SavedOffer['status'] = 'sent';
+  if (rawOffer.status === 'draft' || rawOffer.status === 'accepted' || rawOffer.status === 'rejected') {
+    status = rawOffer.status as SavedOffer['status'];
+  }
+  
+  const newOffer: SavedOffer = {
+    ...rawOffer,
+    status,
+    offer_data: rawOffer.offer_data as unknown as Offer
   };
   
   return newOffer;
