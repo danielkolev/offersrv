@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileEdit, UserPlus, PackagePlus, LayoutTemplate } from 'lucide-react';
+import { FileEdit, UserPlus, PackagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
@@ -33,19 +33,12 @@ const QuickActionCards = () => {
       path: '/saved-products?new=true',
       color: 'bg-purple-100 text-purple-700',
       buttonText: t.common.create
-    },
-    {
-      title: t.common.templates,
-      description: t.home.templatesDescription,
-      icon: LayoutTemplate,
-      path: '/templates',
-      color: 'bg-amber-100 text-amber-700',
-      buttonText: t.common.view
     }
+    // Templates card removed as requested
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-6xl mx-auto">
       {actions.map((action, index) => (
         <Card key={index} className="border rounded-lg shadow-sm flex flex-col h-full">
           <CardHeader className="pb-2">

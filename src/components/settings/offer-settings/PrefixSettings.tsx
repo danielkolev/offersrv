@@ -36,7 +36,16 @@ const PrefixSettings: React.FC<PrefixSettingsProps> = ({ form }) => {
             <FormControl>
               <Switch
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onCheckedChange={(checked) => {
+                  field.onChange(checked);
+                  // If we're disabling the prefix, reset the prefix field
+                  if (!checked) {
+                    form.setValue('prefix', '', { shouldDirty: true });
+                  } else if (!form.getValues('prefix')) {
+                    // Set a default prefix if none exists
+                    form.setValue('prefix', 'OF-', { shouldDirty: true });
+                  }
+                }}
               />
             </FormControl>
           </FormItem>
@@ -51,7 +60,7 @@ const PrefixSettings: React.FC<PrefixSettingsProps> = ({ form }) => {
             <FormItem>
               <FormLabel>{t.settings.prefix}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="INV-" />
+                <Input {...field} placeholder="OF-" value={field.value || ''} />
               </FormControl>
               <FormDescription>
                 {t.settings.prefixDescription}

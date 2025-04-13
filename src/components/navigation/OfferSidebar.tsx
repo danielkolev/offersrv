@@ -14,7 +14,7 @@ import {
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building } from 'lucide-react';
+import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building, LayoutTemplate } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import CompanyManager from '@/components/company/CompanyManager';
@@ -62,6 +62,11 @@ const OfferSidebar = () => {
       name: t.savedProducts?.title || "Saved Products",
       path: '/saved-products',
       icon: PackageIcon
+    },
+    {
+      name: t.common?.templates || "Templates",
+      path: '/templates',
+      icon: LayoutTemplate
     },
     {
       name: t.company?.manage || "Manage Companies",
