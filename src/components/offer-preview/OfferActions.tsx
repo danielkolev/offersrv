@@ -24,10 +24,27 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   const { offer } = useOffer();
 
   const handlePrint = () => {
+    // Only allow printing in view mode
+    if (mode === 'edit') {
+      toast({
+        title: t.common.info || "Info",
+        description: t.savedOffers.saveBeforeAction || "Please save the offer before printing",
+      });
+      return;
+    }
     printContent();
   };
 
   const handleExportPDF = () => {
+    // Only allow exporting in view mode
+    if (mode === 'edit') {
+      toast({
+        title: t.common.info || "Info",
+        description: t.savedOffers.saveBeforeAction || "Please save the offer before exporting to PDF",
+      });
+      return;
+    }
+    
     if (!offerContentRef.current) return;
 
     const element = offerContentRef.current;

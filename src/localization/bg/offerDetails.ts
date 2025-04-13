@@ -6,7 +6,7 @@ export const offerDetails = {
   date: "Дата",
   validUntil: "Валидна до",
   validUntilPlaceholder: "Изберете дата на валидност",
-  showPartNumber: "Покажи номер на част",
+  showPartNumber: "Покажи продуктов код",
   includeVat: "Включи ДДС",
   vatIncluded: "Цените включват ДДС",
   vatExcluded: "Цените не включват ДДС",

@@ -3,10 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Copy, FileText, Save, Printer, Trash, Plus, FileDown } from 'lucide-react';
+import { Copy, FileText, Save, Trash, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { printContent } from './offer-preview/utils/printUtils';
-import { exportToPdf } from './management/offers/saved-offer-item/helpers';
 
 interface QuickActionToolbarProps {
   onPreview: () => void;
@@ -18,16 +16,10 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
 
-  const getOfferFileName = () => {
-    const clientName = offer.client.name || 'Client';
-    const date = new Date().toLocaleDateString().replace(/\//g, '-');
-    return `Offer-${clientName}-${date}`;
-  };
-
   const handleAddProduct = () => {
     addProduct({
-      name: 'New Product',
-      description: 'Product description',
+      name: '',
+      description: '',
       partNumber: '',
       quantity: 1,
       unitPrice: 0
@@ -45,49 +37,6 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
       title: t.common.success,
       description: 'Offer copied (placeholder)',
     });
-  };
-
-  const handlePrint = () => {
-    onPreview();
-    setTimeout(() => {
-      printContent();
-    }, 500);
-  };
-
-  const handleExportPDF = () => {
-    onPreview();
-    setTimeout(() => {
-      const element = document.querySelector('.offer-preview-content');
-      if (!element) return;
-      
-      const filename = getOfferFileName();
-      
-      exportToPdf(
-        element,
-        filename,
-        () => {
-          toast({
-            title: t.common.processing,
-            description: "Generating PDF...",
-          });
-        },
-        () => {
-          toast({
-            title: t.common.success,
-            description: "PDF successfully generated",
-          });
-        },
-        (error) => {
-          console.error("PDF generation error:", error);
-          
-          toast({
-            title: t.common.error,
-            description: "Failed to generate PDF",
-            variant: 'destructive',
-          });
-        }
-      );
-    }, 500);
   };
 
   const handleReset = () => {
@@ -134,26 +83,6 @@ const QuickActionToolbar = ({ onPreview, onSave }: QuickActionToolbarProps) => {
             <Save className="h-5 w-5" />
           </Button>
         )}
-        
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={handlePrint}
-          title={t.common.print}
-          className="hover:bg-blue-50"
-        >
-          <Printer className="h-5 w-5" />
-        </Button>
-        
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={handleExportPDF}
-          title="Export PDF"
-          className="hover:bg-blue-50"
-        >
-          <FileDown className="h-5 w-5" />
-        </Button>
         
         <Button 
           variant="ghost" 

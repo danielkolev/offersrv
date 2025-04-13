@@ -6,7 +6,7 @@ export const offerDetails = {
   date: "Date",
   validUntil: "Valid Until",
   validUntilPlaceholder: "Select expiration date",
-  showPartNumber: "Show Part Number",
+  showPartNumber: "Show Product Code",
   includeVat: "Include VAT",
   vatIncluded: "Prices include VAT",
   vatExcluded: "Prices exclude VAT",

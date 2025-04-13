@@ -24,10 +24,15 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer }) => {
         <h1 className="text-2xl font-bold text-offer-gray">{offer.company.name}</h1>
         <p className="text-sm text-muted-foreground">
           {offer.company.address}<br />
-          {offer.company.city}, {offer.company.country}<br />
-          {t.clientInfo.vatNumber}: {offer.company.vatNumber}
+          {offer.company.city}, {offer.company.country}
         </p>
         <p className="text-sm mt-2">
+          {offer.company.eikNumber && (
+            <>{t.clientInfo.eikNumber}: {offer.company.eikNumber}<br /></>
+          )}
+          {offer.company.vatNumber && (
+            <>{t.clientInfo.vatNumber}: {offer.company.vatNumber}<br /></>
+          )}
           {offer.company.phone}<br />
           {offer.company.email}<br />
           {offer.company.website}

@@ -39,10 +39,6 @@ const OfferAccordion = ({
     });
   }, [expandAll]);
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const handleToggleAll = () => {
     // Use function form to ensure we get latest state
     setExpandAll(prevState => !prevState);
@@ -112,7 +108,6 @@ const OfferAccordion = ({
       
       <OfferActionButtons
         onSave={() => setIsSaveDialogOpen(true)}
-        onPrint={handlePrint}
       />
     </div>
   );
