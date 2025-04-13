@@ -12,7 +12,7 @@ export interface ProductUnit {
 
 export function useProductUnits() {
   const { user } = useAuth();
-  const { language } = useLanguage(); // Use language instead of currentLanguage
+  const { language } = useLanguage();
   const [units, setUnits] = useState<ProductUnit[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -39,37 +39,36 @@ const OfferDetailsForm = () => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          {/* Show either the offer number field or draft status */}
-          {(!hasUserInteracted || offer.details.offerNumber) ? (
-            <div className="space-y-2">
-              <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
-              <Input
-                id="offerNumber"
-                value={offer.details.offerNumber || '00000'}
-                onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
-                placeholder="00000"
-                disabled
-                className={!offer.details.offerNumber ? "bg-amber-50 text-amber-700" : ""}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t.offerDetails?.offerNumberInfo || "This number is automatically generated when the offer is saved"}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <Label htmlFor="draftStatus">{t.offer.draftStatus || "Status"}</Label>
-              <Input
-                id="draftStatus"
-                value={t.offer.statuses.draft || "Draft"}
-                disabled
-                className="bg-amber-50 text-amber-700"
-              />
-              <p className="text-xs text-muted-foreground">
-                {t.offer.draftStatusInfo || "A number will be assigned when saved"}
-              </p>
-            </div>
-          )}
+          {/* First row: Offer number and Status */}
+          <div className="space-y-2">
+            <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
+            <Input
+              id="offerNumber"
+              value={offer.details.offerNumber || '00000'}
+              onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
+              placeholder="00000"
+              disabled
+              className={!offer.details.offerNumber ? "bg-amber-50 text-amber-700" : ""}
+            />
+            <p className="text-xs text-muted-foreground">
+              {t.offerDetails?.offerNumberInfo || "This number is automatically generated when the offer is saved"}
+            </p>
+          </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="draftStatus">{t.offer.draftStatus || "Status"}</Label>
+            <Input
+              id="draftStatus"
+              value={t.offer.statuses.draft || "Draft"}
+              disabled
+              className="bg-amber-50 text-amber-700"
+            />
+            <p className="text-xs text-muted-foreground">
+              {t.offer.draftStatusInfo || "A number will be assigned when saved"}
+            </p>
+          </div>
+
+          {/* Second row: Language and Currency side by side */}
           <div className="space-y-2">
             <Label htmlFor="offerLanguage">{t.offerDetails?.language || "Offer Language"}</Label>
             <Select
@@ -86,7 +85,6 @@ const OfferDetailsForm = () => {
             </Select>
           </div>
           
-          {/* Currency selection - moved from top nav */}
           <div className="space-y-2">
             <Label htmlFor="currency">{t.offerDetails?.currency || "Currency"}</Label>
             <Select
@@ -105,6 +103,7 @@ const OfferDetailsForm = () => {
             </Select>
           </div>
           
+          {/* Third row: Date and Valid Until side by side */}
           <div className="space-y-2">
             <Label htmlFor="offerDate" className="after:content-['*'] after:text-red-500 after:ml-0.5">
               {t.offerDetails?.date || "Date"}

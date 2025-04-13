@@ -14,6 +14,7 @@ export const useClientForm = ({ client, open }: UseClientFormProps) => {
     defaultValues: {
       name: client?.name || '',
       vatNumber: client?.vat_number || '',
+      eikNumber: client?.eik_number || '',
       contactPerson: client?.contact_person || '',
       address: client?.address || '',
       city: client?.city || '',
@@ -29,6 +30,7 @@ export const useClientForm = ({ client, open }: UseClientFormProps) => {
       form.reset({
         name: client?.name || '',
         vatNumber: client?.vat_number || '',
+        eikNumber: client?.eik_number || '',
         contactPerson: client?.contact_person || '',
         address: client?.address || '',
         city: client?.city || '',

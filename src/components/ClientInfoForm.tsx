@@ -87,6 +87,16 @@ const ClientInfoForm = () => {
           </div>
           
           <div className="space-y-2">
+            <Label htmlFor="clientEik">{t.clientInfo.eikNumber}</Label>
+            <Input
+              id="clientEik"
+              value={offer.client.eikNumber || ''}
+              onChange={(e) => updateClientInfo({ eikNumber: e.target.value })}
+              placeholder={t.clientInfo.eikNumberPlaceholder}
+            />
+          </div>
+          
+          <div className="space-y-2">
             <Label htmlFor="clientEmail">{t.clientInfo.email}</Label>
             <Input
               id="clientEmail"

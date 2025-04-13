@@ -5,22 +5,11 @@ import { OfferProvider, useOffer } from '@/context/offer';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import DraftStatusIndicator from '@/components/offer-draft/DraftStatusIndicator';
 
 const OfferContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { 
-    isDirty, 
-    isAutoSaving, 
-    lastSaved, 
-    autoSaveEnabled, 
-    saveDraft, 
-    toggleAutoSave,
-    hasUserInteracted 
-  } = useOffer();
-  
   const [isLoadingCompanyData, setIsLoadingCompanyData] = React.useState(false);
   const [fetchError, setFetchError] = React.useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = React.useState<string | null>(null);
@@ -55,17 +44,7 @@ const OfferContent = () => {
           {t.offer.createOffer}
         </h1>
         
-        {/* Показва индикатора само ако потребителят е взаимодействал с офертата */}
-        {hasUserInteracted && (
-          <DraftStatusIndicator 
-            isDirty={isDirty}
-            isAutoSaving={isAutoSaving}
-            lastSaved={lastSaved}
-            autoSaveEnabled={autoSaveEnabled}
-            onSaveDraft={saveDraft}
-            onToggleAutoSave={toggleAutoSave}
-          />
-        )}
+        {/* Removed DraftStatusIndicator from here as it's now only shown in the TopNavBar */}
       </div>
       
       <OfferAccordion 

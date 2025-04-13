@@ -16,6 +16,7 @@ import { useClientForm } from './hooks/useClientForm';
 export interface ClientFormData {
   name: string;
   vatNumber: string;
+  eikNumber: string;
   contactPerson: string;
   address: string;
   city: string;
