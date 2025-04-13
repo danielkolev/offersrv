@@ -269,7 +269,12 @@ const OfferTemplates = () => {
   };
   
   const handleSelectTemplate = (template: Partial<Offer>) => {
-    applyTemplate(template);
+    // Instead of passing the template directly, we need to create a temporary ID
+    // and apply it to the offer context
+    const tempId = `temp-${Date.now()}`;
+    window.localStorage.setItem(`temp-template-${tempId}`, JSON.stringify(template));
+    applyTemplate(tempId);
+    
     toast({
       title: t.common.success,
       description: 'Template applied successfully',

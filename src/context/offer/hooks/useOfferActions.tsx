@@ -15,6 +15,28 @@ export function useOfferActions(
   const applyTemplate = (templateId?: string) => {
     markUserInteraction();
     
+    // Check if it's a temporary template ID
+    if (templateId?.startsWith('temp-')) {
+      const tempTemplateData = window.localStorage.getItem(`temp-template-${templateId}`);
+      if (tempTemplateData) {
+        try {
+          const templateData = JSON.parse(tempTemplateData);
+          // Apply the template data directly
+          setOffer(prevOffer => ({
+            ...prevOffer,
+            ...templateData
+          }));
+          
+          // Clean up the temporary storage
+          window.localStorage.removeItem(`temp-template-${templateId}`);
+          return;
+        } catch (e) {
+          console.error('Error parsing temporary template:', e);
+        }
+      }
+    }
+    
+    // Regular template handling
     const template = templateId 
       ? getTemplateById(templateId) 
       : getDefaultTemplate();
