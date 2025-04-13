@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -39,7 +38,7 @@ const SavedOffersContent: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   // Filter states
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -159,7 +158,7 @@ const SavedOffersContent: React.FC = () => {
     }
     
     // Apply status filter
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== 'all') {
       filtered = filtered.filter(offer => {
         if (statusFilter === 'draft') {
           return offer.is_draft === true;
@@ -182,7 +181,7 @@ const SavedOffersContent: React.FC = () => {
   };
   
   const resetFilters = () => {
-    setStatusFilter('');
+    setStatusFilter('all');
     setDateFilter(undefined);
     setSearchTerm('');
   };
@@ -245,7 +244,7 @@ const SavedOffersContent: React.FC = () => {
                     <SelectValue placeholder={t.offer.status} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All</SelectItem>
+                    <SelectItem value="all">{t.common.all}</SelectItem>
                     <SelectItem value="draft">{t.offer.statuses.draft}</SelectItem>
                     <SelectItem value="sent">{t.offer.statuses.sent}</SelectItem>
                     <SelectItem value="accepted">{t.offer.statuses.accepted}</SelectItem>
