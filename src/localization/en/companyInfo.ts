@@ -13,7 +13,9 @@ export const enCompanyInfoTranslations: CompanyInfoTranslations = {
   website: 'Website',
   logo: 'Company Logo',
   uploadLogo: 'Upload Logo',
-  removeLogo: 'Remove Logo'
+  removeLogo: 'Remove Logo',
+  slogan: 'Company Slogan',
+  sloganPlaceholder: 'Enter a slogan or tagline for your company'
 };
 
 // Export for use in the main language file

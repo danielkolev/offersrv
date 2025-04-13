@@ -13,76 +13,99 @@ const OfferHeader = ({ offer }: OfferHeaderProps) => {
   
   return (
     <div className="mb-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-2">
-            {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
-          </h1>
-          <div className="text-sm space-y-1">
-            <p>
-              <span className="font-medium">{language === 'bg' ? 'Номер' : 'Number'}:</span> {offer.details.offerNumber || '-'}
-            </p>
-            <p>
-              <span className="font-medium">{language === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, language)}
-            </p>
-            {offer.details.validUntil && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, language)}
-              </p>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex-shrink-0 mt-4 sm:mt-0">
+      <div className="flex flex-col md:flex-row justify-between items-start mb-6">
+        {/* Left side - Logo and slogan */}
+        <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-8">
           {offer.company.logo ? (
-            <div className="h-20 max-w-[200px]">
+            <div className="mb-2">
               <img 
                 src={offer.company.logo} 
                 alt={offer.company.name || t.companyInfo.logo} 
-                className="h-full object-contain"
+                className="max-h-24 max-w-[200px] object-contain"
               />
             </div>
-          ) : offer.company.name ? (
-            <div className="text-xl font-bold">{offer.company.name}</div>
           ) : null}
+          
+          {offer.company.slogan && (
+            <div className="text-sm italic text-muted-foreground mt-2">
+              {offer.company.slogan}
+            </div>
+          )}
+        </div>
+        
+        {/* Right side - Company info */}
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold mb-2 text-right">
+            {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
+          </h1>
+          
+          <div className="text-sm space-y-1">
+            <p className="font-medium">{offer.company.name}</p>
+            {offer.company.address && (
+              <p>{offer.company.address}{offer.company.city ? `, ${offer.company.city}` : ''}</p>
+            )}
+            {offer.company.country && <p>{offer.company.country}</p>}
+            
+            <div className="grid grid-cols-1 gap-1 mt-2">
+              {offer.company.vatNumber && (
+                <p>
+                  <span className="font-medium">{language === 'bg' ? 'ДДС №:' : 'VAT No:'}:</span> {offer.company.vatNumber}
+                </p>
+              )}
+              {offer.company.eikNumber && (
+                <p>
+                  <span className="font-medium">{language === 'bg' ? 'ЕИК:' : 'Company ID:'}:</span> {offer.company.eikNumber}
+                </p>
+              )}
+              {offer.company.phone && (
+                <p>
+                  <span className="font-medium">{language === 'bg' ? 'Телефон:' : 'Phone:'}:</span> {offer.company.phone}
+                </p>
+              )}
+              {offer.company.email && (
+                <p>
+                  <span className="font-medium">{language === 'bg' ? 'Имейл:' : 'Email:'}:</span> {offer.company.email}
+                </p>
+              )}
+              {offer.company.website && (
+                <p>
+                  <span className="font-medium">{language === 'bg' ? 'Уебсайт:' : 'Website:'}:</span> {offer.company.website}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       
-      <div className="border-b pb-4 mb-4">
-        <div className="text-sm space-y-1">
+      {/* Client and offer details in a two-column layout */}
+      <div className="flex flex-col md:flex-row justify-between border-b pb-4 mb-4">
+        {/* Left side - Will be replaced by ClientInfoSection */}
+        <div className="flex-1">
+          {/* ClientInfoSection will be rendered separately */}
+        </div>
+        
+        {/* Right side - Offer details */}
+        <div className="flex-1 mt-4 md:mt-0 md:ml-4 p-4 bg-gray-50 rounded-md">
           <h3 className="font-semibold text-lg mb-2">
-            {language === 'bg' ? 'Данни за фирмата' : 'Company Details'}
+            {language === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
           </h3>
-          <p className="font-medium">{offer.company.name}</p>
-          {offer.company.address && (
-            <p>{offer.company.address}{offer.company.city ? `, ${offer.company.city}` : ''}</p>
-          )}
-          {offer.company.country && <p>{offer.company.country}</p>}
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mt-2">
-            {offer.company.vatNumber && (
+          <div className="text-sm space-y-2">
+            {offer.details.offerNumber && (
               <p>
-                <span className="font-medium">{language === 'bg' ? 'ДДС №:' : 'VAT No:'}:</span> {offer.company.vatNumber}
+                <span className="font-medium">{language === 'bg' ? 'Номер:' : 'Number:'}</span> {offer.details.offerNumber}
               </p>
             )}
-            {offer.company.eikNumber && (
+            
+            {offer.details.date && (
               <p>
-                <span className="font-medium">{language === 'bg' ? 'ЕИК:' : 'Company ID:'}:</span> {offer.company.eikNumber}
+                <span className="font-medium">{language === 'bg' ? 'Дата:' : 'Date:'}</span> {formatDate(offer.details.date, language)}
               </p>
             )}
-            {offer.company.phone && (
+            
+            {offer.details.validUntil && (
               <p>
-                <span className="font-medium">{language === 'bg' ? 'Телефон:' : 'Phone:'}:</span> {offer.company.phone}
-              </p>
-            )}
-            {offer.company.email && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Имейл:' : 'Email:'}:</span> {offer.company.email}
-              </p>
-            )}
-            {offer.company.website && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Уебсайт:' : 'Website:'}:</span> {offer.company.website}
+                <span className="font-medium">{language === 'bg' ? 'Валидна до:' : 'Valid until:'}</span> {formatDate(offer.details.validUntil, language)}
               </p>
             )}
           </div>

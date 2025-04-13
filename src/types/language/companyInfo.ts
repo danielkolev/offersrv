@@ -12,4 +12,6 @@ export interface CompanyInfoTranslations {
   logo: string;
   uploadLogo: string;
   removeLogo: string;
+  slogan: string;
+  sloganPlaceholder: string;
 }

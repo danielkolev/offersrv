@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ClientInfoForm from '@/components/ClientInfoForm';
 import CompanyInfoForm from '@/components/CompanyInfoForm';
@@ -16,36 +17,42 @@ export const useSections = ({ isSaveDialogOpen, setIsSaveDialogOpen }: {
   return [
     {
       id: "company",
+      title: t.companyInfo.title,
       label: t.companyInfo.title,
       content: <CompanyInfoForm />,
     },
     {
       id: "client",
+      title: t.clientInfo.title,
       label: t.clientInfo.title,
       content: <ClientInfoForm />,
     },
     {
       id: "details",
+      title: t.offerDetails.title,
       label: t.offerDetails.title,
       content: <OfferDetailsForm />,
     },
     {
       id: "products",
+      title: t.products.title,
       label: t.products.title,
       content: <ProductsForm />,
     },
     {
       id: "preview",
-      label: t.offer.preview,
+      title: t.offerDetails.title,
+      label: "Preview", // Fallback text
       content: <OfferPreview />,
     },
     {
       id: "save",
-      label: t.offer.saveOffer,
+      title: "Save Offer", // Fallback text
+      label: "Save Offer", // Fallback text
       content: (
         <SaveOfferDialog
           open={isSaveDialogOpen}
-          onOpenChange={setIsSaveDialogOpen}
+          setOpen={setIsSaveDialogOpen}
         />
       ),
     },

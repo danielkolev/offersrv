@@ -13,7 +13,9 @@ export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
   website: 'Уебсайт',
   logo: 'Лого на фирма',
   uploadLogo: 'Качи лого',
-  removeLogo: 'Премахни лого'
+  removeLogo: 'Премахни лого',
+  slogan: 'Слоган на фирма',
+  sloganPlaceholder: 'Въведете слоган или мото на вашата фирма'
 };
 
 // Export for use in the main language file

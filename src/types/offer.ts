@@ -1,4 +1,3 @@
-
 export interface CompanyInfo {
   name: string;
   address: string;
@@ -10,6 +9,7 @@ export interface CompanyInfo {
   email: string;
   website: string;
   logo: string | null;
+  slogan?: string; // Added company slogan field
 }
 
 export interface ClientInfo {
@@ -70,3 +70,4 @@ export interface Offer {
   createdAt?: string; // Added creation timestamp
   lastEdited?: string; // Added last edited timestamp
 }
+

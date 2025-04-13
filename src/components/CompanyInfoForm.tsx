@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { UploadCloud } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import { Textarea } from '@/components/ui/textarea';
 
 const CompanyInfoForm = () => {
   const { offer, updateCompanyInfo } = useOffer();
@@ -104,6 +105,18 @@ const CompanyInfoForm = () => {
               id="companyWebsite"
               value={offer.company.website}
               onChange={(e) => updateCompanyInfo({ website: e.target.value })}
+            />
+          </div>
+          
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="companySlogan">{t.companyInfo.slogan}</Label>
+            <Textarea
+              id="companySlogan"
+              value={offer.company.slogan || ''}
+              placeholder={t.companyInfo.sloganPlaceholder}
+              onChange={(e) => updateCompanyInfo({ slogan: e.target.value })}
+              className="resize-none"
+              rows={2}
             />
           </div>
           

@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -28,7 +28,7 @@ const OfferPreview = ({
   const offerContentRef = useRef<HTMLDivElement>(null);
   
   // Use either external or internal state based on what's provided
-  const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = useState(false);
+  const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = React.useState(false);
   
   const isSaveDialogOpen = externalIsSaveDialogOpen !== undefined 
     ? externalIsSaveDialogOpen 
