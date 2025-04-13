@@ -27,6 +27,7 @@ export const saveClient = async (userId: string, clientInfo: ClientInfo) => {
       city: clientInfo.city,
       country: clientInfo.country,
       vat_number: clientInfo.vatNumber,
+      eik_number: clientInfo.eikNumber, // Added EIK field
       email: clientInfo.email,
       phone: clientInfo.phone,
     })
@@ -49,6 +50,7 @@ export const updateClient = async (id: string, clientInfo: ClientInfo) => {
       city: clientInfo.city,
       country: clientInfo.country,
       vat_number: clientInfo.vatNumber,
+      eik_number: clientInfo.eikNumber, // Added EIK field
       email: clientInfo.email,
       phone: clientInfo.phone,
       updated_at: new Date().toISOString(),

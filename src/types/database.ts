@@ -25,6 +25,7 @@ export interface Client {
   city: string | null;
   country: string | null;
   vat_number: string | null;
+  eik_number: string | null; // Added EIK field
   email: string | null;
   phone: string | null;
   created_at: string;
