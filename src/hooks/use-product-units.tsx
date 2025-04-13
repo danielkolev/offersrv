@@ -12,7 +12,7 @@ export interface ProductUnit {
 
 export function useProductUnits() {
   const { user } = useAuth();
-  const { currentLanguage } = useLanguage();
+  const { language } = useLanguage(); // Use language instead of currentLanguage
   const [units, setUnits] = useState<ProductUnit[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,14 +35,21 @@ export function useProductUnits() {
       setIsLoading(true);
       setError(null);
       
+      // Using raw SQL query instead of table name directly since the custom_units
+      // might not be in the TypeScript definitions yet
       const { data, error } = await supabase
-        .from('custom_units')
-        .select('*')
-        .eq('user_id', user?.id);
+        .rpc('get_custom_units', { user_id_param: user?.id })
+        .select();
         
       if (error) throw error;
       
-      setUnits([...defaultUnits, ...(data || [])]);
+      const customUnits: ProductUnit[] = data?.map((unit: any) => ({
+        id: unit.id,
+        name: unit.name,
+        name_en: unit.name_en
+      })) || [];
+      
+      setUnits([...defaultUnits, ...customUnits]);
     } catch (err) {
       console.error('Error fetching custom units:', err);
       setError('Failed to load custom units');
@@ -57,7 +64,7 @@ export function useProductUnits() {
     const unit = units.find(u => u.id === unitId);
     if (!unit) return unitId;
     
-    return currentLanguage === 'bg' ? unit.name : unit.name_en;
+    return language === 'bg' ? unit.name : unit.name_en;
   };
 
   return {

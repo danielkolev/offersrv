@@ -39,14 +39,20 @@ const CustomUnitsSettings = () => {
       setIsLoading(true);
       setError(null);
       
+      // Using stored procedure instead of direct table access
       const { data, error } = await supabase
-        .from('custom_units')
-        .select('*')
-        .eq('user_id', user?.id);
+        .rpc('get_custom_units', { user_id_param: user?.id })
+        .select();
         
       if (error) throw error;
       
-      setUnits(data || []);
+      const customUnits: CustomUnit[] = data?.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        name_en: item.name_en
+      })) || [];
+      
+      setUnits(customUnits);
     } catch (err) {
       console.error('Error fetching custom units:', err);
       setError(t.settings.errorLoadingSettings || 'Failed to load custom units');
@@ -68,18 +74,18 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
+      // Using stored procedure instead of direct table access
       const { data, error } = await supabase
-        .from('custom_units')
-        .insert({
-          user_id: user?.id,
-          name: newUnit.name,
-          name_en: newUnit.name_en
-        })
-        .select();
+        .rpc('add_custom_unit', { 
+          user_id_param: user?.id,
+          name_param: newUnit.name,
+          name_en_param: newUnit.name_en
+        });
         
       if (error) throw error;
       
-      setUnits([...units, data[0]]);
+      // Refresh the units list
+      fetchCustomUnits();
       setNewUnit({ name: '', name_en: '' });
       
       toast({
@@ -102,11 +108,12 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
+      // Using stored procedure instead of direct table access
       const { error } = await supabase
-        .from('custom_units')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user?.id);
+        .rpc('delete_custom_unit', { 
+          unit_id_param: id,
+          user_id_param: user?.id 
+        });
         
       if (error) throw error;
       

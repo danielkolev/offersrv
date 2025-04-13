@@ -5,6 +5,7 @@ import { translations } from '@/localization';
 
 interface LanguageContextType {
   language: SupportedLanguage;
+  currentLanguage: SupportedLanguage; // Added property for consistency 
   currency: SupportedCurrency;
   t: Translations;
   setLanguage: (lang: SupportedLanguage) => void;
@@ -32,6 +33,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     <LanguageContext.Provider
       value={{
         language,
+        currentLanguage: language, // Added property with same value as language
         currency,
         t,
         setLanguage: handleLanguageChange,
