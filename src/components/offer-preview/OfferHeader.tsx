@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
@@ -52,14 +51,14 @@ const OfferHeader = ({ offer }: OfferHeaderProps) => {
           )}
           
           <div className="mt-1 flex flex-col gap-1">
-            {offer.company.vatNumber && (
-              <p className="text-muted-foreground">
-                <span className="font-medium">{language === 'bg' ? 'ДДС №' : 'VAT No'}:</span> {offer.company.vatNumber}
-              </p>
-            )}
             {offer.company.eikNumber && (
               <p className="text-muted-foreground">
                 <span className="font-medium">{language === 'bg' ? 'ЕИК' : 'Company ID'}:</span> {offer.company.eikNumber}
+              </p>
+            )}
+            {offer.company.vatNumber && (
+              <p className="text-muted-foreground">
+                <span className="font-medium">{language === 'bg' ? 'ДДС №' : 'VAT No'}:</span> {offer.company.vatNumber}
               </p>
             )}
             <div className="flex gap-x-4 justify-end flex-wrap">
@@ -91,38 +90,8 @@ const OfferHeader = ({ offer }: OfferHeaderProps) => {
       <Separator className="mb-4" />
       
       {/* Client and offer details in a two-column layout */}
-      <div className="flex flex-col md:flex-row justify-between">
-        {/* Left side - Client info placeholder */}
-        <div className="flex-1">
-          {/* ClientInfoSection will be rendered separately */}
-        </div>
-        
-        {/* Right side - Offer details */}
-        <div className="flex-1 mt-4 md:mt-0 md:ml-4 bg-gray-50 rounded-md p-3">
-          <h3 className="font-semibold text-base mb-2 text-offer-blue">
-            {language === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
-          </h3>
-          
-          <div className="text-sm space-y-1">
-            {offer.details.offerNumber && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Номер' : 'Number'}:</span> {offer.details.offerNumber}
-              </p>
-            )}
-            
-            {offer.details.date && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, language)}
-              </p>
-            )}
-            
-            {offer.details.validUntil && (
-              <p>
-                <span className="font-medium">{language === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, language)}
-              </p>
-            )}
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* The ClientInfoSection will be rendered here by OfferPreview */}
       </div>
     </div>
   );

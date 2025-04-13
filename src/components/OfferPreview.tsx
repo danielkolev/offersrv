@@ -12,6 +12,8 @@ import NotesSection from './offer-preview/NotesSection';
 import SaveButton from './offer-preview/SaveButton';
 import OfferActions from './offer-preview/OfferActions';
 import SaveOfferHandler from './offer-preview/SaveOfferHandler';
+import { useLanguage } from '@/context/LanguageContext';
+import { formatDate } from '@/lib/utils';
 
 interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
@@ -25,6 +27,7 @@ const OfferPreview = ({
   mode = 'edit'
 }: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
+  const { t, language } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
   
   // Use either external or internal state based on what's provided
@@ -35,6 +38,9 @@ const OfferPreview = ({
     : internalIsSaveDialogOpen;
     
   const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
+
+  // Check if it's a draft (no offer number)
+  const isDraft = !offer.details.offerNumber;
 
   return (
     <Card className="mb-6">
@@ -47,7 +53,40 @@ const OfferPreview = ({
       <CardContent className="card-content">
         <div ref={offerContentRef} className="print-container offer-preview-content">
           <OfferHeader offer={offer} />
-          <ClientInfoSection client={offer.client} />
+          
+          {/* Client and Offer Details in two columns on the same level */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* Left column: Client info */}
+            <ClientInfoSection client={offer.client} />
+            
+            {/* Right column: Offer details */}
+            <div className="bg-gray-50 rounded-md p-3">
+              <h3 className="text-base font-semibold mb-2 text-offer-blue">
+                {language === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
+              </h3>
+              
+              <div className="text-sm space-y-1">
+                {!isDraft && offer.details.offerNumber && (
+                  <p>
+                    <span className="font-medium">{language === 'bg' ? 'Номер' : 'Number'}:</span> <span className="font-bold">{offer.details.offerNumber}</span>
+                  </p>
+                )}
+                
+                {offer.details.date && (
+                  <p>
+                    <span className="font-medium">{language === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, language)}
+                  </p>
+                )}
+                
+                {offer.details.validUntil && (
+                  <p>
+                    <span className="font-medium">{language === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, language)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          
           <ProductsTable 
             products={offer.products} 
             showPartNumber={offer.details.showPartNumber} 
