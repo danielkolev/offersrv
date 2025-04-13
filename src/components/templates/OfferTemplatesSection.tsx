@@ -60,7 +60,7 @@ const OfferTemplatesSection = () => {
   const handleSelectTemplate = (templateId: string) => {
     const template = userTemplates.find(t => t.id === templateId);
     if (template) {
-      applyTemplate(template);
+      applyTemplate(templateId);
       setSelectedTemplateId(templateId);
     }
   };
@@ -89,7 +89,7 @@ const OfferTemplatesSection = () => {
   const handleResetToDefault = () => {
     const defaultTemplate = resetToDefaultTemplate();
     if (defaultTemplate) {
-      applyTemplate(defaultTemplate);
+      applyTemplate(defaultTemplate.id);
       setSelectedTemplateId(defaultTemplate.id);
     }
   };

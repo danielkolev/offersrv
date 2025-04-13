@@ -16,7 +16,7 @@ export interface OfferContextType {
   calculateVat: () => number;
   calculateTotal: () => number;
   resetOffer: () => void;
-  applyTemplate: (template: Partial<Offer>) => void;
+  applyTemplate: (templateId?: string) => void;
   // Draft-related properties and methods
   isDirty: boolean;
   isAutoSaving: boolean;
