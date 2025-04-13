@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { SavedOffer } from '@/types/database';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/utils';
@@ -31,8 +31,8 @@ const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
   t,
   displayNumber
 }) => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [isPreviewModalOpen, setIsPreviewModalOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const handleDeleteClick = () => {
     setIsDeleteDialogOpen(true);
@@ -118,7 +118,7 @@ const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
       </CardContent>
       
       <DeleteOfferDialog
-        open={isDeleteDialogOpen}
+        isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={() => {
           onDelete();
@@ -127,12 +127,13 @@ const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
         t={t}
       />
       
-      <OfferPreviewModal
-        open={isPreviewModalOpen}
-        onClose={() => setIsPreviewModalOpen(false)}
-        offer={offer.offer_data}
-        t={t}
-      />
+      {isPreviewModalOpen && (
+        <OfferPreviewModal
+          savedOffer={offer}
+          isOpen={isPreviewModalOpen}
+          onClose={() => setIsPreviewModalOpen(false)}
+        />
+      )}
     </Card>
   );
 };

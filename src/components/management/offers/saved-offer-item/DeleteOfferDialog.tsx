@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -9,52 +9,33 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+} from '@/components/ui/alert-dialog';
+import { Translations } from '@/types/language';
 
 interface DeleteOfferDialogProps {
-  onDelete: () => void;
-  confirmationText: string;
-  deleteButtonText: string;
-  cancelButtonText: string;
-  confirmationTitle: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  t: Translations;
 }
 
-const DeleteOfferDialog = ({ 
-  onDelete, 
-  confirmationText, 
-  deleteButtonText, 
-  cancelButtonText,
-  confirmationTitle
-}: DeleteOfferDialogProps) => {
+const DeleteOfferDialog = ({ isOpen, onClose, onConfirm, t }: DeleteOfferDialogProps) => {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button 
-          variant="destructive"
-          size="icon"
-          className="h-8 w-8"
-          title={deleteButtonText}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </AlertDialogTrigger>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{confirmationTitle}</AlertDialogTitle>
+          <AlertDialogTitle>{t.savedOffers.deleteOffer}</AlertDialogTitle>
           <AlertDialogDescription>
-            {confirmationText}
+            {t.savedOffers.confirmDelete}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelButtonText}</AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={onDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="bg-destructive hover:bg-destructive/90"
           >
-            {deleteButtonText}
+            {t.common.delete}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

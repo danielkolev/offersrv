@@ -18,7 +18,7 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
   
   // When the modal opens, temporarily set the offer to the saved offer for preview
   React.useEffect(() => {
-    if (isOpen) {
+    if (isOpen && savedOffer && savedOffer.offer_data) {
       setOffer(savedOffer.offer_data);
     }
     

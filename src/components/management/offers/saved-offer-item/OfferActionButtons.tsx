@@ -2,49 +2,28 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Eye, FileEdit, Trash2 } from 'lucide-react';
-import { SavedOffer } from '@/types/database';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import OfferPreviewModal from './OfferPreviewModal';
+import { Translations } from '@/types/language';
 
 interface OfferActionButtonsProps {
-  savedOffer: SavedOffer;
-  loadOffer: (savedOffer: SavedOffer) => void;
-  deleteOffer: (id: string) => void;
-  t: any;
+  onLoad: () => void;
+  onDelete: () => void;
+  onPreview: () => void;
+  t: Translations;
 }
 
 const OfferActionButtons = ({
-  savedOffer,
-  loadOffer,
-  deleteOffer,
+  onLoad,
+  onDelete,
+  onPreview,
   t
 }: OfferActionButtonsProps) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  
-  const handlePreview = () => {
-    setIsPreviewOpen(true);
-  };
-  
-  const handleEdit = () => {
-    console.log('Loading offer for editing:', savedOffer.id);
-    loadOffer(savedOffer);
-    // The loadOffer function now handles navigation
-  };
-  
-  const handleDelete = () => {
-    deleteOffer(savedOffer.id);
-  };
-
   return (
     <div className="flex flex-wrap gap-2 justify-end">
       <Button 
         variant="outline" 
         size="icon"
         title={t.savedOffers.viewOffer}
-        onClick={handlePreview}
+        onClick={onPreview}
       >
         <Eye className="h-4 w-4" />
       </Button>
@@ -53,7 +32,7 @@ const OfferActionButtons = ({
         variant="outline" 
         size="icon"
         title={t.savedOffers.loadOffer}
-        onClick={handleEdit}
+        onClick={onLoad}
       >
         <FileEdit className="h-4 w-4" />
       </Button>
@@ -62,19 +41,11 @@ const OfferActionButtons = ({
         variant="outline"
         size="icon"
         title={t.savedOffers.deleteOffer}
-        onClick={handleDelete}
+        onClick={onDelete}
         className="text-destructive hover:bg-destructive/10"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
-      
-      {isPreviewOpen && (
-        <OfferPreviewModal
-          savedOffer={savedOffer}
-          isOpen={isPreviewOpen}
-          onClose={() => setIsPreviewOpen(false)}
-        />
-      )}
     </div>
   );
 };
