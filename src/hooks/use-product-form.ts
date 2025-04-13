@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Product, BundledProduct } from '@/types/offer';
 import { v4 as uuidv4 } from 'uuid';
+import { useProductUnits } from '@/hooks/use-product-units';
 
 export function useProductForm() {
   const { offer, addProduct, updateProduct, removeProduct } = useOffer();
+  const { defaultUnit } = useProductUnits();
   const [bundleDialogOpen, setBundleDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [bundleProducts, setBundleProducts] = useState<BundledProduct[]>([]);
@@ -24,17 +26,22 @@ export function useProductForm() {
       partNumber: '',
       quantity: 1,
       unitPrice: 0,
-      unit: 'none', // Default to 'none' for no unit displayed
+      unit: defaultUnit, // Using the default unit from the hook
       isBundle: isBundle,
       bundledProducts: isBundle ? [] : undefined,
       showBundledPrices: true // Default to showing bundled prices
     });
   };
 
-  // New function to handle adding an existing product directly
+  // Function to handle adding an existing product directly
   const addExistingProduct = (product: Omit<Product, 'id'>) => {
+    // Ensure the product has the default unit if none is specified
+    const productToAdd = {
+      ...product,
+      unit: product.unit || defaultUnit
+    };
     // Add the product directly without modification
-    addProduct(product);
+    addProduct(productToAdd);
   };
 
   const openBundleDialog = (productId: string) => {
@@ -105,7 +112,7 @@ export function useProductForm() {
     newBundleProduct,
     setNewBundleProduct,
     handleAddProduct,
-    addExistingProduct, // Export the new function
+    addExistingProduct,
     updateProduct,
     removeProduct,
     openBundleDialog,

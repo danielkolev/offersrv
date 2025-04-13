@@ -4,6 +4,7 @@ import { Product } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
+import { useProductUnits } from '@/hooks/use-product-units';
 
 interface ProductsTableProps {
   products: Product[];
@@ -13,6 +14,7 @@ interface ProductsTableProps {
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber, displayLanguage }) => {
   const { language, currency, t } = useLanguage();
+  const { getLocalizedUnitName } = useProductUnits();
   
   // Use displayLanguage prop or fall back to context language
   const tableLanguage = displayLanguage || language;
@@ -79,8 +81,8 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber,
             {/* Quantity column - only show unit if it's not empty and not the default 'none' */}
             <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center text-sm`}>
               {product.quantity}
-              {product.unit && product.unit !== 'none' && product.unit !== '' ? 
-                ` ${product.unit}` : ''}
+              {product.unit && product.unit !== 'none' ? 
+                ` ${getLocalizedUnitName(product.unit)}` : ''}
             </div>
             
             {/* Unit price column - make it bold like the total price */}

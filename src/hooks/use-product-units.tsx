@@ -19,7 +19,7 @@ export function useProductUnits() {
 
   // Start with a default "no unit" option that has a non-empty ID
   const defaultUnits: ProductUnit[] = [
-    { id: 'none', name: '', name_en: '' }, // Non-empty ID for "no unit" option
+    { id: 'none', name: '-', name_en: '-' }, // Non-empty ID for "no unit" option
     { id: 'pieces', name: 'брой', name_en: 'pieces' },
   ];
 
@@ -57,7 +57,7 @@ export function useProductUnits() {
   // Get localized unit name based on current language
   const getLocalizedUnitName = (unitId: string): string => {
     const unit = units.find(u => u.id === unitId);
-    if (!unit) return unitId;
+    if (!unit) return '';
     
     return language === 'bg' ? unit.name : unit.name_en;
   };

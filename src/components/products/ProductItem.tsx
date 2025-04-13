@@ -99,21 +99,26 @@ const ProductItem: React.FC<ProductItemProps> = ({
               onChange={(e) => updateProduct(product.id, { quantity: parseInt(e.target.value) || 0 })}
             />
             
-            <Select
-              value={product.unit || defaultUnit}
-              onValueChange={(value) => updateProduct(product.id, { unit: value })}
-            >
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder={t.products.unit} />
-              </SelectTrigger>
-              <SelectContent>
-                {units.map(unit => (
-                  <SelectItem key={unit.id} value={unit.id}>
-                    {language === 'bg' ? unit.name : unit.name_en}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="w-[120px]">
+              <Label htmlFor={`product-unit-${index}`} className="text-xs mb-1 block">
+                {language === 'bg' ? 'Мярка' : 'Unit'}
+              </Label>
+              <Select
+                value={product.unit || defaultUnit}
+                onValueChange={(value) => updateProduct(product.id, { unit: value })}
+              >
+                <SelectTrigger id={`product-unit-${index}`} className="w-full" placeholder={t.products.unitPlaceholder}>
+                  <SelectValue placeholder={t.products.unitPlaceholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {units.map(unit => (
+                    <SelectItem key={unit.id} value={unit.id}>
+                      {language === 'bg' ? unit.name : unit.name_en}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
         
