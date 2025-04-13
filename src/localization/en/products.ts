@@ -5,7 +5,7 @@ export const products: ProductsTranslations = {
   title: "Products",
   name: "Name",
   description: "Description",
-  partNumber: "Part Number",
+  partNumber: "Product Code",
   price: "Price",
   quantity: "Quantity",
   unit: "Unit",
@@ -21,5 +21,5 @@ export const products: ProductsTranslations = {
   productName: "Product Name",
   unitPlaceholder: "Unit of measurement",
   items: "items",
-  partNo: "Part No."
+  partNo: "Product Code"
 };

@@ -8,48 +8,84 @@ interface OfferHeaderProps {
   offer: Offer;
 }
 
-const OfferHeader: React.FC<OfferHeaderProps> = ({ offer }) => {
-  const { language, t } = useLanguage();
-
+const OfferHeader = ({ offer }: OfferHeaderProps) => {
+  const { t, language } = useLanguage();
+  
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
-      <div className="flex-1">
-        {offer.company.logo && (
-          <img 
-            src={offer.company.logo} 
-            alt="Company Logo" 
-            className="h-16 object-contain mb-4"
-          />
-        )}
-        <h1 className="text-2xl font-bold text-offer-gray">{offer.company.name}</h1>
-        <p className="text-sm text-muted-foreground">
-          {offer.company.address}<br />
-          {offer.company.city}, {offer.company.country}
-        </p>
-        <p className="text-sm mt-2">
-          {offer.company.eikNumber && (
-            <>{t.clientInfo.eikNumber}: {offer.company.eikNumber}<br /></>
-          )}
-          {offer.company.vatNumber && (
-            <>{t.clientInfo.vatNumber}: {offer.company.vatNumber}<br /></>
-          )}
-          {offer.company.phone}<br />
-          {offer.company.email}<br />
-          {offer.company.website}
-        </p>
+    <div className="mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold mb-2">
+            {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
+          </h1>
+          <div className="text-sm space-y-1">
+            <p>
+              <span className="font-medium">{language === 'bg' ? 'Номер' : 'Number'}:</span> {offer.details.offerNumber || '-'}
+            </p>
+            <p>
+              <span className="font-medium">{language === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, language)}
+            </p>
+            {offer.details.validUntil && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, language)}
+              </p>
+            )}
+          </div>
+        </div>
+        
+        <div className="flex-shrink-0 mt-4 sm:mt-0">
+          {offer.company.logo ? (
+            <div className="h-20 max-w-[200px]">
+              <img 
+                src={offer.company.logo} 
+                alt={offer.company.name || t.companyInfo.logo} 
+                className="h-full object-contain"
+              />
+            </div>
+          ) : offer.company.name ? (
+            <div className="text-xl font-bold">{offer.company.name}</div>
+          ) : null}
+        </div>
       </div>
       
-      <div className="min-w-[250px] border rounded-md p-4 bg-offer-lightgray">
-        <h2 className="text-xl font-medium text-offer-blue">{t.offer.offerLabel}</h2>
-        <div className="grid grid-cols-2 gap-1 mt-2">
-          <p className="text-sm font-medium">{t.offer.number}</p>
-          <p className="text-sm text-right">{offer.details.offerNumber}</p>
+      <div className="border-b pb-4 mb-4">
+        <div className="text-sm space-y-1">
+          <h3 className="font-semibold text-lg mb-2">
+            {language === 'bg' ? 'Данни за фирмата' : 'Company Details'}
+          </h3>
+          <p className="font-medium">{offer.company.name}</p>
+          {offer.company.address && (
+            <p>{offer.company.address}{offer.company.city ? `, ${offer.company.city}` : ''}</p>
+          )}
+          {offer.company.country && <p>{offer.company.country}</p>}
           
-          <p className="text-sm font-medium">{t.offer.date}</p>
-          <p className="text-sm text-right">{formatDate(offer.details.date, language)}</p>
-          
-          <p className="text-sm font-medium">{t.offer.validUntil}</p>
-          <p className="text-sm text-right">{formatDate(offer.details.validUntil, language)}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mt-2">
+            {offer.company.vatNumber && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'ДДС №:' : 'VAT No:'}:</span> {offer.company.vatNumber}
+              </p>
+            )}
+            {offer.company.eikNumber && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'ЕИК:' : 'Company ID:'}:</span> {offer.company.eikNumber}
+              </p>
+            )}
+            {offer.company.phone && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'Телефон:' : 'Phone:'}:</span> {offer.company.phone}
+              </p>
+            )}
+            {offer.company.email && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'Имейл:' : 'Email:'}:</span> {offer.company.email}
+              </p>
+            )}
+            {offer.company.website && (
+              <p>
+                <span className="font-medium">{language === 'bg' ? 'Уебсайт:' : 'Website:'}:</span> {offer.company.website}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

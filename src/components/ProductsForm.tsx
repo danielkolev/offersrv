@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,8 +35,8 @@ const ProductsForm = () => {
 
   const handleAddProduct = (isBundle: boolean = false) => {
     addProduct({
-      name: 'New Product',
-      description: 'Product description',
+      name: '',
+      description: '',
       partNumber: '',
       quantity: 1,
       unitPrice: 0,
@@ -99,6 +100,11 @@ const ProductsForm = () => {
     }
   };
 
+  // Validate product name is not empty
+  const validateProductName = (name: string) => {
+    return name.trim() !== '';
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -129,12 +135,20 @@ const ProductsForm = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
               <div className="space-y-2">
-                <Label htmlFor={`product-name-${index}`}>{t.products.productName}</Label>
+                <Label htmlFor={`product-name-${index}`} className="flex items-center">
+                  {t.products.productName}
+                  <span className="text-destructive ml-1">*</span>
+                </Label>
                 <Input
                   id={`product-name-${index}`}
                   value={product.name}
                   onChange={(e) => updateProduct(product.id, { name: e.target.value })}
+                  placeholder={t.products.productName}
+                  className={!validateProductName(product.name) ? "border-destructive" : ""}
                 />
+                {!validateProductName(product.name) && (
+                  <p className="text-sm text-destructive">{t.common.required}</p>
+                )}
               </div>
               
               {offer.details.showPartNumber && (
@@ -144,6 +158,7 @@ const ProductsForm = () => {
                     id={`product-part-${index}`}
                     value={product.partNumber || ''}
                     onChange={(e) => updateProduct(product.id, { partNumber: e.target.value })}
+                    placeholder={t.products.partNumber}
                   />
                 </div>
               )}
@@ -154,6 +169,7 @@ const ProductsForm = () => {
                   id={`product-desc-${index}`}
                   value={product.description}
                   onChange={(e) => updateProduct(product.id, { description: e.target.value })}
+                  placeholder={t.common.description}
                   rows={2}
                 />
               </div>
