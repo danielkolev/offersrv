@@ -121,14 +121,14 @@ const ProductsForm = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {offer.products.map((product, index) => <div key={product.id} className="mb-6 relative rounded-lg border p-4 bg-gray-100">
+        {offer.products.map((product, index) => <div key={product.id} className="mb-6 relative rounded-lg border p-4 bg-gray-50">
             <div className="absolute right-2 top-2">
               <Button variant="ghost" size="icon" onClick={() => removeProduct(product.id)} className="h-6 w-6 text-muted-foreground hover:text-destructive">
                 <XIcon size={16} />
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 bg-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 bg-gray-50">
               <div className="space-y-2">
                 <Label htmlFor={`product-name-${index}`} className="flex items-center">
                   {t.products.productName}
