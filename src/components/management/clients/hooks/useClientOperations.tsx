@@ -43,6 +43,7 @@ export const useClientOperations = (
           city: formData.city,
           country: formData.country,
           vatNumber: formData.vatNumber,
+          eikNumber: formData.eikNumber, // Add eikNumber here
           email: formData.email,
           phone: formData.phone,
         });
@@ -59,6 +60,7 @@ export const useClientOperations = (
                   city: formData.city,
                   country: formData.country,
                   vat_number: formData.vatNumber,
+                  eik_number: formData.eikNumber, // Add eik_number here
                   email: formData.email,
                   phone: formData.phone,
                   updated_at: new Date().toISOString(),
@@ -80,6 +82,7 @@ export const useClientOperations = (
           city: formData.city,
           country: formData.country,
           vatNumber: formData.vatNumber,
+          eikNumber: formData.eikNumber, // Add eikNumber here
           email: formData.email,
           phone: formData.phone,
         });
