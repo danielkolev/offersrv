@@ -34,5 +34,70 @@ export const offer: OfferTranslations = {
   includeVat: "Включи ДДС",
   previewTitle: "Преглед на офертата",
   previewDescription: "Прегледайте офертата преди запазване",
-  partNo: "Продуктов код"
+  partNo: "Продуктов код",
+  
+  // Status related translations
+  status: "Статус",
+  draftStatus: "Статус",
+  draftStatusInfo: "Номер ще бъде присвоен при запазване",
+  statuses: {
+    draft: "Чернова",
+    saved: "Запазена",
+    sent: "Изпратена",
+    accepted: "Приета",
+    rejected: "Отхвърлена"
+  },
+  
+  // Time related translations
+  createdAt: "Създадена",
+  lastEdited: "Последна редакция",
+  
+  // Draft related translations
+  draftLoaded: "Черновата е заредена",
+  draftRestoredDescription: "Вашата чернова е възстановена",
+  draftSaved: "Черновата е запазена",
+  draftSavedDescription: "Вашата чернова е запазена успешно",
+  draftSaveError: "Грешка при запазване на черновата",
+  notSavedYet: "Още не е запазена",
+  lastSaved: "Последно запазване: {time}",
+  saving: "Запазване...",
+  unsavedChanges: "Незапазени промени",
+  saveManually: "Запази ръчно",
+  autoSaveEnabled: "Автоматичното запазване е включено",
+  autoSaveDisabled: "Автоматичното запазване е изключено",
+  draftInProgress: "Има незавършена чернова",
+  returnToDraft: "Връщане към черновата",
+  
+  // Client info related translations
+  toLabel: "До",
+  attention: "Лице за контакт:",
+  
+  // Language options
+  languageOptions: {
+    bulgarian: "Български",
+    english: "Английски"
+  },
+  
+  // Templates related translations
+  templates: {
+    title: "Шаблони за оферти",
+    description: "Създаване и управление на шаблони за оферти",
+    empty: "Няма налични шаблони",
+    create: "Създай шаблон",
+    delete: "Изтрий",
+    confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
+    templateDeleted: "Шаблонът е изтрит успешно",
+    apply: "Приложи шаблон",
+    createNew: "Създай нов шаблон",
+    name: "Име на шаблона",
+    namePlaceholder: "Въведете име на шаблона",
+    descriptionPlaceholder: "Въведете описание на шаблона",
+    save: "Запази шаблон",
+    cancel: "Отказ",
+    saved: "Шаблонът е запазен",
+    error: "Грешка при запазване на шаблона"
+  },
+  
+  // Preview related translations
+  offerPreview: "Преглед на офертата"
 };

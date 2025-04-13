@@ -33,4 +33,69 @@ export interface OfferTranslations {
     previewTitle?: string;
     previewDescription?: string;
     partNo: string;
+    
+    // Status related translations
+    status: string;
+    draftStatus: string;
+    draftStatusInfo: string;
+    statuses: {
+        draft: string;
+        saved: string;
+        sent: string;
+        accepted: string;
+        rejected: string;
+    };
+    
+    // Time related translations
+    createdAt: string;
+    lastEdited: string;
+    
+    // Draft related translations
+    draftLoaded: string;
+    draftRestoredDescription: string;
+    draftSaved: string;
+    draftSavedDescription: string;
+    draftSaveError: string;
+    notSavedYet: string;
+    lastSaved: string;
+    saving: string;
+    unsavedChanges: string;
+    saveManually: string;
+    autoSaveEnabled: string;
+    autoSaveDisabled: string;
+    draftInProgress: string;
+    returnToDraft: string;
+    
+    // Client info related translations
+    toLabel: string;
+    attention: string;
+    
+    // Language options
+    languageOptions: {
+        bulgarian: string;
+        english: string;
+    };
+    
+    // Templates related translations
+    templates: {
+        title: string;
+        description: string;
+        empty: string;
+        create: string;
+        delete: string;
+        confirmDelete: string;
+        templateDeleted: string;
+        apply: string;
+        createNew: string;
+        name: string;
+        namePlaceholder: string;
+        descriptionPlaceholder: string;
+        save: string;
+        cancel: string;
+        saved: string;
+        error: string;
+    };
+    
+    // Preview related translations
+    offerPreview: string;
 }
