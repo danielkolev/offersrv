@@ -44,6 +44,25 @@ export const enSettingsTranslations: SettingsTranslations = {
   additionalInfo: 'Additional Info',
   additionalInfoPlaceholder: 'e.g. Branch, Account Owner',
   
+  // Custom units
+  customUnits: 'Custom Units',
+  customUnitsDescription: 'Add custom measurement units for your products',
+  unitNameBg: 'Bulgarian Name',
+  unitNameEn: 'English Name',
+  unitNamePlaceholderBg: 'e.g. брой, метър',
+  unitNamePlaceholderEn: 'e.g. piece, meter',
+  addUnit: 'Add Unit',
+  existingUnits: 'Existing Units',
+  noCustomUnits: 'No custom units added yet',
+  unitAdded: 'Unit Added',
+  unitAddedSuccess: 'Custom unit has been added successfully',
+  unitDeleted: 'Unit Deleted',
+  unitDeletedSuccess: 'Custom unit has been deleted',
+  unitNameRequired: 'Unit name is required in both languages',
+  validationError: 'Validation Error',
+  unitAddError: 'Failed to add custom unit',
+  unitDeleteError: 'Failed to delete custom unit',
+  
   // General settings messages
   settingsSaved: 'Settings saved successfully',
   errorLoadingSettings: 'Error loading settings',

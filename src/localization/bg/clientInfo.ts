@@ -13,6 +13,8 @@ export const clientInfo = {
   countryPlaceholder: "Въведете държава",
   vatNumber: "ДДС номер",
   vatNumberPlaceholder: "Въведете ДДС номер",
+  eikNumber: "ЕИК номер",
+  eikNumberPlaceholder: "Въведете ЕИК номер",
   email: "Имейл",
   emailPlaceholder: "Въведете имейл",
   phone: "Телефон",

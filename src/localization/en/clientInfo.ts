@@ -13,6 +13,8 @@ export const clientInfo = {
   countryPlaceholder: "Enter country",
   vatNumber: "VAT Number",
   vatNumberPlaceholder: "Enter VAT number",
+  eikNumber: "EIK Number (Company ID)",
+  eikNumberPlaceholder: "Enter EIK number",
   email: "Email",
   emailPlaceholder: "Enter email",
   phone: "Phone",

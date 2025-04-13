@@ -42,6 +42,25 @@ export interface SettingsTranslations {
   additionalInfo: string;
   additionalInfoPlaceholder: string;
   
+  // Custom units
+  customUnits: string;
+  customUnitsDescription: string;
+  unitNameBg: string;
+  unitNameEn: string;
+  unitNamePlaceholderBg: string;
+  unitNamePlaceholderEn: string;
+  addUnit: string;
+  existingUnits: string;
+  noCustomUnits: string;
+  unitAdded: string;
+  unitAddedSuccess: string;
+  unitDeleted: string;
+  unitDeletedSuccess: string;
+  unitNameRequired: string;
+  validationError: string;
+  unitAddError: string;
+  unitDeleteError: string;
+  
   // General settings messages
   settingsSaved: string;
   errorLoadingSettings: string;

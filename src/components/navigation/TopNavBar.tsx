@@ -3,7 +3,6 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import CurrencySwitcher from '@/components/CurrencySwitcher';
 import AccountButton from '@/components/AccountButton';
 import DraftIndicator from '@/components/offer-draft/DraftIndicator';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -27,7 +26,6 @@ const TopNavBar = () => {
         <div className="flex items-center gap-4">
           {shouldShowDraftIndicator && <DraftIndicator />}
           <LanguageSwitcher />
-          <CurrencySwitcher />
           <AccountButton />
         </div>
       </div>

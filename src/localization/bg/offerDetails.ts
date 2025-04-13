@@ -8,6 +8,8 @@ export const offerDetails = {
   validUntilPlaceholder: "Изберете дата на валидност",
   showPartNumber: "Покажи номер на част",
   includeVat: "Включи ДДС",
+  vatIncluded: "Цените включват ДДС",
+  vatExcluded: "Цените не включват ДДС",
   vatRate: "ДДС ставка (%)",
   transportCost: "Транспортни разходи",
   transportCostPlaceholder: "0.00",
@@ -15,5 +17,6 @@ export const offerDetails = {
   otherCostsPlaceholder: "0.00",
   notes: "Бележки",
   notesPlaceholder: "Допълнителна информация или условия",
-  language: "Език на офертата"
+  language: "Език на офертата",
+  currency: "Валута"
 };

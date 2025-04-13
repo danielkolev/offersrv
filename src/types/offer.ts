@@ -5,6 +5,7 @@ export interface CompanyInfo {
   city: string;
   country: string;
   vatNumber: string;
+  eikNumber?: string; // Added EIK field
   phone: string;
   email: string;
   website: string;
@@ -18,6 +19,7 @@ export interface ClientInfo {
   city: string;
   country: string;
   vatNumber: string;
+  eikNumber?: string; // Added EIK field
   email: string;
   phone: string;
 }
@@ -29,10 +31,10 @@ export interface Product {
   partNumber?: string;
   quantity: number;
   unitPrice: number;
-  unit?: string; // Added unit field for measurement (pcs, hours, etc.)
+  unit?: string; // Field for measurement (pcs, hours, etc.)
   isBundle?: boolean; // Flag to indicate if this is a bundle
   bundledProducts?: BundledProduct[]; // Products included in a bundle
-  showBundledPrices?: boolean; // New flag to control visibility of bundled product prices
+  showBundledPrices?: boolean; // Flag to control visibility of bundled product prices
 }
 
 // New interface for products within a bundle
@@ -56,6 +58,7 @@ export interface OfferDetails {
   otherCosts: number;
   notes: string;
   offerLanguage: 'bg' | 'en';
+  currency?: 'BGN' | 'EUR' | 'USD'; // Added currency field
 }
 
 export interface Offer {

@@ -44,6 +44,25 @@ export const bgSettingsTranslations: SettingsTranslations = {
   additionalInfo: 'Допълнителна информация',
   additionalInfoPlaceholder: 'напр. Клон, Титуляр на сметката',
   
+  // Custom units
+  customUnits: 'Мерни единици',
+  customUnitsDescription: 'Добави собствени мерни единици за твоите продукти',
+  unitNameBg: 'Име на български',
+  unitNameEn: 'Име на английски',
+  unitNamePlaceholderBg: 'напр. брой, метър',
+  unitNamePlaceholderEn: 'напр. piece, meter',
+  addUnit: 'Добави единица',
+  existingUnits: 'Съществуващи единици',
+  noCustomUnits: 'Няма добавени мерни единици',
+  unitAdded: 'Единицата е добавена',
+  unitAddedSuccess: 'Мерната единица е добавена успешно',
+  unitDeleted: 'Единицата е изтрита',
+  unitDeletedSuccess: 'Мерната единица е изтрита успешно',
+  unitNameRequired: 'Името на мерната единица е задължително на двата езика',
+  validationError: 'Грешка при валидация',
+  unitAddError: 'Грешка при добавяне на мерна единица',
+  unitDeleteError: 'Грешка при изтриване на мерна единица',
+  
   // General settings messages
   settingsSaved: 'Настройките са запазени успешно',
   errorLoadingSettings: 'Грешка при зареждане на настройките',

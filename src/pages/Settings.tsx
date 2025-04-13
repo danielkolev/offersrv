@@ -3,6 +3,7 @@ import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import OfferSettings from '@/components/settings/OfferSettings';
+import CustomUnitsSettings from '@/components/settings/CustomUnitsSettings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BackButton from '@/components/navigation/BackButton';
 
@@ -39,6 +40,7 @@ const Settings = () => {
         <CardContent>
           <div className="space-y-8">
             <OfferSettings />
+            <CustomUnitsSettings />
           </div>
         </CardContent>
       </Card>

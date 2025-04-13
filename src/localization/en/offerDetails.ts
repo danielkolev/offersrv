@@ -8,6 +8,8 @@ export const offerDetails = {
   validUntilPlaceholder: "Select expiration date",
   showPartNumber: "Show Part Number",
   includeVat: "Include VAT",
+  vatIncluded: "Prices include VAT",
+  vatExcluded: "Prices exclude VAT",
   vatRate: "VAT Rate (%)",
   transportCost: "Transport Cost",
   transportCostPlaceholder: "0.00",
@@ -15,5 +17,6 @@ export const offerDetails = {
   otherCostsPlaceholder: "0.00",
   notes: "Notes",
   notesPlaceholder: "Additional information or terms",
-  language: "Offer Language"
+  language: "Offer Language",
+  currency: "Currency"
 };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,10 +8,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/context/LanguageContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SupportedCurrency } from '@/types/language/base';
+import { Coins } from 'lucide-react';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails, lastSaved, hasUserInteracted } = useOffer();
-  const { t } = useLanguage();
+  const { t, currency, setCurrency } = useLanguage();
 
   // Format last edited date
   const formatLastEdited = () => {
@@ -22,6 +25,12 @@ const OfferDetailsForm = () => {
   const creationDate = offer.details.date 
     ? new Date(offer.details.date).toLocaleString() 
     : new Date().toLocaleString();
+    
+  // Handle currency change
+  const handleCurrencyChange = (value: string) => {
+    setCurrency(value as SupportedCurrency);
+    updateOfferDetails({ currency: value as SupportedCurrency });
+  };
 
   return (
     <Card className="mb-6">
@@ -30,16 +39,17 @@ const OfferDetailsForm = () => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          {/* Only show the offer number field when it's not a draft or it has been saved before */}
-          {!hasUserInteracted || offer.details.offerNumber !== '00000' ? (
+          {/* Show either the offer number field or draft status */}
+          {(!hasUserInteracted || offer.details.offerNumber) ? (
             <div className="space-y-2">
               <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
               <Input
                 id="offerNumber"
-                value={offer.details.offerNumber || ''}
+                value={offer.details.offerNumber || '00000'}
                 onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
                 placeholder="00000"
                 disabled
+                className={!offer.details.offerNumber ? "bg-amber-50 text-amber-700" : ""}
               />
               <p className="text-xs text-muted-foreground">
                 {t.offerDetails?.offerNumberInfo || "This number is automatically generated when the offer is saved"}
@@ -72,6 +82,25 @@ const OfferDetailsForm = () => {
               <SelectContent>
                 <SelectItem value="bg">{t.offer?.languageOptions?.bulgarian || "Bulgarian"}</SelectItem>
                 <SelectItem value="en">{t.offer?.languageOptions?.english || "English"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Currency selection - moved from top nav */}
+          <div className="space-y-2">
+            <Label htmlFor="currency">{t.offerDetails?.currency || "Currency"}</Label>
+            <Select
+              value={offer.details.currency || currency}
+              onValueChange={handleCurrencyChange}
+            >
+              <SelectTrigger id="currency" className="flex items-center">
+                <Coins className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Select currency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="BGN">BGN (лв)</SelectItem>
+                <SelectItem value="EUR">EUR (€)</SelectItem>
+                <SelectItem value="USD">USD ($)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -127,7 +156,11 @@ const OfferDetailsForm = () => {
               checked={offer.details.includeVat}
               onCheckedChange={(checked) => updateOfferDetails({ includeVat: checked })}
             />
-            <Label htmlFor="includeVat">{t.offerDetails?.includeVat || "Include VAT"}</Label>
+            <Label htmlFor="includeVat">
+              {offer.details.includeVat 
+                ? (t.offerDetails?.vatIncluded || "Prices include VAT") 
+                : (t.offerDetails?.vatExcluded || "Prices exclude VAT")}
+            </Label>
           </div>
         </div>
         

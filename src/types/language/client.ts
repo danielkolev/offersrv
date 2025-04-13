@@ -11,6 +11,7 @@ export interface ClientTranslations {
   postalCode: string;
   companyName: string;
   vatNumber: string;
+  eikNumber?: string; // Added EIK field
   website?: string;
   additionalInfo?: string;
   recentClients: string;
@@ -54,6 +55,7 @@ export interface ClientInfoTranslations {
   city: string;
   country: string;
   vatNumber: string;
+  eikNumber: string; // Added EIK field
   email: string;
   phone: string;
   website?: string;
@@ -63,11 +65,12 @@ export interface ClientInfoTranslations {
   cityPlaceholder: string;
   countryPlaceholder: string;
   vatNumberPlaceholder: string;
+  eikNumberPlaceholder: string; // Added EIK field placeholder
   emailPlaceholder: string;
   phonePlaceholder: string;
   websitePlaceholder?: string;
   selectClient: string;
   selectExisting: string;
   searchClients: string;
-  nameRequired: string; // This property was added in the diff but the interface wasn't properly updated
+  nameRequired: string;
 }

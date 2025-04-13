@@ -1,3 +1,4 @@
+
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
@@ -6,6 +7,7 @@ export const defaultCompany = {
   city: '',
   country: '',
   vatNumber: '',
+  eikNumber: '',
   phone: '',
   email: '',
   website: '',
@@ -19,6 +21,7 @@ export const defaultClient = {
   city: '',
   country: '',
   vatNumber: '',
+  eikNumber: '',
   email: '',
   phone: ''
 };
@@ -33,7 +36,8 @@ export const defaultOfferDetails = {
   transportCost: 0,
   otherCosts: 0,
   notes: '',
-  offerLanguage: 'bg'
+  offerLanguage: 'bg',
+  currency: 'BGN'
 };
 
 export const defaultOffer: Offer = {
@@ -43,6 +47,7 @@ export const defaultOffer: Offer = {
     city: '',
     country: '',
     vatNumber: '',
+    eikNumber: '',
     phone: '',
     email: '',
     website: '',
@@ -55,6 +60,7 @@ export const defaultOffer: Offer = {
     city: '',
     country: '',
     vatNumber: '',
+    eikNumber: '',
     email: '',
     phone: ''
   },
@@ -69,6 +75,7 @@ export const defaultOffer: Offer = {
     transportCost: 0,
     otherCosts: 0,
     notes: '',
-    offerLanguage: 'bg'
+    offerLanguage: 'bg',
+    currency: 'BGN'
   }
 };
