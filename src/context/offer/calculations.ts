@@ -8,7 +8,8 @@ export const calculateSubtotal = (offer: Offer): number => {
   }
   
   return offer.products.reduce((sum, product) => {
-    return sum + product.quantity * product.unitPrice;
+    if (!product) return sum;
+    return sum + (product.quantity || 0) * (product.unitPrice || 0);
   }, 0);
 };
 

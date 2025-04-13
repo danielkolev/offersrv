@@ -35,7 +35,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const { units, getLocalizedUnitName, defaultUnit } = useProductUnits();
 
   return (
-    <div className="mb-6 relative rounded-lg border p-4">
+    <div className="mb-6 relative rounded-lg border p-4 bg-gray-50">
       <div className="absolute right-2 top-2">
         <Button
           variant="ghost"
@@ -178,7 +178,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
       
       <div className="text-right text-sm text-muted-foreground mt-2">
         {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
-        {product.unit && product.unit !== 'pcs' && !product.isBundle && (
+        {/* Only show unit if it's not the default 'none' unit and not a bundle */}
+        {product.unit && product.unit !== 'none' && !product.isBundle && (
           <span className="ml-1">({product.quantity} {getLocalizedUnitName(product.unit)})</span>
         )}
       </div>

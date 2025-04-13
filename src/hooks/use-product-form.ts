@@ -24,7 +24,7 @@ export function useProductForm() {
       partNumber: '',
       quantity: 1,
       unitPrice: 0,
-      unit: 'pieces', // Default unit
+      unit: 'none', // Default to 'none' for no unit displayed
       isBundle: isBundle,
       bundledProducts: isBundle ? [] : undefined,
       showBundledPrices: true // Default to showing bundled prices
