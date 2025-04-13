@@ -52,7 +52,10 @@ export const useSections = ({ isSaveDialogOpen, setIsSaveDialogOpen }: {
       content: (
         <SaveOfferDialog
           open={isSaveDialogOpen}
-          setOpen={setIsSaveDialogOpen}
+          onClose={() => setIsSaveDialogOpen(false)}
+          onSave={() => {}}
+          isLoading={false}
+          defaultName=""
         />
       ),
     },
