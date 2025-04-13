@@ -266,6 +266,7 @@ export type Database = {
           name_en: string | null
           owner_id: string
           phone: string | null
+          slogan: string | null
           updated_at: string
           vat_number: string | null
           website: string | null
@@ -285,6 +286,7 @@ export type Database = {
           name_en?: string | null
           owner_id: string
           phone?: string | null
+          slogan?: string | null
           updated_at?: string
           vat_number?: string | null
           website?: string | null
@@ -304,6 +306,7 @@ export type Database = {
           name_en?: string | null
           owner_id?: string
           phone?: string | null
+          slogan?: string | null
           updated_at?: string
           vat_number?: string | null
           website?: string | null
