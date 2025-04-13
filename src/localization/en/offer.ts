@@ -1,4 +1,3 @@
-
 import { OfferTranslations } from '@/types/language/offer';
 
 export const offer: OfferTranslations = {
@@ -108,7 +107,8 @@ export const offer: OfferTranslations = {
     saveAsTemplate: "Save as Template",
     noDescription: "No description provided",
     availableTemplates: "Available Templates",
-    noTemplatesFound: "No templates found"
+    noTemplatesFound: "No templates found",
+    templatePreview: "Template Preview"
   },
   
   // Preview related translations

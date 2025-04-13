@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -173,7 +172,7 @@ const TemplatesPage = () => {
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
-              {userTemplates.find(t => t.id === selectedTemplateId)?.name || t.offer.templates.templatePreview}
+              {userTemplates.find(t => t.id === selectedTemplateId)?.name || t.offer.templates.title}
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">

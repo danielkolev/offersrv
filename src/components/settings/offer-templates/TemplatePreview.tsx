@@ -3,8 +3,8 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
 import { SupportedLanguage } from '@/types/language/base';
-import { ProductsTable } from '@/components/offer-preview/ProductsTable';
-import { TotalsSection } from '@/components/offer-preview/TotalsSection';
+import ProductsTable from '@/components/offer-preview/ProductsTable';
+import TotalsSection from '@/components/offer-preview/TotalsSection';
 import { cn } from '@/lib/utils';
 
 interface TemplatePreviewProps {
