@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SavedOffer } from '@/types/database';
 
 export interface TemplateType {
   id: string;
@@ -237,7 +237,12 @@ export function useTemplateManagement() {
     }
   };
 
-  const createTemplate = async (name: string, description: string, settings?: any) => {
+  const createTemplate = async (
+    name: string, 
+    description: string, 
+    settings?: any, 
+    isDefault?: boolean
+  ) => {
     if (!user) {
       toast({
         title: t.common.error,
@@ -265,6 +270,7 @@ export function useTemplateManagement() {
           name: name,
           description: description,
           is_template: true,
+          is_default: isDefault || false,
           settings: settings || null,
           offer_data: {} // Empty template to be customized later
         })

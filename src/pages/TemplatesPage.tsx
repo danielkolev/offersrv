@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -150,7 +149,7 @@ const TemplatesPage = () => {
                               <CardTitle className="text-lg flex items-center gap-1">
                                 {template.name}
                                 {template.id === defaultTemplateId && 
-                                  <Star className="h-4 w-4 text-amber-500 ml-1" title={t.offer.templates.defaultTemplate} />
+                                  <Star className="h-4 w-4 text-amber-500 ml-1" aria-label={t.offer.templates.defaultTemplate} />
                                 }
                               </CardTitle>
                             </CardHeader>
@@ -233,7 +232,7 @@ const TemplatesPage = () => {
                               <CardTitle className="text-lg flex items-center gap-1">
                                 {template.name}
                                 {template.id === defaultTemplateId && 
-                                  <Star className="h-4 w-4 text-amber-500 ml-1" title={t.offer.templates.defaultTemplate} />
+                                  <Star className="h-4 w-4 text-amber-500 ml-1" aria-label={t.offer.templates.defaultTemplate} />
                                 }
                               </CardTitle>
                             </CardHeader>

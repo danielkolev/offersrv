@@ -405,10 +405,12 @@ export type Database = {
           description: string | null
           draft_code: string | null
           id: string
+          is_default: boolean | null
           is_draft: boolean | null
           is_template: boolean | null
           name: string | null
           offer_data: Json
+          settings: Json | null
           status: string | null
           updated_at: string
           user_id: string
@@ -418,10 +420,12 @@ export type Database = {
           description?: string | null
           draft_code?: string | null
           id?: string
+          is_default?: boolean | null
           is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data: Json
+          settings?: Json | null
           status?: string | null
           updated_at?: string
           user_id: string
@@ -431,10 +435,12 @@ export type Database = {
           description?: string | null
           draft_code?: string | null
           id?: string
+          is_default?: boolean | null
           is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data?: Json
+          settings?: Json | null
           status?: string | null
           updated_at?: string
           user_id?: string
