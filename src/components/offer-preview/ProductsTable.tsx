@@ -11,6 +11,9 @@ interface ProductsTableProps {
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber }) => {
   const { language, currency, t } = useLanguage();
+  
+  // Use the offer language instead of UI language for table headers
+  const offerLanguage = products[0]?.offerLanguage || language;
 
   return (
     <div className="mb-6">
@@ -44,12 +47,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l-2 border-gray-200">
                   <p className="text-xs font-medium text-muted-foreground mb-1">
-                    {language === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
+                    {offerLanguage === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
                   </p>
                   {product.bundledProducts.map(item => (
                     <div key={item.id} className="text-xs flex justify-between">
                       <span>{item.name} x{item.quantity}</span>
-                      <span>{formatCurrency(item.unitPrice * item.quantity, language, currency)}</span>
+                      <span>{formatCurrency(item.unitPrice * item.quantity, offerLanguage, currency)}</span>
                     </div>
                   ))}
                 </div>
@@ -59,7 +62,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
                 <div className="mt-1 pl-2 border-l border-gray-200">
                   <p className="text-xs text-muted-foreground">
-                    {language === 'bg' 
+                    {offerLanguage === 'bg' 
                       ? `Пакетът включва ${product.bundledProducts.length} артикула` 
                       : `Bundle includes ${product.bundledProducts.length} items`}
                   </p>
@@ -78,11 +81,11 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
             
             {/* Unit price column - make it bold like the total price */}
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium`}>
-              {formatCurrency(product.unitPrice, language, currency)}
+              {formatCurrency(product.unitPrice, offerLanguage, currency)}
             </div>
             
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium text-sm`}>
-              {formatCurrency(product.quantity * product.unitPrice, language, currency)}
+              {formatCurrency(product.quantity * product.unitPrice, offerLanguage, currency)}
             </div>
           </div>
         ))}

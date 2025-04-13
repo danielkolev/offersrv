@@ -29,11 +29,29 @@ const OfferPreview = ({
   templateSettings
 }: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
   
   // Use the offer language for display, not the UI language
   const displayLanguage = offer.details.offerLanguage || language;
+  
+  // Temporarily set language to match offer language for proper translations
+  React.useEffect(() => {
+    // Store the original language
+    const originalLanguage = language;
+    
+    // Set language to offer language for rendering
+    if (displayLanguage !== language) {
+      setLanguage(displayLanguage as any);
+    }
+    
+    // Restore original language when component unmounts
+    return () => {
+      if (displayLanguage !== originalLanguage) {
+        setLanguage(originalLanguage as any);
+      }
+    };
+  }, [displayLanguage, language, setLanguage]);
   
   // Use either external or internal state based on what's provided
   const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = React.useState(false);
@@ -47,8 +65,8 @@ const OfferPreview = ({
   // Check if it's a draft (no offer number)
   const isDraft = !offer.details.offerNumber;
 
-  // Get footer text from template settings or use default
-  const footerText = offer.details.offerLanguage === 'bg' 
+  // Get footer text based on offer language
+  const footerText = displayLanguage === 'bg' 
     ? 'Благодарим Ви за доверието!' 
     : 'Thank you for your business!';
 
@@ -98,7 +116,10 @@ const OfferPreview = ({
           </div>
           
           <ProductsTable 
-            products={offer.products} 
+            products={offer.products.map(product => ({
+              ...product,
+              offerLanguage: displayLanguage
+            }))} 
             showPartNumber={offer.details.showPartNumber} 
           />
           <TotalsSection 
@@ -109,6 +130,7 @@ const OfferPreview = ({
             transportCost={offer.details.transportCost}
             otherCosts={offer.details.otherCosts}
             total={calculateTotal()}
+            language={displayLanguage}
           />
           <NotesSection notes={offer.details.notes} />
           
