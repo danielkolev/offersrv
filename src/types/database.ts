@@ -9,8 +9,9 @@ export interface SavedOffer {
   offer_data: any; // Или Offer тип, ако е дефиниран
   meta_info?: any;
   is_template?: boolean;
-  is_draft?: boolean; // Добавено за връзка с draft офертите
+  is_draft?: boolean; // Flag for draft offers
   name?: string;
+  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Added status field for filtering
 }
 
 export interface Client {

@@ -14,7 +14,7 @@ const SavedOfferItem = ({
   currency, 
   t 
 }: SavedOfferItemProps) => {
-  const { offer_data, created_at } = savedOffer;
+  const { offer_data, created_at, updated_at } = savedOffer;
   
   // Safely handle missing or incomplete offer data with proper typing
   const offerDetails: OfferDetails = offer_data?.details || {
@@ -81,6 +81,17 @@ const SavedOfferItem = ({
     }
   };
 
+  // Get status of the offer (draft, sent, accepted, rejected)
+  const getOfferStatus = () => {
+    // For now, determine if it's a draft based on is_draft flag
+    if (savedOffer.is_draft) {
+      return t.offer.statuses.draft;
+    }
+    
+    // In the future, we can get this from the offer_data
+    return '';
+  };
+
   // Get the name of the offer with multiple fallbacks
   const offerName = savedOffer.name || 
     offer_data?.name || 
@@ -89,6 +100,9 @@ const SavedOfferItem = ({
   
   // Safely display offer number with fallback
   const displayOfferNumber = `#${offerDetails.offerNumber || '---'}`;
+  
+  // Get offer status
+  const offerStatus = getOfferStatus();
 
   return (
     <TableRow>
@@ -97,8 +111,22 @@ const SavedOfferItem = ({
         {offerName && offerName !== offerClient.name && (
           <div className="text-sm text-muted-foreground">{offerName}</div>
         )}
+        {offerStatus && (
+          <div className="mt-1">
+            <span className="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800">
+              {offerStatus}
+            </span>
+          </div>
+        )}
       </TableCell>
-      <TableCell>{formatDate(created_at)}</TableCell>
+      <TableCell>
+        <div>{formatDate(created_at)}</div>
+        {updated_at && updated_at !== created_at && (
+          <div className="text-xs text-muted-foreground">
+            {t.offer.lastEdited}: {formatDate(updated_at)}
+          </div>
+        )}
+      </TableCell>
       <TableCell>{offerClient.name || 'Unknown Client'}</TableCell>
       <TableCell className="text-right">
         {formatCurrencyValue(calculateTotal(), currency)}

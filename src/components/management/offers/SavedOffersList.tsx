@@ -23,21 +23,6 @@ const SavedOffersList = ({
   currency, 
   t 
 }: SavedOffersListProps) => {
-  const filteredOffers = savedOffers.filter(offer => {
-    if (!searchTerm) return true;
-    
-    const searchLower = searchTerm.toLowerCase();
-    const clientName = offer.offer_data.client.name.toLowerCase();
-    const offerNumber = offer.offer_data.details.offerNumber.toLowerCase();
-    const offerDate = new Date(offer.offer_data.details.date)
-      .toLocaleDateString(language as SupportedLanguage)
-      .toLowerCase();
-    
-    return clientName.includes(searchLower) || 
-           offerNumber.includes(searchLower) ||
-           offerDate.includes(searchLower);
-  });
-
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -46,7 +31,7 @@ const SavedOffersList = ({
     );
   }
 
-  if (filteredOffers.length === 0) {
+  if (savedOffers.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         {searchTerm 
@@ -68,7 +53,7 @@ const SavedOffersList = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredOffers.map((savedOffer) => (
+        {savedOffers.map((savedOffer) => (
           <SavedOfferItem
             key={savedOffer.id}
             savedOffer={savedOffer}
