@@ -4,7 +4,12 @@ import { Offer } from '@/types/offer';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
-import { saveDraftToDatabase, getLatestDraftFromDatabase, deleteDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { 
+  saveDraftToDatabase, 
+  getLatestDraftFromDatabase, 
+  deleteDraftFromDatabase 
+} from '@/components/management/offers/draftOffersService';
+import { defaultOffer } from '../defaultValues';
 
 // Auto-save interval in milliseconds (5 seconds)
 const AUTO_SAVE_INTERVAL = 5000;
@@ -154,7 +159,7 @@ export function useDraftManagement(
     }
   }, [hasUserInteracted]);
 
-  // New function to manually save draft
+  // Function to manually save draft
   const saveDraft = useCallback(async () => {
     if (!user) return;
     
@@ -195,7 +200,7 @@ export function useDraftManagement(
     }
   }, [user, offer, t, toast, hasUserInteracted, hasMeaningfulChanges, createdAt]);
 
-  // New function to toggle auto-save
+  // Function to toggle auto-save
   const toggleAutoSave = useCallback(() => {
     setAutoSaveEnabled(prev => !prev);
     toast({
@@ -203,11 +208,14 @@ export function useDraftManagement(
     });
   }, [autoSaveEnabled, t, toast]);
 
-  // Reset draft state
+  // Reset draft state completely
   const resetDraftState = useCallback(async () => {
     setHasUserInteracted(false);
     setIsDirty(false);
     setHasMeaningfulChanges(false);
+    setLastSaved(null);
+    setCreatedAt(new Date());
+    
     // Clear any saved drafts when explicitly resetting
     if (user) {
       try {
@@ -216,7 +224,10 @@ export function useDraftManagement(
         console.error('Error deleting draft:', error);
       }
     }
-  }, [user]);
+    
+    // Reset the offer to defaults
+    setOffer(defaultOffer);
+  }, [user, setOffer]);
 
   return {
     isDirty,

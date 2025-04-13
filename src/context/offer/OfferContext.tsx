@@ -42,19 +42,9 @@ export function OfferProvider({ children }: { children: ReactNode }) {
   const calculateOfferTotal = () => calculateTotal(offer);
 
   const resetOffer = async () => {
-    setOffer(defaultOffer);
+    // Use resetDraftState which also sets offer to defaultOffer
     await resetDraftState();
   };
-
-  // Add functions to window for global access (if needed)
-  if (typeof window !== 'undefined') {
-    window.updateCompanyInfo = updateCompanyInfo;
-    window.updateClientInfo = updateClientInfo;
-    window.updateOfferDetails = updateOfferDetails;
-    window.addProduct = addProduct;
-    window.clearProducts = clearProducts;
-    window.resetProducts = resetProducts;
-  }
 
   return (
     <OfferContext.Provider

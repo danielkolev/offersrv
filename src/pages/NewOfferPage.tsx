@@ -1,20 +1,28 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useOffer } from '@/context/offer';
 import { supabase } from '@/integrations/supabase/client';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { resetOffer } = useOffer();
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
-  // Fetch user's default company or first company on load - memoized to avoid unnecessary re-renders
+  // Reset offer state when the component mounts
+  useEffect(() => {
+    // Reset offer to start with clean slate
+    resetOffer();
+  }, [resetOffer]);
+
+  // Fetch user's default company or first company on load
   const fetchDefaultCompany = useCallback(async () => {
     if (!user) return;
     
@@ -65,18 +73,16 @@ const NewOfferPage = () => {
     localStorage.setItem('selectedCompanyId', companyId);
   }, []);
 
-  // Memoized unauthorized state to avoid unnecessary re-renders
-  const unauthorizedState = useMemo(() => (
-    <div className="container mx-auto py-8 px-4">
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
-        <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
-      </div>
-    </div>
-  ), [t.common.unauthorized, t.auth.notAuthenticated]);
-
+  // Unauthorized state for users who aren't logged in
   if (!user) {
-    return unauthorizedState;
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
+          <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -97,4 +103,4 @@ const NewOfferPage = () => {
   );
 };
 
-export default React.memo(NewOfferPage);
+export default NewOfferPage;

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -138,7 +139,10 @@ const SavedOffersContent: React.FC = () => {
     console.log("Loading offer data:", savedOffer.offer_data);
     
     try {
-      // Set the offer data
+      // Reset first
+      resetOffer();
+      
+      // Then set the offer data
       setOffer(savedOffer.offer_data);
       
       toast({
@@ -159,6 +163,7 @@ const SavedOffersContent: React.FC = () => {
   };
 
   const handleCreateNewOffer = () => {
+    // Reset offer state before creating a new one
     resetOffer();
     navigate('/new-offer');
   };
@@ -317,6 +322,51 @@ const SavedOffersContent: React.FC = () => {
       />
     </div>
   );
+  
+  function getFilteredOffers() {
+    let filtered = [...savedOffers];
+    
+    // Apply search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(offer => {
+        // Check if offer_data exists before accessing properties
+        if (!offer.offer_data) return false;
+        
+        const clientName = offer.offer_data.client?.name?.toLowerCase() || '';
+        const offerNumber = offer.offer_data.details?.offerNumber?.toLowerCase() || '';
+        return clientName.includes(searchLower) || offerNumber.includes(searchLower);
+      });
+    }
+    
+    // Apply status filter
+    if (statusFilter && statusFilter !== 'all') {
+      filtered = filtered.filter(offer => {
+        if (statusFilter === 'draft') {
+          return offer.is_draft === true;
+        }
+        // Add more status filters when implemented
+        return true;
+      });
+    }
+    
+    // Apply date filter
+    if (dateFilter) {
+      const filterDate = new Date(dateFilter);
+      filtered = filtered.filter(offer => {
+        const offerDate = new Date(offer.created_at);
+        return offerDate.toDateString() === filterDate.toDateString();
+      });
+    }
+    
+    return filtered;
+  };
+  
+  function resetFilters() {
+    setStatusFilter('all');
+    setDateFilter(undefined);
+    setSearchTerm('');
+  }
 };
 
 export default SavedOffersContent;

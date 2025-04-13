@@ -19,7 +19,7 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
   setIsSaveDialogOpen 
 }) => {
   const { user } = useAuth();
-  const { offer, setOffer } = useOffer();
+  const { offer, setOffer, resetOffer } = useOffer();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
@@ -65,16 +65,20 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
       });
 
       // Delete any associated draft after successfully saving the offer
-      // This is a new step to ensure drafts don't remain after finalizing
       try {
         await deleteDraftFromDatabase(user.id);
         console.log('Draft deleted after saving final offer');
+        
+        // Reset the offer to defaults so that when user creates a new offer, it starts fresh
+        resetOffer();
       } catch (draftError) {
         console.error('Error deleting draft after save:', draftError);
-        // We don't want to block the save confirmation if draft deletion fails
       }
       
       setIsSaveDialogOpen(false);
+      
+      // Redirect to saved offers page after successful save
+      navigate('/saved-offers');
     } catch (error: any) {
       console.error('Error saving offer:', error);
       toast({

@@ -35,7 +35,7 @@ const hasMeaningfulContent = (draft: any): boolean => {
 };
 
 export const DraftIndicator = () => {
-  const { hasUserInteracted, lastSaved, setOffer } = useOffer();
+  const { hasUserInteracted, lastSaved, setOffer, resetOffer } = useOffer();
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
@@ -67,13 +67,17 @@ export const DraftIndicator = () => {
   }, [user]);
 
   // Don't show indicator if there's no draft and user hasn't interacted
-  if (!hasUserInteracted && !hasDraft) {
+  if ((!hasUserInteracted && !hasDraft) || !hasDraft) {
     return null;
   }
 
   const handleNavigateToOffer = async () => {
     if (user && hasDraft) {
       try {
+        // First reset current offer
+        resetOffer();
+        
+        // Then load the draft
         const draftOffer = await getLatestDraftFromDatabase(user.id);
         if (draftOffer && hasMeaningfulContent(draftOffer)) {
           // Load draft directly into context
