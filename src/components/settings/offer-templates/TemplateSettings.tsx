@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,10 +20,12 @@ import {
   CreditCard,
   FileText,
   RefreshCw,
-  Save
+  Save,
+  Star,
+  Undo
 } from 'lucide-react';
 import TemplatePreview from './TemplatePreview';
-import { useTemplateManagement } from '@/hooks/use-template-management';
+import { useTemplateManagement, TemplateType } from '@/hooks/use-template-management';
 
 interface TemplateSettingsProps {
   selectedTemplateId?: string;
@@ -32,13 +35,22 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('appearance');
-  const { editTemplate } = useTemplateManagement();
+  const { 
+    editTemplate, 
+    getTemplateById, 
+    sampleTemplates, 
+    saveTemplateSettings,
+    setAsDefaultTemplate,
+    resetToDefaultTemplate,
+    defaultTemplateId
+  } = useTemplateManagement();
   
   // Default template settings
   const [settings, setSettings] = useState({
     appearance: {
       primaryColor: '#7e69ab',
       secondaryColor: '#f8f9fa',
+      textColor: '#ffffff',
       fontFamily: 'Inter, sans-serif',
       fontSize: 'medium',
       roundedCorners: true,
@@ -74,23 +86,45 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
   });
   
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
+  const [isDefault, setIsDefault] = useState(selectedTemplateId === defaultTemplateId);
   
   // Handle template loading if ID is provided
   useEffect(() => {
     if (selectedTemplateId) {
-      // In a real implementation, this would load template data from the database
-      console.log('Loading template with ID:', selectedTemplateId);
-      // For now, we'll just update the template name
-      setSettings(prev => ({
-        ...prev,
-        template: {
-          ...prev.template,
-          name: 'Loaded Template',
-          description: 'This template was loaded from the database'
+      // Get template data
+      const template = getTemplateById(selectedTemplateId);
+      
+      if (template) {
+        // Update settings from template data
+        if (template.settings) {
+          setSettings(prevSettings => ({
+            ...prevSettings,
+            ...template.settings,
+            template: {
+              ...prevSettings.template,
+              name: template.name,
+              description: template.description || '',
+              language: template.language || 'all'
+            }
+          }));
+        } else {
+          // Just update name and description
+          setSettings(prevSettings => ({
+            ...prevSettings,
+            template: {
+              ...prevSettings.template,
+              name: template.name,
+              description: template.description || '',
+              language: template.language || 'all'
+            }
+          }));
         }
-      }));
+        
+        // Check if this is the default template
+        setIsDefault(template.id === defaultTemplateId || template.isDefault);
+      }
     }
-  }, [selectedTemplateId]);
+  }, [selectedTemplateId, defaultTemplateId]);
   
   const handleAppearanceChange = (key: string, value: any) => {
     setSettings({
@@ -156,9 +190,45 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
     setIsPreviewVisible(!isPreviewVisible);
   };
   
+  const handleSetAsDefault = () => {
+    if (selectedTemplateId) {
+      setAsDefaultTemplate(selectedTemplateId);
+      setIsDefault(true);
+    }
+  };
+  
+  const handleResetToDefault = () => {
+    const defaultTemplate = resetToDefaultTemplate();
+    if (defaultTemplate && defaultTemplate.settings) {
+      // Apply default template settings
+      setSettings(prevSettings => ({
+        ...prevSettings,
+        ...defaultTemplate.settings,
+        template: {
+          ...prevSettings.template,
+          name: defaultTemplate.name,
+          description: defaultTemplate.description || '',
+          language: defaultTemplate.language || 'all'
+        }
+      }));
+    }
+  };
+  
   const saveSettings = () => {
-    // Here we would save the settings to the database
-    console.log('Saving template settings:', settings);
+    // Filter out the template metadata from settings
+    const { template, ...settingsToSave } = settings;
+    
+    // Save settings to the database
+    if (selectedTemplateId) {
+      saveTemplateSettings(selectedTemplateId, settingsToSave);
+      
+      // Update template name and description
+      editTemplate(selectedTemplateId, {
+        name: template.name,
+        description: template.description,
+        settings: settingsToSave
+      });
+    }
     
     toast({
       title: t.common.success,
@@ -166,14 +236,6 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
         ? 'Настройките на шаблона са запазени успешно' 
         : 'Template settings saved successfully',
     });
-    
-    // If we have a template ID, update it
-    if (selectedTemplateId) {
-      editTemplate(selectedTemplateId);
-    } else {
-      // Here we would create a new template
-      console.log('Creating new template');
-    }
   };
 
   return (
@@ -181,9 +243,35 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
       {/* Settings panel */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            {language === 'bg' ? 'Настройки на шаблона' : 'Template Settings'}
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              {language === 'bg' ? 'Настройки на шаблона' : 'Template Settings'}
+            </div>
+            
+            {selectedTemplateId && (
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleSetAsDefault}
+                  disabled={isDefault}
+                  className="gap-1"
+                >
+                  <Star className="h-4 w-4" />
+                  {t.offer.templates.setAsDefault}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleResetToDefault}
+                  className="gap-1"
+                >
+                  <Undo className="h-4 w-4" />
+                  {t.offer.templates.resetToDefault}
+                </Button>
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
         
@@ -278,6 +366,50 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                       type="text"
                       value={settings.appearance.primaryColor}
                       onChange={(e) => handleAppearanceChange('primaryColor', e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="textColor">
+                    {t.offer.templates.textColor}
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="textColor"
+                      type="color"
+                      value={settings.appearance.textColor}
+                      onChange={(e) => handleAppearanceChange('textColor', e.target.value)}
+                      className="w-12 h-9 p-1"
+                    />
+                    <Input 
+                      type="text"
+                      value={settings.appearance.textColor}
+                      onChange={(e) => handleAppearanceChange('textColor', e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="secondaryColor">
+                    {language === 'bg' ? 'Вторичен цвят' : 'Secondary Color'}
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="secondaryColor"
+                      type="color"
+                      value={settings.appearance.secondaryColor}
+                      onChange={(e) => handleAppearanceChange('secondaryColor', e.target.value)}
+                      className="w-12 h-9 p-1"
+                    />
+                    <Input 
+                      type="text"
+                      value={settings.appearance.secondaryColor}
+                      onChange={(e) => handleAppearanceChange('secondaryColor', e.target.value)}
                       className="flex-1"
                     />
                   </div>

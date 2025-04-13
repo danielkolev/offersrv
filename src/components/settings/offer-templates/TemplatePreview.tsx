@@ -12,6 +12,7 @@ interface TemplatePreviewProps {
     appearance: {
       primaryColor: string;
       secondaryColor: string;
+      textColor: string;
       fontFamily: string;
       fontSize: string;
       roundedCorners: boolean;
@@ -35,6 +36,11 @@ interface TemplatePreviewProps {
       showBankDetails: boolean;
       showSignatureArea: boolean;
       signatureText: string;
+    };
+    template?: {
+      name: string;
+      description: string;
+      language: string;
     };
   };
 }
@@ -104,9 +110,13 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings }) => {
               {settings.layout.showLogo && (
                 <div 
                   className={cn(
-                    "w-12 h-12 bg-gray-200 flex items-center justify-center",
+                    "w-12 h-12 flex items-center justify-center",
                     borderRadius
                   )}
+                  style={{ 
+                    backgroundColor: settings.appearance.primaryColor,
+                    color: settings.appearance.textColor
+                  }}
                 >
                   {language === 'bg' ? 'ЛОГО' : 'LOGO'}
                 </div>
@@ -135,7 +145,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings }) => {
                 className={cn("px-4 py-2", borderRadius)}
                 style={{ 
                   backgroundColor: settings.appearance.primaryColor,
-                  color: 'white'
+                  color: settings.appearance.textColor
                 }}
               >
                 {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
@@ -163,23 +173,66 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings }) => {
             </div>
             
             {/* Products table preview */}
-            <ProductsTable 
-              products={sampleProducts} 
-              showPartNumber={true}
-              displayLanguage={currentLanguage}
-            />
+            <div className="w-full overflow-hidden rounded-md border">
+              <table className="w-full">
+                <thead>
+                  <tr 
+                    style={{ 
+                      backgroundColor: settings.appearance.primaryColor,
+                      color: settings.appearance.textColor 
+                    }}
+                  >
+                    <th className="p-2 text-left">{language === 'bg' ? 'Артикул' : 'Item'}</th>
+                    <th className="p-2 text-right">{language === 'bg' ? 'К-во' : 'Qty'}</th>
+                    <th className="p-2 text-right">{language === 'bg' ? 'Ед. цена' : 'Unit Price'}</th>
+                    <th className="p-2 text-right">{language === 'bg' ? 'Общо' : 'Total'}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sampleProducts.map((product, index) => (
+                    <tr key={product.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <td className="p-2">
+                        <div>
+                          <p className="font-medium">{product.name}</p>
+                          {product.description && (
+                            <p className="text-sm text-gray-500">{product.description}</p>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-2 text-right">{product.quantity}</td>
+                      <td className="p-2 text-right">
+                        <span className={settings.content.boldPrices ? 'font-bold' : ''}>
+                          {product.unitPrice.toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="p-2 text-right">
+                        <span className={settings.content.boldPrices ? 'font-bold' : ''}>
+                          {(product.quantity * product.unitPrice).toFixed(2)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             
             {/* Totals preview */}
-            <TotalsSection
-              subtotal={subtotal}
-              vat={vat}
-              vatRate={vatRate}
-              includeVat={true}
-              transportCost={0}
-              otherCosts={0}
-              total={total}
-              language={currentLanguage}
-            />
+            <div className="flex justify-end">
+              <div className="w-1/3 space-y-1">
+                <div className="flex justify-between">
+                  <span>{language === 'bg' ? 'Междинна сума' : 'Subtotal'}:</span>
+                  <span>{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>{language === 'bg' ? 'ДДС' : 'VAT'} (20%):</span>
+                  <span>{vat.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between font-bold border-t pt-1 mt-1">
+                  <span>{language === 'bg' ? 'Обща сума' : 'Total'}:</span>
+                  <span>{total.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Footer preview */}

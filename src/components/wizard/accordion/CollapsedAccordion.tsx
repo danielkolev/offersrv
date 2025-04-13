@@ -43,7 +43,9 @@ const CollapsedAccordion: React.FC<CollapsedAccordionProps> = ({
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
                 {index + 1}
               </div>
-              <h3 className="text-lg font-medium text-left">{section.title}</h3>
+              <h3 className="text-lg font-medium text-left">
+                {section.title}
+              </h3>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6 pt-2">

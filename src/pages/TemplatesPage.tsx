@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -7,18 +8,40 @@ import { useTemplateManagement } from '@/hooks/use-template-management';
 import BackButton from '@/components/navigation/BackButton';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileText, Settings, Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { FileText, Settings, Eye, Edit, Trash2, Plus, Star, BookOpen } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const TemplatesPage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { userTemplates, isLoading, createTemplate, deleteTemplate, editTemplate } = useTemplateManagement();
+  const { 
+    userTemplates, 
+    sampleTemplates, 
+    isLoading, 
+    createTemplate, 
+    deleteTemplate, 
+    editTemplate,
+    setAsDefaultTemplate,
+    defaultTemplateId
+  } = useTemplateManagement();
+  
   const [activeTab, setActiveTab] = useState<string>('templates');
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | undefined>();
   const [previewMode, setPreviewMode] = useState(false);
+  const [sampleTemplatesOpen, setSampleTemplatesOpen] = useState(false);
+
+  // Filter out sample templates for the user templates list
+  const filteredUserTemplates = userTemplates.filter(template => !template.isSample);
+
+  useEffect(() => {
+    // Auto-open sample templates if there are no user templates
+    if (filteredUserTemplates.length === 0 && !isLoading) {
+      setSampleTemplatesOpen(true);
+    }
+  }, [filteredUserTemplates, isLoading]);
 
   if (!user) {
     return (
@@ -60,6 +83,11 @@ const TemplatesPage = () => {
         description: t.offer.templates.templateDeleted
       });
     }
+  };
+  
+  const handleSetAsDefault = (templateId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setAsDefaultTemplate(templateId);
   };
 
   return (
@@ -109,54 +137,145 @@ const TemplatesPage = () => {
             <CardContent>
               {isLoading ? (
                 <div className="text-center py-8">{t.common.loading}</div>
-              ) : userTemplates.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  {t.offer.templates.noTemplatesFound}
-                </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {userTemplates.map((template) => (
-                    <Card key={template.id} className="border rounded-lg shadow-sm">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">{template.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-500 mb-4">
-                          {template.description || t.offer.templates.noDescription}
-                        </p>
-                        <div className="flex justify-between">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleViewTemplate(template.id)}
-                            className="gap-1"
+                <>
+                  {/* User Templates */}
+                  {filteredUserTemplates.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-medium mb-3">{t.offer.templates.userTemplates}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {filteredUserTemplates.map((template) => (
+                          <Card key={template.id} className="border rounded-lg shadow-sm">
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center gap-1">
+                                {template.name}
+                                {template.id === defaultTemplateId && 
+                                  <Star className="h-4 w-4 text-amber-500 ml-1" title={t.offer.templates.defaultTemplate} />
+                                }
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-sm text-gray-500 mb-4">
+                                {template.description || t.offer.templates.noDescription}
+                              </p>
+                              <div className="flex justify-between gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={() => handleViewTemplate(template.id)}
+                                  className="gap-1"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                  {t.common.view}
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={() => handleEditTemplate(template.id)}
+                                  className="gap-1"
+                                >
+                                  <Edit className="h-3.5 w-3.5" />
+                                  {t.common.edit}
+                                </Button>
+                                {template.id !== defaultTemplateId ? (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={(e) => handleSetAsDefault(template.id, e)}
+                                    className="gap-1"
+                                    title={t.offer.templates.setAsDefault}
+                                  >
+                                    <Star className="h-3.5 w-3.5" />
+                                  </Button>
+                                ) : null}
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm" 
+                                  onClick={() => handleDeleteTemplate(template.id)}
+                                  className="gap-1"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                  {t.common.delete}
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Sample Templates */}
+                  <Collapsible open={sampleTemplatesOpen} onOpenChange={setSampleTemplatesOpen}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-medium">{t.offer.templates.sampleTemplates}</h3>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          {sampleTemplatesOpen 
+                            ? (language === 'bg' ? 'Скрий' : 'Hide') 
+                            : (language === 'bg' ? 'Покажи' : 'Show')}
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    
+                    <CollapsibleContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {sampleTemplates.map((template) => (
+                          <Card 
+                            key={template.id} 
+                            className="border rounded-lg shadow-sm"
+                            style={{
+                              borderLeftColor: template.settings?.appearance?.primaryColor || '#1E88E5',
+                              borderLeftWidth: '4px'
+                            }}
                           >
-                            <Eye className="h-3.5 w-3.5" />
-                            {t.common.view}
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleEditTemplate(template.id)}
-                            className="gap-1"
-                          >
-                            <Edit className="h-3.5 w-3.5" />
-                            {t.common.edit}
-                          </Button>
-                          <Button 
-                            variant="destructive" 
-                            size="sm" 
-                            onClick={() => handleDeleteTemplate(template.id)}
-                            className="gap-1"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            {t.common.delete}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg flex items-center gap-1">
+                                {template.name}
+                                {template.id === defaultTemplateId && 
+                                  <Star className="h-4 w-4 text-amber-500 ml-1" title={t.offer.templates.defaultTemplate} />
+                                }
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-sm text-gray-500 mb-4">
+                                {template.description || t.offer.templates.noDescription}
+                              </p>
+                              <div className="flex justify-between gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={() => handleViewTemplate(template.id)}
+                                  className="gap-1 flex-1"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                  {t.common.view}
+                                </Button>
+                                {template.id !== defaultTemplateId ? (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={(e) => handleSetAsDefault(template.id, e)}
+                                    className="gap-1"
+                                    title={t.offer.templates.setAsDefault}
+                                  >
+                                    <Star className="h-3.5 w-3.5" />
+                                  </Button>
+                                ) : null}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  
+                  {filteredUserTemplates.length === 0 && !sampleTemplates.length && (
+                    <div className="text-center py-8 text-gray-500">
+                      {t.offer.templates.noTemplatesFound}
+                    </div>
+                  )}
+                </>
               )}
             </CardContent>
           </Card>
@@ -172,7 +291,9 @@ const TemplatesPage = () => {
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
-              {userTemplates.find(t => t.id === selectedTemplateId)?.name || t.offer.templates.title}
+              {t.offer.templates.templatePreview}: {' '}
+              {(userTemplates.find(t => t.id === selectedTemplateId) || 
+                sampleTemplates.find(t => t.id === selectedTemplateId))?.name || ''}
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">

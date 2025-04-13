@@ -1,3 +1,4 @@
+
 import { OfferTranslations } from '@/types/language/offer';
 
 export const offer: OfferTranslations = {
@@ -108,7 +109,13 @@ export const offer: OfferTranslations = {
     noDescription: "Няма описание",
     availableTemplates: "Налични шаблони",
     noTemplatesFound: "Няма намерени шаблони",
-    templatePreview: "Преглед на шаблона"
+    templatePreview: "Преглед на шаблона",
+    setAsDefault: "Задай като основен",
+    resetToDefault: "Върни към основен",
+    defaultTemplate: "Основен шаблон",
+    sampleTemplates: "Примерни шаблони",
+    textColor: "Цвят на текста",
+    backgroundColor: "Цвят на фона"
   },
   
   // Preview related translations

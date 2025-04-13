@@ -1,3 +1,4 @@
+
 export interface OfferTemplatesTranslations {
   title: string;
   description: string;
@@ -27,6 +28,12 @@ export interface OfferTemplatesTranslations {
   availableTemplates: string;
   noTemplatesFound: string;
   templatePreview: string;
+  setAsDefault: string;
+  resetToDefault: string;
+  defaultTemplate: string;
+  sampleTemplates: string;
+  textColor: string;
+  backgroundColor: string;
 }
 
 export interface OfferTranslations {
