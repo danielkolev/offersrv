@@ -15,12 +15,15 @@ const NewOfferPage = () => {
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // Reset offer state when the component mounts
+  // Reset offer state only once when the component mounts
   useEffect(() => {
-    // Reset offer to start with clean slate
-    resetOffer();
-  }, [resetOffer]);
+    if (!hasInitialized) {
+      resetOffer();
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, resetOffer]);
 
   // Fetch user's default company or first company on load
   const fetchDefaultCompany = useCallback(async () => {
@@ -66,7 +69,7 @@ const NewOfferPage = () => {
   // Only fetch default company on initial mount
   useEffect(() => {
     fetchDefaultCompany();
-  }, []);  // Removed dependency on fetchDefaultCompany to prevent re-runs
+  }, []);  // Intentionally empty dependency array
 
   const handleSelectCompany = useCallback((companyId: string) => {
     setSelectedCompanyId(companyId);

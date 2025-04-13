@@ -12,8 +12,15 @@ export const useCompanyData = (companyId: string | null) => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const fetchedRef = useRef(false);
+  const previousCompanyId = useRef<string | null>(null);
 
   useEffect(() => {
+    // Reset fetched status when company ID changes
+    if (companyId !== previousCompanyId.current) {
+      fetchedRef.current = false;
+      previousCompanyId.current = companyId;
+    }
+    
     if (!companyId || fetchedRef.current) return;
     
     const fetchCompanyData = async () => {
@@ -21,6 +28,8 @@ export const useCompanyData = (companyId: string | null) => {
       setError(null);
       
       try {
+        console.log("Fetching company data for ID:", companyId);
+        
         const { data, error } = await supabase
           .from('organizations')
           .select('*')
@@ -30,6 +39,8 @@ export const useCompanyData = (companyId: string | null) => {
         if (error) throw error;
         
         if (data) {
+          console.log("Company data loaded successfully");
+          
           // Update the offer context with company data
           updateCompanyInfo({
             name: data.name || '',

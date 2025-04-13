@@ -18,17 +18,25 @@ import { useToast } from '@/hooks/use-toast';
 interface CompanySelectorProps {
   onSelectCompany: (companyId: string) => void;
   onCreateCompany: () => void;
+  selectedCompanyId?: string | null;
 }
 
-export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySelectorProps) => {
+export const CompanySelector = ({ onSelectCompany, onCreateCompany, selectedCompanyId }: CompanySelectorProps) => {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
+  const [selected, setSelected] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const hasAttemptedFetch = useRef(false);
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  
+  // Set initial selection based on provided selectedCompanyId
+  useEffect(() => {
+    if (selectedCompanyId && !selected) {
+      setSelected(selectedCompanyId);
+    }
+  }, [selectedCompanyId, selected]);
   
   const fetchCompanies = useCallback(async () => {
     if (!user || hasAttemptedFetch.current) return;
@@ -37,6 +45,8 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     hasAttemptedFetch.current = true;
     
     try {
+      console.log("Fetching companies for user:", user.id);
+      
       // Get companies the user is a member of through the organization_members table
       const { data: memberData, error: memberError } = await supabase
         .from('organization_members')
@@ -66,9 +76,17 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
           }));
           
           setCompanies(formattedCompanies);
-          if (formattedCompanies.length > 0 && !selectedCompany) {
-            setSelectedCompany(formattedCompanies[0].id);
-            onSelectCompany(formattedCompanies[0].id);
+          
+          // Set selected company if not already set
+          if (formattedCompanies.length > 0) {
+            // Use either the provided selectedCompanyId, previously selected value, or the first company
+            const companyToSelect = selectedCompanyId && formattedCompanies.some(c => c.id === selectedCompanyId)
+              ? selectedCompanyId
+              : selected || formattedCompanies[0].id;
+              
+            setSelected(companyToSelect);
+            onSelectCompany(companyToSelect);
+            console.log("Selected company:", companyToSelect);
           }
         }
       } else {
@@ -87,15 +105,21 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     } finally {
       setLoading(false);
     }
-  }, [user, onSelectCompany, selectedCompany, toast, t.common.error]);
+  }, [user, onSelectCompany, selectedCompanyId, selected, toast, t.common.error]);
   
   useEffect(() => {
     fetchCompanies();
-  }, []);  // Removed dependency array to prevent re-runs
+  }, []);  // Intentionally empty dependency array
   
   const handleCompanyChange = (value: string) => {
-    setSelectedCompany(value);
+    console.log("Company selection changed to:", value);
+    setSelected(value);
     onSelectCompany(value);
+  };
+  
+  const handleRetry = () => {
+    hasAttemptedFetch.current = false;
+    fetchCompanies();
   };
   
   if (loading) {
@@ -106,11 +130,8 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     return (
       <div className="flex items-center gap-2">
         <div className="text-red-500 mr-2">{t.common.error}</div>
-        <Button onClick={() => { 
-          hasAttemptedFetch.current = false; 
-          fetchCompanies(); 
-        }} size="sm" variant="outline">
-          Retry
+        <Button onClick={handleRetry} size="sm" variant="outline">
+          {t.common.retry}
         </Button>
       </div>
     );
@@ -120,7 +141,7 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
     <div className="flex items-center gap-2">
       {companies.length > 0 ? (
         <>
-          <Select value={selectedCompany} onValueChange={handleCompanyChange}>
+          <Select value={selected} onValueChange={handleCompanyChange}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder={t.company.selectPlaceholder} />
             </SelectTrigger>

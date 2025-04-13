@@ -21,7 +21,7 @@ export const bgCompanyTranslations: CompanyTranslations = {
   createFirst: 'Създайте първата си фирма',
   companyCreated: 'Фирмата е създадена успешно',
   companyUpdated: 'Фирмата е актуализирана успешно',
-  selectFirst: 'Моля, първо изберете фирма',
+  selectFirst: 'Моля, изберете фирма за да продължите',
   companySettings: 'Настройки на фирмата',
   deleteCompany: 'Изтрий фирма',
   confirmDelete: 'Сигурни ли сте, че искате да изтриете тази фирма? Това действие не може да бъде отменено.',
@@ -38,6 +38,7 @@ export const bgCompanyTranslations: CompanyTranslations = {
   success: 'Успех',
   nameRequired: 'Името на фирмата е задължително',
   createdSuccessfully: 'Фирмата е създадена успешно',
+  useSelector: 'Използвайте селектора за фирми по-горе, за да продължите',
   
   // Placeholder texts
   namePlaceholder: 'Въведете име на фирма',

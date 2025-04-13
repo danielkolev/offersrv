@@ -36,6 +36,7 @@ export interface CompanyTranslations {
   success: string;
   nameRequired: string;
   createdSuccessfully: string;
+  useSelector: string;
   
   // Placeholder texts
   namePlaceholder: string;

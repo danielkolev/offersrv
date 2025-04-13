@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCompanyData } from '@/hooks/useCompanyData';
+import { CompanyManager } from '@/components/company/CompanyManager';
 
 // Import our components
 import AccordionHeader from './accordion/AccordionHeader';
@@ -29,6 +30,15 @@ const OfferAccordion = ({
   
   // Fetch company data and automatically populate the offer
   const { isLoading: isLoadingCompany, error: companyError } = useCompanyData(selectedCompanyId);
+  
+  // Log selected company information
+  useEffect(() => {
+    if (selectedCompanyId) {
+      console.log("OfferAccordion: Using company ID:", selectedCompanyId);
+    } else {
+      console.log("OfferAccordion: No company selected");
+    }
+  }, [selectedCompanyId]);
 
   // Get sections
   const sections = useSections({
@@ -96,47 +106,75 @@ const OfferAccordion = ({
     }
   };
 
-  if (!selectedCompanyId) {
-    return <NoCompanySelected />;
-  }
+  // Add company selector at the top of the accordion when no company is selected
+  const renderCompanySelector = () => {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-medium">{user?.email ? user.email : 'User'}</h3>
+          <CompanyManager 
+            onSelectCompany={onSelectCompany}
+            selectedCompanyId={selectedCompanyId}
+          />
+        </div>
+      </div>
+    );
+  };
 
-  if (isLoadingCompanyData || isLoadingCompany || fetchError || companyError) {
+  if (isLoadingCompanyData || isLoadingCompany) {
     return (
       <LoadingErrorStates 
-        isLoading={isLoadingCompanyData || isLoadingCompany} 
-        hasError={!!fetchError || !!companyError} 
+        isLoading={true} 
+        hasError={false} 
+      />
+    );
+  }
+
+  if (fetchError || companyError) {
+    return (
+      <LoadingErrorStates 
+        isLoading={false} 
+        hasError={true} 
       />
     );
   }
 
   return (
     <div className="space-y-4" ref={accordionRef}>
-      <AccordionHeader
-        expandAll={expandAll}
-        onToggleAll={handleToggleAll}
-      />
-
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
-          {expandAll ? (
-            <ExpandedAccordion
-              sections={visibleSections}
-              onNavigateNext={handleNavigateNext}
-            />
-          ) : (
-            <CollapsedAccordion
-              sections={visibleSections}
-              activeSection={activeSection}
-              onSectionChange={setActiveSection}
-              onNavigateNext={handleNavigateNext}
-            />
-          )}
-        </div>
-      </div>
+      {renderCompanySelector()}
       
-      <OfferActionButtons
-        onSave={() => setIsSaveDialogOpen(true)}
-      />
+      {!selectedCompanyId ? (
+        <NoCompanySelected />
+      ) : (
+        <>
+          <AccordionHeader
+            expandAll={expandAll}
+            onToggleAll={handleToggleAll}
+          />
+
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
+              {expandAll ? (
+                <ExpandedAccordion
+                  sections={visibleSections}
+                  onNavigateNext={handleNavigateNext}
+                />
+              ) : (
+                <CollapsedAccordion
+                  sections={visibleSections}
+                  activeSection={activeSection}
+                  onSectionChange={setActiveSection}
+                  onNavigateNext={handleNavigateNext}
+                />
+              )}
+            </div>
+          </div>
+          
+          <OfferActionButtons
+            onSave={() => setIsSaveDialogOpen(true)}
+          />
+        </>
+      )}
     </div>
   );
 };

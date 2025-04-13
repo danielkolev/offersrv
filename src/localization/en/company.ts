@@ -21,7 +21,7 @@ export const enCompanyTranslations: CompanyTranslations = {
   createFirst: 'Create your first company',
   companyCreated: 'Company created successfully',
   companyUpdated: 'Company updated successfully',
-  selectFirst: 'Please select a company first',
+  selectFirst: 'Please select a company to continue',
   companySettings: 'Company Settings',
   deleteCompany: 'Delete Company',
   confirmDelete: 'Are you sure you want to delete this company? This action cannot be undone.',
@@ -38,6 +38,7 @@ export const enCompanyTranslations: CompanyTranslations = {
   success: 'Success',
   nameRequired: 'Company name is required',
   createdSuccessfully: 'Company created successfully',
+  useSelector: 'Use the company selector above to continue',
   
   // Placeholder texts
   namePlaceholder: 'Enter company name',
