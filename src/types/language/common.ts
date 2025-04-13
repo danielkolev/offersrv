@@ -103,4 +103,12 @@ export interface CommonTranslations {
   
   // Add missing translation key
   noName: string;
+  
+  // Add the missing keys for filters
+  all: string;
+  continue: string;
+  previous: string;
+  submit: string;
+  optional: string;
+  noResults: string;
 }
