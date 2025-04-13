@@ -2,6 +2,7 @@
 import { Offer, Product, CompanyInfo, ClientInfo, OfferDetails } from '@/types/offer';
 import { useEffect } from 'react';
 import { useTemplateManagement } from '@/hooks/use-template-management';
+import { TemplateType } from '@/hooks/use-template-management';
 
 export function useOfferActions(
   offer: Offer,
@@ -20,7 +21,7 @@ export function useOfferActions(
     
     if (!template || !template.settings) {
       console.log('No template settings found');
-      return;
+      return null;
     }
     
     // Set template settings in offer
@@ -33,12 +34,12 @@ export function useOfferActions(
     return template;
   };
   
-  // Apply default template on first load
+  // Apply default template on first load - only if no template is set yet
   useEffect(() => {
     if (!offer.templateId && !offer.templateSettings && defaultTemplateId) {
       applyTemplate(defaultTemplateId);
     }
-  }, [defaultTemplateId]);
+  }, [defaultTemplateId, offer.templateId, offer.templateSettings]);
 
   // Update company information
   const updateCompanyInfo = (companyInfo: Partial<CompanyInfo>) => {
@@ -85,12 +86,19 @@ export function useOfferActions(
     }));
   };
 
-  // Update an existing product
-  const updateProduct = (index: number, product: Product) => {
+  // Update an existing product - using id instead of index for better reliability
+  const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
     markUserInteraction();
     setOffer(prevOffer => {
+      const productIndex = prevOffer.products.findIndex(p => p.id === id);
+      if (productIndex === -1) return prevOffer;
+      
       const newProducts = [...prevOffer.products];
-      newProducts[index] = product;
+      newProducts[productIndex] = {
+        ...newProducts[productIndex],
+        ...updatedProduct
+      };
+      
       return {
         ...prevOffer,
         products: newProducts
@@ -98,17 +106,13 @@ export function useOfferActions(
     });
   };
 
-  // Remove a product
-  const removeProduct = (index: number) => {
+  // Remove a product - using id instead of index for better reliability
+  const removeProduct = (id: string) => {
     markUserInteraction();
-    setOffer(prevOffer => {
-      const newProducts = [...prevOffer.products];
-      newProducts.splice(index, 1);
-      return {
-        ...prevOffer,
-        products: newProducts
-      };
-    });
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      products: prevOffer.products.filter(product => product.id !== id)
+    }));
   };
 
   // Clear all products

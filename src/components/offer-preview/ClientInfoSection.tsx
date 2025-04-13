@@ -2,18 +2,34 @@
 import React from 'react';
 import { ClientInfo } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
+import { cn } from '@/lib/utils';
 
 interface ClientInfoSectionProps {
   client: ClientInfo;
+  settings?: any;
 }
 
-const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
+const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client, settings }) => {
   const { t, language } = useLanguage();
 
   return (
     <div className="mb-4">
-      <h3 className="text-base font-semibold mb-2 text-offer-blue">{t.offer.toLabel}</h3>
-      <div className="border-l-2 border-offer-blue pl-3">
+      <h3 className={cn(
+        "text-base font-semibold mb-2",
+        settings?.appearance?.primaryColor ? "" : "text-offer-blue"
+      )}
+      style={{ 
+        color: settings?.appearance?.primaryColor || ""
+      }}>
+        {t.offer.toLabel}
+      </h3>
+      <div className={cn(
+        "border-l-2 pl-3",
+        settings?.appearance?.primaryColor ? "" : "border-offer-blue"
+      )}
+      style={{ 
+        borderColor: settings?.appearance?.primaryColor || ""
+      }}>
         <h4 className="font-medium">{client.name}</h4>
         {client.contactPerson && (
           <p className="text-sm">

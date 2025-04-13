@@ -3,6 +3,7 @@ import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
+import { cn } from '@/lib/utils';
 
 interface TotalsSectionProps {
   subtotal: number;
@@ -13,6 +14,7 @@ interface TotalsSectionProps {
   otherCosts: number;
   total: number;
   language: SupportedLanguage;
+  settings?: any;
 }
 
 const TotalsSection: React.FC<TotalsSectionProps> = ({
@@ -23,18 +25,30 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   transportCost,
   otherCosts,
   total,
-  language
+  language,
+  settings
 }) => {
   const { currency } = useLanguage();
   
+  const isBoldPrices = settings?.content?.boldPrices !== false;
+  const isCompactMode = settings?.layout?.compactMode === true;
+  
   return (
     <div className="flex justify-end mb-6">
-      <div className="w-full max-w-sm space-y-1">
+      <div className={cn(
+        "w-full max-w-sm space-y-1",
+        isCompactMode ? "text-sm" : ""
+      )}>
         <div className="flex justify-between py-1">
           <span className="text-sm text-gray-600">
             {language === 'bg' ? 'Междинна сума' : 'Subtotal'}:
           </span>
-          <span className="text-gray-800">{formatCurrency(subtotal, language, currency)}</span>
+          <span className={cn(
+            "text-gray-800",
+            isBoldPrices ? "font-medium" : ""
+          )}>
+            {formatCurrency(subtotal, language, currency)}
+          </span>
         </div>
         
         {transportCost > 0 && (
@@ -42,7 +56,12 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
             <span className="text-sm text-gray-600">
               {language === 'bg' ? 'Транспорт' : 'Transport'}:
             </span>
-            <span className="text-gray-800">{formatCurrency(transportCost, language, currency)}</span>
+            <span className={cn(
+              "text-gray-800",
+              isBoldPrices ? "font-medium" : ""
+            )}>
+              {formatCurrency(transportCost, language, currency)}
+            </span>
           </div>
         )}
         
@@ -51,7 +70,12 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
             <span className="text-sm text-gray-600">
               {language === 'bg' ? 'Други разходи' : 'Other costs'}:
             </span>
-            <span className="text-gray-800">{formatCurrency(otherCosts, language, currency)}</span>
+            <span className={cn(
+              "text-gray-800",
+              isBoldPrices ? "font-medium" : ""
+            )}>
+              {formatCurrency(otherCosts, language, currency)}
+            </span>
           </div>
         )}
         
@@ -60,11 +84,24 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
             <span className="text-sm text-gray-600">
               {language === 'bg' ? `ДДС (${vatRate}%)` : `VAT (${vatRate}%)`}:
             </span>
-            <span className="text-gray-800">{formatCurrency(vat, language, currency)}</span>
+            <span className={cn(
+              "text-gray-800",
+              isBoldPrices ? "font-medium" : ""
+            )}>
+              {formatCurrency(vat, language, currency)}
+            </span>
           </div>
         )}
         
-        <div className="flex justify-between py-1 border-t font-bold text-gray-900">
+        <div className={cn(
+          "flex justify-between py-1 border-t",
+          settings?.appearance?.primaryColor ? "" : "",
+          isBoldPrices ? "font-bold" : "font-medium",
+          "text-gray-900"
+        )}
+        style={{ 
+          borderColor: settings?.appearance?.primaryColor || ""
+        }}>
           <span>
             {language === 'bg' ? 'Обща сума' : 'Total'}:
           </span>

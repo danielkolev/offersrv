@@ -1,14 +1,17 @@
+
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatDate } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 interface OfferHeaderProps {
   offer: Offer;
+  settings?: any;
 }
 
-const OfferHeader = ({ offer }: OfferHeaderProps) => {
+const OfferHeader = ({ offer, settings }: OfferHeaderProps) => {
   const { t, language } = useLanguage();
   
   return (
@@ -28,11 +31,19 @@ const OfferHeader = ({ offer }: OfferHeaderProps) => {
           ) : null}
           
           <div>
-            <h2 className="text-xl font-bold">
+            <h2 className={cn(
+              "text-xl font-bold",
+              settings?.appearance?.primaryColor ? "" : ""
+            )}
+            style={{ 
+              color: settings?.header?.companyNameSize === 'large' ? settings?.appearance?.primaryColor : '',
+              fontSize: settings?.header?.companyNameSize === 'small' ? '1.1rem' :
+                      settings?.header?.companyNameSize === 'large' ? '1.5rem' : '1.25rem'
+            }}>
               {offer.company.name}
             </h2>
             
-            {offer.company.slogan && (
+            {(offer.company.slogan && settings?.header?.showCompanySlogan !== false) && (
               <div className="text-sm italic text-muted-foreground">
                 {offer.company.slogan}
               </div>
@@ -83,15 +94,29 @@ const OfferHeader = ({ offer }: OfferHeaderProps) => {
       </div>
       
       {/* OFFER title centered */}
-      <h1 className="text-2xl font-bold my-3 text-center text-offer-blue">
-        {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
-      </h1>
+      {settings?.header?.showOfferLabel !== false && (
+        <h1 className={cn(
+          "text-2xl font-bold my-3 text-center", 
+          settings?.appearance?.primaryColor ? "" : "text-offer-blue"
+        )}
+        style={{ 
+          color: settings?.appearance?.primaryColor || ""
+        }}>
+          {language === 'bg' ? 'ОФЕРТА' : 'OFFER'}
+        </h1>
+      )}
       
-      <Separator className="mb-4" />
+      <Separator className={cn(
+        "mb-4",
+        settings?.appearance?.primaryColor ? "" : ""
+      )}
+      style={{ 
+        backgroundColor: settings?.appearance?.primaryColor || ""
+      }} />
       
-      {/* Client and offer details in a two-column layout */}
+      {/* Client and offer details в двуколонен layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* The ClientInfoSection will be rendered here by OfferPreview */}
+        {/* ClientInfoSection ще бъде рендериран тук от OfferPreview */}
       </div>
     </div>
   );

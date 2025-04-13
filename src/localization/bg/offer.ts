@@ -115,7 +115,14 @@ export const offer: OfferTranslations = {
     defaultTemplate: "Основен шаблон",
     sampleTemplates: "Примерни шаблони",
     textColor: "Цвят на текста",
-    backgroundColor: "Цвят на фона"
+    backgroundColor: "Цвят на фона",
+    designTemplateType: "Тип дизайн на шаблона",
+    designTemplates: {
+      classic: "Класически",
+      modernDark: "Модерен тъмен",
+      gradient: "Градиент",
+      businessPro: "Бизнес Про"
+    }
   },
   
   // Preview related translations

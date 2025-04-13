@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
@@ -14,64 +14,67 @@ const NewOfferPage = () => {
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
-  // Fetch user's default company or first company on load
-  useEffect(() => {
-    if (user) {
-      const fetchDefaultCompany = async () => {
-        setIsLoadingCompanyData(true);
-        try {
-          // Get companies the user is a member of
-          const { data: memberData, error: memberError } = await supabase
-            .from('organization_members')
-            .select('organization_id')
-            .eq('user_id', user.id);
-            
-          if (memberError) throw memberError;
-          
-          // If user has companies, select the first one as default
-          if (memberData && memberData.length > 0) {
-            // Check localStorage for previously selected company
-            const storedCompanyId = localStorage.getItem('selectedCompanyId');
-            
-            if (storedCompanyId && memberData.some(m => m.organization_id === storedCompanyId)) {
-              setSelectedCompanyId(storedCompanyId);
-            } else {
-              setSelectedCompanyId(memberData[0].organization_id);
-            }
-          }
-          
-          setFetchError(false);
-        } catch (error: any) {
-          console.error('Error fetching company data:', error);
-          setFetchError(true);
-          toast({
-            title: t.common.error,
-            description: error.message,
-            variant: 'destructive'
-          });
-        } finally {
-          setIsLoadingCompanyData(false);
-        }
-      };
+  // Fetch user's default company or first company on load - мемоизиран за избягване на излишни рендерирания
+  const fetchDefaultCompany = useCallback(async () => {
+    if (!user) return;
+    
+    setIsLoadingCompanyData(true);
+    try {
+      // Get companies the user is a member of
+      const { data: memberData, error: memberError } = await supabase
+        .from('organization_members')
+        .select('organization_id')
+        .eq('user_id', user.id);
+        
+      if (memberError) throw memberError;
       
-      fetchDefaultCompany();
+      // If user has companies, select the first one as default
+      if (memberData && memberData.length > 0) {
+        // Check localStorage for previously selected company
+        const storedCompanyId = localStorage.getItem('selectedCompanyId');
+        
+        if (storedCompanyId && memberData.some(m => m.organization_id === storedCompanyId)) {
+          setSelectedCompanyId(storedCompanyId);
+        } else {
+          setSelectedCompanyId(memberData[0].organization_id);
+        }
+      }
+      
+      setFetchError(false);
+    } catch (error: any) {
+      console.error('Error fetching company data:', error);
+      setFetchError(true);
+      toast({
+        title: t.common.error,
+        description: error.message,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoadingCompanyData(false);
     }
   }, [user, toast, t]);
 
-  const handleSelectCompany = (companyId: string) => {
+  useEffect(() => {
+    fetchDefaultCompany();
+  }, [fetchDefaultCompany]);
+
+  const handleSelectCompany = useCallback((companyId: string) => {
     setSelectedCompanyId(companyId);
     localStorage.setItem('selectedCompanyId', companyId);
-  };
+  }, []);
+
+  // Мемоизиране на неавторизираното състояние за избягване на излишни рендерирания
+  const unauthorizedState = useMemo(() => (
+    <div className="container mx-auto py-8 px-4">
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
+        <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
+      </div>
+    </div>
+  ), [t.common.unauthorized, t.auth.notAuthenticated]);
 
   if (!user) {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
-          <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
-        </div>
-      </div>
-    );
+    return unauthorizedState;
   }
 
   return (
@@ -92,4 +95,4 @@ const NewOfferPage = () => {
   );
 };
 
-export default NewOfferPage;
+export default React.memo(NewOfferPage);

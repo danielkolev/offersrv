@@ -1,101 +1,86 @@
-
 import React from 'react';
 import { Product } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
-import { useProductUnits } from '@/hooks/use-product-units';
+import { cn } from '@/lib/utils';
 
-interface ProductsTableProps {
+export interface ProductsTableProps {
   products: Product[];
   showPartNumber: boolean;
-  displayLanguage?: SupportedLanguage; // Properly typed as SupportedLanguage
+  displayLanguage?: SupportedLanguage;
+  settings?: any;
 }
 
-const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber, displayLanguage }) => {
-  const { language, currency, t } = useLanguage();
-  const { getLocalizedUnitName } = useProductUnits();
+const ProductsTable: React.FC<ProductsTableProps> = ({ 
+  products, 
+  showPartNumber, 
+  displayLanguage = 'bg',
+  settings 
+}) => {
+  const { t } = useLanguage();
   
-  // Use displayLanguage prop or fall back to context language
-  const tableLanguage = displayLanguage || language;
-
+  const isCompactMode = settings?.layout?.compactMode === true;
+  const isBoldPrices = settings?.content?.boldPrices !== false;
+  const alternateRowColors = settings?.content?.alternateRowColors === true;
+  
   return (
-    <div className="mb-6">
-      <div className="bg-offer-blue text-white py-2 px-3 rounded-t-md">
-        <div className="grid grid-cols-12 gap-2 text-sm">
-          <div className="col-span-5 font-medium">{t.offer.item}</div>
-          {showPartNumber && (
-            <div className="col-span-2 font-medium">{t.offer.partNo}</div>
-          )}
-          <div className={`col-span-${showPartNumber ? '1' : '3'} text-center font-medium`}>{t.offer.qty}</div>
-          <div className={`col-span-${showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.unitPrice}</div>
-          <div className={`col-span-${showPartNumber ? '2' : '2'} text-right font-medium`}>{t.offer.total}</div>
-        </div>
-      </div>
-      
-      <div className="border-x border-b rounded-b-md overflow-hidden">
-        {products.map((product, index) => (
-          <div 
-            key={product.id} 
-            className={`grid grid-cols-12 gap-2 px-3 py-2 ${
-              index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-            }`}
-          >
-            <div className="col-span-5">
-              <div className="font-medium text-sm">{product.name}</div>
-              {product.description && (
-                <div className="text-xs text-muted-foreground">{product.description}</div>
-              )}
-              
-              {/* Display bundled products */}
-              {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
-                <div className="mt-1 pl-2 border-l-2 border-gray-200">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">
-                    {tableLanguage === 'bg' ? 'Пакетът включва:' : 'Bundle includes:'}
-                  </p>
-                  {product.bundledProducts.map(item => (
-                    <div key={item.id} className="text-xs flex justify-between">
-                      <span>{item.name} x{item.quantity}</span>
-                      <span className="text-gray-700 font-medium">{formatCurrency(item.unitPrice * item.quantity, tableLanguage, currency)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {/* Just show the item count if showBundledPrices is false */}
-              {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
-                <div className="mt-1 pl-2 border-l border-gray-200">
-                  <p className="text-xs text-muted-foreground">
-                    {tableLanguage === 'bg' 
-                      ? `Пакетът включва ${product.bundledProducts.length} артикула` 
-                      : `Bundle includes ${product.bundledProducts.length} items`}
-                  </p>
-                </div>
-              )}
-            </div>
-            
-            {showPartNumber && (
-              <div className="col-span-2 self-center text-sm">{product.partNumber || '-'}</div>
+    <div className="w-full overflow-hidden rounded-md border print-visible">
+      <table className="w-full">
+        <thead>
+          <tr 
+            className={cn(
+              "text-sm font-medium",
+              settings?.layout?.compactMode ? "text-xs" : ""
             )}
-            
-            {/* Quantity column - only show unit if it's not empty and not the default 'none' */}
-            <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center text-sm`}>
-              {product.quantity}
-              {product.unit && product.unit !== 'none' ? 
-                ` ${getLocalizedUnitName(product.unit)}` : ''}
-            </div>
-            
-            {/* Unit price column - make it bold like the total price */}
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium text-gray-800`}>
-              {formatCurrency(product.unitPrice, tableLanguage, currency)}
-            </div>
-            
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-bold text-sm text-gray-800`}>
-              {formatCurrency(product.quantity * product.unitPrice, tableLanguage, currency)}
-            </div>
-          </div>
-        ))}
-      </div>
+            style={{ 
+              backgroundColor: settings?.appearance?.primaryColor || "",
+              color: settings?.appearance?.textColor || ""
+            }}
+          >
+            <th className="p-2 text-left">{t.offer.item}</th>
+            {showPartNumber && <th className="p-2 text-left">{t.offer.partNo}</th>}
+            <th className="p-2 text-right">{t.offer.qty}</th>
+            <th className="p-2 text-right">{t.offer.unit}</th>
+            <th className="p-2 text-right">{t.offer.unitPrice}</th>
+            <th className="p-2 text-right">{t.offer.total}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product, index) => (
+            <tr 
+              key={product.id} 
+              className={cn(
+                index % 2 === 0 ? 'bg-white' : 'bg-gray-50',
+                alternateRowColors && index % 2 !== 0 ? 'bg-gray-100' : '',
+                settings?.layout?.compactMode ? "text-xs" : ""
+              )}
+            >
+              <td className="p-2">
+                <div>
+                  <p className="font-medium">{product.name}</p>
+                  {product.description && (
+                    <p className="text-sm text-gray-500">{product.description}</p>
+                  )}
+                </div>
+              </td>
+              {showPartNumber && <td className="p-2">{product.partNumber}</td>}
+              <td className="p-2 text-right">{product.quantity}</td>
+              <td className="p-2 text-right">{product.unit || 'бр.'}</td>
+              <td className="p-2 text-right">
+                <span className={cn(isBoldPrices ? 'font-medium' : '')}>
+                  {formatCurrency(product.unitPrice, displayLanguage)}
+                </span>
+              </td>
+              <td className="p-2 text-right">
+                <span className={cn(isBoldPrices ? 'font-medium' : '')}>
+                  {formatCurrency(product.quantity * product.unitPrice, displayLanguage)}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
