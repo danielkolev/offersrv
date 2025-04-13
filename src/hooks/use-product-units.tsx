@@ -35,7 +35,7 @@ export function useProductUnits() {
       setIsLoading(true);
       setError(null);
       
-      // Use a raw query instead of table access or RPC
+      // Use a raw query to fetch custom units for the current user
       const { data, error } = await supabase
         .from('custom_units')
         .select('id, name, name_en')
@@ -43,11 +43,7 @@ export function useProductUnits() {
         
       if (error) throw error;
       
-      const customUnits: ProductUnit[] = data?.map((unit: any) => ({
-        id: unit.id,
-        name: unit.name,
-        name_en: unit.name_en
-      })) || [];
+      const customUnits: ProductUnit[] = data || [];
       
       setUnits([...defaultUnits, ...customUnits]);
     } catch (err) {

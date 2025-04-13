@@ -39,7 +39,7 @@ const CustomUnitsSettings = () => {
       setIsLoading(true);
       setError(null);
       
-      // Use raw query instead of RPC
+      // Use a raw query to fetch custom units for the current user
       const { data, error } = await supabase
         .from('custom_units')
         .select('id, name, name_en')
@@ -47,11 +47,7 @@ const CustomUnitsSettings = () => {
         
       if (error) throw error;
       
-      const customUnits: CustomUnit[] = data?.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        name_en: item.name_en
-      })) || [];
+      const customUnits: CustomUnit[] = data || [];
       
       setUnits(customUnits);
     } catch (err) {
@@ -75,15 +71,14 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Use raw query to insert unit
-      const { data, error } = await supabase
+      // Use a raw query to insert a new custom unit
+      const { error } = await supabase
         .from('custom_units')
         .insert({
           user_id: user?.id,
           name: newUnit.name,
           name_en: newUnit.name_en
-        })
-        .select();
+        });
         
       if (error) throw error;
       
@@ -111,7 +106,7 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Use raw query to delete unit
+      // Use a raw query to delete a custom unit
       const { error } = await supabase
         .from('custom_units')
         .delete()

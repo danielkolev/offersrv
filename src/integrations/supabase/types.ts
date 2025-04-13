@@ -54,6 +54,33 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_units: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          name_en: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          name_en: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          name_en?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       offers: {
         Row: {
           client_address: string | null
