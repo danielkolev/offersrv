@@ -8,10 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
-  PaletteSwatch, 
-  TextAlignCenter, 
-  TextAlignLeft, 
-  TextAlignRight,
+  Palette, 
+  AlignCenter, 
+  AlignLeft, 
+  AlignRight,
   LayoutGrid,
   SquareStack,
   Settings
@@ -100,7 +100,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="appearance">
-              <PaletteSwatch className="h-4 w-4 mr-2" />
+              <Palette className="h-4 w-4 mr-2" />
               {language === 'bg' ? 'Визия' : 'Appearance'}
             </TabsTrigger>
             <TabsTrigger value="layout">
@@ -187,7 +187,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                     onClick={() => handleLayoutChange('logoPosition', 'left')}
                     className="flex-1"
                   >
-                    <TextAlignLeft className="h-4 w-4 mr-2" />
+                    <AlignLeft className="h-4 w-4 mr-2" />
                     {language === 'bg' ? 'Ляво' : 'Left'}
                   </Button>
                   <Button
@@ -196,7 +196,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                     onClick={() => handleLayoutChange('logoPosition', 'center')}
                     className="flex-1"
                   >
-                    <TextAlignCenter className="h-4 w-4 mr-2" />
+                    <AlignCenter className="h-4 w-4 mr-2" />
                     {language === 'bg' ? 'Център' : 'Center'}
                   </Button>
                   <Button
@@ -205,7 +205,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                     onClick={() => handleLayoutChange('logoPosition', 'right')}
                     className="flex-1"
                   >
-                    <TextAlignRight className="h-4 w-4 mr-2" />
+                    <AlignRight className="h-4 w-4 mr-2" />
                     {language === 'bg' ? 'Дясно' : 'Right'}
                   </Button>
                 </div>
