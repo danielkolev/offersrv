@@ -37,7 +37,7 @@ export const defaultOfferDetails = {
   otherCosts: 0,
   notes: '',
   offerLanguage: 'bg' as 'bg' | 'en',
-  currency: 'BGN'
+  currency: 'BGN' as 'BGN' | 'EUR' | 'USD'
 };
 
 export const defaultOffer: Offer = {

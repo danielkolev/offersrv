@@ -111,4 +111,7 @@ export interface CommonTranslations {
   submit: string;
   optional: string;
   noResults: string;
+  
+  // Add the missing info property
+  info: string;
 }

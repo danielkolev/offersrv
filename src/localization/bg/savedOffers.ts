@@ -1,3 +1,4 @@
+
 import { formatDistanceToNow } from 'date-fns';
 import { bg } from 'date-fns/locale';
 
@@ -34,4 +35,26 @@ export const savedOffers = {
   },
   createTemplate: "Създай шаблон",
   saveBeforeAction: "Моля, запазете офертата преди това действие",
+  
+  // Add all missing fields to match the required interface
+  loadOffer: "Зареди оферта",
+  deleteOffer: "Изтрий оферта",
+  confirmDelete: "Сигурни ли сте, че искате да изтриете тази оферта?",
+  offerDeleted: "Офертата е изтрита успешно.",
+  offerLoaded: "Офертата е заредена успешно.",
+  saveError: "Грешка при запазване на офертата.",
+  deleteError: "Грешка при изтриване на офертата.",
+  loadError: "Грешка при зареждане на офертата.",
+  recentOffers: "Последни оферти",
+  offerSaved: "Офертата е запазена",
+  offerSavedWithDetails: "Офертата е запазена с детайли",
+  noOffersFound: "Няма намерени оферти",
+  noOffersFoundSearch: "Няма оферти, отговарящи на критериите за търсене",
+  amount: "Сума",
+  search: "Търсене",
+  searchPlaceholder: "Търсене на оферти...",
+  clientName: "Име на клиент",
+  createNew: "Създай нова",
+  viewOffer: "Преглед на оферта",
+  filter: "Филтър"
 };
