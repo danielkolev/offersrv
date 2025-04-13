@@ -44,17 +44,37 @@ const OfferTableRow: React.FC<OfferTableRowProps> = ({
 
   // Format date
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'dd.MM.yyyy');
+    try {
+      return format(new Date(dateString), 'dd.MM.yyyy');
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return dateString;
+    }
   };
 
-  // Calculate total amount
+  // Calculate total amount - with safety checks
   const calculateOfferTotal = (offer: SavedOffer) => {
-    if (!offer.offer_data) return 0;
-    return calculateTotal(offer.offer_data);
+    try {
+      if (!offer.offer_data) return 0;
+      return calculateTotal(offer.offer_data);
+    } catch (error) {
+      console.error("Error calculating offer total:", error, offer);
+      return 0;
+    }
   };
 
   // Convert string to SupportedLanguage
   const typedLanguage = (language === 'bg' || language === 'en') ? language as SupportedLanguage : 'en';
+
+  // Safely get client name
+  const getClientName = () => {
+    return offer.offer_data?.client?.name || t.common.noName;
+  };
+
+  // Safely get client email
+  const getClientEmail = () => {
+    return offer.offer_data?.client?.email || '';
+  };
 
   return (
     <TableRow>
@@ -64,10 +84,10 @@ const OfferTableRow: React.FC<OfferTableRowProps> = ({
       <TableCell>
         <div>
           <div className="font-medium">
-            {offer.offer_data?.client?.name || t.common.noName}
+            {getClientName()}
           </div>
           <div className="text-xs text-muted-foreground">
-            {offer.offer_data?.client?.email || ''}
+            {getClientEmail()}
           </div>
         </div>
       </TableCell>
