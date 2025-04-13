@@ -65,6 +65,8 @@ export const offer: OfferTranslations = {
   saveManually: "Запази ръчно",
   autoSaveEnabled: "Автоматичното запазване е включено",
   autoSaveDisabled: "Автоматичното запазване е изключено",
+  enableAutoSave: "Включи автоматично запазване",
+  disableAutoSave: "Изключи автоматично запазване",
   draftInProgress: "Има незавършена чернова",
   returnToDraft: "Връщане към черновата",
   
@@ -95,7 +97,18 @@ export const offer: OfferTranslations = {
     save: "Запази шаблон",
     cancel: "Отказ",
     saved: "Шаблонът е запазен",
-    error: "Грешка при запазване на шаблона"
+    error: "Грешка при запазване на шаблона",
+    defaultTemplates: "Стандартни шаблони",
+    userTemplates: "Вашите шаблони",
+    templateName: "Име на шаблона",
+    noTemplates: "Няма налични шаблони",
+    templateSaved: "Шаблонът е запазен успешно",
+    useTemplate: "Използвай шаблон",
+    createFromCurrent: "Създай от текущата оферта",
+    saveAsTemplate: "Запази като шаблон",
+    noDescription: "Няма описание",
+    availableTemplates: "Налични шаблони",
+    noTemplatesFound: "Няма намерени шаблони"
   },
   
   // Preview related translations

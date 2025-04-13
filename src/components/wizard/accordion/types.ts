@@ -1,11 +1,5 @@
 
-import { ReactNode } from 'react';
-
-export interface AccordionSection {
-  id: string;
-  title: string;
-  content: ReactNode;
-}
+import React from 'react';
 
 export interface OfferAccordionProps {
   isLoadingCompanyData: boolean;
@@ -14,16 +8,10 @@ export interface OfferAccordionProps {
   onSelectCompany: (companyId: string) => void;
 }
 
-export interface OfferActionButtonsProps {
-  onSave: () => void;
-  onPrint: () => void;
-}
-
-export interface LoadingErrorStatesProps {
-  isLoading: boolean;
-  hasError: boolean;
-}
-
-export interface NoCompanySelectedProps {
-  message?: string;
+export interface AccordionSection {
+  id: string;
+  title: string;
+  description: string;
+  component: React.ReactNode;
+  content?: any; // Make this optional to match our implementation
 }

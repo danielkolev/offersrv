@@ -63,6 +63,8 @@ export interface OfferTranslations {
     saveManually: string;
     autoSaveEnabled: string;
     autoSaveDisabled: string;
+    enableAutoSave: string;
+    disableAutoSave: string;
     draftInProgress: string;
     returnToDraft: string;
     
@@ -94,6 +96,17 @@ export interface OfferTranslations {
         cancel: string;
         saved: string;
         error: string;
+        defaultTemplates: string;
+        userTemplates: string;
+        templateName: string;
+        noTemplates: string;
+        templateSaved: string;
+        useTemplate: string;
+        createFromCurrent: string;
+        saveAsTemplate: string;
+        noDescription: string;
+        availableTemplates: string;
+        noTemplatesFound: string;
     };
     
     // Preview related translations

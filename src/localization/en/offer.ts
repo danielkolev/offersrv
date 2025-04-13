@@ -65,6 +65,8 @@ export const offer: OfferTranslations = {
   saveManually: "Save manually",
   autoSaveEnabled: "Auto-save enabled",
   autoSaveDisabled: "Auto-save disabled",
+  enableAutoSave: "Enable auto-save",
+  disableAutoSave: "Disable auto-save",
   draftInProgress: "Draft in progress",
   returnToDraft: "Return to draft",
   
@@ -95,7 +97,18 @@ export const offer: OfferTranslations = {
     save: "Save Template",
     cancel: "Cancel",
     saved: "Template saved",
-    error: "Error saving template"
+    error: "Error saving template",
+    defaultTemplates: "Default Templates",
+    userTemplates: "Your Templates",
+    templateName: "Template Name",
+    noTemplates: "No templates available",
+    templateSaved: "Template saved successfully",
+    useTemplate: "Use Template",
+    createFromCurrent: "Create from Current Offer",
+    saveAsTemplate: "Save as Template",
+    noDescription: "No description provided",
+    availableTemplates: "Available Templates",
+    noTemplatesFound: "No templates found"
   },
   
   // Preview related translations

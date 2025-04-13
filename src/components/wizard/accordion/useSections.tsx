@@ -18,7 +18,7 @@ export interface AccordionSection {
   title: string;
   description: string;
   component: React.ReactNode;
-  content?: any; // This property is needed by OfferAccordion
+  content?: any; // Make this optional to match the expected type
 }
 
 export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectionsProps): AccordionSection[] {
@@ -28,21 +28,21 @@ export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectio
     {
       id: "company",
       title: t.companyInfo.title || "Company Info",
-      description: t.companyInfo.description || "Enter your company information",
+      description: t.companyInfo.title || "Enter your company information", // Using title as fallback since description doesn't exist
       component: <CompanyInfoForm />,
       content: null // Add this property to match the expected type
     },
     {
       id: "details",
       title: t.offerDetails.title || "Offer Details",
-      description: t.offerDetails.description || "Enter offer details",
+      description: t.offerDetails.title || "Enter offer details", // Using title as fallback since description doesn't exist
       component: <OfferDetailsForm />,
       content: null
     },
     {
       id: "client",
       title: t.clientInfo.title || "Client Info",
-      description: t.clientInfo.description || "Enter client information",
+      description: t.clientInfo.title || "Enter client information", // Using title as fallback since description doesn't exist
       component: <ClientInfoForm />,
       content: null
     },
