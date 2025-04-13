@@ -3,6 +3,7 @@ import { CompanyInfoTranslations } from '@/types/language/companyInfo';
 
 export const enCompanyInfoTranslations: CompanyInfoTranslations = {
   title: 'Company Information',
+  description: 'Enter your company information', // Added description
   name: 'Company Name',
   vatNumber: 'VAT Number',
   address: 'Address',

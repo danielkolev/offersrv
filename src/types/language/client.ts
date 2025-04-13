@@ -53,13 +53,14 @@ export interface SavedClientsTranslations {
 
 export interface ClientInfoTranslations {
   title: string;
+  description: string; // Added description property
   name: string;
   contactPerson: string;
   address: string;
   city: string;
   country: string;
   vatNumber: string;
-  eikNumber: string; // Added EIK field
+  eikNumber: string;
   email: string;
   phone: string;
   website?: string;
@@ -69,7 +70,7 @@ export interface ClientInfoTranslations {
   cityPlaceholder: string;
   countryPlaceholder: string;
   vatNumberPlaceholder: string;
-  eikNumberPlaceholder: string; // Added EIK field placeholder
+  eikNumberPlaceholder: string;
   emailPlaceholder: string;
   phonePlaceholder: string;
   websitePlaceholder?: string;

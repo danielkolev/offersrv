@@ -1,6 +1,7 @@
 
 export const clientInfo = {
   title: "Информация за клиента",
+  description: "Въведете информация за клиента", // Added description
   name: "Име",
   contactPerson: "Лице за контакт",
   address: "Адрес",

@@ -1,6 +1,7 @@
 
 export interface CompanyInfoTranslations {
   title: string;
+  description: string; // Added description property
   name: string;
   vatNumber: string;
   address: string;
