@@ -69,6 +69,24 @@ const HomeContent = () => {
     }).format(amount);
   };
 
+  // Calculate offer total safely
+  const calculateOfferTotal = (offer: SavedOffer) => {
+    try {
+      // Check if offer_data and products exist and are properly structured
+      if (!offer?.offer_data?.products || !Array.isArray(offer.offer_data.products)) {
+        return 0;
+      }
+      
+      return offer.offer_data.products.reduce(
+        (acc, product) => acc + ((product?.quantity || 0) * (product?.unitPrice || 0)), 
+        0
+      );
+    } catch (error) {
+      console.error('Error calculating offer total:', error);
+      return 0;
+    }
+  };
+
   const handleOfferClick = (offer: SavedOffer) => {
     // Зареждане на офертата и навигация към страницата за редактиране
     setOffer(offer.offer_data);
@@ -106,7 +124,7 @@ const HomeContent = () => {
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-100 p-2 rounded-full text-blue-700">
-                        {offer.offer_data.client?.name ? (
+                        {offer.offer_data?.client?.name ? (
                           <User size={18} />
                         ) : (
                           <Calendar size={18} />
@@ -114,7 +132,7 @@ const HomeContent = () => {
                       </div>
                       <div>
                         <div className="font-medium">
-                          {offer.offer_data.client?.name || t.common.noName}
+                          {offer.offer_data?.client?.name || t.common.noName}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           {formatOfferDate(offer.created_at)}
@@ -125,15 +143,10 @@ const HomeContent = () => {
                     <div className="flex items-center gap-2">
                       <div className="text-right">
                         <div className="font-medium">
-                          {formatCurrency(
-                            offer.offer_data.products.reduce(
-                              (acc, product) => acc + (product.unitPrice * product.quantity), 
-                              0
-                            )
-                          )}
+                          {formatCurrency(calculateOfferTotal(offer))}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {offer.offer_data.products.length} {t.products.items}
+                          {offer.offer_data?.products?.length || 0} {t.products.items}
                         </div>
                       </div>
                       <ArrowUpRight size={16} className="text-muted-foreground" />
