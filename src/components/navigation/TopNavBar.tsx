@@ -21,10 +21,11 @@ const TopNavBar = () => {
       {/* Desktop navigation */}
       <div className="bg-background border-b py-2 px-4 hidden md:flex justify-between items-center">
         <div className="flex items-center gap-4">
-          {shouldShowDraftIndicator && <DraftIndicator />}
+          {/* Left side is empty now */}
         </div>
         
         <div className="flex items-center gap-4">
+          {shouldShowDraftIndicator && <DraftIndicator />}
           <LanguageSwitcher />
           <CurrencySwitcher />
           <AccountButton />
