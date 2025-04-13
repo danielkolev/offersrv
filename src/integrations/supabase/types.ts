@@ -370,33 +370,39 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          draft_code: string | null
           id: string
           is_draft: boolean | null
           is_template: boolean | null
           name: string | null
           offer_data: Json
+          status: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          draft_code?: string | null
           id?: string
           is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data: Json
+          status?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          draft_code?: string | null
           id?: string
           is_draft?: boolean | null
           is_template?: boolean | null
           name?: string | null
           offer_data?: Json
+          status?: string | null
           updated_at?: string
           user_id?: string
         }
