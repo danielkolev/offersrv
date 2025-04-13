@@ -1,3 +1,4 @@
+
 export interface OfferTranslations {
   title: string;
   createOffer: string;
@@ -56,7 +57,6 @@ export interface OfferTranslations {
     title: string;
     description: string;
     useTemplate: string;
-    useTemplate: string;
     createFromCurrent: string;
     templateName: string;
     saveAsTemplate: string;
@@ -72,4 +72,30 @@ export interface OfferTranslations {
     noTemplatesFound: string;
     noDescription: string;
   };
+}
+
+// Adding the missing interfaces that are imported in index.ts
+export interface SavedOffersTranslations {
+  title: string;
+  noOffers: string;
+  search: string;
+  filter: string;
+  createNew: string;
+}
+
+export interface SavedProductsTranslations {
+  title: string;
+  noProducts: string;
+  search: string;
+  filter: string;
+  createNew: string;
+}
+
+export interface ProductsTranslations {
+  title: string;
+  description: string;
+  addProduct: string;
+  editProduct: string;
+  deleteProduct: string;
+  items: string;
 }
