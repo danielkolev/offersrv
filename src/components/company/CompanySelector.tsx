@@ -91,7 +91,7 @@ export const CompanySelector = ({ onSelectCompany, onCreateCompany }: CompanySel
   
   useEffect(() => {
     fetchCompanies();
-  }, [fetchCompanies]);
+  }, []);  // Removed dependency array to prevent re-runs
   
   const handleCompanyChange = (value: string) => {
     setSelectedCompany(value);

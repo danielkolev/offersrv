@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useToast } from '@/hooks/use-toast';
@@ -11,9 +11,10 @@ export const useCompanyData = (companyId: string | null) => {
   const { updateCompanyInfo } = useOffer();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!companyId) return;
+    if (!companyId || fetchedRef.current) return;
     
     const fetchCompanyData = async () => {
       setIsLoading(true);
@@ -42,6 +43,9 @@ export const useCompanyData = (companyId: string | null) => {
             logo: data.logo_url || null,
             slogan: data.slogan || ''
           });
+          
+          // Mark data as fetched so we don't fetch again
+          fetchedRef.current = true;
         }
       } catch (err: any) {
         console.error('Error fetching company data:', err);
@@ -59,5 +63,10 @@ export const useCompanyData = (companyId: string | null) => {
     fetchCompanyData();
   }, [companyId, updateCompanyInfo, toast, t]);
 
-  return { isLoading, error };
+  // Add a reset method to allow refetching in some cases
+  const reset = () => {
+    fetchedRef.current = false;
+  };
+
+  return { isLoading, error, reset };
 };

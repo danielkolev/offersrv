@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import CompanyForm from './CompanyForm';
 import CompanySelector from './CompanySelector';
@@ -11,14 +11,14 @@ interface CompanyManagerProps {
 export const CompanyManager = ({ onSelectCompany }: CompanyManagerProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  const handleCreateCompany = () => {
+  const handleCreateCompany = useCallback(() => {
     setDialogOpen(true);
-  };
+  }, []);
   
-  const handleCompanyCreated = (companyId: string) => {
+  const handleCompanyCreated = useCallback((companyId: string) => {
     setDialogOpen(false);
     onSelectCompany(companyId);
-  };
+  }, [onSelectCompany]);
   
   return (
     <>
@@ -36,4 +36,4 @@ export const CompanyManager = ({ onSelectCompany }: CompanyManagerProps) => {
   );
 };
 
-export default CompanyManager;
+export default React.memo(CompanyManager);

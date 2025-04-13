@@ -14,13 +14,14 @@ const NewOfferPage = () => {
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
-  // Fetch user's default company or first company on load - мемоизиран за избягване на излишни рендерирания
+  // Fetch user's default company or first company on load - memoized to avoid unnecessary re-renders
   const fetchDefaultCompany = useCallback(async () => {
     if (!user) return;
     
     setIsLoadingCompanyData(true);
+    
     try {
-      // Get companies the user is a member of
+      // Get companies the user is a member of through the organization_members table
       const { data: memberData, error: memberError } = await supabase
         .from('organization_members')
         .select('organization_id')
@@ -52,18 +53,19 @@ const NewOfferPage = () => {
     } finally {
       setIsLoadingCompanyData(false);
     }
-  }, [user, toast, t]);
+  }, [user, toast, t.common.error]);
 
+  // Only fetch default company on initial mount
   useEffect(() => {
     fetchDefaultCompany();
-  }, [fetchDefaultCompany]);
+  }, []);  // Removed dependency on fetchDefaultCompany to prevent re-runs
 
   const handleSelectCompany = useCallback((companyId: string) => {
     setSelectedCompanyId(companyId);
     localStorage.setItem('selectedCompanyId', companyId);
   }, []);
 
-  // Мемоизиране на неавторизираното състояние за избягване на излишни рендерирания
+  // Memoized unauthorized state to avoid unnecessary re-renders
   const unauthorizedState = useMemo(() => (
     <div className="container mx-auto py-8 px-4">
       <div className="text-center py-12">
