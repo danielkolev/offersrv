@@ -120,7 +120,10 @@ const OfferSidebar = () => {
         
         {/* Company selector below the logo */}
         <div className="mt-4 mb-2">
-          <CompanyManager onSelectCompany={handleSelectCompany} />
+          <CompanyManager 
+            onSelectCompany={handleSelectCompany} 
+            selectedCompanyId={selectedCompanyId}
+          />
         </div>
       </SidebarHeader>
       <SidebarContent>

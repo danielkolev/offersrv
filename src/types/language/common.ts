@@ -114,4 +114,7 @@ export interface CommonTranslations {
   
   // Add the missing info property
   info: string;
+  
+  // Add the missing retry property
+  retry: string;
 }

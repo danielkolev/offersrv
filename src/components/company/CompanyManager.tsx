@@ -6,7 +6,7 @@ import CompanySelector from './CompanySelector';
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
-  selectedCompanyId: string | null;
+  selectedCompanyId?: string | null;
 }
 
 export const CompanyManager = ({ onSelectCompany, selectedCompanyId }: CompanyManagerProps) => {

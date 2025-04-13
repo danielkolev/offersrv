@@ -103,5 +103,6 @@ export const common = {
   newProduct: 'Нов продукт',
   templates: 'Шаблони',
   navigation: 'Навигация',
-  noName: 'Без име'
+  noName: 'Без име',
+  retry: 'Опитай отново'
 };

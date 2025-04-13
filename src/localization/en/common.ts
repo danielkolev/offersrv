@@ -103,5 +103,6 @@ export const common = {
   newProduct: 'New Product',
   templates: 'Templates',
   navigation: 'Navigation',
-  noName: 'No Name'
+  noName: 'No Name',
+  retry: 'Retry'
 };

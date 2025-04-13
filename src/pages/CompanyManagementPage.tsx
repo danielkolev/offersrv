@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,14 @@ const CompanyManagementPage = () => {
   const { user } = useAuth();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
+  // Load selected company from localStorage on initial load
+  useEffect(() => {
+    const storedCompanyId = localStorage.getItem('selectedCompanyId');
+    if (storedCompanyId) {
+      setSelectedCompanyId(storedCompanyId);
+    }
+  }, []);
+
   if (!user) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -28,6 +36,7 @@ const CompanyManagementPage = () => {
 
   const handleSelectCompany = (companyId: string) => {
     setSelectedCompanyId(companyId);
+    localStorage.setItem('selectedCompanyId', companyId);
   };
 
   return (
@@ -42,7 +51,10 @@ const CompanyManagementPage = () => {
       </div>
       
       <div className="mb-6">
-        <CompanyManager onSelectCompany={handleSelectCompany} />
+        <CompanyManager 
+          onSelectCompany={handleSelectCompany} 
+          selectedCompanyId={selectedCompanyId}
+        />
       </div>
       
       {selectedCompanyId ? (
