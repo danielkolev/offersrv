@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCompanyData } from '@/hooks/useCompanyData';
@@ -24,18 +24,19 @@ const OfferAccordion = ({
   const { toast } = useToast();
   const [expandAll, setExpandAll] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>("details");
+  const [activeSection, setActiveSection] = useState<string | null>("client"); // Set first step to client
+  const accordionRef = useRef<HTMLDivElement>(null);
   
   // Fetch company data and automatically populate the offer
   const { isLoading: isLoadingCompany, error: companyError } = useCompanyData(selectedCompanyId);
 
-  // Get sections but skip the company section since we're auto-populating it
+  // Get sections
   const sections = useSections({
     isSaveDialogOpen,
     setIsSaveDialogOpen
   });
   
-  // Можем да филтрираме като е нужно, сега получаваме всички секции
+  // Visible sections are all sections
   const visibleSections = sections;
 
   // Force rerender when expandAll changes to ensure Collapsible state syncs properly
@@ -47,6 +48,25 @@ const OfferAccordion = ({
     });
   }, [expandAll]);
 
+  // Add stabilization effect for the preview step
+  useEffect(() => {
+    // Prevent infinite rerenders in preview step
+    if (activeSection === "preview" && accordionRef.current) {
+      const previewSection = document.getElementById("preview");
+      if (previewSection) {
+        previewSection.classList.add("preview-section-stable");
+      }
+    }
+    
+    return () => {
+      // Cleanup when component unmounts
+      const previewSection = document.getElementById("preview");
+      if (previewSection) {
+        previewSection.classList.remove("preview-section-stable");
+      }
+    };
+  }, [activeSection]);
+
   const handleToggleAll = () => {
     // Use function form to ensure we get latest state
     setExpandAll(prevState => !prevState);
@@ -56,7 +76,7 @@ const OfferAccordion = ({
     if (!expandAll) {
       setActiveSection(null);
     } else {
-      setActiveSection("details");
+      setActiveSection("client");
     }
   };
 
@@ -90,7 +110,7 @@ const OfferAccordion = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={accordionRef}>
       <AccordionHeader
         expandAll={expandAll}
         onToggleAll={handleToggleAll}

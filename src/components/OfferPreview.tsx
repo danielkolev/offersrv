@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -30,32 +30,21 @@ const OfferPreview = ({
   templateSettings
 }: OfferPreviewProps = {}) => {
   const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
   
-  // Use the offer language for display, not the UI language
-  const displayLanguage = offer.details.offerLanguage || language;
+  // IMPORTANT: Prevent excessive rerenders by memoizing the display language
+  const [displayLanguage, setDisplayLanguage] = useState<SupportedLanguage>(
+    offer.details.offerLanguage || language
+  );
   
-  // Temporarily set language to match offer language for proper translations
-  React.useEffect(() => {
-    // Store the original language
-    const originalLanguage = language;
-    
-    // Set language to offer language for rendering
-    if (displayLanguage !== language) {
-      setLanguage(displayLanguage);
-    }
-    
-    // Restore original language when component unmounts
-    return () => {
-      if (displayLanguage !== originalLanguage) {
-        setLanguage(originalLanguage);
-      }
-    };
-  }, [displayLanguage, language, setLanguage]);
+  // Only update display language when offer language changes
+  useEffect(() => {
+    setDisplayLanguage(offer.details.offerLanguage || language);
+  }, [offer.details.offerLanguage, language]);
   
   // Use either external or internal state based on what's provided
-  const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = React.useState(false);
+  const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = useState(false);
   
   const isSaveDialogOpen = externalIsSaveDialogOpen !== undefined 
     ? externalIsSaveDialogOpen 
@@ -103,13 +92,13 @@ const OfferPreview = ({
                 
                 {offer.details.date && (
                   <p>
-                    <span className="font-medium">{displayLanguage === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, displayLanguage)}
+                    <span className="font-medium">{displayLanguage === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, displayLanguage as SupportedLanguage)}
                   </p>
                 )}
                 
                 {offer.details.validUntil && (
                   <p>
-                    <span className="font-medium">{displayLanguage === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, displayLanguage)}
+                    <span className="font-medium">{displayLanguage === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, displayLanguage as SupportedLanguage)}
                   </p>
                 )}
               </div>

@@ -20,24 +20,17 @@ export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectio
   
   return [
     {
-      id: "company",
-      title: t.companyInfo.title || "Company Info",
-      description: t.companyInfo.description || t.companyInfo.title || "Enter your company information",
-      component: <CompanyInfoForm />,
-      content: null // Да добавим content с null, за да съответства на типа
+      id: "client",
+      title: t.clientInfo.title || "Client Info",
+      description: t.clientInfo.description || t.clientInfo.title || "Enter client information",
+      component: <ClientInfoForm />,
+      content: null
     },
     {
       id: "details",
       title: t.offerDetails.title || "Offer Details",
       description: t.offerDetails.description || t.offerDetails.title || "Enter offer details",
       component: <OfferDetailsForm />,
-      content: null
-    },
-    {
-      id: "client",
-      title: t.clientInfo.title || "Client Info",
-      description: t.clientInfo.description || t.clientInfo.title || "Enter client information",
-      component: <ClientInfoForm />,
       content: null
     },
     {
