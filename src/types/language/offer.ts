@@ -12,6 +12,10 @@ export interface OfferTranslations {
   notes: string;
   terms: string;
   status: string;
+  draftStatus: string;  // Added for the draft status display
+  draftStatusInfo: string;  // Added for the draft status info text
+  createdAt: string;  // Added for creation date display
+  lastEdited: string;  // Added for last edited date display
   statuses: {
     draft: string;
     sent: string;

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,15 +47,15 @@ const OfferDetailsForm = () => {
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="draftStatus">{t.offer?.draftStatus || "Status"}</Label>
+              <Label htmlFor="draftStatus">{t.offer.draftStatus || "Status"}</Label>
               <Input
                 id="draftStatus"
-                value={t.offer?.statuses?.draft || "Draft"}
+                value={t.offer.statuses.draft || "Draft"}
                 disabled
                 className="bg-amber-50 text-amber-700"
               />
               <p className="text-xs text-muted-foreground">
-                {t.offer?.draftStatusInfo || "A number will be assigned when saved"}
+                {t.offer.draftStatusInfo || "A number will be assigned when saved"}
               </p>
             </div>
           )}
@@ -105,10 +104,10 @@ const OfferDetailsForm = () => {
         {/* Display creation and last edited timestamps */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm text-muted-foreground">
           <div>
-            {t.offer?.createdAt || "Created"}: {creationDate}
+            {t.offer.createdAt || "Created"}: {creationDate}
           </div>
           <div>
-            {t.offer?.lastEdited || "Last edited"}: {formatLastEdited()}
+            {t.offer.lastEdited || "Last edited"}: {formatLastEdited()}
           </div>
         </div>
         
