@@ -1,3 +1,4 @@
+
 export interface CompanyInfo {
   name: string;
   address: string;
@@ -69,5 +70,6 @@ export interface Offer {
   name?: string; // Added optional name field for the offer
   createdAt?: string; // Added creation timestamp
   lastEdited?: string; // Added last edited timestamp
+  templateId?: string; // Added template ID
+  templateSettings?: any; // Added template settings
 }
-

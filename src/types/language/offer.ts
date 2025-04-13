@@ -34,6 +34,13 @@ export interface OfferTemplatesTranslations {
   sampleTemplates: string;
   textColor: string;
   backgroundColor: string;
+  designTemplateType: string;
+  designTemplates: {
+    classic: string;
+    modernDark: string;
+    gradient: string;
+    businessPro: string;
+  };
 }
 
 export interface OfferTranslations {

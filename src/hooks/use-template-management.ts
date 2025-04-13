@@ -51,7 +51,8 @@ const sampleTemplates: TemplateType[] = [
         showBankDetails: true,
         showSignatureArea: true,
         signatureText: 'Signature and stamp:',
-      }
+      },
+      designTemplate: 'classic'
     }
   },
   {
@@ -88,7 +89,8 @@ const sampleTemplates: TemplateType[] = [
         showBankDetails: true,
         showSignatureArea: true,
         signatureText: 'Signature:',
-      }
+      },
+      designTemplate: 'classic'
     }
   },
   {
@@ -125,7 +127,145 @@ const sampleTemplates: TemplateType[] = [
         showBankDetails: false,
         showSignatureArea: true,
         signatureText: 'Authorized by:',
-      }
+      },
+      designTemplate: 'classic'
+    }
+  },
+  // Modern Design Templates
+  {
+    id: 'modern-1',
+    name: 'Ultra Modern Dark',
+    description: 'Contemporary dark mode design with vibrant accents',
+    language: 'all',
+    isSample: true,
+    settings: {
+      appearance: {
+        primaryColor: '#6366F1', // Indigo
+        secondaryColor: '#1F2937', // Dark background
+        textColor: '#F9FAFB', // Light text
+        fontFamily: 'Poppins, sans-serif',
+        fontSize: 'medium',
+        roundedCorners: true,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'left',
+        compactMode: false,
+        fullWidth: true,
+      },
+      content: {
+        boldPrices: true,
+        showFooter: true,
+        footerText: 'Thank you for your business!',
+        useCards: true,
+        showLineNumbers: true,
+      },
+      header: {
+        showCompanySlogan: true,
+        companyNameSize: 'large',
+        showOfferLabel: true,
+        useGradient: true,
+      },
+      footer: {
+        showBankDetails: true,
+        showSignatureArea: true,
+        signatureText: 'Digital Signature:',
+        includeSocialMedia: true,
+      },
+      designTemplate: 'modern-dark'
+    }
+  },
+  {
+    id: 'modern-2',
+    name: 'Gradient Elegance',
+    description: 'Sleek design with beautiful gradient accents',
+    language: 'all',
+    isSample: true,
+    settings: {
+      appearance: {
+        primaryColor: '#EC4899', // Pink
+        secondaryColor: '#F9FAFB', // Light background
+        textColor: '#ffffff',
+        gradient: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
+        fontFamily: 'Montserrat, sans-serif',
+        fontSize: 'medium',
+        roundedCorners: true,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'right',
+        compactMode: false,
+        fullWidth: false,
+        floatingHeader: true,
+      },
+      content: {
+        boldPrices: true,
+        showFooter: true,
+        footerText: 'We appreciate your trust in our services!',
+        useCards: true,
+        showLineNumbers: false,
+        highlightTotals: true,
+      },
+      header: {
+        showCompanySlogan: true,
+        companyNameSize: 'large',
+        showOfferLabel: true,
+        useGradient: true,
+      },
+      footer: {
+        showBankDetails: true,
+        showSignatureArea: true,
+        signatureText: 'Approved by:',
+        includeSocialMedia: true,
+      },
+      designTemplate: 'gradient'
+    }
+  },
+  {
+    id: 'modern-3',
+    name: 'Business Pro',
+    description: 'Clean professional layout with modern typography',
+    language: 'all',
+    isSample: true,
+    settings: {
+      appearance: {
+        primaryColor: '#0891B2', // Cyan
+        secondaryColor: '#F0F9FF', // Light blue bg
+        textColor: '#ffffff',
+        fontFamily: 'DM Sans, sans-serif',
+        fontSize: 'medium',
+        roundedCorners: true,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'center',
+        compactMode: false,
+        fullWidth: true,
+        borderless: true,
+      },
+      content: {
+        boldPrices: true,
+        showFooter: true,
+        footerText: 'Thank you for choosing our company!',
+        useCards: false,
+        showLineNumbers: true,
+        alternateRowColors: true,
+      },
+      header: {
+        showCompanySlogan: true,
+        companyNameSize: 'large',
+        showOfferLabel: true,
+        useGradient: false,
+        shadow: true,
+      },
+      footer: {
+        showBankDetails: true,
+        showSignatureArea: true,
+        signatureText: 'Authorized signature:',
+        includeSocialMedia: false,
+        useQRCode: true,
+      },
+      designTemplate: 'business-pro'
     }
   },
   {
@@ -163,7 +303,8 @@ const sampleTemplates: TemplateType[] = [
         showBankDetails: false,
         showSignatureArea: false,
         signatureText: 'Signature and stamp:',
-      }
+      },
+      designTemplate: 'classic'
     }
   }
 ];

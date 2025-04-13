@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -11,6 +12,7 @@ import { FileText, Settings, Eye, Edit, Trash2, Plus, Star, BookOpen } from 'luc
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const TemplatesPage = () => {
   const { t, language } = useLanguage();
@@ -148,9 +150,18 @@ const TemplatesPage = () => {
                             <CardHeader className="pb-2">
                               <CardTitle className="text-lg flex items-center gap-1">
                                 {template.name}
-                                {template.id === defaultTemplateId && 
-                                  <Star className="h-4 w-4 text-amber-500 ml-1" aria-label={t.offer.templates.defaultTemplate} />
-                                }
+                                {template.id === defaultTemplateId && (
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Star className="h-4 w-4 text-amber-500 ml-1" />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t.offer.templates.defaultTemplate}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                )}
                               </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -177,15 +188,23 @@ const TemplatesPage = () => {
                                   {t.common.edit}
                                 </Button>
                                 {template.id !== defaultTemplateId ? (
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    onClick={(e) => handleSetAsDefault(template.id, e)}
-                                    className="gap-1"
-                                    title={t.offer.templates.setAsDefault}
-                                  >
-                                    <Star className="h-3.5 w-3.5" />
-                                  </Button>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button 
+                                          variant="outline" 
+                                          size="sm" 
+                                          onClick={(e) => handleSetAsDefault(template.id, e)}
+                                          className="gap-1"
+                                        >
+                                          <Star className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t.offer.templates.setAsDefault}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
                                 ) : null}
                                 <Button 
                                   variant="destructive" 
@@ -231,9 +250,18 @@ const TemplatesPage = () => {
                             <CardHeader className="pb-2">
                               <CardTitle className="text-lg flex items-center gap-1">
                                 {template.name}
-                                {template.id === defaultTemplateId && 
-                                  <Star className="h-4 w-4 text-amber-500 ml-1" aria-label={t.offer.templates.defaultTemplate} />
-                                }
+                                {template.id === defaultTemplateId && (
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Star className="h-4 w-4 text-amber-500 ml-1" />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t.offer.templates.defaultTemplate}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                )}
                               </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -251,15 +279,23 @@ const TemplatesPage = () => {
                                   {t.common.view}
                                 </Button>
                                 {template.id !== defaultTemplateId ? (
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    onClick={(e) => handleSetAsDefault(template.id, e)}
-                                    className="gap-1"
-                                    title={t.offer.templates.setAsDefault}
-                                  >
-                                    <Star className="h-3.5 w-3.5" />
-                                  </Button>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button 
+                                          variant="outline" 
+                                          size="sm" 
+                                          onClick={(e) => handleSetAsDefault(template.id, e)}
+                                          className="gap-1"
+                                        >
+                                          <Star className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t.offer.templates.setAsDefault}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
                                 ) : null}
                               </div>
                             </CardContent>

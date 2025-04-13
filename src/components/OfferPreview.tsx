@@ -2,19 +2,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent } from '@/components/ui/card';
-
-// Import refactored components
-import OfferHeader from './offer-preview/OfferHeader';
-import ClientInfoSection from './offer-preview/ClientInfoSection';
-import ProductsTable from './offer-preview/ProductsTable';
-import TotalsSection from './offer-preview/TotalsSection';
-import NotesSection from './offer-preview/NotesSection';
-import SaveButton from './offer-preview/SaveButton';
-import OfferActions from './offer-preview/OfferActions';
-import SaveOfferHandler from './offer-preview/SaveOfferHandler';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatDate } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
+
+// Import refactored components
+import SaveButton from './offer-preview/SaveButton';
+import SaveOfferHandler from './offer-preview/SaveOfferHandler';
+import { cn } from '@/lib/utils';
+
+// Import template-specific components
+import ClassicTemplate from './offer-preview/templates/ClassicTemplate';
+import ModernDarkTemplate from './offer-preview/templates/ModernDarkTemplate';
+import GradientTemplate from './offer-preview/templates/GradientTemplate';
+import BusinessProTemplate from './offer-preview/templates/BusinessProTemplate';
 
 interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
@@ -29,8 +30,8 @@ const OfferPreview = ({
   mode = 'edit',
   templateSettings
 }: OfferPreviewProps = {}) => {
-  const { offer, calculateSubtotal, calculateVat, calculateTotal } = useOffer();
-  const { t, language } = useLanguage();
+  const { offer } = useOffer();
+  const { language } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
   
   // IMPORTANT: Prevent excessive rerenders by memoizing the display language
@@ -52,81 +53,43 @@ const OfferPreview = ({
     
   const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
 
-  // Check if it's a draft (no offer number)
-  const isDraft = !offer.details.offerNumber;
-
-  // Get footer text based on offer language
-  const footerText = displayLanguage === 'bg' 
-    ? 'Благодарим Ви за доверието!' 
-    : 'Thank you for your business!';
+  // Get template settings either from props or from offer
+  const settings = templateSettings || offer.templateSettings || {};
+  
+  // Determine which template to use based on settings
+  const getTemplateComponent = () => {
+    const designTemplate = settings?.designTemplate || 'classic';
+    
+    switch(designTemplate) {
+      case 'modern-dark':
+        return ModernDarkTemplate;
+      case 'gradient':
+        return GradientTemplate;
+      case 'business-pro':
+        return BusinessProTemplate;
+      case 'classic':
+      default:
+        return ClassicTemplate;
+    }
+  };
+  
+  const TemplateComponent = getTemplateComponent();
 
   return (
-    <Card className="mb-6">
-      <OfferActions 
-        offerContentRef={offerContentRef}
-        setIsSaveDialogOpen={setIsSaveDialogOpen}
-        mode={mode}
-      />
-      
-      <CardContent className="card-content">
+    <Card className={cn(
+      "mb-6", 
+      settings?.layout?.fullWidth ? "max-w-none" : ""
+    )}>
+      <CardContent className="card-content p-0">
         <div ref={offerContentRef} className="print-container offer-preview-content">
-          <OfferHeader offer={offer} />
-          
-          {/* Client and Offer Details in two columns on the same level */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Left column: Client info */}
-            <ClientInfoSection client={offer.client} />
-            
-            {/* Right column: Offer details */}
-            <div className="bg-gray-50 rounded-md p-3">
-              <h3 className="text-base font-semibold mb-2 text-offer-blue">
-                {displayLanguage === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
-              </h3>
-              
-              <div className="text-sm space-y-1">
-                {!isDraft && offer.details.offerNumber && (
-                  <p>
-                    <span className="font-medium">{displayLanguage === 'bg' ? 'Номер' : 'Number'}:</span> <span className="font-bold">{offer.details.offerNumber}</span>
-                  </p>
-                )}
-                
-                {offer.details.date && (
-                  <p>
-                    <span className="font-medium">{displayLanguage === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, displayLanguage as SupportedLanguage)}
-                  </p>
-                )}
-                
-                {offer.details.validUntil && (
-                  <p>
-                    <span className="font-medium">{displayLanguage === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, displayLanguage as SupportedLanguage)}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <ProductsTable 
-            products={offer.products} 
-            showPartNumber={offer.details.showPartNumber}
+          <TemplateComponent 
+            offer={offer}
             displayLanguage={displayLanguage}
+            settings={settings}
+            mode={mode}
+            offerContentRef={offerContentRef}
+            setIsSaveDialogOpen={setIsSaveDialogOpen}
           />
-          
-          <TotalsSection 
-            subtotal={calculateSubtotal()}
-            vat={calculateVat()}
-            vatRate={offer.details.vatRate}
-            includeVat={offer.details.includeVat}
-            transportCost={offer.details.transportCost}
-            otherCosts={offer.details.otherCosts}
-            total={calculateTotal()}
-            language={displayLanguage}
-          />
-          
-          <NotesSection notes={offer.details.notes} />
-          
-          <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible">
-            <p>{footerText}</p>
-          </div>
         </div>
       </CardContent>
       
