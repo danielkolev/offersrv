@@ -50,6 +50,9 @@ export const offer = {
   draftSaveError: "Failed to save draft",
   draftLoaded: "Draft loaded",
   draftRestoredDescription: "Your previous work has been restored",
+  // New draft indicator translations
+  draftInProgress: "Draft in progress",
+  returnToDraft: "Return to your draft offer",
   templates: {
     title: 'Offer Templates',
     description: 'Template Description',

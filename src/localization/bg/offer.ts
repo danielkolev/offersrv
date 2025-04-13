@@ -50,6 +50,9 @@ export const offer = {
   draftSaveError: "Грешка при запазване на черновата",
   draftLoaded: "Черновата е заредена",
   draftRestoredDescription: "Вашата предишна работа е възстановена",
+  // New draft indicator translations
+  draftInProgress: "Активна чернова",
+  returnToDraft: "Върнете се към черновата на офертата",
   templates: {
     title: 'Шаблони',
     description: 'Описание на шаблона',

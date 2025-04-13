@@ -33,7 +33,7 @@ export interface OfferTranslations {
     bulgarian: string;
     english: string;
   };
-  // Draft-related translations
+  // Draft related translations
   saving: string;
   saved: string;
   unsavedChanges: string;
@@ -49,19 +49,22 @@ export interface OfferTranslations {
   draftSaveError: string;
   draftLoaded: string;
   draftRestoredDescription: string;
-  // Templates translations
+  // Draft indicator translations
+  draftInProgress: string;
+  returnToDraft: string;
   templates: {
     title: string;
-    description?: string;
-    useTemplate?: string;
-    createFromCurrent?: string;
-    templateName?: string;
-    saveAsTemplate?: string;
-    templateSaved?: string;
-    noTemplates?: string;
-    confirmDelete?: string;
-    deleteTemplate?: string;
-    templateDeleted?: string;
+    description: string;
+    useTemplate: string;
+    useTemplate: string;
+    createFromCurrent: string;
+    templateName: string;
+    saveAsTemplate: string;
+    templateSaved: string;
+    noTemplates: string;
+    confirmDelete: string;
+    deleteTemplate: string;
+    templateDeleted: string;
     defaultTemplates: string;
     userTemplates: string;
     createNew: string;
@@ -69,72 +72,4 @@ export interface OfferTranslations {
     noTemplatesFound: string;
     noDescription: string;
   };
-}
-
-export interface SavedOffersTranslations {
-  title: string;
-  loadOffer: string;
-  saveOffer: string;
-  deleteOffer: string;
-  offerSaved: string;
-  offerSavedWithDetails: string;
-  offerDeleted: string;
-  noOffersFound: string;
-  noOffersFoundSearch: string;
-  confirmDelete: string;
-  date: string;
-  client: string;
-  amount: string;
-  actions: string;
-  search: string;
-  searchPlaceholder: string;
-  clientName: string;
-  offerNumber: string;
-  createNew: string;
-  offerLoaded: string;
-  viewOffer: string;
-  recentOffers: string;
-}
-
-export interface ProductsTranslations {
-  title: string;
-  name: string;
-  description: string;
-  price: string;
-  quantity: string;
-  vat: string;
-  vatIncluded: string;
-  total: string;
-  addProduct: string;
-  removeProduct: string;
-  noProducts: string;
-  productName: string;
-  partNumber: string;
-  unitPrice: string;
-  selectExisting: string;
-  selectProduct: string;
-  unit: string;
-  unitPlaceholder: string;
-  // Add the missing translation key
-  items: string;
-}
-
-export interface SavedProductsTranslations {
-  title: string;
-  addProduct: string;
-  editProduct: string;
-  deleteProduct: string;
-  productDeleted: string;
-  confirmDelete: string;
-  noProductsFound: string;
-  noProductsFoundSearch: string;
-  search: string;
-  searchPlaceholder: string;
-  searchByName: string;
-  searchByPartNumber: string;
-  selectProduct: string;
-  cancel: string;
-  saveFromOffer: string;
-  deleteConfirmation: string;
-  backToOffer: string;
 }
