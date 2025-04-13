@@ -39,7 +39,7 @@ const CustomUnitsSettings = () => {
       setIsLoading(true);
       setError(null);
       
-      // Use direct table access instead of RPC function
+      // Use raw query instead of RPC
       const { data, error } = await supabase
         .from('custom_units')
         .select('id, name, name_en')
@@ -75,7 +75,7 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Use direct table insert instead of RPC function
+      // Use raw query to insert unit
       const { data, error } = await supabase
         .from('custom_units')
         .insert({
@@ -111,7 +111,7 @@ const CustomUnitsSettings = () => {
     try {
       setIsLoading(true);
       
-      // Use direct table delete instead of RPC function
+      // Use raw query to delete unit
       const { error } = await supabase
         .from('custom_units')
         .delete()

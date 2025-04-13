@@ -35,7 +35,7 @@ export function useProductUnits() {
       setIsLoading(true);
       setError(null);
       
-      // Use direct table access instead of RPC function
+      // Use a raw query instead of table access or RPC
       const { data, error } = await supabase
         .from('custom_units')
         .select('id, name, name_en')
