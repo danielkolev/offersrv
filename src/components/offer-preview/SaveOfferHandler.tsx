@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from "@/hooks/use-toast";
 import { useOffer } from '@/context/offer/OfferContext';
 import { saveOfferToDatabase } from '../management/offers/savedOffersService';
+import { deleteDraftFromDatabase } from '../management/offers/draftOffersService';
 import SaveOfferDialog from '../SaveOfferDialog';
 import { useNavigate } from 'react-router-dom';
 
@@ -52,6 +53,16 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
         title: t.common.success,
         description: t.savedOffers.offerSavedWithDetails,
       });
+
+      // Delete any associated draft after successfully saving the offer
+      // This is a new step to ensure drafts don't remain after finalizing
+      try {
+        await deleteDraftFromDatabase(user.id);
+        console.log('Draft deleted after saving final offer');
+      } catch (draftError) {
+        console.error('Error deleting draft after save:', draftError);
+        // We don't want to block the save confirmation if draft deletion fails
+      }
       
       setIsSaveDialogOpen(false);
     } catch (error: any) {

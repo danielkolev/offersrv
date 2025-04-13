@@ -1,8 +1,14 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Offer } from '@/types/offer';
+import { v4 as uuidv4 } from 'uuid';
 
 const DRAFT_OFFER_KEY = 'draft_offer';
+
+// Generate a unique draft code (alphanumeric)
+const generateDraftCode = (): string => {
+  // Create a shortened UUID-based code - first 8 chars
+  return `DRAFT-${uuidv4().substring(0, 8)}`;
+};
 
 // Save draft to local storage for temporary storage
 export const saveDraftToLocalStorage = (offer: Offer): void => {
@@ -48,13 +54,23 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
       throw fetchError;
     }
     
+    // Draft code to use - either existing or new
+    let draftCode = generateDraftCode();
+    
     if (existingDrafts && existingDrafts.length > 0) {
-      // Update existing draft
+      // Use existing draft_code or generate a new one
+      draftCode = existingDrafts[0].draft_code || draftCode;
+      
+      // Update existing draft, keeping the draft_code
       const { error } = await supabase
         .from('saved_offers')
         .update({
           offer_data: offer as any,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          draft_code: draftCode,
+          // Force a temporary placeholder for offer number in drafts
+          // We'll set this to "DRAFT-XXX" in the display instead of using actual numbers
+          name: `Draft: ${offer.client.name || 'Untitled'}`
         })
         .eq('id', existingDrafts[0].id);
         
@@ -62,14 +78,15 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
         throw error;
       }
     } else {
-      // Insert new draft
+      // Insert new draft with a draft code
       const { error } = await supabase
         .from('saved_offers')
         .insert({
           user_id: userId,
           offer_data: offer as any,
           is_draft: true,
-          name: 'Draft Offer'
+          draft_code: draftCode,
+          name: `Draft: ${offer.client.name || 'Untitled'}`
         });
         
       if (error) {

@@ -12,6 +12,7 @@ export interface SavedOffer {
   is_draft?: boolean; // Flag for draft offers
   name?: string;
   status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Added status field for filtering
+  draft_code?: string; // New field for draft identification
 }
 
 export interface Client {

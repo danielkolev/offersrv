@@ -1,145 +1,139 @@
 
 import React from 'react';
-import { TableRow, TableCell } from '@/components/ui/table';
-import { SavedOfferItemProps } from '../types';
-import { formatCurrencyValue } from './helpers';
+import { SavedOffer } from '@/types/database';
+import { Card, CardContent } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/utils';
+import { format } from 'date-fns';
+import { calculateTotal } from '@/context/offer/calculations';
 import OfferActionButtons from './OfferActionButtons';
-import { OfferDetails, ClientInfo } from '@/types/offer';
+import { Badge } from '@/components/ui/badge';
+import { Translations } from '@/types/language';
+import DeleteOfferDialog from './DeleteOfferDialog';
+import OfferPreviewModal from './OfferPreviewModal';
+import { Edit, Clock } from 'lucide-react';
 
-const SavedOfferItem = ({ 
-  savedOffer, 
-  loadOffer, 
-  deleteOffer, 
-  language, 
-  currency, 
-  t 
-}: SavedOfferItemProps) => {
-  const { offer_data, created_at, updated_at } = savedOffer;
-  
-  // Safely handle missing or incomplete offer data with proper typing
-  const offerDetails: OfferDetails = offer_data?.details || {
-    offerNumber: '',
-    date: '',
-    validUntil: '',
-    showPartNumber: false,
-    includeVat: false,
-    vatRate: 0,
-    transportCost: 0,
-    otherCosts: 0,
-    notes: '',
-    offerLanguage: 'bg'
-  };
-  
-  const offerClient: ClientInfo = offer_data?.client || {
-    name: '',
-    contactPerson: '',
-    address: '',
-    city: '',
-    country: '',
-    vatNumber: '',
-    email: '',
-    phone: ''
+interface SavedOfferItemProps {
+  offer: SavedOffer;
+  onLoad: () => void;
+  onDelete: () => void;
+  language: string;
+  currency: string;
+  t: Translations;
+  displayNumber: string; // New prop for displaying either offer number or draft code
+}
+
+const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
+  offer,
+  onLoad,
+  onDelete,
+  language,
+  currency,
+  t,
+  displayNumber
+}) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = React.useState(false);
+
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
   };
 
-  // Calculate the total amount from the offer data
-  const calculateTotal = () => {
-    try {
-      let subtotal = 0;
-      
-      // Calculate the subtotal from products
-      (offer_data?.products || []).forEach(product => {
-        subtotal += product.quantity * product.unitPrice;
-      });
-      
-      // Add additional costs
-      const total = subtotal + 
-        (offerDetails.transportCost || 0) +
-        (offerDetails.otherCosts || 0);
-      
-      // Add VAT if needed
-      return offerDetails.includeVat 
-        ? total * (1 + (offerDetails.vatRate || 0) / 100) 
-        : total;
-    } catch (error) {
-      console.error('Error calculating total:', error);
-      return 0;
-    }
+  const handlePreviewClick = () => {
+    setIsPreviewModalOpen(true);
   };
 
-  // Format the date safely
   const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString(language, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-      });
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return 'Invalid Date';
-    }
+    return format(new Date(dateString), 'dd.MM.yyyy');
   };
 
-  // Get status of the offer (draft, sent, accepted, rejected)
-  const getOfferStatus = () => {
-    // For now, determine if it's a draft based on is_draft flag
-    if (savedOffer.is_draft) {
-      return t.offer.statuses.draft;
+  const totalAmount = calculateTotal(offer.offer_data);
+  const clientName = offer.offer_data?.client?.name || t.common.noName;
+  
+  // Get status display color
+  const getStatusBadge = () => {
+    if (offer.is_draft) {
+      return (
+        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+          <Edit className="h-3 w-3 mr-1" />
+          {t.offer.statuses.draft}
+        </Badge>
+      );
     }
     
-    // In the future, we can get this from the offer_data
-    return '';
+    switch (offer.status) {
+      case 'sent':
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">{t.offer.statuses.sent}</Badge>;
+      case 'accepted':
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">{t.offer.statuses.accepted}</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">{t.offer.statuses.rejected}</Badge>;
+      default:
+        return null;
+    }
   };
 
-  // Get the name of the offer with multiple fallbacks
-  const offerName = savedOffer.name || 
-    offer_data?.name || 
-    offerClient.name || 
-    'Unnamed Offer';
-  
-  // Safely display offer number with fallback
-  const displayOfferNumber = `#${offerDetails.offerNumber || '---'}`;
-  
-  // Get offer status
-  const offerStatus = getOfferStatus();
-
   return (
-    <TableRow>
-      <TableCell>
-        <div className="font-medium">{displayOfferNumber}</div>
-        {offerName && offerName !== offerClient.name && (
-          <div className="text-sm text-muted-foreground">{offerName}</div>
-        )}
-        {offerStatus && (
-          <div className="mt-1">
-            <span className="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800">
-              {offerStatus}
-            </span>
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        <div className="flex flex-col md:flex-row">
+          {/* Left section with offer number and client */}
+          <div className="p-4 flex-1">
+            <div className="flex items-center mb-2 gap-2">
+              <h3 className="text-lg font-semibold">
+                {`#${displayNumber}`}
+              </h3>
+              {getStatusBadge()}
+            </div>
+            
+            <p className="text-gray-700 mb-1">{clientName}</p>
+            
+            <div className="text-sm text-gray-500 mt-2">
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {formatDate(offer.created_at)}
+              </div>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {t.common.update}: {formatDate(offer.updated_at)}
+              </p>
+            </div>
           </div>
-        )}
-      </TableCell>
-      <TableCell>
-        <div>{formatDate(created_at)}</div>
-        {updated_at && updated_at !== created_at && (
-          <div className="text-xs text-muted-foreground">
-            {t.offer.lastEdited}: {formatDate(updated_at)}
+          
+          {/* Right section with amount and actions */}
+          <div className="bg-gray-50 p-4 md:w-64 flex flex-col justify-between">
+            <div className="mb-2">
+              <p className="text-sm text-gray-500">{t.savedOffers.amount}:</p>
+              <p className="text-lg font-medium">
+                {formatCurrency(totalAmount, currency)}
+              </p>
+            </div>
+            
+            <OfferActionButtons
+              onLoad={onLoad}
+              onDelete={handleDeleteClick}
+              onPreview={handlePreviewClick}
+              t={t}
+            />
           </div>
-        )}
-      </TableCell>
-      <TableCell>{offerClient.name || 'Unknown Client'}</TableCell>
-      <TableCell className="text-right">
-        {formatCurrencyValue(calculateTotal(), currency)}
-      </TableCell>
-      <TableCell>
-        <OfferActionButtons
-          savedOffer={savedOffer}
-          loadOffer={loadOffer}
-          deleteOffer={deleteOffer}
-          t={t}
-        />
-      </TableCell>
-    </TableRow>
+        </div>
+      </CardContent>
+      
+      <DeleteOfferDialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={() => {
+          onDelete();
+          setIsDeleteDialogOpen(false);
+        }}
+        t={t}
+      />
+      
+      <OfferPreviewModal
+        open={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
+        offer={offer.offer_data}
+        t={t}
+      />
+    </Card>
   );
 };
 
