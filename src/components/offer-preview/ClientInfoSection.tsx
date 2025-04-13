@@ -27,7 +27,9 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
         )}
         {(client.city || client.country) && (
           <p className="text-sm">
-            {client.city}{client.city && client.country ? ', ' : ''}{client.country}
+            {client.city}
+            {client.city && client.country && language !== 'bg' ? ', ' : ''}
+            {language !== 'bg' && client.country ? client.country : ''}
           </p>
         )}
         
@@ -39,10 +41,10 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
             <p>{t.clientInfo.vatNumber}: {client.vatNumber}</p>
           )}
           {client.phone && (
-            <p>{client.phone}</p>
+            <p>{t.clientInfo.phone}: {client.phone}</p>
           )}
           {client.email && (
-            <p>{client.email}</p>
+            <p>{t.clientInfo.email}: {client.email}</p>
           )}
         </div>
       </div>
