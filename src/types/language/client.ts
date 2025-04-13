@@ -69,4 +69,5 @@ export interface ClientInfoTranslations {
   selectClient: string;
   selectExisting: string;
   searchClients: string;
+  nameRequired: string; // Added this property
 }

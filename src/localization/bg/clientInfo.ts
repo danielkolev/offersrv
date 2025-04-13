@@ -1,3 +1,4 @@
+
 export const clientInfo = {
   title: "Информация за клиента",
   name: "Име на клиент",

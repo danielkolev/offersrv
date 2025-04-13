@@ -88,9 +88,15 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
 
 // Function to check if client exists and save if it doesn't
 const saveClientIfNew = async (userId: string, client: ClientInfo): Promise<void> => {
+  // Validate client name
+  if (!client.name || client.name.trim() === '') {
+    console.error('Cannot save client without a name');
+    return;
+  }
+  
   console.log('Checking if client exists:', client.name);
   
-  // Check if client with same name and VAT number exists
+  // Check if client with same name exists
   const { data: existingClients, error: checkError } = await supabase
     .from('clients')
     .select('*')
