@@ -24,7 +24,6 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
 }) => {
   const { language, currency, t } = useLanguage();
   
-  // Default translations in case they're missing
   const translations = {
     subtotal: t?.totals?.subtotal || "Subtotal",
     vat: t?.totals?.vat || "VAT",
@@ -36,13 +35,12 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   };
 
   return (
-    <div className="flex justify-end mb-8">
-      <div className="w-full md:w-64">
-        <div className="grid grid-cols-2 gap-1 border-b pb-2 mb-2">
+    <div className="flex justify-end mb-6">
+      <div className="w-full md:w-60 bg-gray-50 p-3 rounded-md">
+        <div className="grid grid-cols-2 gap-1 border-b pb-2 mb-2 text-sm">
           <p className="font-medium">{translations.subtotal}:</p>
           <p className="text-right">{formatCurrency(subtotal, language, currency)}</p>
           
-          {/* Always show VAT information, but with different wording based on includeVat */}
           <p className="font-medium">{translations.vat} ({vatRate}%):</p>
           <p className="text-right">{formatCurrency(vat, language, currency)}</p>
           
@@ -62,20 +60,14 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
         </div>
         
         <div className="grid grid-cols-2 gap-1">
-          <p className="font-bold text-lg">{translations.totalAmount}:</p>
-          <p className="text-right font-bold text-lg text-offer-blue">
+          <p className="font-bold">{translations.totalAmount}:</p>
+          <p className="text-right font-bold text-offer-blue">
             {formatCurrency(total, language, currency)}
           </p>
           
-          {includeVat ? (
-            <p className="col-span-2 text-right text-xs text-muted-foreground">
-              {translations.vatIncluded}
-            </p>
-          ) : (
-            <p className="col-span-2 text-right text-xs text-muted-foreground">
-              {translations.vatExcluded}
-            </p>
-          )}
+          <p className="col-span-2 text-right text-xs text-muted-foreground">
+            {includeVat ? translations.vatIncluded : translations.vatExcluded}
+          </p>
         </div>
       </div>
     </div>

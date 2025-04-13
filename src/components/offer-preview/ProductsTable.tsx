@@ -13,9 +13,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
   const { language, currency, t } = useLanguage();
 
   return (
-    <div className="mb-8">
-      <div className="bg-offer-blue text-white py-2 px-4 rounded-t-md">
-        <div className="grid grid-cols-12 gap-2">
+    <div className="mb-6">
+      <div className="bg-offer-blue text-white py-2 px-3 rounded-t-md">
+        <div className="grid grid-cols-12 gap-2 text-sm">
           <div className="col-span-5 font-medium">{t.offer.item}</div>
           {showPartNumber && (
             <div className="col-span-2 font-medium">{t.offer.partNo}</div>
@@ -30,17 +30,19 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
         {products.map((product, index) => (
           <div 
             key={product.id} 
-            className={`grid grid-cols-12 gap-2 px-4 py-3 ${
-              index % 2 === 0 ? 'bg-white' : 'bg-offer-lightgray'
+            className={`grid grid-cols-12 gap-2 px-3 py-2 ${
+              index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
             }`}
           >
             <div className="col-span-5">
-              <div className="font-medium">{product.name}</div>
-              <div className="text-sm text-muted-foreground">{product.description}</div>
+              <div className="font-medium text-sm">{product.name}</div>
+              {product.description && (
+                <div className="text-xs text-muted-foreground">{product.description}</div>
+              )}
               
-              {/* Display bundled products if this is a bundle and showBundledPrices is true */}
+              {/* Display bundled products */}
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && product.showBundledPrices && (
-                <div className="mt-2 pl-4 border-l-2 border-slate-200">
+                <div className="mt-1 pl-2 border-l-2 border-gray-200">
                   <p className="text-xs font-medium text-muted-foreground mb-1">Bundle includes:</p>
                   {product.bundledProducts.map(item => (
                     <div key={item.id} className="text-xs flex justify-between">
@@ -53,8 +55,8 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               
               {/* Just show the item count if showBundledPrices is false */}
               {product.isBundle && product.bundledProducts && product.bundledProducts.length > 0 && !product.showBundledPrices && (
-                <div className="mt-2 pl-4 border-l-2 border-slate-200">
-                  <p className="text-xs font-medium text-muted-foreground">
+                <div className="mt-1 pl-2 border-l border-gray-200">
+                  <p className="text-xs text-muted-foreground">
                     Bundle includes {product.bundledProducts.length} items
                   </p>
                 </div>
@@ -62,21 +64,21 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
             </div>
             
             {showPartNumber && (
-              <div className="col-span-2 self-center">{product.partNumber || '-'}</div>
+              <div className="col-span-2 self-center text-sm">{product.partNumber || '-'}</div>
             )}
             
-            <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center`}>
+            <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center text-sm`}>
               {product.quantity} {product.unit && product.unit !== 'pcs' ? product.unit : ''}
             </div>
             
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right`}>
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm`}>
               {formatCurrency(product.unitPrice, language, currency)}
               {product.unit && product.unit !== 'pcs' && !product.isBundle && (
                 <span className="text-xs ml-1">/ {product.unit}</span>
               )}
             </div>
             
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium`}>
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium text-sm`}>
               {formatCurrency(product.quantity * product.unitPrice, language, currency)}
             </div>
           </div>

@@ -11,10 +11,10 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
   const { t, language } = useLanguage();
 
   return (
-    <div className="mb-8">
-      <h2 className="text-lg font-medium mb-2">{t.offer.toLabel}</h2>
-      <div className="border-l-2 border-offer-blue pl-4">
-        <h3 className="font-medium">{client.name}</h3>
+    <div className="mb-4">
+      <h3 className="text-base font-semibold mb-2 text-offer-blue">{t.offer.toLabel}</h3>
+      <div className="border-l-2 border-offer-blue pl-3">
+        <h4 className="font-medium">{client.name}</h4>
         {client.contactPerson && (
           <p className="text-sm">
             {t.offer.attention} {client.contactPerson}
@@ -23,28 +23,23 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
         {client.address && (
           <p className="text-sm">
             {client.address}
-          </p>
-        )}
-        {(client.city || client.country) && (
-          <p className="text-sm">
-            {client.city}
-            {client.city && client.country && language !== 'bg' ? ', ' : ''}
-            {language !== 'bg' && client.country ? client.country : ''}
+            {client.city && `, ${client.city}`}
+            {language !== 'bg' && client.country ? `, ${client.country}` : ''}
           </p>
         )}
         
-        <div className="text-sm mt-2">
+        <div className="text-sm mt-2 space-y-1">
           {client.eikNumber && (
-            <p>{t.clientInfo.eikNumber}: {client.eikNumber}</p>
+            <p><span className="font-medium">{t.clientInfo.eikNumber}:</span> {client.eikNumber}</p>
           )}
           {client.vatNumber && (
-            <p>{t.clientInfo.vatNumber}: {client.vatNumber}</p>
+            <p><span className="font-medium">{t.clientInfo.vatNumber}:</span> {client.vatNumber}</p>
           )}
           {client.phone && (
-            <p>{t.clientInfo.phone}: {client.phone}</p>
+            <p><span className="font-medium">{t.clientInfo.phone}:</span> {client.phone}</p>
           )}
           {client.email && (
-            <p>{t.clientInfo.email}: {client.email}</p>
+            <p><span className="font-medium">{t.clientInfo.email}:</span> {client.email}</p>
           )}
         </div>
       </div>
