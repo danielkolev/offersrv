@@ -12,6 +12,10 @@ export const offer = {
   notes: "Notes",
   terms: "Terms & Conditions",
   status: "Status",
+  draftStatus: "Status",
+  draftStatusInfo: "A number will be assigned when saved",
+  createdAt: "Created on",
+  lastEdited: "Last edited",
   statuses: {
     draft: "Draft",
     sent: "Sent",

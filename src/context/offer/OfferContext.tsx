@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { Offer, CompanyInfo, ClientInfo, Product, OfferDetails } from '../../types/offer';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,6 +24,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [createdAt, setCreatedAt] = useState<Date>(new Date());
 
   // Load draft on initial mount
   useEffect(() => {
@@ -36,6 +36,10 @@ export function OfferProvider({ children }: { children: ReactNode }) {
             setOffer(draft);
             setLastSaved(new Date());
             setHasUserInteracted(true);
+            // If the draft has a creation date, use it
+            if (draft.createdAt) {
+              setCreatedAt(new Date(draft.createdAt));
+            }
             toast({
               title: t.offer.draftLoaded,
               description: t.offer.draftRestoredDescription,
@@ -58,7 +62,14 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     const autoSaveDraft = async () => {
       setIsAutoSaving(true);
       try {
-        await saveDraftToDatabase(user.id, offer);
+        // Add creation and last edited timestamps to the draft
+        const draftToSave = {
+          ...offer,
+          createdAt: createdAt.toISOString(),
+          lastEdited: new Date().toISOString()
+        };
+        
+        await saveDraftToDatabase(user.id, draftToSave);
         setLastSaved(new Date());
         setIsDirty(false);
       } catch (error) {
@@ -70,7 +81,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
     const timer = setTimeout(autoSaveDraft, AUTO_SAVE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted]);
+  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted, createdAt]);
 
   // Mark as dirty when offer changes, and set that user has interacted
   useEffect(() => {
@@ -187,7 +198,14 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     try {
       // Only save if user has interacted with the offer
       if (hasUserInteracted) {
-        await saveDraftToDatabase(user.id, offer);
+        // Add creation and last edited timestamps
+        const draftToSave = {
+          ...offer,
+          createdAt: createdAt.toISOString(),
+          lastEdited: new Date().toISOString()
+        };
+        
+        await saveDraftToDatabase(user.id, draftToSave);
         setLastSaved(new Date());
         setIsDirty(false);
         toast({
@@ -205,7 +223,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsAutoSaving(false);
     }
-  }, [user, offer, t, toast, hasUserInteracted]);
+  }, [user, offer, t, toast, hasUserInteracted, createdAt]);
 
   // New function to toggle auto-save
   const toggleAutoSave = useCallback(() => {
@@ -272,7 +290,8 @@ export function OfferProvider({ children }: { children: ReactNode }) {
         autoSaveEnabled,
         saveDraft,
         toggleAutoSave,
-        hasUserInteracted
+        hasUserInteracted,
+        createdAt
       }}
     >
       {children}

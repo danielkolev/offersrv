@@ -25,6 +25,7 @@ export interface OfferContextType {
   saveDraft: () => Promise<void>;
   toggleAutoSave: () => void;
   hasUserInteracted: boolean;
+  createdAt: Date;
 }
 
 // Extend Window interface

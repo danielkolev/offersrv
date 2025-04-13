@@ -10,8 +10,19 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const OfferDetailsForm = () => {
-  const { offer, updateOfferDetails } = useOffer();
+  const { offer, updateOfferDetails, lastSaved, hasUserInteracted } = useOffer();
   const { t } = useLanguage();
+
+  // Format last edited date
+  const formatLastEdited = () => {
+    if (!lastSaved) return "-";
+    return new Date(lastSaved).toLocaleString();
+  };
+
+  // Format creation date (using current date when it's a new offer)
+  const creationDate = offer.details.date 
+    ? new Date(offer.details.date).toLocaleString() 
+    : new Date().toLocaleString();
 
   return (
     <Card className="mb-6">
@@ -20,19 +31,35 @@ const OfferDetailsForm = () => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div className="space-y-2">
-            <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
-            <Input
-              id="offerNumber"
-              value={offer.details.offerNumber || ''}
-              onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
-              placeholder="00000"
-              disabled
-            />
-            <p className="text-xs text-muted-foreground">
-              {t.offerDetails?.offerNumberInfo || "This number is automatically generated"}
-            </p>
-          </div>
+          {/* Only show the offer number field when it's not a draft or it has been saved before */}
+          {!hasUserInteracted || offer.details.offerNumber !== '00000' ? (
+            <div className="space-y-2">
+              <Label htmlFor="offerNumber">{t.offerDetails?.offerNumber || "Offer Number"}</Label>
+              <Input
+                id="offerNumber"
+                value={offer.details.offerNumber || ''}
+                onChange={(e) => updateOfferDetails({ offerNumber: e.target.value })}
+                placeholder="00000"
+                disabled
+              />
+              <p className="text-xs text-muted-foreground">
+                {t.offerDetails?.offerNumberInfo || "This number is automatically generated when the offer is saved"}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="draftStatus">{t.offer?.draftStatus || "Status"}</Label>
+              <Input
+                id="draftStatus"
+                value={t.offer?.statuses?.draft || "Draft"}
+                disabled
+                className="bg-amber-50 text-amber-700"
+              />
+              <p className="text-xs text-muted-foreground">
+                {t.offer?.draftStatusInfo || "A number will be assigned when saved"}
+              </p>
+            </div>
+          )}
           
           <div className="space-y-2">
             <Label htmlFor="offerLanguage">{t.offerDetails?.language || "Offer Language"}</Label>
@@ -72,6 +99,16 @@ const OfferDetailsForm = () => {
               onChange={(e) => updateOfferDetails({ validUntil: e.target.value })}
               placeholder={t.offerDetails?.validUntilPlaceholder || "Select expiration date"}
             />
+          </div>
+        </div>
+
+        {/* Display creation and last edited timestamps */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm text-muted-foreground">
+          <div>
+            {t.offer?.createdAt || "Created"}: {creationDate}
+          </div>
+          <div>
+            {t.offer?.lastEdited || "Last edited"}: {formatLastEdited()}
           </div>
         </div>
         

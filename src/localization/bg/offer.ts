@@ -12,6 +12,10 @@ export const offer = {
   notes: "Бележки",
   terms: "Условия",
   status: "Статус",
+  draftStatus: "Статус",
+  draftStatusInfo: "Номерът ще бъде генериран след запазване",
+  createdAt: "Създадена на",
+  lastEdited: "Последна редакция",
   statuses: {
     draft: "Чернова",
     sent: "Изпратена",

@@ -64,4 +64,6 @@ export interface Offer {
   products: Product[];
   details: OfferDetails;
   name?: string; // Added optional name field for the offer
+  createdAt?: string; // Added creation timestamp
+  lastEdited?: string; // Added last edited timestamp
 }

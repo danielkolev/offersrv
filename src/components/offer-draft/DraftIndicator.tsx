@@ -23,9 +23,8 @@ export const DraftIndicator = () => {
   }
 
   const handleNavigateToOffer = () => {
-    // Get the last offer path from localStorage, defaulting to /new-offer
-    const lastOfferPath = localStorage.getItem('lastOfferPath') || '/new-offer';
-    navigate(lastOfferPath);
+    // Navigate directly to the new-offer page
+    navigate('/new-offer');
   };
 
   const formatLastSaved = () => {
