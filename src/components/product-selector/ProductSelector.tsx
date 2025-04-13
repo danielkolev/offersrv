@@ -9,7 +9,7 @@ import {
   SheetTrigger 
 } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { fetchSavedProducts, convertToOfferProduct } from '@/components/management/products/productsService';
 import { SavedProduct } from '@/types/database';
@@ -112,30 +112,37 @@ const ProductSelector = ({ onSelectProduct, buttonText }: ProductSelectorProps) 
               <p>{t.common.loading}</p>
             </div>
           ) : filteredProducts.length > 0 ? (
-            <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="p-3 border rounded-md hover:bg-muted cursor-pointer"
-                  onClick={() => handleSelectProduct(product)}
-                >
-                  <div className="font-medium">{product.name}</div>
-                  {product.part_number && (
-                    <div className="text-sm text-muted-foreground">
-                      {t.products.partNumber}: {product.part_number}
-                    </div>
-                  )}
-                  <div className="flex justify-between mt-1">
-                    <div className="text-sm text-muted-foreground">
-                      {product.description?.substring(0, 50)}{product.description?.length > 50 ? '...' : ''}
-                    </div>
-                    <div className="font-medium">
-                      {formatCurrency(product.unit_price, language, currency)}
+            <>
+              <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 rounded-md shadow-inner bg-gray-50 p-2">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="p-3 border rounded-md hover:bg-muted cursor-pointer bg-white"
+                    onClick={() => handleSelectProduct(product)}
+                  >
+                    <div className="font-medium">{product.name}</div>
+                    {product.part_number && (
+                      <div className="text-sm text-muted-foreground">
+                        {t.products.partNumber}: {product.part_number}
+                      </div>
+                    )}
+                    <div className="flex justify-between mt-1">
+                      <div className="text-sm text-muted-foreground">
+                        {product.description?.substring(0, 50)}{product.description?.length > 50 ? '...' : ''}
+                      </div>
+                      <div className="font-medium text-gray-800">
+                        {formatCurrency(product.unit_price, language, currency)}
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+              {filteredProducts.length > 5 && (
+                <div className="text-center mt-2 text-muted-foreground text-sm">
+                  <ChevronDown className="h-4 w-4 inline-block" /> Scroll for more products
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               {searchTerm 

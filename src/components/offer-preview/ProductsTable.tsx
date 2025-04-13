@@ -56,7 +56,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber,
                   {product.bundledProducts.map(item => (
                     <div key={item.id} className="text-xs flex justify-between">
                       <span>{item.name} x{item.quantity}</span>
-                      <span>{formatCurrency(item.unitPrice * item.quantity, tableLanguage, currency)}</span>
+                      <span className="text-gray-700 font-medium">{formatCurrency(item.unitPrice * item.quantity, tableLanguage, currency)}</span>
                     </div>
                   ))}
                 </div>
@@ -86,11 +86,11 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber,
             </div>
             
             {/* Unit price column - make it bold like the total price */}
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium`}>
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium text-gray-800`}>
               {formatCurrency(product.unitPrice, tableLanguage, currency)}
             </div>
             
-            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-medium text-sm`}>
+            <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right font-bold text-sm text-gray-800`}>
               {formatCurrency(product.quantity * product.unitPrice, tableLanguage, currency)}
             </div>
           </div>

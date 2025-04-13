@@ -31,40 +31,40 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
     <div className="flex justify-end mb-6">
       <div className="w-full max-w-sm space-y-1">
         <div className="flex justify-between py-1">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-600">
             {language === 'bg' ? 'Междинна сума' : 'Subtotal'}:
           </span>
-          <span>{formatCurrency(subtotal, language, currency)}</span>
+          <span className="text-gray-800">{formatCurrency(subtotal, language, currency)}</span>
         </div>
         
         {transportCost > 0 && (
           <div className="flex justify-between py-1">
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-gray-600">
               {language === 'bg' ? 'Транспорт' : 'Transport'}:
             </span>
-            <span>{formatCurrency(transportCost, language, currency)}</span>
+            <span className="text-gray-800">{formatCurrency(transportCost, language, currency)}</span>
           </div>
         )}
         
         {otherCosts > 0 && (
           <div className="flex justify-between py-1">
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-gray-600">
               {language === 'bg' ? 'Други разходи' : 'Other costs'}:
             </span>
-            <span>{formatCurrency(otherCosts, language, currency)}</span>
+            <span className="text-gray-800">{formatCurrency(otherCosts, language, currency)}</span>
           </div>
         )}
         
         {includeVat && (
           <div className="flex justify-between py-1">
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-gray-600">
               {language === 'bg' ? `ДДС (${vatRate}%)` : `VAT (${vatRate}%)`}:
             </span>
-            <span>{formatCurrency(vat, language, currency)}</span>
+            <span className="text-gray-800">{formatCurrency(vat, language, currency)}</span>
           </div>
         )}
         
-        <div className="flex justify-between py-1 border-t font-medium">
+        <div className="flex justify-between py-1 border-t font-bold text-gray-900">
           <span>
             {language === 'bg' ? 'Обща сума' : 'Total'}:
           </span>

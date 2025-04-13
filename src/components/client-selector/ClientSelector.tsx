@@ -9,7 +9,7 @@ import {
   SheetTrigger 
 } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { fetchClients } from '@/components/management/clients/clientsService';
 import { Client } from '@/types/database';
@@ -98,32 +98,39 @@ const ClientSelector = ({ onSelectClient }: ClientSelectorProps) => {
               <p>{t.common.loading}</p>
             </div>
           ) : filteredClients.length > 0 ? (
-            <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
-              {filteredClients.map((client) => (
-                <div
-                  key={client.id}
-                  className="p-3 border rounded-md hover:bg-muted cursor-pointer"
-                  onClick={() => handleSelectClient(client)}
-                >
-                  <div className="font-medium">{client.name}</div>
-                  {client.vat_number && (
-                    <div className="text-sm text-muted-foreground">
-                      {t.clientInfo.vatNumber}: {client.vat_number}
-                    </div>
-                  )}
-                  {client.eik_number && (
-                    <div className="text-sm text-muted-foreground">
-                      {t.clientInfo.eikNumber}: {client.eik_number}
-                    </div>
-                  )}
-                  {client.contact_person && (
-                    <div className="text-sm text-muted-foreground">
-                      {t.clientInfo.contactPerson}: {client.contact_person}
-                    </div>
-                  )}
+            <>
+              <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 rounded-md shadow-inner bg-gray-50 p-2">
+                {filteredClients.map((client) => (
+                  <div
+                    key={client.id}
+                    className="p-3 border rounded-md hover:bg-muted cursor-pointer bg-white"
+                    onClick={() => handleSelectClient(client)}
+                  >
+                    <div className="font-medium">{client.name}</div>
+                    {client.vat_number && (
+                      <div className="text-sm text-muted-foreground">
+                        {t.clientInfo.vatNumber}: {client.vat_number}
+                      </div>
+                    )}
+                    {client.eik_number && (
+                      <div className="text-sm text-muted-foreground">
+                        {t.clientInfo.eikNumber}: {client.eik_number}
+                      </div>
+                    )}
+                    {client.contact_person && (
+                      <div className="text-sm text-muted-foreground">
+                        {t.clientInfo.contactPerson}: {client.contact_person}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {filteredClients.length > 5 && (
+                <div className="text-center mt-2 text-muted-foreground text-sm">
+                  <ChevronDown className="h-4 w-4 inline-block" /> Scroll for more clients
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               {searchTerm 

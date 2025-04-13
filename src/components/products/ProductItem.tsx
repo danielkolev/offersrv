@@ -89,9 +89,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
         </div>
         
         {/* Improved alignment for quantity, unit and price fields */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor={`product-quantity-${index}`}>{t.products.quantity}</Label>
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-3 space-y-2">
+            <Label htmlFor={`product-quantity-${index}`} className="whitespace-nowrap">
+              {t.products.quantity}
+            </Label>
             <Input
               id={`product-quantity-${index}`}
               type="number"
@@ -102,8 +104,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor={`product-unit-${index}`}>
+          <div className="col-span-3 space-y-2">
+            <Label htmlFor={`product-unit-${index}`} className="whitespace-nowrap">
               {language === 'bg' ? 'Мярка' : 'Unit'}
             </Label>
             <Select
@@ -123,8 +125,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor={`product-price-${index}`}>{t.products.unitPrice}</Label>
+          <div className="col-span-6 space-y-2">
+            <Label htmlFor={`product-price-${index}`} className="whitespace-nowrap">
+              {t.products.unitPrice}
+            </Label>
             <Input
               id={`product-price-${index}`}
               type="number"
@@ -184,7 +188,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
         </div>
       )}
       
-      <div className="text-right text-sm text-muted-foreground mt-2">
+      <div className="text-right text-sm font-medium mt-2 text-gray-800">
         {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
         {/* Only show unit if it's not the default 'none' unit and not a bundle */}
         {product.unit && product.unit !== 'none' && !product.isBundle && (
