@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { BundledProduct } from '@/types/offer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ProductSelector from './product-selector/ProductSelector';
+import { useProductUnits } from '@/hooks/use-product-units';
 
 const ProductsForm = () => {
   const { offer, addProduct, updateProduct, removeProduct } = useOffer();
@@ -28,18 +28,9 @@ const ProductsForm = () => {
     quantity: 1,
     unitPrice: 0
   });
-
-  // Common units of measurement
-  const commonUnits = [
-    { value: 'pcs', label: 'Pieces' },
-    { value: 'hour', label: 'Hours' },
-    { value: 'day', label: 'Days' },
-    { value: 'month', label: 'Months' },
-    { value: 'kg', label: 'Kilograms' },
-    { value: 'meter', label: 'Meters' },
-    { value: 'liter', label: 'Liters' },
-    { value: 'set', label: 'Sets' },
-  ];
+  
+  // Use the custom product units hook instead of hardcoded units
+  const { units, getLocalizedUnitName, defaultUnit } = useProductUnits();
 
   const handleAddProduct = (isBundle: boolean = false) => {
     addProduct({
@@ -48,7 +39,7 @@ const ProductsForm = () => {
       partNumber: '',
       quantity: 1,
       unitPrice: 0,
-      unit: 'pcs',
+      unit: defaultUnit, // Use the default unit from the hook
       isBundle: isBundle,
       bundledProducts: isBundle ? [] : undefined,
       showBundledPrices: true // Default to showing bundled prices
@@ -179,16 +170,16 @@ const ProductsForm = () => {
                   />
                   
                   <Select
-                    value={product.unit || 'pcs'}
+                    value={product.unit || defaultUnit}
                     onValueChange={(value) => updateProduct(product.id, { unit: value })}
                   >
                     <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder="Unit" />
+                      <SelectValue placeholder={t.products.unit} />
                     </SelectTrigger>
                     <SelectContent>
-                      {commonUnits.map(unit => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
+                      {units.map(unit => (
+                        <SelectItem key={unit.id} value={unit.id}>
+                          {language === 'bg' ? unit.name : unit.name_en}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -258,7 +249,7 @@ const ProductsForm = () => {
             <div className="text-right text-sm text-muted-foreground mt-2">
               {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
               {product.unit && product.unit !== 'pcs' && !product.isBundle && (
-                <span className="ml-1">({product.quantity} {product.unit})</span>
+                <span className="ml-1">({product.quantity} {getLocalizedUnitName(product.unit)})</span>
               )}
             </div>
           </div>

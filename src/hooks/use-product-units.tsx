@@ -17,11 +17,9 @@ export function useProductUnits() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Default units that are always available
+  // Only include basic default units - pieces
   const defaultUnits: ProductUnit[] = [
     { id: 'pieces', name: 'брой', name_en: 'pieces' },
-    { id: 'hours', name: 'часове', name_en: 'hours' },
-    { id: 'days', name: 'дни', name_en: 'days' },
   ];
 
   useEffect(() => {

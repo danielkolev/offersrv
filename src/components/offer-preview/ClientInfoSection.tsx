@@ -21,11 +21,11 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ client }) => {
           {client.city}, {client.country}
         </p>
         <p className="text-sm mt-2">
-          {client.vatNumber && (
-            <>{t.clientInfo.vatNumber}: {client.vatNumber}<br /></>
-          )}
           {client.eikNumber && (
             <>{t.clientInfo.eikNumber}: {client.eikNumber}<br /></>
+          )}
+          {client.vatNumber && (
+            <>{t.clientInfo.vatNumber}: {client.vatNumber}<br /></>
           )}
           {client.phone}<br />
           {client.email}

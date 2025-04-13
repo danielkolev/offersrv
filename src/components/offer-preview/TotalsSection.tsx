@@ -42,12 +42,9 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
           <p className="font-medium">{translations.subtotal}:</p>
           <p className="text-right">{formatCurrency(subtotal, language, currency)}</p>
           
-          {includeVat && (
-            <>
-              <p className="font-medium">{translations.vat} ({vatRate}%):</p>
-              <p className="text-right">{formatCurrency(vat, language, currency)}</p>
-            </>
-          )}
+          {/* Always show VAT information, but with different wording based on includeVat */}
+          <p className="font-medium">{translations.vat} ({vatRate}%):</p>
+          <p className="text-right">{formatCurrency(vat, language, currency)}</p>
           
           {transportCost > 0 && (
             <>
