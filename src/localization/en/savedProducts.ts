@@ -16,5 +16,7 @@ export const savedProducts = {
   saveFromOffer: "Save from offer",
   noProductsFoundSearch: "No products found matching your search criteria.",
   deleteConfirmation: "Are you sure you want to delete this product?",
-  backToOffer: "Back to Offer"
+  backToOffer: "Back to Offer",
+  // Added missing property
+  noProducts: "No products"
 };
