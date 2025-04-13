@@ -1,50 +1,53 @@
-
-import { useMemo } from 'react';
-import { useLanguage } from '@/context/LanguageContext';
+import React from 'react';
 import ClientInfoForm from '@/components/ClientInfoForm';
+import CompanyInfoForm from '@/components/CompanyInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
-import ProductsForm from '@/components/ProductsForm';
+import ProductsForm from '@/components/products/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
-import { AccordionSection } from './types';
+import { useLanguage } from '@/context/LanguageContext';
+import SaveOfferDialog from '@/components/SaveOfferDialog';
 
-interface UseSectionsProps {
+export const useSections = ({ isSaveDialogOpen, setIsSaveDialogOpen }: {
   isSaveDialogOpen: boolean;
-  setIsSaveDialogOpen: (isOpen: boolean) => void;
-}
-
-export const useSections = ({
-  isSaveDialogOpen,
-  setIsSaveDialogOpen
-}: UseSectionsProps) => {
+  setIsSaveDialogOpen: (open: boolean) => void;
+}) => {
   const { t } = useLanguage();
 
-  const sections = useMemo<AccordionSection[]>(() => [
+  return [
+    {
+      id: "company",
+      label: t.companyInfo.title,
+      content: <CompanyInfoForm />,
+    },
     {
       id: "client",
-      title: t?.client?.title || "Client",
-      content: <ClientInfoForm />
+      label: t.clientInfo.title,
+      content: <ClientInfoForm />,
     },
     {
       id: "details",
-      title: t?.offer?.details || "Offer Details",
-      content: <OfferDetailsForm />
+      label: t.offerDetails.title,
+      content: <OfferDetailsForm />,
     },
     {
       id: "products",
-      title: t?.products?.title || "Products",
-      content: <ProductsForm />
+      label: t.products.title,
+      content: <ProductsForm />,
     },
     {
       id: "preview",
-      title: t?.offer?.offerPreview || "Offer Preview",
+      label: t.offer.preview,
+      content: <OfferPreview />,
+    },
+    {
+      id: "save",
+      label: t.offer.saveOffer,
       content: (
-        <OfferPreview 
-          isSaveDialogOpen={isSaveDialogOpen}
-          setIsSaveDialogOpen={setIsSaveDialogOpen}
+        <SaveOfferDialog
+          open={isSaveDialogOpen}
+          onOpenChange={setIsSaveDialogOpen}
         />
-      )
-    }
-  ], [t, isSaveDialogOpen, setIsSaveDialogOpen]);
-
-  return sections;
+      ),
+    },
+  ];
 };
