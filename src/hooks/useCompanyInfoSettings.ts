@@ -31,7 +31,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     name_en: '',
     address_en: '',
     city_en: '',
-    country_en: ''
+    country_en: '',
+    slogan: '' // Added slogan field
   });
 
   // Load company data when component mounts
@@ -67,7 +68,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           name_en: data.name_en || '',
           address_en: data.address_en || '',
           city_en: data.city_en || '',
-          country_en: data.country_en || ''
+          country_en: data.country_en || '',
+          slogan: data.slogan || '' // Added slogan field
         });
       }
     } catch (error: any) {
@@ -102,7 +104,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           name_en: company.name_en,
           address_en: company.address_en,
           city_en: company.city_en,
-          country_en: company.country_en
+          country_en: company.country_en,
+          slogan: company.slogan // Added slogan field
         })
         .eq('id', companyId);
         

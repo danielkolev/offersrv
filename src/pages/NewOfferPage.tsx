@@ -1,29 +1,67 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { OfferProvider, useOffer } from '@/context/offer';
+import { OfferProvider } from '@/context/offer';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const OfferContent = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [isLoadingCompanyData, setIsLoadingCompanyData] = React.useState(false);
-  const [fetchError, setFetchError] = React.useState(false);
-  const [selectedCompanyId, setSelectedCompanyId] = React.useState<string | null>(null);
+  const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  // Fetch user's default company or first company on load
+  useEffect(() => {
     if (user) {
-      // This could fetch company data as in the Index component
-      setSelectedCompanyId('default'); // Using a default value for now
+      const fetchDefaultCompany = async () => {
+        setIsLoadingCompanyData(true);
+        try {
+          // Get companies the user is a member of
+          const { data: memberData, error: memberError } = await supabase
+            .from('organization_members')
+            .select('organization_id')
+            .eq('user_id', user.id);
+            
+          if (memberError) throw memberError;
+          
+          // If user has companies, select the first one as default
+          if (memberData && memberData.length > 0) {
+            // Check localStorage for previously selected company
+            const storedCompanyId = localStorage.getItem('selectedCompanyId');
+            
+            if (storedCompanyId && memberData.some(m => m.organization_id === storedCompanyId)) {
+              setSelectedCompanyId(storedCompanyId);
+            } else {
+              setSelectedCompanyId(memberData[0].organization_id);
+            }
+          }
+          
+          setFetchError(false);
+        } catch (error: any) {
+          console.error('Error fetching company data:', error);
+          setFetchError(true);
+          toast({
+            title: t.common.error,
+            description: error.message,
+            variant: 'destructive'
+          });
+        } finally {
+          setIsLoadingCompanyData(false);
+        }
+      };
+      
+      fetchDefaultCompany();
     }
-  }, [user]);
+  }, [user, toast, t]);
 
-  // This is a placeholder for the actual company selection handler
   const handleSelectCompany = (companyId: string) => {
     setSelectedCompanyId(companyId);
+    localStorage.setItem('selectedCompanyId', companyId);
   };
 
   if (!user) {
@@ -43,8 +81,6 @@ const OfferContent = () => {
         <h1 className="text-3xl font-bold text-offer-gray">
           {t.offer.createOffer}
         </h1>
-        
-        {/* Removed DraftStatusIndicator from here as it's now only shown in the TopNavBar */}
       </div>
       
       <OfferAccordion 

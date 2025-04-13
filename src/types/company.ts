@@ -13,6 +13,7 @@ export interface Company {
   created_at?: string;
   updated_at?: string;
   owner_id?: string;
+  slogan?: string; // Added slogan field
   
   // English translations
   name_en?: string;

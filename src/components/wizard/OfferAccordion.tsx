@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useCompanyData } from '@/hooks/useCompanyData';
 
-// Import our new components
+// Import our components
 import AccordionHeader from './accordion/AccordionHeader';
 import ExpandedAccordion from './accordion/ExpandedAccordion';
 import CollapsedAccordion from './accordion/CollapsedAccordion';
@@ -23,12 +24,19 @@ const OfferAccordion = ({
   const { toast } = useToast();
   const [expandAll, setExpandAll] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>("client");
+  const [activeSection, setActiveSection] = useState<string | null>("details");
+  
+  // Fetch company data and automatically populate the offer
+  const { isLoading: isLoadingCompany, error: companyError } = useCompanyData(selectedCompanyId);
 
-  const sections = useSections({
+  // Get sections but skip the company section since we're auto-populating it
+  const allSections = useSections({
     isSaveDialogOpen,
     setIsSaveDialogOpen
   });
+  
+  // Filter out the company section
+  const sections = allSections.filter(section => section.id !== "company");
 
   // Force rerender when expandAll changes to ensure Collapsible state syncs properly
   useEffect(() => {
@@ -48,7 +56,7 @@ const OfferAccordion = ({
     if (!expandAll) {
       setActiveSection(null);
     } else {
-      setActiveSection("client");
+      setActiveSection("details");
     }
   };
 
@@ -72,11 +80,11 @@ const OfferAccordion = ({
     return <NoCompanySelected />;
   }
 
-  if (isLoadingCompanyData || fetchError) {
+  if (isLoadingCompanyData || isLoadingCompany || fetchError || companyError) {
     return (
       <LoadingErrorStates 
-        isLoading={isLoadingCompanyData} 
-        hasError={fetchError} 
+        isLoading={isLoadingCompanyData || isLoadingCompany} 
+        hasError={!!fetchError || !!companyError} 
       />
     );
   }
