@@ -7,15 +7,20 @@ import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Mail, Lock, User } from 'lucide-react';
 
 type AuthMode = 'login' | 'register';
 
-export const AuthForm = () => {
+interface AuthFormProps {
+  mode?: AuthMode;
+}
+
+export const AuthForm = ({ mode = 'login' }: AuthFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<AuthMode>('login');
+  const [authMode, setAuthMode] = useState<AuthMode>(mode);
   const { t } = useLanguage();
   const { toast } = useToast();
 
@@ -24,7 +29,7 @@ export const AuthForm = () => {
     setLoading(true);
 
     try {
-      if (mode === 'login') {
+      if (authMode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -62,61 +67,88 @@ export const AuthForm = () => {
   };
 
   const toggleMode = () => {
-    setMode(mode === 'login' ? 'register' : 'login');
+    setAuthMode(authMode === 'login' ? 'register' : 'login');
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>{mode === 'login' ? t.auth.loginTitle : t.auth.registerTitle}</CardTitle>
+    <Card className="w-full shadow-lg bg-white">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold">
+          {authMode === 'login' ? t.auth.loginTitle : t.auth.registerTitle}
+        </CardTitle>
         <CardDescription>
-          {mode === 'login' ? t.auth.loginDescription : t.auth.registerDescription}
+          {authMode === 'login' ? t.auth.loginDescription : t.auth.registerDescription}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleAuth} className="space-y-4">
-          {mode === 'register' && (
+          {authMode === 'register' && (
             <div className="space-y-2">
-              <Label htmlFor="name">{t.auth.name}</Label>
-              <Input 
-                id="name" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t.auth.namePlaceholder} 
-                required={mode === 'register'}
-              />
+              <Label htmlFor="name" className="text-sm font-medium">
+                {t.auth.name}
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input 
+                  id="name" 
+                  className="pl-10"
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={t.auth.namePlaceholder} 
+                  required={authMode === 'register'}
+                />
+              </div>
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">{t.auth.email}</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t.auth.emailPlaceholder} 
-              required
-            />
+            <Label htmlFor="email" className="text-sm font-medium">
+              {t.auth.email}
+            </Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input 
+                id="email" 
+                type="email" 
+                className="pl-10"
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t.auth.emailPlaceholder} 
+                required
+              />
+            </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">{t.auth.password}</Label>
-            <Input 
-              id="password" 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t.auth.passwordPlaceholder} 
-              required
-            />
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className="text-sm font-medium">
+                {t.auth.password}
+              </Label>
+              {authMode === 'login' && (
+                <Button variant="link" className="px-0 font-normal text-xs h-auto">
+                  {t.auth.forgotPassword}
+                </Button>
+              )}
+            </div>
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input 
+                id="password" 
+                type="password" 
+                className="pl-10"
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t.auth.passwordPlaceholder} 
+                required
+              />
+            </div>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? t.auth.processing : (mode === 'login' ? t.auth.loginButton : t.auth.registerButton)}
+          <Button type="submit" className="w-full bg-offer-blue hover:bg-blue-600" disabled={loading}>
+            {loading ? t.auth.processing : (authMode === 'login' ? t.auth.loginButton : t.auth.registerButton)}
           </Button>
         </form>
       </CardContent>
       <CardFooter>
-        <Button variant="link" onClick={toggleMode} className="w-full">
-          {mode === 'login' ? t.auth.needAccount : t.auth.haveAccount}
+        <Button variant="ghost" onClick={toggleMode} className="w-full text-sm">
+          {authMode === 'login' ? t.auth.needAccount : t.auth.haveAccount}
         </Button>
       </CardFooter>
     </Card>

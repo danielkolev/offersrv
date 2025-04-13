@@ -31,4 +31,12 @@ export interface AuthTranslations {
   welcomeTitle: string;
   welcomeSubtitle: string;
   notAuthenticated: string;
+  // New landing page translations
+  appTitle?: string;
+  appDescription?: string;
+  feature1?: string;
+  feature2?: string;
+  feature3?: string;
+  getStarted?: string;
+  seeDemo?: string;
 }

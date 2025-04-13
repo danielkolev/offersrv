@@ -32,7 +32,15 @@ export const bgAuthTranslations: AuthTranslations = {
   haveAccount: 'Вече имате акаунт?',
   welcomeTitle: 'Добре дошли отново',
   welcomeSubtitle: 'Въведете данните си, за да продължите',
-  notAuthenticated: 'Трябва да сте влезли в системата'
+  notAuthenticated: 'Трябва да сте влезли в системата',
+  // New landing page translations
+  appTitle: 'OfferForge',
+  appDescription: 'Създавайте професионални оферти бързо и лесно',
+  feature1: 'Професионални шаблони и персонализиране',
+  feature2: 'Управлявайте клиенти и продукти ефективно',
+  feature3: 'Генерирайте и проследявайте оферти безпроблемно',
+  getStarted: 'Започнете безплатно',
+  seeDemo: 'Вижте демо'
 };
 
 // Export for use in the main language file

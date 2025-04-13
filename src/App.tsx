@@ -45,74 +45,138 @@ function App() {
             <SidebarProvider>
               <div className="flex flex-col min-h-screen w-full">
                 <RouteTracker />
-                <TopNavBar />
-                <div className="flex flex-1 w-full">
-                  <MainSidebar />
-                  <div className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route
-                        path="/new-offer"
-                        element={
-                          <ProtectedRoute>
-                            <NewOfferPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/saved-offers"
-                        element={
-                          <ProtectedRoute>
-                            <SavedOffersPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/saved-clients"
-                        element={
-                          <ProtectedRoute>
-                            <SavedClientsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/saved-products"
-                        element={
-                          <ProtectedRoute>
-                            <SavedProductsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/templates"
-                        element={
-                          <ProtectedRoute>
-                            <TemplatesPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/settings"
-                        element={
-                          <ProtectedRoute>
-                            <Settings />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/company-management"
-                        element={
-                          <ProtectedRoute>
-                            <CompanyManagementPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                    <Toaster />
-                  </div>
-                </div>
+                <Routes>
+                  {/* Make Auth the landing page */}
+                  <Route path="/" element={<Auth />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <div className="flex flex-col min-h-screen w-full">
+                        <TopNavBar />
+                        <div className="flex flex-1 w-full">
+                          <MainSidebar />
+                          <div className="flex-1">
+                            <Index />
+                          </div>
+                        </div>
+                      </div>
+                    </ProtectedRoute>
+                  } />
+                  <Route
+                    path="/new-offer"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <NewOfferPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/saved-offers"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <SavedOffersPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/saved-clients"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <SavedClientsPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/saved-products"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <SavedProductsPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/templates"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <TemplatesPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <Settings />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/company-management"
+                    element={
+                      <ProtectedRoute>
+                        <div className="flex flex-col min-h-screen w-full">
+                          <TopNavBar />
+                          <div className="flex flex-1 w-full">
+                            <MainSidebar />
+                            <div className="flex-1">
+                              <CompanyManagementPage />
+                            </div>
+                          </div>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <Toaster />
               </div>
             </SidebarProvider>
           </BrowserRouter>

@@ -32,7 +32,15 @@ export const enAuthTranslations: AuthTranslations = {
   haveAccount: 'Already have an account?',
   welcomeTitle: 'Welcome back',
   welcomeSubtitle: 'Enter your credentials to continue',
-  notAuthenticated: 'You need to be logged in'
+  notAuthenticated: 'You need to be logged in',
+  // New landing page translations
+  appTitle: 'OfferForge',
+  appDescription: 'Create professional business offers quickly and easily',
+  feature1: 'Professional templates and customization',
+  feature2: 'Manage clients and products efficiently',
+  feature3: 'Generate and track offers seamlessly',
+  getStarted: 'Get Started Free',
+  seeDemo: 'See Demo'
 };
 
 // Export for use in the main language file
