@@ -28,7 +28,7 @@ export interface DraftActions {
 
 export function useDraftManagement(
   offer: Offer,
-  setOffer: (offer: Offer) => void
+  setOffer: React.Dispatch<React.SetStateAction<Offer>>
 ): DraftState & DraftActions {
   const { user } = useAuth();
   const { toast } = useToast();

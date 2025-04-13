@@ -17,7 +17,7 @@ export interface OfferActions {
 
 export function useOfferActions(
   offer: Offer,
-  setOffer: (offer: Offer) => void,
+  setOffer: React.Dispatch<React.SetStateAction<Offer>>,
   markUserInteraction: () => void
 ): OfferActions {
   const updateCompanyInfo = useCallback((info: Partial<CompanyInfo>) => {
