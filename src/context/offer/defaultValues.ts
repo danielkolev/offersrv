@@ -36,7 +36,7 @@ export const defaultOfferDetails = {
   transportCost: 0,
   otherCosts: 0,
   notes: '',
-  offerLanguage: 'bg',
+  offerLanguage: 'bg' as 'bg' | 'en',
   currency: 'BGN'
 };
 

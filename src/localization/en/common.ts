@@ -1,4 +1,3 @@
-
 export const common = {
   back: 'Back',
   save: 'Save',

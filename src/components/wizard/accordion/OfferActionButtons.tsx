@@ -33,7 +33,7 @@ const OfferActionButtons: React.FC<OfferActionButtonsProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 flex justify-end gap-2">
       <Button 
-        variant="primary"
+        variant="default"
         onClick={handleSaveOffer}
         className="flex items-center gap-2"
       >
