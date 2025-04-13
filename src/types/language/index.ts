@@ -12,6 +12,7 @@ import { UserTranslations } from './user';
 import { SupportedLanguage, SupportedCurrency, Translations } from './base';
 import { CompanyInfoTranslations } from './companyInfo';
 
+// Define HomeType only once
 export interface HomeType {
   quickActions: string;
   createOfferDescription: string;
@@ -35,10 +36,10 @@ export type {
   SettingsTranslations,
   UserTranslations,
   CompanyInfoTranslations,
-  HomeType,
   SavedOffersTranslations,
   SavedClientsTranslations,
   ClientInfoTranslations,
   SavedProductsTranslations,
   ProductsTranslations
+  // HomeType is already exported above, so don't include it here
 };
