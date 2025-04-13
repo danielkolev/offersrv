@@ -35,8 +35,19 @@ const CreateTemplateDialog: React.FC<CreateTemplateDialogProps> = ({
     setOpen(false);
   };
 
+  // Добавяме обработка на затварянето на модалния прозорец
+  const handleOpenChange = (newOpenState: boolean) => {
+    setOpen(newOpenState);
+    // Малко забавяне преди да се възстанови фокуса
+    if (!newOpenState) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 100);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button 
           variant="outline" 

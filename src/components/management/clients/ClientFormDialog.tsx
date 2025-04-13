@@ -50,8 +50,19 @@ const ClientFormDialog = ({
     form.reset();
   });
 
+  // Добавяме обработка на затварянето на модалния прозорец
+  const handleOpenChange = (newOpenState: boolean) => {
+    onOpenChange(newOpenState);
+    // Малко забавяне преди да се възстанови фокуса
+    if (!newOpenState) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 100);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>

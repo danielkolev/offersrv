@@ -37,8 +37,19 @@ const SaveOfferDialog = ({
     onSave(offerName);
   };
 
+  // Добавяме обработка на затварянето на модалния прозорец
+  const handleOpenChange = (newOpenState: boolean) => {
+    if (!newOpenState) {
+      onClose();
+      // Малко забавяне преди да се възстанови фокуса
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 100);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t.savedOffers.saveOffer}</DialogTitle>

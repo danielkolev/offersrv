@@ -30,10 +30,19 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
     };
   }, [isOpen, savedOffer, setOffer, resetOffer]);
 
+  // Добавяме обработка на затварянето на модалния прозорец
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+      // Малко забавяне преди да се възстанови фокуса
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 100);
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) onClose();
-    }}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
         <DialogTitle className="sr-only">{t.offer.offerPreview}</DialogTitle>
         <OfferPreview

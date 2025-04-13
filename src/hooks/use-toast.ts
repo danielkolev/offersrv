@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import type {
@@ -66,6 +67,11 @@ const addToRemoveQueue = (toastId: string) => {
       type: "REMOVE_TOAST",
       toastId: toastId,
     })
+    
+    // Добавяме код за възстановяване на интерактивността
+    setTimeout(() => {
+      document.body.style.pointerEvents = 'auto';
+    }, 100);
   }, TOAST_REMOVE_DELAY)
 
   toastTimeouts.set(toastId, timeout)
