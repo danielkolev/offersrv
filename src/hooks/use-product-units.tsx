@@ -67,6 +67,6 @@ export function useProductUnits() {
     isLoading,
     error,
     getLocalizedUnitName,
-    defaultUnit: 'none' // Changed from empty string to 'none'
+    defaultUnit: 'none' // Using 'none' as the default unit ID
   };
 }

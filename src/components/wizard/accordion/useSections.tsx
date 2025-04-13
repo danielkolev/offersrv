@@ -1,63 +1,53 @@
 
 import React from 'react';
-import ClientInfoForm from '@/components/ClientInfoForm';
 import CompanyInfoForm from '@/components/CompanyInfoForm';
+import ClientInfoForm from '@/components/ClientInfoForm';
 import OfferDetailsForm from '@/components/OfferDetailsForm';
-import ProductsForm from '@/components/products/ProductsForm';
+import ProductsForm from '@/components/ProductsForm';
 import OfferPreview from '@/components/OfferPreview';
 import { useLanguage } from '@/context/LanguageContext';
-import SaveOfferDialog from '@/components/SaveOfferDialog';
 
-export const useSections = ({ isSaveDialogOpen, setIsSaveDialogOpen }: {
+interface UseSectionsProps {
   isSaveDialogOpen: boolean;
-  setIsSaveDialogOpen: (open: boolean) => void;
-}) => {
-  const { t } = useLanguage();
+  setIsSaveDialogOpen: (isOpen: boolean) => void;
+}
 
+export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectionsProps) {
+  const { t } = useLanguage();
+  
   return [
     {
       id: "company",
       title: t.companyInfo.title,
-      label: t.companyInfo.title,
-      content: <CompanyInfoForm />,
-    },
-    {
-      id: "client",
-      title: t.clientInfo.title,
-      label: t.clientInfo.title,
-      content: <ClientInfoForm />,
+      description: t.companyInfo.subtitle,
+      component: <CompanyInfoForm />
     },
     {
       id: "details",
       title: t.offerDetails.title,
-      label: t.offerDetails.title,
-      content: <OfferDetailsForm />,
+      description: t.offerDetails.subtitle,
+      component: <OfferDetailsForm />
+    },
+    {
+      id: "client",
+      title: t.clientInfo.title,
+      description: t.clientInfo.subtitle,
+      component: <ClientInfoForm />
     },
     {
       id: "products",
       title: t.products.title,
-      label: t.products.title,
-      content: <ProductsForm />,
+      description: t.products.subtitle || t.common.stepDescription,
+      component: <ProductsForm />
     },
     {
       id: "preview",
-      title: t.offerDetails.title,
-      label: "Preview", // Fallback text
-      content: <OfferPreview />,
-    },
-    {
-      id: "save",
-      title: "Save Offer", // Fallback text
-      label: "Save Offer", // Fallback text
-      content: (
-        <SaveOfferDialog
-          open={isSaveDialogOpen}
-          onClose={() => setIsSaveDialogOpen(false)}
-          onSave={() => {}}
-          isLoading={false}
-          defaultName=""
-        />
-      ),
-    },
+      title: t.offer.previewTitle || "Offer Preview", // Updated title for the preview section
+      description: t.offer.previewDescription || "Review your offer before saving",
+      component: <OfferPreview 
+                    isSaveDialogOpen={isSaveDialogOpen} 
+                    setIsSaveDialogOpen={setIsSaveDialogOpen} 
+                  />
+    }
   ];
-};
+}
