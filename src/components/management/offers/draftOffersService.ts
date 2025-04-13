@@ -45,6 +45,8 @@ export const clearDraftFromLocalStorage = (): void => {
 // Save draft to database for persistent storage
 export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise<void> => {
   try {
+    // No client or product saving for drafts
+    
     // First check if there's already a draft for this user
     const { data: existingDrafts, error: fetchError } = await supabase
       .from('saved_offers')

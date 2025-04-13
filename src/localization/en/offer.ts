@@ -1,4 +1,3 @@
-
 export const offer = {
   title: 'Offer',
   createOffer: 'Create Offer',
@@ -18,6 +17,7 @@ export const offer = {
   lastEdited: "Last edited",
   statuses: {
     draft: "Draft",
+    saved: "Saved", // Add saved status
     sent: "Sent",
     accepted: "Accepted",
     rejected: "Rejected"

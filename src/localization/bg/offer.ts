@@ -1,4 +1,3 @@
-
 export const offer = {
   title: 'Оферта',
   createOffer: 'Създаване на оферта',
@@ -18,6 +17,7 @@ export const offer = {
   lastEdited: "Последна редакция",
   statuses: {
     draft: "Чернова",
+    saved: "Запазена", // Add saved status 
     sent: "Изпратена",
     accepted: "Приета",
     rejected: "Отхвърлена"

@@ -35,6 +35,16 @@ const SaveOfferHandler: React.FC<SaveOfferHandlerProps> = ({
       return;
     }
     
+    // Validate client name before saving
+    if (!offer.client.name || offer.client.name.trim() === '') {
+      toast({
+        title: t.common.error,
+        description: t.clientInfo.nameRequired,
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setIsSaving(true);
     try {
       // Create a copy of the offer with the custom name

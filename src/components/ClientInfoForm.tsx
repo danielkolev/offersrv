@@ -29,7 +29,11 @@ const ClientInfoForm = () => {
               onChange={(e) => updateClientInfo({ name: e.target.value })}
               placeholder={t.clientInfo.namePlaceholder}
               required
+              className={!offer.client.name ? "border-red-300 focus:border-red-500" : ""}
             />
+            {!offer.client.name && (
+              <p className="text-xs text-red-500 mt-1">{t.clientInfo.nameRequired}</p>
+            )}
           </div>
           
           <div className="space-y-2">

@@ -21,6 +21,8 @@ const OfferStatusBadge: React.FC<OfferStatusBadgeProps> = ({ offer, t }) => {
   }
   
   switch (offer.status) {
+    case 'saved':
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">{t.offer.statuses.saved}</Badge>;
     case 'sent':
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">{t.offer.statuses.sent}</Badge>;
     case 'accepted':

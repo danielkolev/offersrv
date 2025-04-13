@@ -11,7 +11,7 @@ export interface SavedOffer {
   is_template?: boolean;
   is_draft?: boolean; // Flag for draft offers
   name?: string;
-  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Status field for filtering
+  status?: 'draft' | 'saved' | 'sent' | 'accepted' | 'rejected'; // Added 'saved' status
   draft_code?: string; // Code for draft identification
   description?: string;
 }

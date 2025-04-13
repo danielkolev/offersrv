@@ -22,6 +22,9 @@ export const fetchSavedOffers = async (): Promise<SavedOffer[]> => {
       status = item.status;
     } else if (item.is_draft) {
       status = 'draft';
+    } else {
+      // Change default status from 'sent' to 'saved'
+      status = 'saved';
     }
     
     return {
@@ -35,6 +38,11 @@ export const fetchSavedOffers = async (): Promise<SavedOffer[]> => {
 };
 
 export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?: string }): Promise<SavedOffer> => {
+  // Validate that client name exists before saving
+  if (!offer.client.name || offer.client.name.trim() === '') {
+    throw new Error('Client name is required');
+  }
+  
   // Extract name from offer if available
   const offerName = offer.name || `${offer.client.name} - #${offer.details.offerNumber} - ${new Date().toLocaleDateString()}`;
   
@@ -53,7 +61,7 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
       user_id: userId,
       offer_data: offer as any, // Cast to any to bypass type checking
       name: offerName, // Store the name in the separate column
-      status: 'sent' as SavedOffer['status'] // Explicitly set a valid status
+      status: 'saved' as SavedOffer['status'] // Use 'saved' instead of 'sent'
     })
     .select('*');
     
@@ -64,7 +72,7 @@ export const saveOfferToDatabase = async (userId: string, offer: Offer & { name?
   
   // Convert the returned data to match our SavedOffer type with status validation
   const rawOffer = data[0];
-  let status: SavedOffer['status'] = 'sent';
+  let status: SavedOffer['status'] = 'saved'; // Default to 'saved'
   if (rawOffer.status === 'draft' || rawOffer.status === 'accepted' || rawOffer.status === 'rejected') {
     status = rawOffer.status as SavedOffer['status'];
   }
