@@ -30,11 +30,11 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
     };
   }, [isOpen, savedOffer, setOffer, resetOffer]);
 
-  // Добавяме обработка на затварянето на модалния прозорец
+  // Handle dialog close
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       onClose();
-      // Малко забавяне преди да се възстанови фокуса
+      // Small delay before restoring focus
       setTimeout(() => {
         document.body.style.pointerEvents = 'auto';
       }, 100);

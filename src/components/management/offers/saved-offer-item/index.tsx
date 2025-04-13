@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { calculateTotal } from '@/context/offer/calculations';
 import OfferActionButtons from './OfferActionButtons';
 import { Badge } from '@/components/ui/badge';
-import { Translations } from '@/types/language';
+import { Translations, SupportedLanguage } from '@/types/language';
 import DeleteOfferDialog from './DeleteOfferDialog';
 import OfferPreviewModal from './OfferPreviewModal';
 import { Edit, Clock } from 'lucide-react';
@@ -72,6 +72,9 @@ const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
     }
   };
 
+  // Convert language string to SupportedLanguage type
+  const typedLanguage = (language === 'bg' || language === 'en') ? language as SupportedLanguage : 'en';
+
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
@@ -103,7 +106,7 @@ const SavedOfferItem: React.FC<SavedOfferItemProps> = ({
             <div className="mb-2">
               <p className="text-sm text-gray-500">{t.savedOffers.amount}:</p>
               <p className="text-lg font-medium">
-                {formatCurrency(totalAmount, currency)}
+                {formatCurrency(totalAmount, typedLanguage, currency as any)}
               </p>
             </div>
             

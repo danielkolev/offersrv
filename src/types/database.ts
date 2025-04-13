@@ -1,4 +1,3 @@
-
 import { Offer, ClientInfo, Product } from './offer';
 
 export interface SavedOffer {
@@ -12,7 +11,7 @@ export interface SavedOffer {
   is_draft?: boolean; // Flag for draft offers
   name?: string;
   status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Added status field for filtering
-  draft_code?: string; // New field for draft identification
+  draft_code?: string; // Draft identification code
 }
 
 export interface Client {
@@ -40,3 +39,4 @@ export interface SavedProduct {
   created_at: string;
   updated_at: string;
 }
+
