@@ -30,7 +30,7 @@ const CompanyInfoForm = () => {
   };
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-gray-50">
       <CardHeader>
         <CardTitle>{t.companyInfo.title}</CardTitle>
       </CardHeader>

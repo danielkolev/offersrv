@@ -12,7 +12,7 @@ const ClientInfoForm = () => {
   const { t } = useLanguage();
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-gray-50">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.clientInfo.title}</CardTitle>
         <ClientSelector onSelectClient={updateClientInfo} />

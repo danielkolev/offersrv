@@ -88,51 +88,54 @@ const ProductItem: React.FC<ProductItemProps> = ({
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor={`product-quantity-${index}`}>{t.products.quantity}</Label>
-          <div className="flex gap-2">
+        {/* Improved alignment for quantity, unit and price fields */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor={`product-quantity-${index}`}>{t.products.quantity}</Label>
             <Input
               id={`product-quantity-${index}`}
               type="number"
               min="1"
               value={product.quantity}
               onChange={(e) => updateProduct(product.id, { quantity: parseInt(e.target.value) || 0 })}
+              className="w-full"
             />
-            
-            <div className="w-[120px]">
-              <Label htmlFor={`product-unit-${index}`} className="text-xs mb-1 block">
-                {language === 'bg' ? 'Мярка' : 'Unit'}
-              </Label>
-              <Select
-                value={product.unit || defaultUnit}
-                onValueChange={(value) => updateProduct(product.id, { unit: value })}
-              >
-                <SelectTrigger id={`product-unit-${index}`} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {units.map(unit => (
-                    <SelectItem key={unit.id} value={unit.id}>
-                      {language === 'bg' ? unit.name : unit.name_en}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
           </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor={`product-price-${index}`}>{t.products.unitPrice}</Label>
-          <Input
-            id={`product-price-${index}`}
-            type="number"
-            min="0"
-            step="0.01"
-            value={product.unitPrice}
-            onChange={(e) => updateProduct(product.id, { unitPrice: parseFloat(e.target.value) || 0 })}
-            disabled={product.isBundle}
-          />
+          
+          <div className="space-y-2">
+            <Label htmlFor={`product-unit-${index}`}>
+              {language === 'bg' ? 'Мярка' : 'Unit'}
+            </Label>
+            <Select
+              value={product.unit || defaultUnit}
+              onValueChange={(value) => updateProduct(product.id, { unit: value })}
+            >
+              <SelectTrigger id={`product-unit-${index}`} className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {units.map(unit => (
+                  <SelectItem key={unit.id} value={unit.id}>
+                    {language === 'bg' ? unit.name : unit.name_en}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor={`product-price-${index}`}>{t.products.unitPrice}</Label>
+            <Input
+              id={`product-price-${index}`}
+              type="number"
+              min="0"
+              step="0.01"
+              value={product.unitPrice}
+              onChange={(e) => updateProduct(product.id, { unitPrice: parseFloat(e.target.value) || 0 })}
+              disabled={product.isBundle}
+              className="w-full"
+            />
+          </div>
         </div>
       </div>
       

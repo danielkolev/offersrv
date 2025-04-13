@@ -33,7 +33,7 @@ const OfferDetailsForm = () => {
   };
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-gray-50">
       <CardHeader>
         <CardTitle>{t.offerDetails?.title || "Offer Details"}</CardTitle>
       </CardHeader>

@@ -20,7 +20,7 @@ const ProductsForm = () => {
     newBundleProduct,
     setNewBundleProduct,
     handleAddProduct,
-    addExistingProduct, // Renamed to be more explicit
+    addExistingProduct,
     updateProduct,
     removeProduct,
     openBundleDialog,
@@ -31,7 +31,7 @@ const ProductsForm = () => {
   } = useProductForm();
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-gray-50">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.products.title}</CardTitle>
         <div className="flex gap-2">
