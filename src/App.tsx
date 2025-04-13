@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
@@ -7,8 +6,9 @@ import { AuthProvider } from '@/context/AuthContext';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { OfferProvider } from '@/context/offer';
 import TopNavBar from './components/navigation/TopNavBar';
-import Index from './pages/Index';
+import Dashboard from './pages/Dashboard';
 import Auth from './pages/Auth';
+import Login from './pages/Login';
 import NewOfferPage from './pages/NewOfferPage';
 import SavedOffersPage from './pages/SavedOffersPage';
 import SavedClientsPage from './pages/SavedClientsPage';
@@ -19,6 +19,7 @@ import NotFound from './pages/NotFound';
 import CompanyManagementPage from './pages/CompanyManagementPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainSidebar from './components/navigation/MainSidebar';
+import LandingPage from './pages/LandingPage';
 
 import './App.css';
 
@@ -28,7 +29,7 @@ const RouteTracker = () => {
   
   useEffect(() => {
     // Store the path when user is in offer creation process
-    if (location.pathname === '/' || location.pathname === '/new-offer') {
+    if (location.pathname === '/dashboard' || location.pathname === '/new-offer') {
       localStorage.setItem('lastOfferPath', location.pathname);
     }
   }, [location]);
@@ -46,9 +47,12 @@ function App() {
               <div className="flex flex-col min-h-screen w-full">
                 <RouteTracker />
                 <Routes>
-                  {/* Make Auth the landing page */}
-                  <Route path="/" element={<Auth />} />
+                  {/* Public routes */}
+                  <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/login" element={<Login />} />
+                  
+                  {/* Protected routes */}
                   <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <div className="flex flex-col min-h-screen w-full">
@@ -56,7 +60,7 @@ function App() {
                         <div className="flex flex-1 w-full">
                           <MainSidebar />
                           <div className="flex-1">
-                            <Index />
+                            <Dashboard />
                           </div>
                         </div>
                       </div>

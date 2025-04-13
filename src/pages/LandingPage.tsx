@@ -1,27 +1,23 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/context/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useLanguage } from '@/context/LanguageContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const Auth = () => {
+const LandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useLanguage();
   
-  // Get the path the user was trying to access
-  const from = location.state?.from?.pathname || '/dashboard';
-
   useEffect(() => {
     if (user) {
-      // Navigate to the page the user was trying to access, or dashboard
-      navigate(from, { replace: true });
+      // If user is already logged in, redirect to dashboard
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate, from]);
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col justify-center p-4">
@@ -89,4 +85,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default LandingPage;
