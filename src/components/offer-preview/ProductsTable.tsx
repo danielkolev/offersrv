@@ -71,12 +71,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber 
               <div className="col-span-2 self-center text-sm">{product.partNumber || '-'}</div>
             )}
             
-            {/* Quantity column - show unit only if defined and not 'pcs' */}
+            {/* Quantity column - show unit only if defined and not empty */}
             <div className={`col-span-${showPartNumber ? '1' : '3'} self-center text-center text-sm`}>
-              {product.quantity}{product.unit && product.unit !== 'pcs' ? ` ${product.unit}` : ''}
+              {product.quantity}{product.unit && product.unit !== '' ? ` ${product.unit}` : ''}
             </div>
             
-            {/* Unit price column - make it bold like the total price and remove the "/ unit" suffix */}
+            {/* Unit price column - make it bold like the total price */}
             <div className={`col-span-${showPartNumber ? '2' : '2'} self-center text-right text-sm font-medium`}>
               {formatCurrency(product.unitPrice, language, currency)}
             </div>

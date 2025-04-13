@@ -19,7 +19,7 @@ interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
   setIsSaveDialogOpen?: (isOpen: boolean) => void;
   mode?: 'edit' | 'view';
-  templateSettings?: any; // Add template settings prop
+  templateSettings?: any; // Template settings prop
 }
 
 const OfferPreview = ({ 
@@ -32,6 +32,9 @@ const OfferPreview = ({
   const { t, language } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
   
+  // Use the offer language for display, not the UI language
+  const displayLanguage = offer.details.offerLanguage || language;
+  
   // Use either external or internal state based on what's provided
   const [internalIsSaveDialogOpen, setInternalIsSaveDialogOpen] = React.useState(false);
   
@@ -43,6 +46,11 @@ const OfferPreview = ({
 
   // Check if it's a draft (no offer number)
   const isDraft = !offer.details.offerNumber;
+
+  // Get footer text from template settings or use default
+  const footerText = offer.details.offerLanguage === 'bg' 
+    ? 'Благодарим Ви за доверието!' 
+    : 'Thank you for your business!';
 
   return (
     <Card className="mb-6">
@@ -64,25 +72,25 @@ const OfferPreview = ({
             {/* Right column: Offer details */}
             <div className="bg-gray-50 rounded-md p-3">
               <h3 className="text-base font-semibold mb-2 text-offer-blue">
-                {language === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
+                {displayLanguage === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
               </h3>
               
               <div className="text-sm space-y-1">
                 {!isDraft && offer.details.offerNumber && (
                   <p>
-                    <span className="font-medium">{language === 'bg' ? 'Номер' : 'Number'}:</span> <span className="font-bold">{offer.details.offerNumber}</span>
+                    <span className="font-medium">{displayLanguage === 'bg' ? 'Номер' : 'Number'}:</span> <span className="font-bold">{offer.details.offerNumber}</span>
                   </p>
                 )}
                 
                 {offer.details.date && (
                   <p>
-                    <span className="font-medium">{language === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, language)}
+                    <span className="font-medium">{displayLanguage === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, displayLanguage)}
                   </p>
                 )}
                 
                 {offer.details.validUntil && (
                   <p>
-                    <span className="font-medium">{language === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, language)}
+                    <span className="font-medium">{displayLanguage === 'bg' ? 'Валидна до' : 'Valid until'}:</span> {formatDate(offer.details.validUntil, displayLanguage)}
                   </p>
                 )}
               </div>
@@ -105,9 +113,7 @@ const OfferPreview = ({
           <NotesSection notes={offer.details.notes} />
           
           <div className="text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible">
-            <p>{offer.details.offerLanguage === 'bg' 
-                ? 'Благодарим Ви за доверието!' 
-                : 'Thank you for your business!'}</p>
+            <p>{footerText}</p>
           </div>
         </div>
       </CardContent>

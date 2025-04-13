@@ -14,7 +14,9 @@ import {
   AlignRight,
   LayoutGrid,
   SquareStack,
-  Settings
+  Settings,
+  CreditCard,
+  FileText
 } from 'lucide-react';
 
 interface TemplateSettingsProps {
@@ -39,15 +41,23 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
       showLogo: true,
       logoPosition: 'left',
       headerLayout: 'standard',
-      showPageNumbers: true,
       compactMode: false,
     },
     content: {
-      showBundleDetails: true,
-      showProductCodes: true,
       boldPrices: true,
       showFooter: true,
       footerText: language === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!',
+      showBankDetails: false,
+    },
+    header: {
+      showCompanySlogan: true,
+      companyNameSize: 'large',
+      showOfferLabel: true,
+    },
+    footer: {
+      showBankDetails: false,
+      showSignatureArea: false,
+      signatureText: language === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:',
     }
   });
   
@@ -80,6 +90,26 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
       }
     });
   };
+
+  const handleHeaderChange = (key: string, value: any) => {
+    setSettings({
+      ...settings,
+      header: {
+        ...settings.header,
+        [key]: value
+      }
+    });
+  };
+
+  const handleFooterChange = (key: string, value: any) => {
+    setSettings({
+      ...settings,
+      footer: {
+        ...settings.footer,
+        [key]: value
+      }
+    });
+  };
   
   const saveSettings = () => {
     // Here we would save the settings to the database or local storage
@@ -107,9 +137,17 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
               <LayoutGrid className="h-4 w-4 mr-2" />
               {language === 'bg' ? 'Оформление' : 'Layout'}
             </TabsTrigger>
+            <TabsTrigger value="header">
+              <FileText className="h-4 w-4 mr-2" />
+              {language === 'bg' ? 'Хедър' : 'Header'}
+            </TabsTrigger>
             <TabsTrigger value="content">
               <SquareStack className="h-4 w-4 mr-2" />
               {language === 'bg' ? 'Съдържание' : 'Content'}
+            </TabsTrigger>
+            <TabsTrigger value="footer">
+              <CreditCard className="h-4 w-4 mr-2" />
+              {language === 'bg' ? 'Футър' : 'Footer'}
             </TabsTrigger>
           </TabsList>
           
@@ -214,17 +252,6 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
             
             <div className="flex items-center space-x-2">
               <Switch 
-                id="showPageNumbers"
-                checked={settings.layout.showPageNumbers}
-                onCheckedChange={(checked) => handleLayoutChange('showPageNumbers', checked)}
-              />
-              <Label htmlFor="showPageNumbers">
-                {language === 'bg' ? 'Номерация на страниците' : 'Show Page Numbers'}
-              </Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch 
                 id="compactMode"
                 checked={settings.layout.compactMode}
                 onCheckedChange={(checked) => handleLayoutChange('compactMode', checked)}
@@ -235,29 +262,47 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
             </div>
           </TabsContent>
           
-          <TabsContent value="content" className="space-y-4">
+          <TabsContent value="header" className="space-y-4">
             <div className="flex items-center space-x-2">
               <Switch 
-                id="showBundleDetails"
-                checked={settings.content.showBundleDetails}
-                onCheckedChange={(checked) => handleContentChange('showBundleDetails', checked)}
+                id="showCompanySlogan"
+                checked={settings.header.showCompanySlogan}
+                onCheckedChange={(checked) => handleHeaderChange('showCompanySlogan', checked)}
               />
-              <Label htmlFor="showBundleDetails">
-                {language === 'bg' ? 'Покажи детайли за пакети' : 'Show Bundle Details'}
+              <Label htmlFor="showCompanySlogan">
+                {language === 'bg' ? 'Покажи слоган на компанията' : 'Show Company Slogan'}
               </Label>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="companyNameSize">
+                {language === 'bg' ? 'Размер на името на компанията' : 'Company Name Size'}
+              </Label>
+              <select 
+                id="companyNameSize"
+                className="w-full p-2 border rounded-md"
+                value={settings.header.companyNameSize}
+                onChange={(e) => handleHeaderChange('companyNameSize', e.target.value)}
+              >
+                <option value="small">{language === 'bg' ? 'Малък' : 'Small'}</option>
+                <option value="medium">{language === 'bg' ? 'Среден' : 'Medium'}</option>
+                <option value="large">{language === 'bg' ? 'Голям' : 'Large'}</option>
+              </select>
             </div>
             
             <div className="flex items-center space-x-2">
               <Switch 
-                id="showProductCodes"
-                checked={settings.content.showProductCodes}
-                onCheckedChange={(checked) => handleContentChange('showProductCodes', checked)}
+                id="showOfferLabel"
+                checked={settings.header.showOfferLabel}
+                onCheckedChange={(checked) => handleHeaderChange('showOfferLabel', checked)}
               />
-              <Label htmlFor="showProductCodes">
-                {language === 'bg' ? 'Покажи продуктови кодове' : 'Show Product Codes'}
+              <Label htmlFor="showOfferLabel">
+                {language === 'bg' ? 'Покажи етикет "Оферта"' : 'Show "Offer" Label'}
               </Label>
             </div>
-            
+          </TabsContent>
+          
+          <TabsContent value="content" className="space-y-4">            
             <div className="flex items-center space-x-2">
               <Switch 
                 id="boldPrices"
@@ -289,6 +334,43 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                   id="footerText"
                   value={settings.content.footerText}
                   onChange={(e) => handleContentChange('footerText', e.target.value)}
+                />
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="footer" className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Switch 
+                id="showBankDetails"
+                checked={settings.footer.showBankDetails}
+                onCheckedChange={(checked) => handleFooterChange('showBankDetails', checked)}
+              />
+              <Label htmlFor="showBankDetails">
+                {language === 'bg' ? 'Покажи банкови детайли' : 'Show Bank Details'}
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Switch 
+                id="showSignatureArea"
+                checked={settings.footer.showSignatureArea}
+                onCheckedChange={(checked) => handleFooterChange('showSignatureArea', checked)}
+              />
+              <Label htmlFor="showSignatureArea">
+                {language === 'bg' ? 'Покажи зона за подпис' : 'Show Signature Area'}
+              </Label>
+            </div>
+            
+            {settings.footer.showSignatureArea && (
+              <div className="space-y-2 pl-6">
+                <Label htmlFor="signatureText">
+                  {language === 'bg' ? 'Текст за подпис' : 'Signature Text'}
+                </Label>
+                <Input 
+                  id="signatureText"
+                  value={settings.footer.signatureText}
+                  onChange={(e) => handleFooterChange('signatureText', e.target.value)}
                 />
               </div>
             )}
