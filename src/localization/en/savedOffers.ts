@@ -21,5 +21,8 @@ export const savedOffers = {
   clientName: "Client Name",
   offerNumber: "Offer Number",
   createNew: "Create New Offer",
-  viewOffer: "View Offer"
+  viewOffer: "View Offer",
+  // Added missing properties
+  noOffers: "No offers",
+  filter: "Filter offers"
 };

@@ -21,5 +21,8 @@ export const savedOffers = {
   clientName: "Име на клиент",
   offerNumber: "Номер на оферта",
   createNew: "Създай нова оферта",
-  viewOffer: "Преглед на оферта"
+  viewOffer: "Преглед на оферта",
+  // Added missing properties
+  noOffers: "Няма оферти",
+  filter: "Филтриране на оферти"
 };

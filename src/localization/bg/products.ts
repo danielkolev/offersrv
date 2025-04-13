@@ -18,6 +18,6 @@ export const products = {
   selectExisting: "Избери съществуващ продукт",
   productName: "Име на продукта",
   unitPlaceholder: "Мерна единица",
-  // Add the missing translation
-  items: "продукта"
+  items: "продукта",
+  partNo: "Арт. №"
 };

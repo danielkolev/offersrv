@@ -18,6 +18,6 @@ export const products = {
   selectExisting: "Select Existing Product",
   productName: "Product Name",
   unitPlaceholder: "Unit of measurement",
-  // Add the missing translation
-  items: "items"
+  items: "items",
+  partNo: "Part No."
 };
