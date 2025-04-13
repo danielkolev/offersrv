@@ -88,9 +88,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
           />
         </div>
         
-        {/* Improved alignment for quantity, unit and price fields */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3 space-y-2">
+        {/* Improved grid with larger fields for quantity, unit and price */}
+        <div className="grid grid-cols-12 gap-4 md:col-span-2">
+          <div className="col-span-4 space-y-2">
             <Label htmlFor={`product-quantity-${index}`} className="whitespace-nowrap">
               {t.products.quantity}
             </Label>
@@ -104,7 +104,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             />
           </div>
           
-          <div className="col-span-3 space-y-2">
+          <div className="col-span-4 space-y-2">
             <Label htmlFor={`product-unit-${index}`} className="whitespace-nowrap">
               {language === 'bg' ? 'Мярка' : 'Unit'}
             </Label>
@@ -125,7 +125,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </Select>
           </div>
           
-          <div className="col-span-6 space-y-2">
+          <div className="col-span-4 space-y-2">
             <Label htmlFor={`product-price-${index}`} className="whitespace-nowrap">
               {t.products.unitPrice}
             </Label>
@@ -188,7 +188,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
         </div>
       )}
       
-      <div className="text-right text-sm font-medium mt-2 text-gray-800">
+      <div className="text-right text-sm font-medium mt-2 text-gray-900">
         {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
         {/* Only show unit if it's not the default 'none' unit and not a bundle */}
         {product.unit && product.unit !== 'none' && !product.isBundle && (

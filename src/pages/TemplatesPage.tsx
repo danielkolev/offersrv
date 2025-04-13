@@ -8,14 +8,18 @@ import { useTemplateManagement } from '@/hooks/use-template-management';
 import BackButton from '@/components/navigation/BackButton';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileText, Settings } from 'lucide-react';
+import { FileText, Settings, Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
 const TemplatesPage = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const { user } = useAuth();
   const { userTemplates, isLoading, createTemplate, deleteTemplate, editTemplate } = useTemplateManagement();
   const [activeTab, setActiveTab] = useState<string>('templates');
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | undefined>();
+  const [previewMode, setPreviewMode] = useState(false);
 
   if (!user) {
     return (
@@ -27,6 +31,37 @@ const TemplatesPage = () => {
       </div>
     );
   }
+
+  const handleCreateTemplate = () => {
+    setSelectedTemplateId(undefined);
+    setActiveTab('settings');
+    setPreviewMode(false);
+  };
+
+  const handleEditTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId);
+    setActiveTab('settings');
+    setPreviewMode(false);
+  };
+
+  const handleViewTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId);
+    setPreviewMode(true);
+  };
+
+  const handleClosePreview = () => {
+    setPreviewMode(false);
+  };
+
+  const handleDeleteTemplate = (templateId: string) => {
+    if (window.confirm(t.offer.templates.confirmDelete)) {
+      deleteTemplate(templateId);
+      toast({
+        title: t.common.success,
+        description: t.offer.templates.templateDeleted
+      });
+    }
+  };
 
   return (
     <div className="flex-1 space-y-6 p-6">
@@ -42,12 +77,14 @@ const TemplatesPage = () => {
             variant="outline"
             onClick={() => {
               setActiveTab('settings');
+              setSelectedTemplateId(undefined);
             }}
           >
             <Settings className="h-4 w-4 mr-2" />
             {t.common.settings}
           </Button>
-          <Button onClick={() => createTemplate('New Template', '')}>
+          <Button onClick={handleCreateTemplate}>
+            <Plus className="h-4 w-4 mr-2" />
             {t.offer.templates.createNew}
           </Button>
         </div>
@@ -92,18 +129,28 @@ const TemplatesPage = () => {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            onClick={() => {
-                              setSelectedTemplateId(template.id);
-                              setActiveTab('settings');
-                            }}
+                            onClick={() => handleViewTemplate(template.id)}
+                            className="gap-1"
                           >
+                            <Eye className="h-3.5 w-3.5" />
+                            {t.common.view}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleEditTemplate(template.id)}
+                            className="gap-1"
+                          >
+                            <Edit className="h-3.5 w-3.5" />
                             {t.common.edit}
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm" 
-                            onClick={() => deleteTemplate(template.id)}
+                            onClick={() => handleDeleteTemplate(template.id)}
+                            className="gap-1"
                           >
+                            <Trash2 className="h-3.5 w-3.5" />
                             {t.common.delete}
                           </Button>
                         </div>
@@ -120,6 +167,20 @@ const TemplatesPage = () => {
           <TemplateSettings selectedTemplateId={selectedTemplateId} />
         </TabsContent>
       </Tabs>
+      
+      {/* Template Preview Dialog */}
+      <Dialog open={previewMode} onOpenChange={handleClosePreview}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>
+              {userTemplates.find(t => t.id === selectedTemplateId)?.name || t.offer.templates.templatePreview}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <TemplateSettings selectedTemplateId={selectedTemplateId} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
