@@ -17,9 +17,9 @@ export function useProductUnits() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Start with an empty unit option as default, then include basic default units
+  // Start with a default "no unit" option that has a non-empty ID
   const defaultUnits: ProductUnit[] = [
-    { id: '', name: '', name_en: '' }, // Empty option
+    { id: 'none', name: '', name_en: '' }, // Non-empty ID for "no unit" option
     { id: 'pieces', name: 'брой', name_en: 'pieces' },
   ];
 
@@ -67,6 +67,6 @@ export function useProductUnits() {
     isLoading,
     error,
     getLocalizedUnitName,
-    defaultUnit: '' // Set default to empty string instead of 'pieces'
+    defaultUnit: 'none' // Changed from empty string to 'none'
   };
 }

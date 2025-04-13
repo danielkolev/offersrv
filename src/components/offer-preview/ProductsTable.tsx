@@ -3,11 +3,12 @@ import React from 'react';
 import { Product } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
+import { SupportedLanguage } from '@/types/language/base';
 
 interface ProductsTableProps {
   products: Product[];
   showPartNumber: boolean;
-  displayLanguage?: string; // Add a displayLanguage prop
+  displayLanguage?: SupportedLanguage; // Properly typed as SupportedLanguage
 }
 
 const ProductsTable: React.FC<ProductsTableProps> = ({ products, showPartNumber, displayLanguage }) => {

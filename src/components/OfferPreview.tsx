@@ -14,6 +14,7 @@ import OfferActions from './offer-preview/OfferActions';
 import SaveOfferHandler from './offer-preview/SaveOfferHandler';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatDate } from '@/lib/utils';
+import { SupportedLanguage } from '@/types/language/base';
 
 interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
@@ -42,13 +43,13 @@ const OfferPreview = ({
     
     // Set language to offer language for rendering
     if (displayLanguage !== language) {
-      setLanguage(displayLanguage as any);
+      setLanguage(displayLanguage);
     }
     
     // Restore original language when component unmounts
     return () => {
       if (displayLanguage !== originalLanguage) {
-        setLanguage(originalLanguage as any);
+        setLanguage(originalLanguage);
       }
     };
   }, [displayLanguage, language, setLanguage]);

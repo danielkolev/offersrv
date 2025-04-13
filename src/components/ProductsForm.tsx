@@ -264,7 +264,7 @@ const ProductsForm = () => {
             
             <div className="text-right text-sm text-muted-foreground mt-2">
               {t.products.total}: {formatCurrency(product.quantity * product.unitPrice, language, currency)}
-              {product.unit && product.unit !== 'pcs' && !product.isBundle && (
+              {product.unit && product.unit !== 'none' && !product.isBundle && (
                 <span className="ml-1">({product.quantity} {getLocalizedUnitName(product.unit)})</span>
               )}
             </div>
