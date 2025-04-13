@@ -4,9 +4,12 @@ import { Offer, ClientInfo, Product } from './offer';
 export interface SavedOffer {
   id: string;
   user_id: string;
-  offer_data: Offer;
   created_at: string;
   updated_at: string;
+  offer_data: any; // Или Offer тип, ако е дефиниран
+  meta_info?: any;
+  is_template?: boolean;
+  is_draft?: boolean; // Добавено за връзка с draft офертите
   name?: string;
 }
 

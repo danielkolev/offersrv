@@ -1,26 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import QuickActionCards from '@/components/home/QuickActionCards';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { Offer } from '@/types/offer';
-
-interface SavedOfferData {
-  id: string;
-  created_at: string;
-  offer_data: Offer;
-  name?: string;
-}
+import { SavedOffer } from '@/types/database';
+import { ArrowUpRight, Calendar, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useOffer } from '@/context/offer';
+import { formatDistanceToNow } from 'date-fns';
+import { bg, enUS } from 'date-fns/locale';
 
 const HomeContent = () => {
-  const { t } = useLanguage();
+  const { t, language, currency } = useLanguage();
   const { user } = useAuth();
-  const [recentOffers, setRecentOffers] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { setOffer } = useOffer();
+  const [recentOffers, setRecentOffers] = useState<SavedOffer[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -29,36 +28,20 @@ const HomeContent = () => {
   }, [user]);
 
   const fetchRecentOffers = async () => {
+    if (!user) return;
+
     setIsLoading(true);
     try {
-      // Fetch recent offers from saved_offers table
-      const { data: offers, error: offersError } = await supabase
+      const { data, error } = await supabase
         .from('saved_offers')
-        .select('id, created_at, offer_data')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_draft', false)
         .order('created_at', { ascending: false })
         .limit(5);
 
-      if (offersError) throw offersError;
-      
-      // Transform the offers data to include the required display fields
-      const transformedOffers = offers?.map(offer => {
-        // Cast offer_data to Offer type after parsing it (if it's a string)
-        const offerData = typeof offer.offer_data === 'string' 
-          ? JSON.parse(offer.offer_data) as Offer
-          : offer.offer_data as unknown as Offer;
-
-        return {
-          id: offer.id,
-          created_at: offer.created_at,
-          client_name: offerData.client?.name || 'Unknown Client',
-          offer_number: offerData.details?.offerNumber || `#${offer.id.slice(0, 8)}`,
-          total_amount: offerData.details?.includeVat && offerData.products && offerData.details?.vatRate
-            ? (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice * (1 + offerData.details.vatRate / 100)), 0) 
-            : (offerData.products || []).reduce((sum, p) => sum + (p.quantity * p.unitPrice), 0)
-        };
-      }) || [];
-      
-      setRecentOffers(transformedOffers);
+      if (error) throw error;
+      setRecentOffers(data || []);
     } catch (error) {
       console.error('Error fetching recent offers:', error);
     } finally {
@@ -66,76 +49,107 @@ const HomeContent = () => {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
-          <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
-        </div>
-      </div>
-    );
-  }
+  const formatOfferDate = (date: string) => {
+    try {
+      return formatDistanceToNow(new Date(date), {
+        addSuffix: true,
+        locale: language === 'bg' ? bg : enUS,
+      });
+    } catch (error) {
+      return date;
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat(language === 'bg' ? 'bg-BG' : 'en-US', {
+      style: 'currency',
+      currency: currency,
+    }).format(amount);
+  };
+
+  const handleOfferClick = (offer: SavedOffer) => {
+    // Зареждане на офертата и навигация към страницата за редактиране
+    setOffer(offer.offer_data);
+    navigate('/new-offer');
+  };
 
   return (
-    <div className="flex-1 space-y-6 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-offer-gray">
-          {t.common.dashboard}
-        </h1>
-      </div>
-      
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t.home.quickActions}</h2>
-        <div className="flex justify-center">
-          <QuickActionCards />
-        </div>
+    <div className="space-y-8">
+      <section>
+        <h2 className="text-xl font-semibold mb-4">{t.home.quickActions}</h2>
+        <QuickActionCards />
       </section>
-      
-      <section className="mt-8">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex justify-between items-center">
-              <span>{t.savedOffers.recentOffers}</span>
-              <Link 
-                to="/saved-offers" 
-                className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">{t.savedOffers.recentOffers}</h2>
+        <div className="grid grid-cols-1 gap-4">
+          {isLoading ? (
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center">{t.common.loading}</div>
+              </CardContent>
+            </Card>
+          ) : recentOffers.length > 0 ? (
+            recentOffers.map((offer) => (
+              <Card 
+                key={offer.id} 
+                className="hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleOfferClick(offer)}
               >
-                <span>{t.common.viewAll}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-4">
-                <div className="animate-pulse space-y-2">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className="h-10 bg-gray-200 rounded"></div>
-                  ))}
-                </div>
-              </div>
-            ) : recentOffers.length > 0 ? (
-              <ul className="divide-y">
-                {recentOffers.map((offer) => (
-                  <li key={offer.id} className="py-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">{offer.client_name}</span>
-                      <span className="text-gray-500">{new Date(offer.created_at).toLocaleDateString()}</span>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-blue-100 p-2 rounded-full text-blue-700">
+                        {offer.offer_data.client?.name ? (
+                          <User size={18} />
+                        ) : (
+                          <Calendar size={18} />
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-medium">
+                          {offer.offer_data.client?.name || t.common.noName}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {formatOfferDate(offer.created_at)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {offer.offer_number}
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="text-right">
+                        <div className="font-medium">
+                          {formatCurrency(
+                            offer.offer_data.products.reduce(
+                              (acc, product) => acc + (product.unitPrice * product.quantity), 
+                              0
+                            )
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {offer.offer_data.products.length} {t.products.items}
+                        </div>
+                      </div>
+                      <ArrowUpRight size={16} className="text-muted-foreground" />
                     </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                {t.home.noRecentOffers}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card>
+              <CardContent className="p-6 text-center">
+                <div className="mb-2">{t.home.noRecentOffers}</div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/new-offer')}
+                >
+                  {t.common.newOffer}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </section>
     </div>
   );

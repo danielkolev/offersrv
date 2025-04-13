@@ -42,7 +42,7 @@ const SavedProductsPage = () => {
       />
       
       <div className="mb-4">
-        <BackButton label={t.savedProducts.backToOffer} />
+        <BackButton label={t.common.back} />
       </div>
       
       <ProductSearch

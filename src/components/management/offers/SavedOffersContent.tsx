@@ -123,7 +123,8 @@ const SavedOffersContent: React.FC = () => {
 
   const handleCreateNewOffer = () => {
     resetOffer();
-    navigate('/');
+    // Променена навигация директно към new-offer вместо '/'
+    navigate('/new-offer');
   };
 
   return (

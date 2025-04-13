@@ -91,9 +91,20 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
     return user.email.substring(0, 2).toUpperCase();
   };
 
+  // Обработка на затварянето на модалния прозорец
+  const handleOpenChange = (newOpenState: boolean) => {
+    onOpenChange(newOpenState);
+    // Малко забавяне преди да се възстанови фокуса
+    if (!newOpenState) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 100);
+    }
+  };
+
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t.user.profile}</DialogTitle>
