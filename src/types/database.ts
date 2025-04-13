@@ -1,3 +1,4 @@
+
 import { Offer, ClientInfo, Product } from './offer';
 
 export interface SavedOffer {
@@ -5,13 +6,14 @@ export interface SavedOffer {
   user_id: string;
   created_at: string;
   updated_at: string;
-  offer_data: any; // Или Offer тип, ако е дефиниран
+  offer_data: Offer;
   meta_info?: any;
   is_template?: boolean;
-  is_draft?: boolean; // Flag for draft offers
+  is_draft?: boolean; // Флаг за чернови оферти
   name?: string;
-  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Added status field for filtering
-  draft_code?: string; // Draft identification code
+  status?: 'draft' | 'sent' | 'accepted' | 'rejected'; // Поле за статус за филтриране
+  draft_code?: string; // Код за идентификация на чернова
+  description?: string;
 }
 
 export interface Client {
@@ -39,4 +41,3 @@ export interface SavedProduct {
   created_at: string;
   updated_at: string;
 }
-

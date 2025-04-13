@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOffer } from '@/context/offer';
+import { useAuth } from '@/context/AuthContext';
 import { FileEdit } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Badge } from '@/components/ui/badge';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
 import {
   Tooltip,
   TooltipContent,
@@ -13,24 +15,55 @@ import {
 } from '@/components/ui/tooltip';
 
 export const DraftIndicator = () => {
-  const { hasUserInteracted, lastSaved } = useOffer();
+  const { hasUserInteracted, lastSaved, setOffer } = useOffer();
+  const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const [hasDraft, setHasDraft] = useState(false);
+  
+  // Проверка за наличие на чернова при зареждане на компонента
+  useEffect(() => {
+    const checkForDraft = async () => {
+      if (!user) return;
+      
+      try {
+        const draftOffer = await getLatestDraftFromDatabase(user.id);
+        if (draftOffer) {
+          setHasDraft(true);
+        }
+      } catch (error) {
+        console.error("Error checking for draft:", error);
+      }
+    };
+    
+    checkForDraft();
+  }, [user]);
 
-  // Don't show indicator if there's no draft
-  if (!hasUserInteracted) {
+  // Не показваме индикатора, ако няма чернова или потребителят не е правил промени
+  if (!hasUserInteracted && !hasDraft) {
     return null;
   }
 
-  const handleNavigateToOffer = () => {
-    // Navigate directly to the new-offer page
+  const handleNavigateToOffer = async () => {
+    if (user && hasDraft) {
+      try {
+        const draftOffer = await getLatestDraftFromDatabase(user.id);
+        if (draftOffer) {
+          // Зареждаме чернова директно в контекста
+          setOffer(draftOffer);
+        }
+      } catch (error) {
+        console.error("Error loading draft:", error);
+      }
+    }
+    // Навигиране към страницата за нова оферта
     navigate('/new-offer');
   };
 
   const formatLastSaved = () => {
     if (!lastSaved) return t.offer.notSavedYet;
     
-    // Simplified last saved info
+    // Опростена информация за последното запазване
     const now = new Date();
     const diffMs = now.getTime() - lastSaved.getTime();
     const diffMins = Math.round(diffMs / 60000);

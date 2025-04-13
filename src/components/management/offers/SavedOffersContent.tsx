@@ -24,7 +24,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from 'date-fns';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
 
 const SavedOffersContent: React.FC = () => {
   const { user } = useAuth();
@@ -45,8 +45,27 @@ const SavedOffersContent: React.FC = () => {
   useEffect(() => {
     if (user) {
       handleFetchSavedOffers();
+      checkForDraftOffer(); // Проверка за наличие на чернова
     }
   }, [user]);
+
+  // Проверка за наличие на чернова
+  const checkForDraftOffer = async () => {
+    if (!user) return;
+    
+    try {
+      const draftOffer = await getLatestDraftFromDatabase(user.id);
+      if (draftOffer) {
+        toast({
+          title: t.offer.draftStatus,
+          description: t.offer.draftRestoredDescription,
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.error("Error checking for draft offer:", error);
+    }
+  };
 
   const handleFetchSavedOffers = async () => {
     if (!user) return;
@@ -151,8 +170,11 @@ const SavedOffersContent: React.FC = () => {
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(offer => {
-        const clientName = offer.offer_data.client.name.toLowerCase();
-        const offerNumber = offer.offer_data.details.offerNumber.toLowerCase();
+        // Check if offer_data exists before accessing properties
+        if (!offer.offer_data) return false;
+        
+        const clientName = offer.offer_data.client?.name?.toLowerCase() || '';
+        const offerNumber = offer.offer_data.details?.offerNumber?.toLowerCase() || '';
         return clientName.includes(searchLower) || offerNumber.includes(searchLower);
       });
     }

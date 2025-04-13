@@ -16,13 +16,13 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
   const { offer, setOffer, resetOffer } = useOffer();
   const { t } = useLanguage();
   
-  // When the modal opens, temporarily set the offer to the saved offer for preview
+  // При отваряне на модалния прозорец, временно задаваме офертата за преглед
   React.useEffect(() => {
     if (isOpen && savedOffer && savedOffer.offer_data) {
       setOffer(savedOffer.offer_data);
     }
     
-    // Cleanup when modal closes
+    // Почистване при затваряне на модалния прозорец
     return () => {
       if (!isOpen) {
         resetOffer();
@@ -30,16 +30,21 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
     };
   }, [isOpen, savedOffer, setOffer, resetOffer]);
 
-  // Handle dialog close
+  // Обработка на затварянето на диалога
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       onClose();
-      // Small delay before restoring focus
+      // Малко закъснение преди възстановяване на фокуса
       setTimeout(() => {
         document.body.style.pointerEvents = 'auto';
       }, 100);
     }
   };
+
+  // Проверка дали офертните данни съществуват
+  if (!savedOffer || !savedOffer.offer_data) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
