@@ -15,3 +15,9 @@ export interface AccordionSection {
   component: React.ReactNode;
   content?: any; // Make this optional to match our implementation
 }
+
+// Add the missing NoCompanySelectedProps export
+export interface NoCompanySelectedProps {
+  message?: string;
+}
+
