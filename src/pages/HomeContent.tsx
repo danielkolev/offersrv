@@ -41,7 +41,8 @@ const HomeContent = () => {
         .limit(5);
 
       if (error) throw error;
-      setRecentOffers(data || []);
+      // Properly cast the data to SavedOffer[] type
+      setRecentOffers((data || []) as unknown as SavedOffer[]);
     } catch (error) {
       console.error('Error fetching recent offers:', error);
     } finally {

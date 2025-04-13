@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Offer } from '@/types/offer';
 import { SavedOffer } from '@/types/database';
@@ -60,7 +61,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
     
     if (existingDrafts && existingDrafts.length > 0) {
       // Use existing draft_code or generate a new one
-      const existingDraft = existingDrafts[0] as SavedOffer;
+      const existingDraft = existingDrafts[0] as unknown as SavedOffer;
       draftCode = existingDraft.draft_code || draftCode;
       
       // Update existing draft, keeping the draft_code
@@ -118,7 +119,8 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
     }
     
     if (data && data.length > 0) {
-      return data[0].offer_data as unknown as Offer;
+      // Explicit casting to handle type conversion from Json to Offer
+      return (data[0].offer_data as unknown) as Offer;
     }
     
     return null;
