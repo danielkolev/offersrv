@@ -12,14 +12,8 @@ interface UseSectionsProps {
   setIsSaveDialogOpen: (isOpen: boolean) => void;
 }
 
-// Define the proper section type that matches what's used in OfferAccordion
-export interface AccordionSection {
-  id: string;
-  title: string;
-  description: string;
-  component: React.ReactNode;
-  content?: any; // Make this optional to match the expected type
-}
+// Използваме типа AccordionSection от общия types.ts файл
+import { AccordionSection } from './types';
 
 export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectionsProps): AccordionSection[] {
   const { t } = useLanguage();
@@ -28,21 +22,21 @@ export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectio
     {
       id: "company",
       title: t.companyInfo.title || "Company Info",
-      description: t.companyInfo.title || "Enter your company information", // Using title as fallback since description doesn't exist
+      description: t.companyInfo.description || t.companyInfo.title || "Enter your company information",
       component: <CompanyInfoForm />,
-      content: null // Add this property to match the expected type
+      content: null // Да добавим content с null, за да съответства на типа
     },
     {
       id: "details",
       title: t.offerDetails.title || "Offer Details",
-      description: t.offerDetails.title || "Enter offer details", // Using title as fallback since description doesn't exist
+      description: t.offerDetails.description || t.offerDetails.title || "Enter offer details",
       component: <OfferDetailsForm />,
       content: null
     },
     {
       id: "client",
       title: t.clientInfo.title || "Client Info",
-      description: t.clientInfo.title || "Enter client information", // Using title as fallback since description doesn't exist
+      description: t.clientInfo.description || t.clientInfo.title || "Enter client information",
       component: <ClientInfoForm />,
       content: null
     },

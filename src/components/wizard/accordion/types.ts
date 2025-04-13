@@ -13,11 +13,10 @@ export interface AccordionSection {
   title: string;
   description: string;
   component: React.ReactNode;
-  content?: any; // Make this optional to match our implementation
+  content?: any; // Това е опционално, а не задължително
 }
 
 // Add the missing NoCompanySelectedProps export
 export interface NoCompanySelectedProps {
   message?: string;
 }
-

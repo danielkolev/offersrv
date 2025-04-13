@@ -30,13 +30,13 @@ const OfferAccordion = ({
   const { isLoading: isLoadingCompany, error: companyError } = useCompanyData(selectedCompanyId);
 
   // Get sections but skip the company section since we're auto-populating it
-  const allSections = useSections({
+  const sections = useSections({
     isSaveDialogOpen,
     setIsSaveDialogOpen
   });
   
-  // Filter out the company section
-  const sections = allSections.filter(section => section.id !== "company");
+  // Можем да филтрираме като е нужно, сега получаваме всички секции
+  const visibleSections = sections;
 
   // Force rerender when expandAll changes to ensure Collapsible state syncs properly
   useEffect(() => {
@@ -61,9 +61,9 @@ const OfferAccordion = ({
   };
 
   const handleNavigateNext = (currentSectionId: string) => {
-    const currentIndex = sections.findIndex(section => section.id === currentSectionId);
-    if (currentIndex < sections.length - 1) {
-      const nextSection = sections[currentIndex + 1];
+    const currentIndex = visibleSections.findIndex(section => section.id === currentSectionId);
+    if (currentIndex < visibleSections.length - 1) {
+      const nextSection = visibleSections[currentIndex + 1];
       setActiveSection(nextSection.id);
       
       // Scroll to next section
@@ -100,12 +100,12 @@ const OfferAccordion = ({
         <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
           {expandAll ? (
             <ExpandedAccordion
-              sections={sections}
+              sections={visibleSections}
               onNavigateNext={handleNavigateNext}
             />
           ) : (
             <CollapsedAccordion
-              sections={sections}
+              sections={visibleSections}
               activeSection={activeSection}
               onSectionChange={setActiveSection}
               onNavigateNext={handleNavigateNext}

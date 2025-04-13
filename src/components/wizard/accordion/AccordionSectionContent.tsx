@@ -22,7 +22,7 @@ const AccordionSectionContent: React.FC<AccordionSectionContentProps> = ({
 
   return (
     <>
-      {section.content}
+      {section.component}
       
       {index < totalSections - 1 && (
         <div className="flex justify-end mt-4">
