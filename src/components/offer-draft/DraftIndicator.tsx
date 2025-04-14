@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useOffer } from '@/context/offer';
@@ -5,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { FileEdit } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Badge } from '@/components/ui/badge';
-import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draft';
 import {
   Tooltip,
   TooltipContent,

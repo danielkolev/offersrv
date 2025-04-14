@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Offer } from '@/types/offer';
 import { useAuth } from '@/context/AuthContext';
 import { defaultOffer } from '../../defaultValues';
-import { deleteDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { deleteDraftFromDatabase } from '@/components/management/offers/draft';
 
 export function useDraftReset(
   setOffer: React.Dispatch<React.SetStateAction<Offer>>,

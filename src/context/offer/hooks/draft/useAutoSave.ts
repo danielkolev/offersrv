@@ -1,8 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { Offer } from '@/types/offer';
 import { useAuth } from '@/context/AuthContext';
-import { saveDraftToDatabase, saveDraftToLocalStorage } from '@/components/management/offers/draftOffersService';
+import { 
+  saveDraftToDatabase, 
+  saveDraftToLocalStorage 
+} from '@/components/management/offers/draft';
 
 // Auto-save interval in milliseconds (5 seconds)
 const AUTO_SAVE_INTERVAL = 5000;

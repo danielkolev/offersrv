@@ -4,7 +4,7 @@ import { useOffer } from '@/context/offer/OfferContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
-import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draft';
 import { useLocation } from 'react-router-dom';
 
 export const useOfferInitialization = (setSelectedCompanyId: (id: string | null) => void) => {

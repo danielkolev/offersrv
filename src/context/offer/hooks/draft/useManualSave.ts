@@ -4,7 +4,10 @@ import { Offer } from '@/types/offer';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
-import { saveDraftToDatabase, saveDraftToLocalStorage } from '@/components/management/offers/draftOffersService';
+import { 
+  saveDraftToDatabase, 
+  saveDraftToLocalStorage 
+} from '@/components/management/offers/draft';
 
 export function useManualSave(
   offer: Offer,
