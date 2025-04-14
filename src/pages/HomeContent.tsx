@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import QuickActionCards from '@/components/home/QuickActionCards';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { SavedOffer } from '@/types/database';
 import { ArrowUpRight, Calendar, User } from 'lucide-react';
@@ -17,7 +17,7 @@ const HomeContent = () => {
   const { t, language, currency } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { setOffer } = useOffer();
+  const { setOffer, resetOffer } = useOffer();
   const [recentOffers, setRecentOffers] = useState<SavedOffer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,9 +87,20 @@ const HomeContent = () => {
   };
 
   const handleOfferClick = (offer: SavedOffer) => {
-    // Зареждане на офертата и навигация към страницата за редактиране
-    setOffer(offer.offer_data);
-    navigate('/new-offer');
+    // Важна промяна: първо ресетвайте текущата оферта преди да заредите новата
+    resetOffer();
+    
+    // Задайте малко забавяне за да може ресетът да приключи преди да заредим новата оферта
+    setTimeout(() => {
+      console.log("Зареждане на оферта с данни:", offer.offer_data);
+      if (offer?.offer_data) {
+        // Проверка дали offer_data съществува и не е null
+        setOffer(offer.offer_data);
+        navigate('/new-offer');
+      } else {
+        console.error("Невалидни данни за оферта:", offer);
+      }
+    }, 50);
   };
 
   return (

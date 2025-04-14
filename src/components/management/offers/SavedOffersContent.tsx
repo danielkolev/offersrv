@@ -136,22 +136,34 @@ const SavedOffersContent: React.FC = () => {
   };
 
   const handleLoadOffer = (savedOffer: SavedOffer) => {
-    console.log("Loading offer data:", savedOffer.offer_data);
+    console.log("Зареждане на оферта с данни:", savedOffer.offer_data);
     
     try {
       // Reset first
       resetOffer();
       
-      // Then set the offer data
-      setOffer(savedOffer.offer_data);
-      
-      toast({
-        title: t.common.success,
-        description: t.savedOffers.offerLoaded,
-      });
-      
-      // Navigate to the edit page
-      navigate('/new-offer');
+      // Добавям малко забавяне преди да заредя офертата за да е сигурно, че resetOffer е завършил
+      setTimeout(() => {
+        // Then set the offer data
+        if (savedOffer.offer_data) {
+          setOffer(savedOffer.offer_data);
+          
+          toast({
+            title: t.common.success,
+            description: t.savedOffers.offerLoaded,
+          });
+          
+          // Navigate to the edit page
+          navigate('/new-offer');
+        } else {
+          console.error("Невалидни данни за оферта:", savedOffer);
+          toast({
+            title: t.common.error,
+            description: "Невалидни данни за оферта",
+            variant: 'destructive',
+          });
+        }
+      }, 50);
     } catch (error) {
       console.error("Error loading offer:", error);
       toast({
@@ -165,7 +177,10 @@ const SavedOffersContent: React.FC = () => {
   const handleCreateNewOffer = () => {
     // Reset offer state before creating a new one
     resetOffer();
-    navigate('/new-offer');
+    // Добавяме малко забавяне преди да навигираме към страницата за нова оферта
+    setTimeout(() => {
+      navigate('/new-offer');
+    }, 50);
   };
   
   const getFilteredOffers = () => {

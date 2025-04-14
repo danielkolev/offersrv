@@ -75,17 +75,20 @@ export const DraftIndicator = () => {
     if (user && hasDraft) {
       try {
         // First reset current offer
-        resetOffer();
+        await resetOffer();
         
-        // Then load the draft
-        const draftOffer = await getLatestDraftFromDatabase(user.id);
-        if (draftOffer && hasMeaningfulContent(draftOffer)) {
-          console.log("Navigating to draft with data:", draftOffer);
-          // Load draft directly into context
-          setOffer(draftOffer);
-          // Navigate to new offer page
-          navigate('/new-offer');
-        }
+        // Добавям малко забавяне преди да заредя черновата за да е сигурно, че resetOffer е завършил
+        setTimeout(async () => {
+          // Then load the draft
+          const draftOffer = await getLatestDraftFromDatabase(user.id);
+          if (draftOffer && hasMeaningfulContent(draftOffer)) {
+            console.log("Навигирам към чернова с данни:", draftOffer);
+            // Load draft directly into context
+            setOffer(draftOffer);
+            // Navigate to new offer page
+            navigate('/new-offer');
+          }
+        }, 50);
       } catch (error) {
         console.error("Error loading draft:", error);
       }

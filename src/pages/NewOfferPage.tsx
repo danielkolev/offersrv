@@ -7,17 +7,21 @@ import { useToast } from '@/hooks/use-toast';
 import { useOffer } from '@/context/offer';
 import { supabase } from '@/integrations/supabase/client';
 import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { useCompanyData } from '@/hooks/useCompanyData';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { resetOffer, setOffer } = useOffer();
+  const { resetOffer, setOffer, offer } = useOffer();
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [isDraftLoading, setIsDraftLoading] = useState(false);
+  
+  // Използваме къстъм hook за зареждане на данните за компанията
+  const { isLoading: isCompanyLoading } = useCompanyData(selectedCompanyId);
 
   // Check for draft and initialize the offer state
   useEffect(() => {
@@ -31,25 +35,32 @@ const NewOfferPage = () => {
         
         // If there's a draft, load it instead of resetting
         if (draftOffer) {
-          console.log('Loading draft offer from database', draftOffer);
-          setOffer(draftOffer);
-          
-          // If the draft has a company selected, use that
-          if (draftOffer.company) {
-            const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
-            if (companyId) {
-              setSelectedCompanyId(companyId);
+          console.log('Зареждане на чернова от базата данни:', draftOffer);
+          // Проверка за валидни данни
+          if (draftOffer.client && draftOffer.products && draftOffer.details) {
+            setOffer(draftOffer);
+            
+            // If the draft has a company selected, use that
+            if (draftOffer.company) {
+              const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
+              if (companyId) {
+                setSelectedCompanyId(companyId);
+                localStorage.setItem('selectedCompanyId', companyId);
+              }
             }
+          } else {
+            console.error('Черновата има невалидни данни:', draftOffer);
+            resetOffer();
           }
         } else {
           // No draft found, reset to default state
-          console.log('No draft found, resetting offer');
-          resetOffer();
+          console.log('Няма намерена чернова, ресетвам оферта');
+          await resetOffer();
         }
         
         setHasInitialized(true);
       } catch (error) {
-        console.error('Error initializing offer state:', error);
+        console.error('Грешка при инициализация на офертата:', error);
         resetOffer();
         setHasInitialized(true);
       } finally {
@@ -65,6 +76,7 @@ const NewOfferPage = () => {
     if (hasInitialized && !selectedCompanyId) {
       const storedCompanyId = localStorage.getItem('selectedCompanyId');
       if (storedCompanyId) {
+        console.log("Using company from localStorage:", storedCompanyId);
         setSelectedCompanyId(storedCompanyId);
       } else {
         // If no company is selected in the main menu, fetch the default company
@@ -90,7 +102,10 @@ const NewOfferPage = () => {
       
       // If user has companies, select the first one as default
       if (memberData && memberData.length > 0) {
-        setSelectedCompanyId(memberData[0].organization_id);
+        const defaultCompanyId = memberData[0].organization_id;
+        console.log("Setting default company ID:", defaultCompanyId);
+        setSelectedCompanyId(defaultCompanyId);
+        localStorage.setItem('selectedCompanyId', defaultCompanyId);
       }
       
       setFetchError(false);
@@ -128,7 +143,7 @@ const NewOfferPage = () => {
       </div>
       
       <OfferAccordion 
-        isLoadingCompanyData={isLoadingCompanyData || isDraftLoading}
+        isLoadingCompanyData={isLoadingCompanyData || isDraftLoading || isCompanyLoading}
         fetchError={fetchError}
         selectedCompanyId={selectedCompanyId}
       />
