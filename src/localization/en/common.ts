@@ -82,5 +82,6 @@ export const common: CommonTranslations = {
   welcome: "Welcome",
   unauthorized: "Unauthorized",
   expandAll: "Expand All",
-  collapseAll: "Collapse All"
+  collapseAll: "Collapse All",
+  language: "Language" // Added missing property
 };

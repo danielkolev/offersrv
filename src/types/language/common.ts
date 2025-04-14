@@ -57,7 +57,7 @@ export interface CommonTranslations {
   pageOf: string;
   showingItems: string;
   
-  // Additional properties needed based on error messages
+  // Additional properties
   account: string;
   newOffer: string;
   newClient: string;
@@ -81,4 +81,5 @@ export interface CommonTranslations {
   unauthorized: string;
   expandAll: string;
   collapseAll: string;
+  language: string; // Added missing property
 }

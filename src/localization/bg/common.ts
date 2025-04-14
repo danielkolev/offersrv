@@ -82,5 +82,6 @@ export const common: CommonTranslations = {
   welcome: "Добре дошли",
   unauthorized: "Неоторизиран достъп",
   expandAll: "Разгъни всички",
-  collapseAll: "Свий всички"
+  collapseAll: "Свий всички",
+  language: "Език" // Added missing property
 };

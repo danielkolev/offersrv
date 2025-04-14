@@ -38,3 +38,16 @@ export interface AccordionSectionContentProps {
   section: SectionProps;
   onNavigateNext: (sectionId: string) => void;
 }
+
+// Added the missing types
+export interface NoCompanySelectedProps {
+  message?: string;
+}
+
+export interface AccordionSection {
+  id: string;
+  title: string;
+  description: string;
+  component: React.ReactNode;
+  content: React.ReactNode | null;
+}

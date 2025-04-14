@@ -12,7 +12,7 @@ interface UseSectionsProps {
   setIsSaveDialogOpen: (isOpen: boolean) => void;
 }
 
-// Използваме типа AccordionSection от общия types.ts файл
+// Use the AccordionSection type from the types.ts file
 import { AccordionSection } from './types';
 
 export function useSections({ isSaveDialogOpen, setIsSaveDialogOpen }: UseSectionsProps): AccordionSection[] {
