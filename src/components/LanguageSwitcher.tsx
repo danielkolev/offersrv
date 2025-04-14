@@ -20,9 +20,9 @@ const LanguageSwitcher = () => {
 
   return (
     <Select value={language} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[80px] h-9">
-        <Globe className="h-4 w-4 mr-1" />
-        <SelectValue placeholder="Language" />
+      <SelectTrigger className="w-[130px] h-9">
+        <Globe className="h-4 w-4 mr-2" />
+        <SelectValue placeholder={t.common.language} />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="bg">

@@ -11,7 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Settings } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import UserProfileModal from './account/UserProfileModal';
@@ -44,26 +45,41 @@ const AccountButton = () => {
     setProfileModalOpen(true);
   };
   
+  if (!user) return null;
+  
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
-            className="gap-2"
-            aria-label={t.common.account}
-          >
-            <User size={16} />
-            {user?.email ? user.email.split('@')[0] : t.common.account}
+          <Button variant="outline" className="flex gap-2 max-w-[200px]">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
+              <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <span className="truncate">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel>{t.common.account}</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{user.user_metadata?.full_name || user.email}</p>
+              <p className="text-xs leading-none text-muted-foreground truncate">
+                {user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           
           <DropdownMenuItem onClick={openProfileModal} className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             <span>{t.user.profile}</span>
+          </DropdownMenuItem>
+          
+          <DropdownMenuItem asChild>
+            <a href="/settings" className="flex cursor-pointer items-center">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>{t.navigation.settings}</span>
+            </a>
           </DropdownMenuItem>
           
           <DropdownMenuSeparator />

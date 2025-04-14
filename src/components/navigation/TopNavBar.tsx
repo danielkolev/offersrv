@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Menu, X, Globe, ChevronDown, LogOut, User, Settings, FileText, Home, BarChart2, Building, FileEdit } from 'lucide-react';
+import { Menu, X, LogOut, User, Settings, FileText, Home, BarChart2, Building, FileEdit } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +18,12 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import DraftIndicator from '@/components/offer-draft/DraftIndicator';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import AccountButton from '@/components/AccountButton';
 
 const TopNavBar = () => {
   const { user, signOut } = useAuth();
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const location = useLocation();
   const { toast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -57,10 +59,6 @@ const TopNavBar = () => {
         variant: 'destructive',
       });
     }
-  };
-
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'bg' : 'en');
   };
 
   const navLinks = [
@@ -112,60 +110,16 @@ const TopNavBar = () => {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {/* Draft indicator */}
           {user && <DraftIndicator />}
 
-          {/* Language Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleLanguage}
-            className="text-muted-foreground"
-          >
-            <Globe className="h-5 w-5" />
-          </Button>
-
-          {/* User Menu (Desktop) */}
+          {/* Language Switcher - Improved presentation */}
+          <LanguageSwitcher />
+          
+          {/* Account Button - Improved presentation */}
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
-                    <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.user_metadata?.full_name || user.email}</p>
-                    <p className="text-xs leading-none text-muted-foreground truncate">
-                      {user.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer flex w-full items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>{t.navigation.profile}</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings" className="cursor-pointer flex w-full items-center">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>{t.navigation.settings}</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>{t.auth.signOut}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AccountButton />
           ) : (
             <Button asChild variant="default" size="sm">
               <Link to="/login">{t.auth.signIn}</Link>
@@ -256,13 +210,11 @@ const TopNavBar = () => {
                   </Button>
                 )}
                 <div className="h-px bg-border my-4" />
-                <button
-                  onClick={toggleLanguage}
-                  className="flex items-center py-2 text-base font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Globe className="h-4 w-4 mr-2" />
-                  {language === 'en' ? 'Български' : 'English'}
-                </button>
+                {/* Language switcher in mobile menu */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{t.common.language}</span>
+                  <LanguageSwitcher />
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

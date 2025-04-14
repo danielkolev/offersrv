@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCompanyData } from '@/hooks/useCompanyData';
-import { CompanyManager } from '@/components/company/CompanyManager';
 
 // Import our components
 import AccordionHeader from './accordion/AccordionHeader';
@@ -18,8 +17,7 @@ import { OfferAccordionProps } from './accordion/types';
 const OfferAccordion = ({
   isLoadingCompanyData,
   fetchError,
-  selectedCompanyId,
-  onSelectCompany
+  selectedCompanyId
 }: OfferAccordionProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -106,21 +104,6 @@ const OfferAccordion = ({
     }
   };
 
-  // Add company selector at the top of the accordion when no company is selected
-  const renderCompanySelector = () => {
-    return (
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">{user?.email ? user.email : 'User'}</h3>
-          <CompanyManager 
-            onSelectCompany={onSelectCompany}
-            selectedCompanyId={selectedCompanyId}
-          />
-        </div>
-      </div>
-    );
-  };
-
   if (isLoadingCompanyData || isLoadingCompany) {
     return (
       <LoadingErrorStates 
@@ -141,8 +124,6 @@ const OfferAccordion = ({
 
   return (
     <div className="space-y-4" ref={accordionRef}>
-      {renderCompanySelector()}
-      
       {!selectedCompanyId ? (
         <NoCompanySelected />
       ) : (

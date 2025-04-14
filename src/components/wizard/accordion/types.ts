@@ -1,22 +1,40 @@
 
-import React from 'react';
-
 export interface OfferAccordionProps {
   isLoadingCompanyData: boolean;
   fetchError: boolean;
   selectedCompanyId: string | null;
-  onSelectCompany: (companyId: string) => void;
 }
 
-export interface AccordionSection {
+export interface AccordionHeaderProps {
+  expandAll: boolean;
+  onToggleAll: () => void;
+}
+
+export interface SectionProps {
   id: string;
   title: string;
-  description: string;
-  component: React.ReactNode;
-  content?: any; // Това е опционално, а не задължително
+  content: React.ReactNode;
+  isActive?: boolean;
+  onNavigateNext?: (sectionId: string) => void;
 }
 
-// Add the missing NoCompanySelectedProps export
-export interface NoCompanySelectedProps {
-  message?: string;
+export interface ExpandedAccordionProps {
+  sections: SectionProps[];
+  onNavigateNext: (sectionId: string) => void;
+}
+
+export interface CollapsedAccordionProps {
+  sections: SectionProps[];
+  activeSection: string | null;
+  onSectionChange: (sectionId: string | null) => void;
+  onNavigateNext: (sectionId: string) => void;
+}
+
+export interface OfferActionButtonsProps {
+  onSave: () => void;
+}
+
+export interface AccordionSectionContentProps {
+  section: SectionProps;
+  onNavigateNext: (sectionId: string) => void;
 }

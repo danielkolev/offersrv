@@ -39,7 +39,6 @@ const NewOfferPage = () => {
             const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
             if (companyId) {
               setSelectedCompanyId(companyId);
-              localStorage.setItem('selectedCompanyId', companyId);
             }
           }
         } else {
@@ -61,7 +60,20 @@ const NewOfferPage = () => {
     initializeOfferState();
   }, [user, resetOffer, setOffer, hasInitialized]);
 
-  // Fetch user's default company or first company on load
+  // Use the company selected in the main menu (stored in localStorage)
+  useEffect(() => {
+    if (hasInitialized && !selectedCompanyId) {
+      const storedCompanyId = localStorage.getItem('selectedCompanyId');
+      if (storedCompanyId) {
+        setSelectedCompanyId(storedCompanyId);
+      } else {
+        // If no company is selected in the main menu, fetch the default company
+        fetchDefaultCompany();
+      }
+    }
+  }, [hasInitialized]);
+
+  // Fetch user's default company or first company if none is selected
   const fetchDefaultCompany = useCallback(async () => {
     if (!user) return;
     
@@ -78,14 +90,7 @@ const NewOfferPage = () => {
       
       // If user has companies, select the first one as default
       if (memberData && memberData.length > 0) {
-        // Check localStorage for previously selected company
-        const storedCompanyId = localStorage.getItem('selectedCompanyId');
-        
-        if (storedCompanyId && memberData.some(m => m.organization_id === storedCompanyId)) {
-          setSelectedCompanyId(storedCompanyId);
-        } else {
-          setSelectedCompanyId(memberData[0].organization_id);
-        }
+        setSelectedCompanyId(memberData[0].organization_id);
       }
       
       setFetchError(false);
@@ -101,18 +106,6 @@ const NewOfferPage = () => {
       setIsLoadingCompanyData(false);
     }
   }, [user, toast, t.common.error]);
-
-  // Only fetch default company after checking for draft
-  useEffect(() => {
-    if (hasInitialized && !selectedCompanyId) {
-      fetchDefaultCompany();
-    }
-  }, [hasInitialized, fetchDefaultCompany, selectedCompanyId]);
-
-  const handleSelectCompany = useCallback((companyId: string) => {
-    setSelectedCompanyId(companyId);
-    localStorage.setItem('selectedCompanyId', companyId);
-  }, []);
 
   // Unauthorized state for users who aren't logged in
   if (!user) {
@@ -138,7 +131,6 @@ const NewOfferPage = () => {
         isLoadingCompanyData={isLoadingCompanyData || isDraftLoading}
         fetchError={fetchError}
         selectedCompanyId={selectedCompanyId}
-        onSelectCompany={handleSelectCompany}
       />
     </div>
   );
