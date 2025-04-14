@@ -1,3 +1,4 @@
+
 export const offer = {
   createOffer: "Create Offer",
   offerDetails: "Offer Details",
@@ -5,6 +6,7 @@ export const offer = {
   clientInfo: "Client Info",
   productsAndServices: "Products & Services",
   previewAndSave: "Preview & Save",
+  previewAndFinish: "Preview & Finish",
   offerNumber: "Offer Number",
   offerDate: "Offer Date",
   validUntil: "Valid Until",

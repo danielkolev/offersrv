@@ -77,6 +77,8 @@ export const offer = {
   templateCreated: "Шаблонът е създаден успешно",
   templateUpdated: "Шаблонът е обновен успешно",
   templateDeleted: "Шаблонът е изтрит успешно",
+  templateSaved: "Шаблонът е запазен успешно",
+  templateSaveError: "Грешка при запазване на шаблона",
   defaultTemplate: "По подразбиране",
   setDefaultTemplate: "Задай като шаблон по подразбиране",
   resetToDefault: "Възстанови по подразбиране",
