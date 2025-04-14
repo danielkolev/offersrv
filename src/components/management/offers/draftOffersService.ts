@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Offer } from '@/types/offer';
 import { SavedOffer } from '@/types/database';
@@ -14,6 +13,11 @@ const generateDraftCode = (): string => {
 
 // Helper to check if an offer has meaningful content worth saving
 const hasMeaningfulContent = (offer: Offer): boolean => {
+  if (!offer || !offer.client || !offer.products || !offer.details) {
+    console.log("Invalid offer structure for meaningful content check");
+    return false;
+  }
+  
   // Check if client has at least a name
   const hasClientInfo = offer.client?.name && offer.client.name.trim() !== '';
   
@@ -30,13 +34,17 @@ const hasMeaningfulContent = (offer: Offer): boolean => {
   return hasClientInfo || hasProducts || hasOfferDetails;
 };
 
-// Save draft to local storage for temporary storage
+// Save draft to local storage for temporary storage and backup
 export const saveDraftToLocalStorage = (offer: Offer): void => {
   // Only save if there's meaningful content
-  if (!hasMeaningfulContent(offer)) return;
+  if (!hasMeaningfulContent(offer)) {
+    console.log("Not saving draft to local storage - no meaningful content");
+    return;
+  }
   
   try {
     localStorage.setItem(DRAFT_OFFER_KEY, JSON.stringify(offer));
+    console.log("Draft saved to local storage successfully");
   } catch (error) {
     console.error('Error saving draft to local storage:', error);
   }
@@ -47,7 +55,15 @@ export const getDraftFromLocalStorage = (): Offer | null => {
   try {
     const draftString = localStorage.getItem(DRAFT_OFFER_KEY);
     if (!draftString) return null;
-    return JSON.parse(draftString) as Offer;
+    
+    const draft = JSON.parse(draftString) as Offer;
+    
+    // Only return the draft if it has meaningful content
+    if (hasMeaningfulContent(draft)) {
+      return draft;
+    }
+    
+    return null;
   } catch (error) {
     console.error('Error retrieving draft from local storage:', error);
     return null;
@@ -58,6 +74,7 @@ export const getDraftFromLocalStorage = (): Offer | null => {
 export const clearDraftFromLocalStorage = (): void => {
   try {
     localStorage.removeItem(DRAFT_OFFER_KEY);
+    console.log("Draft cleared from local storage");
   } catch (error) {
     console.error('Error clearing draft from local storage:', error);
   }
@@ -67,13 +84,13 @@ export const clearDraftFromLocalStorage = (): void => {
 export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise<void> => {
   // Skip saving if there's no meaningful content
   if (!hasMeaningfulContent(offer)) {
-    console.log('Skipping draft save - no meaningful content');
+    console.log('Skipping draft save to database - no meaningful content');
     return;
   }
   
+  console.log('Saving draft to database for user:', userId);
+  
   try {
-    // No client or product saving for drafts
-    
     // First check if there's already a draft for this user
     const { data: existingDrafts, error: fetchError } = await supabase
       .from('saved_offers')
@@ -93,6 +110,8 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
       const existingDraft = existingDrafts[0];
       draftCode = existingDraft.draft_code || draftCode;
       
+      console.log('Updating existing draft with ID:', existingDraft.id);
+      
       // Update existing draft, keeping the draft_code
       const { error } = await supabase
         .from('saved_offers')
@@ -103,16 +122,19 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           // Set status to draft for filtering and sorting
           status: 'draft' as SavedOffer['status'],
           // Force a temporary placeholder for offer number in drafts
-          // We'll set this to "DRAFT-XXX" in the display instead of using actual numbers
-          name: `Draft: ${offer.client.name || 'Untitled'}`
+          name: `Draft: ${offer.client?.name || 'Untitled'}`
         })
         .eq('id', existingDrafts[0].id);
         
       if (error) {
-        console.error('Error updating draft:', error);
+        console.error('Error updating draft in database:', error);
         throw error;
       }
+      
+      console.log('Draft updated successfully in database');
     } else {
+      console.log('Creating new draft in database');
+      
       // Insert new draft with a draft code
       const { error } = await supabase
         .from('saved_offers')
@@ -122,13 +144,15 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
           is_draft: true,
           draft_code: draftCode,
           status: 'draft' as SavedOffer['status'],
-          name: `Draft: ${offer.client.name || 'Untitled'}`
+          name: `Draft: ${offer.client?.name || 'Untitled'}`
         });
         
       if (error) {
-        console.error('Error inserting draft:', error);
+        console.error('Error inserting draft into database:', error);
         throw error;
       }
+      
+      console.log('New draft created successfully in database');
     }
   } catch (error) {
     console.error('Error saving draft to database:', error);
@@ -138,40 +162,79 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
   }
 };
 
-// Get latest draft from database
+// Get latest draft from database with improved error handling
 export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer | null> => {
   try {
     console.log("Attempting to fetch draft for user:", userId);
-    const { data, error } = await supabase
-      .from('saved_offers')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('is_draft', true)
-      .order('updated_at', { ascending: false })
-      .limit(1);
-      
-    if (error) {
-      throw error;
+    
+    // Retry mechanism in case of temporary errors
+    let attempts = 0;
+    const maxAttempts = 2;
+    
+    while (attempts < maxAttempts) {
+      try {
+        const { data, error } = await supabase
+          .from('saved_offers')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('is_draft', true)
+          .order('updated_at', { ascending: false })
+          .limit(1);
+          
+        if (error) {
+          console.error(`Attempt ${attempts + 1} failed:`, error);
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          console.log("Draft found in database:", data[0]);
+          
+          // Explicit casting to handle type conversion from Json to Offer
+          const offerData = (data[0].offer_data as unknown) as Offer;
+          
+          // Check if the draft has meaningful content
+          if (hasMeaningfulContent(offerData)) {
+            console.log("Draft has meaningful content, returning");
+            return offerData;
+          } else {
+            // If draft doesn't have meaningful content, delete it
+            console.log("Draft has no meaningful content, deleting");
+            await deleteDraftFromDatabase(userId);
+            return null;
+          }
+        } else {
+          console.log("No draft found for user in database");
+        }
+        
+        // If we get here, we've successfully completed the query - exit the retry loop
+        break;
+      } catch (retryError) {
+        attempts++;
+        
+        if (attempts >= maxAttempts) {
+          // If we've exhausted our retries, rethrow the last error
+          throw retryError;
+        }
+        
+        // Wait a bit before retrying (200ms)
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
     }
     
-    if (data && data.length > 0) {
-      console.log("Draft found:", data[0]);
+    // Try from local storage as fallback
+    const localDraft = getDraftFromLocalStorage();
+    if (localDraft) {
+      console.log("Found draft in local storage, using it as fallback");
       
-      // Explicit casting to handle type conversion from Json to Offer
-      const offerData = (data[0].offer_data as unknown) as Offer;
-      
-      // Check if the draft has meaningful content
-      if (hasMeaningfulContent(offerData)) {
-        console.log("Draft has meaningful content, returning");
-        return offerData;
-      } else {
-        // If draft doesn't have meaningful content, delete it
-        console.log("Draft has no meaningful content, deleting");
-        await deleteDraftFromDatabase(userId);
-        return null;
+      // Save to database for future retrievals
+      try {
+        await saveDraftToDatabase(userId, localDraft);
+        console.log("Local storage draft saved to database");
+      } catch (saveError) {
+        console.error("Failed to save local storage draft to database:", saveError);
       }
-    } else {
-      console.log("No draft found for user");
+      
+      return localDraft;
     }
     
     return null;
@@ -185,6 +248,8 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
 // Delete draft from database
 export const deleteDraftFromDatabase = async (userId: string): Promise<void> => {
   try {
+    console.log("Deleting draft from database for user:", userId);
+    
     const { error } = await supabase
       .from('saved_offers')
       .delete()
@@ -194,6 +259,8 @@ export const deleteDraftFromDatabase = async (userId: string): Promise<void> => 
     if (error) {
       throw error;
     }
+    
+    console.log("Draft deleted from database successfully");
     
     // Also clear from local storage
     clearDraftFromLocalStorage();

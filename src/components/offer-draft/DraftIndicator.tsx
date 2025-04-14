@@ -35,7 +35,7 @@ const hasMeaningfulContent = (draft: any): boolean => {
 };
 
 export const DraftIndicator = () => {
-  const { hasUserInteracted, lastSaved, setOffer, resetOffer } = useOffer();
+  const { hasUserInteracted, lastSaved } = useOffer();
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
@@ -86,28 +86,28 @@ export const DraftIndicator = () => {
         if (draftOffer && hasMeaningfulContent(draftOffer)) {
           console.log("DraftIndicator: Draft found with data:", draftOffer);
           
-          // Navigate first, then we'll load the draft in NewOfferPage
+          // Navigate with clear state that we want to load this draft
           navigate('/new-offer', { 
             state: { 
               loadDraft: true,
-              draftId: user.id // Use user ID as draft identifier
-            } 
+              draftId: user.id, // Use user ID as draft identifier
+              timestamp: new Date().getTime() // Add timestamp to ensure state freshness
+            },
+            replace: true // Replace current history entry to prevent back issues
           });
         } else {
           console.log("DraftIndicator: No valid draft found, creating new offer");
-          await resetOffer();
-          navigate('/new-offer');
+          navigate('/new-offer', { replace: true });
         }
       } else {
         // Just navigate to new offer page
         console.log("DraftIndicator: No user or draft, creating new offer");
-        navigate('/new-offer');
+        navigate('/new-offer', { replace: true });
       }
     } catch (error) {
       console.error("Error in draft navigation:", error);
       // Fall back to starting a new offer
-      await resetOffer();
-      navigate('/new-offer');
+      navigate('/new-offer', { replace: true });
     } finally {
       setIsNavigating(false);
     }

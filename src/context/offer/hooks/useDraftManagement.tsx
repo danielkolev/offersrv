@@ -7,12 +7,13 @@ import { useLanguage } from '@/context/LanguageContext';
 import { 
   saveDraftToDatabase, 
   getLatestDraftFromDatabase, 
-  deleteDraftFromDatabase 
+  deleteDraftFromDatabase,
+  saveDraftToLocalStorage 
 } from '@/components/management/offers/draftOffersService';
 import { defaultOffer } from '../defaultValues';
 
-// Auto-save interval in milliseconds (5 seconds)
-const AUTO_SAVE_INTERVAL = 5000;
+// Auto-save interval in milliseconds (3 seconds)
+const AUTO_SAVE_INTERVAL = 3000;
 
 export interface DraftState {
   isDirty: boolean;
@@ -71,48 +72,59 @@ export function useDraftManagement(
   const [createdAt, setCreatedAt] = useState<Date>(new Date());
   // New state to track if we have meaningful content
   const [hasMeaningfulChanges, setHasMeaningfulChanges] = useState(false);
+  // Track if we're currently loading a draft to prevent double-saves
+  const [isLoadingDraft, setIsLoadingDraft] = useState(true);
 
   // Load draft on initial mount
   useEffect(() => {
+    let isMounted = true;
+    
     const loadDraft = async () => {
-      if (user) {
-        try {
-          console.log("Attempting to load draft for user:", user.id);
-          const draft = await getLatestDraftFromDatabase(user.id);
-          
-          if (draft) {
-            console.log("Draft found, checking for meaningful content");
-            // Only load drafts that have meaningful content
-            if (hasMeaningfulContent(draft)) {
-              console.log("useDraftManagement: Loading draft with data:", draft);
-              setOffer(draft);
-              setLastSaved(new Date());
-              setHasUserInteracted(true);
-              setHasMeaningfulChanges(true);
-              // If the draft has a creation date, use it
-              if (draft.createdAt) {
-                setCreatedAt(new Date(draft.createdAt));
-              }
-              toast({
-                title: t.offer.draftLoaded,
-                description: t.offer.draftRestoredDescription,
-              });
-            } else {
-              console.log("Draft has no meaningful content, deleting it");
-              // If draft doesn't have meaningful content, delete it
-              await deleteDraftFromDatabase(user.id);
+      if (!user) {
+        setIsLoadingDraft(false);
+        return;
+      }
+      
+      try {
+        console.log("useDraftManagement: Attempting to load draft for user:", user.id);
+        const draft = await getLatestDraftFromDatabase(user.id);
+        
+        if (draft && isMounted) {
+          console.log("Draft found, checking for meaningful content");
+          // Only load drafts that have meaningful content
+          if (hasMeaningfulContent(draft)) {
+            console.log("useDraftManagement: Loading draft with data:", draft);
+            setOffer(draft);
+            setLastSaved(new Date());
+            setHasUserInteracted(true);
+            setHasMeaningfulChanges(true);
+            // If the draft has a creation date, use it
+            if (draft.createdAt) {
+              setCreatedAt(new Date(draft.createdAt));
             }
           } else {
-            console.log("No draft found for user");
+            console.log("Draft has no meaningful content, deleting it");
+            // If draft doesn't have meaningful content, delete it
+            await deleteDraftFromDatabase(user.id);
           }
-        } catch (error) {
-          console.error('Error loading draft:', error);
+        } else {
+          console.log("No draft found for user");
+        }
+      } catch (error) {
+        console.error('Error loading draft:', error);
+      } finally {
+        if (isMounted) {
+          setIsLoadingDraft(false);
         }
       }
     };
 
     loadDraft();
-  }, [user, setOffer, t, toast]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [user, setOffer]);
 
   // Check for meaningful changes whenever the offer changes
   useEffect(() => {
@@ -123,7 +135,7 @@ export function useDraftManagement(
     }
   }, [offer, hasUserInteracted]);
 
-  // Autosave effect
+  // Autosave effect with improved database persistence
   useEffect(() => {
     // Only auto-save if:
     // 1. User is logged in
@@ -131,12 +143,13 @@ export function useDraftManagement(
     // 3. We have unsaved changes
     // 4. User has interacted with the offer
     // 5. There are meaningful changes to save
-    if (!user || !autoSaveEnabled || !isDirty || !hasUserInteracted || !hasMeaningfulChanges) return;
+    // 6. We're not currently loading a draft
+    if (!user || !autoSaveEnabled || !isDirty || !hasUserInteracted || !hasMeaningfulChanges || isLoadingDraft) return;
 
     const autoSaveDraft = async () => {
       setIsAutoSaving(true);
       try {
-        console.log("Auto-saving draft");
+        console.log("Auto-saving draft to database");
         // Add creation and last edited timestamps to the draft
         const draftToSave = {
           ...offer,
@@ -144,13 +157,26 @@ export function useDraftManagement(
           lastEdited: new Date().toISOString()
         };
         
+        // First save to database for persistence
         await saveDraftToDatabase(user.id, draftToSave);
+        
+        // Also save to local storage as a backup
+        saveDraftToLocalStorage(draftToSave);
+        
         setLastSaved(new Date());
         setIsDirty(false);
-        console.log("Draft auto-saved successfully");
+        console.log("Draft auto-saved successfully to database");
       } catch (error) {
-        console.error('Error auto-saving draft:', error);
-        // Silent error handling for auto-save - don't show toast for every failed autosave
+        console.error('Error auto-saving draft to database:', error);
+        // Try to save to local storage as fallback
+        try {
+          saveDraftToLocalStorage(offer);
+          console.log("Draft auto-saved to local storage as fallback");
+          setLastSaved(new Date());
+          setIsDirty(false);
+        } catch (localStorageError) {
+          console.error('Error auto-saving to local storage:', localStorageError);
+        }
       } finally {
         setIsAutoSaving(false);
       }
@@ -158,15 +184,15 @@ export function useDraftManagement(
 
     const timer = setTimeout(autoSaveDraft, AUTO_SAVE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted, hasMeaningfulChanges, createdAt]);
+  }, [offer, user, autoSaveEnabled, isDirty, hasUserInteracted, hasMeaningfulChanges, createdAt, isLoadingDraft]);
 
   // Mark as dirty when offer changes, and set that user has interacted
   useEffect(() => {
     // Only mark as dirty if this isn't the first render and hasUserInteracted is true
-    if (hasUserInteracted) {
+    if (hasUserInteracted && !isLoadingDraft) {
       setIsDirty(true);
     }
-  }, [offer, hasUserInteracted]);
+  }, [offer, hasUserInteracted, isLoadingDraft]);
 
   // Helper function for all update functions to set hasUserInteracted flag
   const markUserInteraction = useCallback(() => {
@@ -181,7 +207,7 @@ export function useDraftManagement(
     
     setIsAutoSaving(true);
     try {
-      console.log("Manually saving draft");
+      console.log("Manually saving draft to database");
       // Only save if user has interacted with the offer AND there are meaningful changes
       if (hasUserInteracted && hasMeaningfulChanges) {
         // Add creation and last edited timestamps
@@ -191,14 +217,19 @@ export function useDraftManagement(
           lastEdited: new Date().toISOString()
         };
         
+        // Save to database first for persistence
         await saveDraftToDatabase(user.id, draftToSave);
+        
+        // Also save to local storage as a backup
+        saveDraftToLocalStorage(draftToSave);
+        
         setLastSaved(new Date());
         setIsDirty(false);
         toast({
           title: t.offer.draftSaved,
           description: t.offer.draftSavedDescription,
         });
-        console.log("Draft saved successfully");
+        console.log("Draft saved successfully to database");
       } else if (hasUserInteracted && !hasMeaningfulChanges) {
         // If user interacted but no meaningful changes, show different message
         console.log("No meaningful changes to save");
@@ -208,12 +239,25 @@ export function useDraftManagement(
         });
       }
     } catch (error) {
-      console.error('Error saving draft:', error);
-      toast({
-        title: t.common.error,
-        description: t.offer.draftSaveError,
-        variant: 'destructive',
-      });
+      console.error('Error saving draft to database:', error);
+      
+      // Try to save to local storage as fallback
+      try {
+        saveDraftToLocalStorage(offer);
+        setLastSaved(new Date());
+        setIsDirty(false);
+        toast({
+          title: t.offer.draftSaved,
+          description: t.offer.draftSavedToLocalStorage,
+        });
+      } catch (localStorageError) {
+        console.error('Error saving to local storage:', localStorageError);
+        toast({
+          title: t.common.error,
+          description: t.offer.draftSaveError,
+          variant: 'destructive',
+        });
+      }
     } finally {
       setIsAutoSaving(false);
     }

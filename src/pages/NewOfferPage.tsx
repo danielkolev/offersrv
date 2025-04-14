@@ -25,25 +25,29 @@ const NewOfferPage = () => {
   // Check if we should load a draft based on navigation state
   const shouldLoadDraft = location.state?.loadDraft === true;
   const draftId = location.state?.draftId;
+  const stateTimestamp = location.state?.timestamp || 0;
   
-  // Използваме къстъм hook за зареждане на данните за компанията
+  // Use custom hook for loading company data
   const { isLoading: isCompanyLoading } = useCompanyData(selectedCompanyId);
 
   // Check for draft and initialize the offer state
   useEffect(() => {
+    let isMounted = true;
+    
     const initializeOfferState = async () => {
-      if (!user || hasInitialized) return;
+      if (!user || hasInitialized || !isMounted) return;
       
       setIsDraftLoading(true);
       try {
-        console.log("NewOfferPage: Initializing offer state, shouldLoadDraft:", shouldLoadDraft);
+        console.log("NewOfferPage: Initializing offer state, shouldLoadDraft:", shouldLoadDraft, "timestamp:", stateTimestamp);
         
         if (shouldLoadDraft && draftId) {
           console.log("NewOfferPage: Should load draft with ID:", draftId);
+          
           // Explicitly load the draft if we came from a "load draft" action
           const draftOffer = await getLatestDraftFromDatabase(user.id);
           
-          if (draftOffer) {
+          if (draftOffer && isMounted) {
             console.log('NewOfferPage: Loading draft with data:', draftOffer);
             
             // Make sure we have valid offer data before setting it
@@ -52,7 +56,9 @@ const NewOfferPage = () => {
               await resetOffer();
               
               // Small delay to ensure reset is complete
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await new Promise(resolve => setTimeout(resolve, 200));
+              
+              if (!isMounted) return;
               
               // Now set the offer with the draft data
               setOffer(draftOffer);
@@ -73,23 +79,26 @@ const NewOfferPage = () => {
               }
             } else {
               console.error('NewOfferPage: Draft has invalid data:', draftOffer);
-              await resetOffer();
+              if (isMounted) await resetOffer();
             }
           } else {
             console.log('NewOfferPage: No draft found, resetting offer');
-            await resetOffer();
+            if (isMounted) await resetOffer();
           }
         } else {
           // Normal initialization - check for draft as fallback
           console.log('NewOfferPage: Normal initialization, checking for draft');
           const draftOffer = await getLatestDraftFromDatabase(user.id);
           
-          if (draftOffer) {
+          if (draftOffer && isMounted) {
             console.log('NewOfferPage: Found draft during normal initialization:', draftOffer);
             
             if (draftOffer.client && draftOffer.products && draftOffer.details) {
               await resetOffer();
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await new Promise(resolve => setTimeout(resolve, 200));
+              
+              if (!isMounted) return;
+              
               setOffer(draftOffer);
               
               // If the draft has a company selected, use that
@@ -102,27 +111,33 @@ const NewOfferPage = () => {
               }
             } else {
               console.error('NewOfferPage: Draft has invalid data:', draftOffer);
-              await resetOffer();
+              if (isMounted) await resetOffer();
             }
           } else {
             // No draft found, reset to default state
             console.log('NewOfferPage: No draft found, resetting offer');
-            await resetOffer();
+            if (isMounted) await resetOffer();
           }
         }
         
-        setHasInitialized(true);
+        if (isMounted) setHasInitialized(true);
       } catch (error) {
         console.error('Error during offer initialization:', error);
-        resetOffer();
-        setHasInitialized(true);
+        if (isMounted) {
+          await resetOffer();
+          setHasInitialized(true);
+        }
       } finally {
-        setIsDraftLoading(false);
+        if (isMounted) setIsDraftLoading(false);
       }
     };
 
     initializeOfferState();
-  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, draftId, toast, t.offer.draftLoaded, t.offer.draftRestoredDescription]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, draftId, toast, t.offer.draftLoaded, t.offer.draftRestoredDescription, stateTimestamp]);
 
   // Use the company selected in the main menu (stored in localStorage)
   useEffect(() => {

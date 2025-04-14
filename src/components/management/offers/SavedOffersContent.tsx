@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -6,7 +7,7 @@ import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Save, Loader2, PlusCircle, Filter } from 'lucide-react';
+import { Search, Save, Loader2, PlusCircle, Filter, FileEdit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
 import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { Card, CardContent } from '@/components/ui/card';
 
 const SavedOffersContent: React.FC = () => {
   const { user } = useAuth();
@@ -37,6 +39,7 @@ const SavedOffersContent: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
   
   // Filter states
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -46,22 +49,20 @@ const SavedOffersContent: React.FC = () => {
   useEffect(() => {
     if (user) {
       handleFetchSavedOffers();
-      checkForDraftOffer(); // Проверка за наличие на чернова
+      checkForDraftOffer();
     }
   }, [user]);
 
-  // Проверка за наличие на чернова
+  // Check for existing draft offer
   const checkForDraftOffer = async () => {
     if (!user) return;
     
     try {
       const draftOffer = await getLatestDraftFromDatabase(user.id);
       if (draftOffer) {
-        toast({
-          title: t.offer.draftStatus,
-          description: t.offer.draftRestoredDescription,
-          duration: 5000,
-        });
+        setHasDraft(true);
+      } else {
+        setHasDraft(false);
       }
     } catch (error) {
       console.error("Error checking for draft offer:", error);
@@ -148,19 +149,21 @@ const SavedOffersContent: React.FC = () => {
           state: { 
             loadSavedOffer: true,
             savedOfferId: savedOffer.id,
-            offerData: savedOffer.offer_data
-          }
+            offerData: savedOffer.offer_data,
+            timestamp: new Date().getTime()
+          },
+          replace: true
         });
       } else {
         console.error("SavedOffersContent: Invalid offer data:", savedOffer);
         toast({
           title: t.common.error,
-          description: "Невалидни данни за оферта",
+          description: "Invalid offer data",
           variant: 'destructive',
         });
         
         await resetOffer();
-        navigate('/new-offer');
+        navigate('/new-offer', { replace: true });
       }
     } catch (error) {
       console.error("SavedOffersContent: Error loading offer:", error);
@@ -171,7 +174,43 @@ const SavedOffersContent: React.FC = () => {
       });
       
       await resetOffer();
-      navigate('/new-offer');
+      navigate('/new-offer', { replace: true });
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
+  const handleOpenDraftOffer = async () => {
+    if (isNavigating) return;
+    setIsNavigating(true);
+    
+    try {
+      if (user && hasDraft) {
+        console.log("SavedOffersContent: Opening draft offer");
+        
+        // Navigate with state that indicates we're loading a draft
+        navigate('/new-offer', {
+          state: { 
+            loadDraft: true,
+            draftId: user.id,
+            timestamp: new Date().getTime()
+          },
+          replace: true
+        });
+      } else {
+        console.log("SavedOffersContent: No draft found");
+        await resetOffer();
+        navigate('/new-offer', { replace: true });
+      }
+    } catch (error) {
+      console.error("Error opening draft:", error);
+      toast({
+        title: t.common.error,
+        description: "Error opening draft offer",
+        variant: 'destructive'
+      });
+      await resetOffer();
+      navigate('/new-offer', { replace: true });
     } finally {
       setIsNavigating(false);
     }
@@ -180,7 +219,7 @@ const SavedOffersContent: React.FC = () => {
   const handleCreateNewOffer = async () => {
     // Reset offer state before creating a new one
     await resetOffer();
-    navigate('/new-offer');
+    navigate('/new-offer', { replace: true });
   };
   
   const getFilteredOffers = () => {
@@ -219,7 +258,8 @@ const SavedOffersContent: React.FC = () => {
       });
     }
     
-    return filtered;
+    // Only show non-draft offers in the main list
+    return filtered.filter(offer => !offer.is_draft);
   };
   
   const resetFilters = () => {
@@ -256,6 +296,37 @@ const SavedOffersContent: React.FC = () => {
           </Button>
         </div>
       </div>
+      
+      {hasDraft && (
+        <div className="mb-6">
+          <h2 className="text-lg font-medium mb-2">{t.offer.draftStatus}</h2>
+          <Card 
+            className="hover:shadow-md transition-shadow cursor-pointer border-amber-200 bg-amber-50"
+            onClick={handleOpenDraftOffer}
+          >
+            <CardContent className="p-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="bg-amber-100 p-2 rounded-full text-amber-700">
+                    <FileEdit size={18} />
+                  </div>
+                  <div>
+                    <div className="font-medium text-amber-800">
+                      {t.offer.draftInProgress}
+                    </div>
+                    <div className="text-sm text-amber-600">
+                      {t.offer.continueWorking}
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" className="border-amber-400 text-amber-700 hover:bg-amber-100">
+                  {t.offer.openDraft}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
       
       <div className="flex gap-2 mb-4">
         <div className="relative flex-1">
