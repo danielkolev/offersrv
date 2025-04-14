@@ -57,5 +57,30 @@ export const common: CommonTranslations = {
   configuration: "Configuration",
   apply: "Apply",
   pageOf: "Page {current} of {total}",
-  showingItems: "Showing {start}-{end} of {total} items"
+  showingItems: "Showing {start}-{end} of {total} items",
+  
+  // Additional properties
+  account: "Account",
+  newOffer: "New Offer",
+  newClient: "New Client",
+  newProduct: "New Product",
+  create: "Create",
+  manageAccount: "Manage Account",
+  back: "Back",
+  confirmation: "Confirmation",
+  all: "All",
+  reset: "Reset",
+  noName: "No Name",
+  update: "Update",
+  description: "Description",
+  saving: "Saving...",
+  home: "Home",
+  templates: "Templates",
+  navigation: "Navigation",
+  preview: "Preview",
+  retry: "Retry",
+  welcome: "Welcome",
+  unauthorized: "Unauthorized",
+  expandAll: "Expand All",
+  collapseAll: "Collapse All"
 };

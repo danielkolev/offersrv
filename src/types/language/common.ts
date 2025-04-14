@@ -56,4 +56,29 @@ export interface CommonTranslations {
   apply: string;
   pageOf: string;
   showingItems: string;
+  
+  // Additional properties needed based on error messages
+  account: string;
+  newOffer: string;
+  newClient: string;
+  newProduct: string;
+  create: string;
+  manageAccount: string;
+  back: string;
+  confirmation: string;
+  all: string;
+  reset: string;
+  noName: string;
+  update: string;
+  description: string;
+  saving: string;
+  home: string;
+  templates: string;
+  navigation: string;
+  preview: string;
+  retry: string;
+  welcome: string;
+  unauthorized: string;
+  expandAll: string;
+  collapseAll: string;
 }

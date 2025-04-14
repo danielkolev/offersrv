@@ -17,6 +17,7 @@ import { TotalsTranslations } from './totals';
 import { CompanyInfoTranslations } from './companyInfo';
 
 export type SupportedLanguage = 'bg' | 'en';
+export type SupportedCurrency = 'BGN' | 'EUR' | 'USD';
 
 export interface Translations {
   auth: AuthTranslations;

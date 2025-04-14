@@ -11,17 +11,9 @@ import { SettingsTranslations } from './settings';
 import { UserTranslations } from './user';
 import { SupportedLanguage, SupportedCurrency, Translations } from './base';
 import { CompanyInfoTranslations } from './companyInfo';
-
-// Define HomeType only once
-export interface HomeType {
-  quickActions: string;
-  createOfferDescription: string;
-  createClientDescription: string;
-  createProductDescription: string;
-  templatesDescription: string;
-  noRecentOffers: string;
-  noRecentClients: string;
-}
+import { HomeTranslations } from './home';
+import { OfferDetailsTranslations } from './offerDetails';
+import { TotalsTranslations } from './totals';
 
 // Export all types for easy access
 export type {
@@ -40,6 +32,8 @@ export type {
   SavedClientsTranslations,
   ClientInfoTranslations,
   SavedProductsTranslations,
-  ProductsTranslations
-  // HomeType is already exported above, so don't include it here
+  ProductsTranslations,
+  HomeTranslations,
+  OfferDetailsTranslations,
+  TotalsTranslations
 };

@@ -57,5 +57,30 @@ export const common: CommonTranslations = {
   configuration: "Конфигурация",
   apply: "Приложи",
   pageOf: "Страница {current} от {total}",
-  showingItems: "Показване на {start}-{end} от {total} елемента"
+  showingItems: "Показване на {start}-{end} от {total} елемента",
+  
+  // Additional properties
+  account: "Акаунт",
+  newOffer: "Нова оферта",
+  newClient: "Нов клиент",
+  newProduct: "Нов продукт",
+  create: "Създай",
+  manageAccount: "Управление на акаунта",
+  back: "Назад",
+  confirmation: "Потвърждение",
+  all: "Всички",
+  reset: "Нулиране",
+  noName: "Без име",
+  update: "Обнови",
+  description: "Описание",
+  saving: "Запазване...",
+  home: "Начало",
+  templates: "Шаблони",
+  navigation: "Навигация",
+  preview: "Преглед",
+  retry: "Опитай отново",
+  welcome: "Добре дошли",
+  unauthorized: "Неоторизиран достъп",
+  expandAll: "Разгъни всички",
+  collapseAll: "Свий всички"
 };
