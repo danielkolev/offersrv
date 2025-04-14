@@ -1,341 +1,340 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTemplateManagement } from '@/hooks/use-template-management';
-import BackButton from '@/components/navigation/BackButton';
-import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileText, Settings, Eye, Edit, Trash2, Plus, Star, BookOpen } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTemplateManagement } from '@/hooks/use-template-management';
+import { PlusCircle, Pencil, Trash2, CheckCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
+import { useNavigate } from 'react-router-dom';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const TemplatesPage = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { toast } = useToast();
-  const { user } = useAuth();
-  const { 
-    userTemplates, 
-    sampleTemplates, 
-    isLoading, 
-    createTemplate, 
-    deleteTemplate, 
-    editTemplate,
-    setAsDefaultTemplate,
+  const navigate = useNavigate();
+  
+  const [activeTab, setActiveTab] = useState('templates');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [showUserTemplatesOnly, setShowUserTemplatesOnly] = useState(true);
+  
+  const {
+    userTemplates,
+    sampleTemplates,
+    isLoading,
+    createTemplate,
+    deleteTemplate,
+    updateTemplate,
+    getTemplateById,
+    setDefaultTemplate,
     defaultTemplateId
   } = useTemplateManagement();
   
-  const [activeTab, setActiveTab] = useState<string>('templates');
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | undefined>();
-  const [previewMode, setPreviewMode] = useState(false);
-  const [sampleTemplatesOpen, setSampleTemplatesOpen] = useState(false);
-
-  // Filter out sample templates for the user templates list
-  const filteredUserTemplates = userTemplates.filter(template => !template.isSample);
-
-  useEffect(() => {
-    // Auto-open sample templates if there are no user templates
-    if (filteredUserTemplates.length === 0 && !isLoading) {
-      setSampleTemplatesOpen(true);
-    }
-  }, [filteredUserTemplates, isLoading]);
-
-  if (!user) {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold">{t.common.unauthorized}</h2>
-          <p className="mt-2 text-gray-600">{t.auth.notAuthenticated}</p>
-        </div>
-      </div>
-    );
-  }
-
+  const allTemplates = showUserTemplatesOnly
+    ? userTemplates
+    : [...userTemplates, ...sampleTemplates];
+  
   const handleCreateTemplate = () => {
-    setSelectedTemplateId(undefined);
-    setActiveTab('settings');
-    setPreviewMode(false);
+    setSelectedTemplateId(null);
+    setIsSettingsOpen(true);
   };
-
-  const handleEditTemplate = (templateId: string) => {
-    setSelectedTemplateId(templateId);
-    setActiveTab('settings');
-    setPreviewMode(false);
+  
+  const handleEditTemplate = (id: string) => {
+    setSelectedTemplateId(id);
+    setIsSettingsOpen(true);
   };
-
-  const handleViewTemplate = (templateId: string) => {
-    setSelectedTemplateId(templateId);
-    setPreviewMode(true);
+  
+  const handleDeleteTemplate = (id: string) => {
+    setSelectedTemplateId(id);
+    setIsDeleteDialogOpen(true);
   };
-
-  const handleClosePreview = () => {
-    setPreviewMode(false);
-  };
-
-  const handleDeleteTemplate = (templateId: string) => {
-    if (window.confirm(t.offer.templates.confirmDelete)) {
-      deleteTemplate(templateId);
+  
+  const confirmDelete = async () => {
+    if (!selectedTemplateId) return;
+    
+    try {
+      await deleteTemplate(selectedTemplateId);
       toast({
         title: t.common.success,
-        description: t.offer.templates.templateDeleted
+        description: t.settings.templateDeleted
+      });
+    } catch (error) {
+      console.error('Error deleting template:', error);
+      toast({
+        title: t.common.error,
+        description: t.settings.deleteTemplateFailed,
+        variant: 'destructive'
+      });
+    }
+    
+    setIsDeleteDialogOpen(false);
+  };
+  
+  const handleSaveTemplate = async (settings: any) => {
+    try {
+      if (selectedTemplateId) {
+        // Updating existing template
+        await updateTemplate(selectedTemplateId, settings);
+        toast({
+          title: t.common.success,
+          description: t.settings.templateUpdated
+        });
+      } else {
+        // Creating new template
+        await createTemplate(settings.template.name, settings.template.description, {
+          language: settings.template.language,
+          settings
+        });
+        toast({
+          title: t.common.success,
+          description: t.settings.templateCreated
+        });
+      }
+      setIsSettingsOpen(false);
+    } catch (error) {
+      console.error('Error saving template:', error);
+      toast({
+        title: t.common.error,
+        description: t.settings.saveTemplateFailed,
+        variant: 'destructive'
       });
     }
   };
   
-  const handleSetAsDefault = (templateId: string, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setAsDefaultTemplate(templateId);
+  const handleSetAsDefault = async (id: string) => {
+    try {
+      await setDefaultTemplate(id);
+      toast({
+        title: t.common.success,
+        description: t.settings.defaultTemplateSet
+      });
+    } catch (error) {
+      console.error('Error setting default template:', error);
+      toast({
+        title: t.common.error,
+        description: t.settings.setDefaultFailed,
+        variant: 'destructive'
+      });
+    }
   };
-
-  return (
-    <div className="flex-1 space-y-6 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <BackButton label={t.common.back} to="/" />
-          <h1 className="text-3xl font-bold text-offer-gray">
-            {t.offer.templates.title}
-          </h1>
-        </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline"
-            onClick={() => {
-              setActiveTab('settings');
-              setSelectedTemplateId(undefined);
+  
+  const handleUseTemplate = (id: string) => {
+    navigate(`/create-offer?template=${id}`);
+  };
+  
+  const renderTemplateCard = (template: any) => {
+    const isDefault = template.id === defaultTemplateId;
+    const isUserTemplate = userTemplates.some(t => t.id === template.id);
+    
+    return (
+      <Card key={template.id} className="overflow-hidden">
+        <div 
+          className="h-3" 
+          style={{ 
+            backgroundColor: 
+              template.settings?.appearance?.primaryColor || 
+              '#0891B2' 
+          }}
+        ></div>
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-lg">{template.name}</CardTitle>
+              <CardDescription>{template.description}</CardDescription>
+            </div>
+            {isDefault && (
+              <Badge variant="outline" className="ml-2 bg-primary/10">
+                {t.settings.default}
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="pb-2">
+          <div 
+            className="h-32 rounded-md overflow-hidden bg-gray-50 flex items-center justify-center"
+            style={{ 
+              backgroundColor: template.settings?.appearance?.secondaryColor || '#F0F9FF',
+              color: template.settings?.appearance?.primaryColor || '#0891B2',
             }}
           >
-            <Settings className="h-4 w-4 mr-2" />
-            {t.common.settings}
+            <div className="text-center p-4">
+              <p className="text-sm opacity-70">
+                {template.settings?.designTemplate === 'modern-dark' ? 'Modern Dark Template' :
+                 template.settings?.designTemplate === 'gradient' ? 'Gradient Template' :
+                 template.settings?.designTemplate === 'business-pro' ? 'Business Pro Template' :
+                 'Classic Template'}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between pt-0">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => handleUseTemplate(template.id)}
+          >
+            {t.settings.useTemplate}
           </Button>
+          
+          <div className="flex gap-1">
+            {isUserTemplate && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => handleEditTemplate(template.id)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => handleDeleteTemplate(template.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                
+                {!isDefault && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleSetAsDefault(template.id)}
+                    title={t.settings.setAsDefault}
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    );
+  };
+  
+  const renderTemplates = () => {
+    if (isLoading) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardHeader>
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-1/2 mt-2" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-32 w-full" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="h-9 w-20" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      );
+    }
+    
+    if (allTemplates.length === 0) {
+      return (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">{t.settings.noTemplates}</p>
           <Button onClick={handleCreateTemplate}>
-            <Plus className="h-4 w-4 mr-2" />
-            {t.offer.templates.createNew}
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {t.settings.createTemplate}
           </Button>
         </div>
+      );
+    }
+    
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {allTemplates.map(renderTemplateCard)}
+        
+        <Card className="flex flex-col items-center justify-center p-6 border-dashed cursor-pointer hover:bg-accent/20 transition-colors"
+          onClick={handleCreateTemplate}
+        >
+          <PlusCircle className="h-8 w-8 mb-2 text-muted-foreground" />
+          <p className="text-muted-foreground font-medium">{t.settings.createNewTemplate}</p>
+        </Card>
+      </div>
+    );
+  };
+  
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">{t.settings.templates}</h1>
+        <Button onClick={handleCreateTemplate} className="self-start">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {t.settings.createTemplate}
+        </Button>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="templates">
-            <FileText className="h-4 w-4 mr-2" />
-            {t.offer.templates.title}
-          </TabsTrigger>
-          <TabsTrigger value="settings">
-            <Settings className="h-4 w-4 mr-2" />
-            {t.common.settings}
-          </TabsTrigger>
+        <TabsList className="mb-4">
+          <TabsTrigger value="templates">{t.settings.offerTemplates}</TabsTrigger>
         </TabsList>
         
         <TabsContent value="templates">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t.offer.templates.availableTemplates}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="text-center py-8">{t.common.loading}</div>
-              ) : (
-                <>
-                  {/* User Templates */}
-                  {filteredUserTemplates.length > 0 && (
-                    <div className="mb-6">
-                      <h3 className="text-lg font-medium mb-3">{t.offer.templates.userTemplates}</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {filteredUserTemplates.map((template) => (
-                          <Card key={template.id} className="border rounded-lg shadow-sm">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-lg flex items-center gap-1">
-                                {template.name}
-                                {template.id === defaultTemplateId && (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Star className="h-4 w-4 text-amber-500 ml-1" />
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        {t.offer.templates.defaultTemplate}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                )}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-sm text-gray-500 mb-4">
-                                {template.description || t.offer.templates.noDescription}
-                              </p>
-                              <div className="flex justify-between gap-2">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  onClick={() => handleViewTemplate(template.id)}
-                                  className="gap-1"
-                                >
-                                  <Eye className="h-3.5 w-3.5" />
-                                  {t.common.view}
-                                </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  onClick={() => handleEditTemplate(template.id)}
-                                  className="gap-1"
-                                >
-                                  <Edit className="h-3.5 w-3.5" />
-                                  {t.common.edit}
-                                </Button>
-                                {template.id !== defaultTemplateId ? (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button 
-                                          variant="outline" 
-                                          size="sm" 
-                                          onClick={(e) => handleSetAsDefault(template.id, e)}
-                                          className="gap-1"
-                                        >
-                                          <Star className="h-3.5 w-3.5" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        {t.offer.templates.setAsDefault}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                ) : null}
-                                <Button 
-                                  variant="destructive" 
-                                  size="sm" 
-                                  onClick={() => handleDeleteTemplate(template.id)}
-                                  className="gap-1"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                  {t.common.delete}
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Sample Templates */}
-                  <Collapsible open={sampleTemplatesOpen} onOpenChange={setSampleTemplatesOpen}>
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-medium">{t.offer.templates.sampleTemplates}</h3>
-                      <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          {sampleTemplatesOpen 
-                            ? (language === 'bg' ? 'Скрий' : 'Hide') 
-                            : (language === 'bg' ? 'Покажи' : 'Show')}
-                        </Button>
-                      </CollapsibleTrigger>
-                    </div>
-                    
-                    <CollapsibleContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {sampleTemplates.map((template) => (
-                          <Card 
-                            key={template.id} 
-                            className="border rounded-lg shadow-sm"
-                            style={{
-                              borderLeftColor: template.settings?.appearance?.primaryColor || '#1E88E5',
-                              borderLeftWidth: '4px'
-                            }}
-                          >
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-lg flex items-center gap-1">
-                                {template.name}
-                                {template.id === defaultTemplateId && (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Star className="h-4 w-4 text-amber-500 ml-1" />
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        {t.offer.templates.defaultTemplate}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                )}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-sm text-gray-500 mb-4">
-                                {template.description || t.offer.templates.noDescription}
-                              </p>
-                              <div className="flex justify-between gap-2">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  onClick={() => handleViewTemplate(template.id)}
-                                  className="gap-1 flex-1"
-                                >
-                                  <Eye className="h-3.5 w-3.5" />
-                                  {t.common.view}
-                                </Button>
-                                {template.id !== defaultTemplateId ? (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button 
-                                          variant="outline" 
-                                          size="sm" 
-                                          onClick={(e) => handleSetAsDefault(template.id, e)}
-                                          className="gap-1"
-                                        >
-                                          <Star className="h-3.5 w-3.5" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        {t.offer.templates.setAsDefault}
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                ) : null}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                  
-                  {filteredUserTemplates.length === 0 && !sampleTemplates.length && (
-                    <div className="text-center py-8 text-gray-500">
-                      {t.offer.templates.noTemplatesFound}
-                    </div>
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="settings">
-          <TemplateSettings selectedTemplateId={selectedTemplateId} />
+          <div className="mb-4 flex items-center justify-end">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="show-user-templates"
+                checked={showUserTemplatesOnly}
+                onCheckedChange={setShowUserTemplatesOnly}
+              />
+              <Label htmlFor="show-user-templates">
+                {t.settings.showUserTemplatesOnly}
+              </Label>
+            </div>
+          </div>
+          
+          {renderTemplates()}
         </TabsContent>
       </Tabs>
       
-      {/* Template Preview Dialog */}
-      <Dialog open={previewMode} onOpenChange={handleClosePreview}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>
-              {t.offer.templates.templatePreview}: {' '}
-              {(userTemplates.find(t => t.id === selectedTemplateId) || 
-                sampleTemplates.find(t => t.id === selectedTemplateId))?.name || ''}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <TemplateSettings selectedTemplateId={selectedTemplateId} />
-          </div>
+      {/* Template Settings Dialog */}
+      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+        <DialogContent className="max-w-[1000px] max-h-[90vh] overflow-y-auto">
+          <TemplateSettings 
+            initialSettings={selectedTemplateId ? getTemplateById(selectedTemplateId)?.settings : undefined}
+            onSave={handleSaveTemplate}
+            onCancel={() => setIsSettingsOpen(false)}
+            isEditing={!!selectedTemplateId}
+          />
         </DialogContent>
       </Dialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.common.confirmDelete}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.settings.confirmDeleteTemplate}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t.common.delete}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

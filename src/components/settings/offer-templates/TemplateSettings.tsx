@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +18,7 @@ import { HexColorPicker } from 'react-colorful';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import TemplatePreview from './TemplatePreview';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -80,9 +81,9 @@ const templateSettingsSchema = z.object({
   designTemplate: z.string().default('classic'),
 });
 
-type TemplateSettingsFormValues = z.infer<typeof templateSettingsSchema>;
+export type TemplateSettingsFormValues = z.infer<typeof templateSettingsSchema>;
 
-interface TemplateSettingsProps {
+export interface TemplateSettingsProps {
   initialSettings?: any;
   onSave?: (settings: any) => void;
   onCancel?: () => void;
@@ -163,7 +164,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
       onSave(data);
     } else {
       toast({
-        title: t.success,
+        title: t.common.success,
         description: t.settings.templateSaved,
       });
     }
@@ -927,7 +928,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
             <div className="flex justify-between">
               {onCancel && (
                 <Button type="button" variant="outline" onClick={onCancel}>
-                  {t.cancel}
+                  {t.common.cancel}
                 </Button>
               )}
               <Button type="submit" className="ml-auto">
@@ -941,7 +942,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-4">{t.settings.preview}</h3>
-                <TemplatePreview settings={formValues} />
+                <TemplatePreview settings={formValues as any} />
               </CardContent>
             </Card>
           </div>

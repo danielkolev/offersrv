@@ -1,385 +1,322 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileText, Save, BookOpen, Info, Languages, Settings, Star, PlusCircle } from 'lucide-react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useTemplateManagement } from '@/hooks/use-template-management';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
-import { useTemplateManagement, TemplateType } from '@/hooks/use-template-management';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { PlusCircle, Copy, Trash2, Edit, CheckCircle } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { useRouter } from 'react-router-dom';
 
-// This is a more focused version of the OfferTemplates component
-// to be used in the offer creation flow
 const OfferTemplatesSection = () => {
-  const { applyTemplate, offer } = useOffer();
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('templates');
-  const [templateName, setTemplateName] = useState('');
-  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | undefined>();
-  const [sampleTemplatesOpen, setSampleTemplatesOpen] = useState(false);
-
+  const [activeTab, setActiveTab] = useState('user');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
+  
   const {
     userTemplates,
     sampleTemplates,
     isLoading,
     createTemplate,
     deleteTemplate,
-    editTemplate,
-    refreshTemplates,
+    updateTemplate,
     getTemplateById,
-    setAsDefaultTemplate,
-    defaultTemplateId,
-    resetToDefaultTemplate
+    setDefaultTemplate,
+    defaultTemplateId
   } = useTemplateManagement();
   
-  // Filter templates based on the current language
-  const filteredUserTemplates = userTemplates.filter(
-    template => !template.isSample && (template.language === 'all' || template.language === offer.details.offerLanguage)
-  );
-  
-  const filteredSampleTemplates = sampleTemplates.filter(
-    template => template.language === 'all' || template.language === offer.details.offerLanguage
-  );
-
-  useEffect(() => {
-    // If there's a default template, select it initially
-    if (defaultTemplateId && !selectedTemplateId) {
-      const defaultTemplate = userTemplates.find(t => t.id === defaultTemplateId);
-      if (defaultTemplate) {
-        setSelectedTemplateId(defaultTemplateId);
-      }
-    }
-  }, [userTemplates, defaultTemplateId]);
-
-  const handleSelectTemplate = (templateId: string) => {
-    const template = userTemplates.find(t => t.id === templateId);
-    if (template) {
-      applyTemplate(templateId);
-      setSelectedTemplateId(templateId);
-    }
+  const handleCreateTemplate = () => {
+    setSelectedTemplateId(null);
+    setIsSettingsOpen(true);
   };
   
-  const handleSaveAsTemplate = async () => {
-    if (!templateName.trim()) return;
-    
+  const handleEditTemplate = (id: string) => {
+    setSelectedTemplateId(id);
+    setIsSettingsOpen(true);
+  };
+  
+  const handleCloseSettings = () => {
+    setIsSettingsOpen(false);
+    setSelectedTemplateId(null);
+  };
+  
+  const handleSaveTemplate = async (settings: any) => {
     try {
-      const newTemplateId = await createTemplate(templateName, '');
-      setTemplateName('');
-      setSaveDialogOpen(false);
-      refreshTemplates();
-      
-      if (newTemplateId) {
-        setSelectedTemplateId(newTemplateId);
+      if (selectedTemplateId) {
+        // Edit existing template
+        await updateTemplate(selectedTemplateId, settings);
+        toast({
+          title: t.common.success,
+          description: t.settings.templateSaved,
+        });
+      } else {
+        // Create new template
+        await createTemplate(
+          settings.template.name,
+          settings.template.description,
+          {
+            language: settings.template.language,
+            settings
+          }
+        );
+        toast({
+          title: t.common.success,
+          description: t.settings.templateSaved,
+        });
       }
+      setIsSettingsOpen(false);
     } catch (error) {
       console.error('Error saving template:', error);
+      toast({
+        title: t.common.error,
+        description: 'Failed to save template',
+        variant: 'destructive',
+      });
     }
   };
   
-  const handleSetAsDefault = (templateId: string) => {
-    setAsDefaultTemplate(templateId);
+  const handleDeleteTemplate = (id: string) => {
+    setSelectedTemplateId(id);
+    setIsDeleteDialogOpen(true);
   };
   
-  const handleResetToDefault = () => {
-    const defaultTemplate = resetToDefaultTemplate();
-    if (defaultTemplate) {
-      applyTemplate(defaultTemplate.id);
-      setSelectedTemplateId(defaultTemplate.id);
+  const confirmDelete = async () => {
+    if (selectedTemplateId) {
+      await deleteTemplate(selectedTemplateId);
+      setIsDeleteDialogOpen(false);
+      setSelectedTemplateId(null);
+      toast({
+        title: t.common.success,
+        description: 'Template deleted successfully',
+      });
     }
   };
-
-  return (
-    <Card className="mb-6">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl">{t.offer.templates.title}</CardTitle>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline"
-            onClick={() => setActiveTab('settings')}
-            className={activeTab === 'settings' ? 'bg-muted' : ''}
+  
+  const handleSetAsDefault = async (id: string) => {
+    await setDefaultTemplate(id);
+    toast({
+      title: t.common.success,
+      description: 'Default template set successfully',
+    });
+  };
+  
+  const handleUseTemplate = (id: string) => {
+    router.push(`/create-offer?template=${id}`);
+  };
+  
+  const renderTemplateCard = (template: any, isUserTemplate: boolean) => {
+    const isDefault = template.id === defaultTemplateId;
+    
+    return (
+      <Card key={template.id} className="overflow-hidden">
+        <div 
+          className="h-3" 
+          style={{ 
+            backgroundColor: 
+              template.settings?.appearance?.primaryColor || 
+              '#0891B2' 
+          }}
+        ></div>
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-lg">{template.name}</CardTitle>
+              <CardDescription>{template.description}</CardDescription>
+            </div>
+            {isDefault && (
+              <Badge variant="outline" className="ml-2 bg-primary/10">
+                {t.settings.default}
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="pb-2">
+          <div 
+            className="h-32 rounded-md overflow-hidden bg-gray-50 flex items-center justify-center"
+            style={{ 
+              backgroundColor: template.settings?.appearance?.secondaryColor || '#F0F9FF',
+              color: template.settings?.appearance?.primaryColor || '#0891B2',
+            }}
           >
-            <Settings className="h-4 w-4 mr-2" />
-            {t.common.settings}
+            <div className="text-center p-4">
+              <p className="text-sm opacity-70">
+                {template.settings?.designTemplate === 'modern-dark' ? 'Modern Dark Template' :
+                 template.settings?.designTemplate === 'gradient' ? 'Gradient Template' :
+                 template.settings?.designTemplate === 'business-pro' ? 'Business Pro Template' :
+                 'Classic Template'}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between pt-0">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => handleUseTemplate(template.id)}
+          >
+            {t.settings.useTemplate}
           </Button>
-          <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Save className="h-4 w-4" />
-                {t.offer.templates.createFromCurrent}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t.offer.templates.saveAsTemplate}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="template-name">{t.offer.templates.templateName}</Label>
-                  <Input 
-                    id="template-name" 
-                    value={templateName} 
-                    onChange={(e) => setTemplateName(e.target.value)}
-                    placeholder={language === 'bg' ? 'напр. Моя стандартен шаблон' : 'e.g. My Standard Template'}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setSaveDialogOpen(false)}
-                >
-                  {t.common.cancel}
-                </Button>
-                <Button 
-                  onClick={handleSaveAsTemplate} 
-                  disabled={isLoading || !templateName.trim()}
-                >
-                  {isLoading ? t.common.saving : t.offer.templates.saveAsTemplate}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="templates">
-              <FileText className="h-4 w-4 mr-2" />
-              {t.offer.templates.title}
-            </TabsTrigger>
-            <TabsTrigger value="settings">
-              <Settings className="h-4 w-4 mr-2" />
-              {t.common.settings}
-            </TabsTrigger>
-          </TabsList>
           
-          <TabsContent value="templates">
-            <p className="text-muted-foreground mb-4">{t.offer.templates.description}</p>
-            
-            {/* Default Template Section */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-medium">{t.offer.templates.defaultTemplate}</h3>
+          <div className="flex gap-1">
+            {isUserTemplate && (
+              <>
                 <Button 
                   variant="ghost" 
-                  size="sm"
-                  onClick={handleResetToDefault}
+                  size="icon" 
+                  onClick={() => handleEditTemplate(template.id)}
                 >
-                  {t.offer.templates.resetToDefault}
+                  <Edit className="h-4 w-4" />
                 </Button>
-              </div>
-              
-              {defaultTemplateId && (
-                <Card 
-                  className={`hover:border-offer-blue transition-colors cursor-pointer ${
-                    selectedTemplateId === defaultTemplateId ? 'border-offer-blue bg-blue-50' : ''
-                  }`}
-                  onClick={() => handleSelectTemplate(defaultTemplateId)}
-                >
-                  <CardContent className="p-4 flex flex-col h-full">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h4 className="font-medium flex items-center gap-2 mb-2">
-                          <FileText className="h-4 w-4" />
-                          {userTemplates.find(t => t.id === defaultTemplateId)?.name || 'Default Template'}
-                          <Star className="h-3 w-3 text-amber-500 ml-1" />
-                        </h4>
-                        <p className="text-sm text-muted-foreground mb-4 flex-grow">
-                          {userTemplates.find(t => t.id === defaultTemplateId)?.description || t.offer.templates.defaultTemplate}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      variant={selectedTemplateId === defaultTemplateId ? "default" : "outline"}
-                      size="sm" 
-                      className="w-full justify-center mt-auto"
-                    >
-                      {selectedTemplateId === defaultTemplateId 
-                        ? (language === 'bg' ? 'Активен' : 'Selected') 
-                        : t.offer.templates.useTemplate}
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-            
-            {/* User Templates Section */}
-            {filteredUserTemplates.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-lg font-medium mb-2">{t.offer.templates.userTemplates}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredUserTemplates.map((template) => (
-                    <Card 
-                      key={template.id} 
-                      className={`hover:border-offer-blue transition-colors cursor-pointer ${
-                        selectedTemplateId === template.id ? 'border-offer-blue bg-blue-50' : ''
-                      }`}
-                      onClick={() => handleSelectTemplate(template.id)}
-                    >
-                      <CardContent className="p-4 flex flex-col h-full">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <h4 className="font-medium flex items-center gap-2 mb-2">
-                              <FileText className="h-4 w-4" />
-                              {template.name}
-                              {template.isDefault && <Star className="h-3 w-3 text-amber-500 ml-1" />}
-                            </h4>
-                            {template.language && (
-                              <div className="text-xs inline-flex items-center gap-1 text-muted-foreground mb-2">
-                                <Languages className="h-3 w-3" /> 
-                                {template.language === 'bg' ? 'Български' : template.language === 'en' ? 'English' : 'Multi-language'}
-                              </div>
-                            )}
-                            <p className="text-sm text-muted-foreground mb-4 flex-grow">{template.description}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2 mt-auto">
-                          <Button 
-                            variant={selectedTemplateId === template.id ? "default" : "outline"}
-                            size="sm" 
-                            className="flex-1 justify-center"
-                          >
-                            {selectedTemplateId === template.id 
-                              ? (language === 'bg' ? 'Активен' : 'Selected') 
-                              : t.offer.templates.useTemplate}
-                          </Button>
-                          {!template.isDefault && (
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSetAsDefault(template.id);
-                              }}
-                              title={t.offer.templates.setAsDefault}
-                            >
-                              <Star className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Sample Templates Section */}
-            <Collapsible open={sampleTemplatesOpen} onOpenChange={setSampleTemplatesOpen} className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-medium">{t.offer.templates.sampleTemplates}</h3>
-                <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    {sampleTemplatesOpen 
-                      ? (language === 'bg' ? 'Скрий' : 'Hide') 
-                      : (language === 'bg' ? 'Покажи' : 'Show')}
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-              
-              <CollapsibleContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredSampleTemplates.map((template) => (
-                    <Card 
-                      key={template.id} 
-                      className={`hover:border-offer-blue transition-colors cursor-pointer ${
-                        selectedTemplateId === template.id ? 'border-offer-blue bg-blue-50' : ''
-                      }`}
-                      onClick={() => handleSelectTemplate(template.id)}
-                      style={{
-                        borderLeftColor: template.settings?.appearance?.primaryColor || '#1E88E5',
-                        borderLeftWidth: '4px'
-                      }}
-                    >
-                      <CardContent className="p-4 flex flex-col h-full">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <h4 className="font-medium flex items-center gap-2 mb-2">
-                              <FileText className="h-4 w-4" />
-                              {template.name}
-                              {template.isDefault && <Star className="h-3 w-3 text-amber-500 ml-1" />}
-                            </h4>
-                            <p className="text-sm text-muted-foreground mb-4 flex-grow">{template.description}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2 mt-auto">
-                          <Button 
-                            variant={selectedTemplateId === template.id ? "default" : "outline"}
-                            size="sm" 
-                            className="flex-1 justify-center"
-                          >
-                            {selectedTemplateId === template.id 
-                              ? (language === 'bg' ? 'Активен' : 'Selected') 
-                              : t.offer.templates.useTemplate}
-                          </Button>
-                          {!template.isDefault && (
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSetAsDefault(template.id);
-                              }}
-                              title={t.offer.templates.setAsDefault}
-                            >
-                              <Star className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-            
-            {/* Empty State */}
-            {filteredUserTemplates.length === 0 && !filteredSampleTemplates.length && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Info className="h-12 w-12 mx-auto mb-2 text-muted-foreground/50" />
-                <p>{language === 'bg' 
-                  ? 'Няма намерени шаблони за този език. Създайте нов шаблон.' 
-                  : 'No templates found for this language. Create a new template.'}</p>
+                
                 <Button 
-                  variant="link" 
-                  className="mt-2"
-                  onClick={() => setSaveDialogOpen(true)}
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => handleDeleteTemplate(template.id)}
                 >
-                  {t.offer.templates.createFromCurrent}
+                  <Trash2 className="h-4 w-4" />
                 </Button>
-              </div>
+              </>
             )}
             
-            {/* Create New Template Button */}
-            <div className="mt-6 flex justify-center">
+            {isUserTemplate && !isDefault && (
               <Button 
-                variant="outline" 
-                onClick={() => setSaveDialogOpen(true)}
-                className="gap-2"
+                variant="ghost" 
+                size="icon"
+                onClick={() => handleSetAsDefault(template.id)}
+                title={t.settings.setAsDefault}
               >
-                <PlusCircle className="h-4 w-4" />
-                {t.offer.templates.createNew}
+                <CheckCircle className="h-4 w-4" />
               </Button>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="settings">
-            <TemplateSettings selectedTemplateId={selectedTemplateId} />
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    );
+  };
+  
+  const renderTemplatesGrid = (templates: any[], isUserTemplates: boolean) => {
+    if (isLoading) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardHeader>
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-1/2 mt-2" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-32 w-full" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="h-9 w-20" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      );
+    }
+    
+    if (templates.length === 0 && isUserTemplates) {
+      return (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">{t.settings.noTemplates}</p>
+          <Button onClick={handleCreateTemplate}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {t.settings.createTemplate}
+          </Button>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {templates.map((template) => renderTemplateCard(template, isUserTemplates))}
+        
+        {isUserTemplates && (
+          <Card className="flex flex-col items-center justify-center p-6 border-dashed cursor-pointer hover:bg-accent/20 transition-colors"
+            onClick={handleCreateTemplate}
+          >
+            <PlusCircle className="h-8 w-8 mb-2 text-muted-foreground" />
+            <p className="text-muted-foreground font-medium">{t.settings.createNewTemplate}</p>
+          </Card>
+        )}
+      </div>
+    );
+  };
+  
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold tracking-tight">{t.settings.offerTemplates}</h2>
+        <Button onClick={handleCreateTemplate}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {t.settings.createTemplate}
+        </Button>
+      </div>
+      
+      <p className="text-muted-foreground">{t.settings.templatesDescription}</p>
+      
+      <Separator />
+      
+      <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="mb-4">
+          <TabsTrigger value="user">{t.settings.userTemplates}</TabsTrigger>
+          <TabsTrigger value="sample">{t.settings.sampleTemplates}</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="user">
+          {renderTemplatesGrid(userTemplates, true)}
+        </TabsContent>
+        
+        <TabsContent value="sample">
+          {renderTemplatesGrid(sampleTemplates, false)}
+        </TabsContent>
+      </Tabs>
+      
+      {/* Template Settings Dialog */}
+      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+        <DialogContent className="max-w-[1000px] max-h-[90vh] overflow-y-auto">
+          <TemplateSettings 
+            initialSettings={selectedTemplateId ? getTemplateById(selectedTemplateId)?.settings : undefined}
+            onSave={handleSaveTemplate}
+            onCancel={handleCloseSettings}
+            isEditing={!!selectedTemplateId}
+          />
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Template Confirmation */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.common.confirmDelete}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.settings.confirmDeleteTemplate}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t.common.delete}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 };
 

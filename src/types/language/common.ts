@@ -1,120 +1,59 @@
 
 export interface CommonTranslations {
-  offerForge: string;
+  cancel: string;
+  close: string;
+  save: string;
+  edit: string;
+  delete: string;
+  search: string;
+  processing: string;
   loading: string;
   error: string;
   success: string;
-  save: string;
-  saving: string;
-  cancel: string;
-  close: string;
-  edit: string;
-  preview: string;
-  previewOffer: string;
-  backToEdit: string;
-  yes: string;
-  no: string;
-  delete: string;
-  confirm: string;
-  name: string;
-  login: string;
-  logout: string;
-  register: string;
+  warning: string;
+  info: string;
   required: string;
-  upload: string;
-  remove: string;
-  select: string;
-  export: string;
-  import: string;
-  search: string;
-  actions: string;
-  description: string;
-  details: string;
-  print: string;
-  copy: string;
-  download: string;
-  share: string;
-  options: string;
-  settings: string;
-  profile: string;
-  account: string;
-  help: string;
-  about: string;
-  contact: string;
-  privacyPolicy: string;
-  termsOfService: string;
-  copyright: string;
-  language: string;
-  currency: string;
-  theme: string;
-  light: string;
-  dark: string;
-  system: string;
-  areYouSure: string;
-  thisActionCannot: string;
-  apply: string;
-  reset: string;
-  default: string;
-  id: string;
-  date: string;
-  time: string;
-  amount: string;
-  total: string;
-  subtotal: string;
-  tax: string;
-  discount: string;
-  quantity: string;
-  price: string;
-  status: string;
-  type: string;
-  // Standard translations
-  confirmation: string;
-  processing: string;
-  comingSoon: string;
-  featureInDevelopment: string;
-  // Wizard navigation translations
-  next: string;
-  back: string;
-  step: string;
-  of: string;
-  finish: string;
-  // New translations for settings page
-  unauthorized: string;
-  manageAccount: string;
-  // New navigation translations
-  home: string;
-  collapseAll: string;
-  expandAll: string;
-  // Additional items needed
-  create: string;
-  view: string;
-  add: string;
-  update: string;
-  viewAll: string;
-  welcome: string;
-  dashboard: string;
-  newOffer: string;
-  newClient: string;
-  newProduct: string;
-  templates: string;
-  
-  // Add navigation property
-  navigation?: string;
-  
-  // Add missing translation key
-  noName: string;
-  
-  // Add the missing keys for filters
-  all: string;
-  continue: string;
-  previous: string;
-  submit: string;
   optional: string;
   noResults: string;
-  
-  // Add the missing info property
-  info: string;
-  
-  // Add the missing retry property
-  retry: string;
+  actions: string;
+  selectOne: string;
+  new: string;
+  view: string;
+  chooseFile: string;
+  upload: string;
+  remove: string;
+  add: string;
+  created: string;
+  updated: string;
+  save_changes: string;
+  confirm: string;
+  copy: string;
+  print: string;
+  export: string;
+  areYouSure: string;
+  thisActionCannot: string;
+  yes: string;
+  no: string;
+  confirmDelete: string;
+  confirmDeleteText: string;
+  viewImage: string;
+  selectDate: string;
+  allProducts: string;
+  itemsSelected: string;
+  clear: string;
+  clearFilters: string;
+  noDataAvailable: string;
+  today: string;
+  day: string;
+  week: string;
+  month: string;
+  year: string;
+  or: string;
+  and: string;
+  next: string;
+  prev: string;
+  configuration: string;
+  apply: string;
+  pageOf: string;
+  showingItems: string;
 }

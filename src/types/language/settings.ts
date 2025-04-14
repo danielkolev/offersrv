@@ -1,68 +1,78 @@
 
 export interface SettingsTranslations {
   title: string;
-  subtitle: string;
-  
-  // Template settings
+  general: string;
+  appearance: string;
+  layout: string;
+  content: string;
+  template: string;
+  details: string;
+  templates: {
+    classic: string;
+    modernDark: string;
+    gradient: string;
+    businessPro: string;
+    selectDesign: string;
+  };
   offerTemplates: string;
   templatesDescription: string;
-  newTemplate: string;
-  createTemplate: string;
-  templateCreated: string;
+  preview: string;
   templateName: string;
   templateNamePlaceholder: string;
   templateDescription: string;
   templateDescriptionPlaceholder: string;
-  defaultTemplatesDescription: string;
-  editTemplate: string;
-  viewTemplate: string;
-  createNewTemplate: string;
-  
-  // Offer settings
-  offerSettings: string;
-  usePrefix: string;
-  usePrefixDescription: string;
-  prefix: string;
-  prefixDescription: string;
-  suffixYear: string;
-  suffixYearDescription: string;
-  defaultVatRate: string;
-  defaultVatRateDescription: string;
-  
-  // Bank details
-  bankDetails: string;
+  templateLanguage: string;
+  selectLanguage: string;
+  primaryColor: string;
+  secondaryColor: string;
+  textColor: string;
+  fontFamily: string;
+  selectFont: string;
+  fontSize: string;
+  selectFontSize: string;
+  roundedCorners: string;
+  roundedCornersDescription: string;
+  showLogo: string;
+  showLogoDescription: string;
+  logoPosition: string;
+  selectLogoPosition: string;
+  compactMode: string;
+  compactModeDescription: string;
+  fullWidth: string;
+  fullWidthDescription: string;
+  borderless: string;
+  borderlessDescription: string;
+  useShadows: string;
+  useShadowsDescription: string;
+  boldPrices: string;
+  boldPricesDescription: string;
+  alternateRowColors: string;
+  alternateRowColorsDescription: string;
+  showLineNumbers: string;
+  showLineNumbersDescription: string;
+  showFooter: string;
+  showFooterDescription: string;
+  footerText: string;
   showBankDetails: string;
   showBankDetailsDescription: string;
-  bankName: string;
-  bankNamePlaceholder: string;
-  iban: string;
-  ibanPlaceholder: string;
-  swift: string;
-  swiftPlaceholder: string;
-  additionalInfo: string;
-  additionalInfoPlaceholder: string;
-  
-  // Custom units
-  customUnits: string;
-  customUnitsDescription: string;
-  unitNameBg: string;
-  unitNameEn: string;
-  unitNamePlaceholderBg: string;
-  unitNamePlaceholderEn: string;
-  addUnit: string;
-  existingUnits: string;
-  noCustomUnits: string;
-  unitAdded: string;
-  unitAddedSuccess: string;
-  unitDeleted: string;
-  unitDeletedSuccess: string;
-  unitNameRequired: string;
-  validationError: string;
-  unitAddError: string;
-  unitDeleteError: string;
-  
-  // General settings messages
-  settingsSaved: string;
-  errorLoadingSettings: string;
-  errorSavingSettings: string;
+  showSignatureArea: string;
+  showSignatureAreaDescription: string;
+  signatureText: string;
+  useQRCode: string;
+  useQRCodeDescription: string;
+  showCompanySlogan: string;
+  showCompanySloganDescription: string;
+  companyNameSize: string;
+  selectSize: string;
+  showOfferLabel: string;
+  showOfferLabelDescription: string;
+  updateTemplate: string;
+  saveTemplate: string;
+  templateSaved: string;
+  small: string;
+  medium: string;
+  large: string;
+  left: string;
+  center: string;
+  right: string;
 }

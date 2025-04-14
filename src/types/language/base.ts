@@ -1,39 +1,38 @@
 
-import { 
-  AuthTranslations,
-  ClientTranslations,
-  CommonTranslations,
-  CompanyTranslations,
-  OfferTranslations,
-  SettingsTranslations,
-  UserTranslations,
-  HomeType,
-  SavedOffersTranslations,
-  SavedClientsTranslations,
-  ClientInfoTranslations,
-  SavedProductsTranslations,
-  ProductsTranslations,
-  CompanyInfoTranslations
-} from './index';
+import { AuthTranslations } from './auth';
+import { CommonTranslations } from './common';
+import { CompanyTranslations } from './company';
+import { OfferTranslations } from './offer';
+import { SettingsTranslations } from './settings';
+import { UserTranslations } from './user';
+import { ClientTranslations } from './client';
+import { HomeTranslations } from './home';
+import { SavedOffersTranslations } from './savedOffers';
+import { ClientInfoTranslations } from './clientInfo';
+import { SavedClientsTranslations } from './savedClients';
+import { SavedProductsTranslations } from './savedProducts';
+import { ProductsTranslations } from './products';
+import { OfferDetailsTranslations } from './offerDetails';
+import { TotalsTranslations } from './totals';
+import { CompanyInfoTranslations } from './companyInfo';
 
-export type SupportedLanguage = 'en' | 'bg';
-export type SupportedCurrency = 'USD' | 'EUR' | 'BGN';
+export type SupportedLanguage = 'bg' | 'en';
 
 export interface Translations {
   auth: AuthTranslations;
-  client: ClientTranslations;
   common: CommonTranslations;
   company: CompanyTranslations;
   offer: OfferTranslations;
   settings: SettingsTranslations;
   user: UserTranslations;
-  home: HomeType;
+  client: ClientTranslations;
+  home: HomeTranslations;
   savedOffers: SavedOffersTranslations;
   clientInfo: ClientInfoTranslations;
   savedClients: SavedClientsTranslations;
   savedProducts: SavedProductsTranslations;
   products: ProductsTranslations;
-  offerDetails: any; // Using any until we create a proper type
-  totals: any; // Using any until we create a proper type
+  offerDetails: OfferDetailsTranslations;
+  totals: TotalsTranslations;
   companyInfo: CompanyInfoTranslations;
 }

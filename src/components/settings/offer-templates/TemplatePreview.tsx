@@ -3,46 +3,11 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
 import { SupportedLanguage } from '@/types/language/base';
-import ProductsTable from '@/components/offer-preview/ProductsTable';
-import TotalsSection from '@/components/offer-preview/TotalsSection';
+import { TemplateSettingsFormValues } from './TemplateSettings';
 import { cn } from '@/lib/utils';
 
 interface TemplatePreviewProps {
-  settings: {
-    appearance: {
-      primaryColor: string;
-      secondaryColor: string;
-      textColor: string;
-      fontFamily: string;
-      fontSize: string;
-      roundedCorners: boolean;
-    };
-    layout: {
-      showLogo: boolean;
-      logoPosition: string;
-      compactMode: boolean;
-    };
-    content: {
-      boldPrices: boolean;
-      showFooter: boolean;
-      footerText: string;
-    };
-    header: {
-      showCompanySlogan: boolean;
-      companyNameSize: string;
-      showOfferLabel: boolean;
-    };
-    footer: {
-      showBankDetails: boolean;
-      showSignatureArea: boolean;
-      signatureText: string;
-    };
-    template?: {
-      name: string;
-      description: string;
-      language: string;
-    };
-  };
+  settings: TemplateSettingsFormValues;
 }
 
 const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings }) => {
