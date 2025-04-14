@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Save, Loader2, PlusCircle, Filter, FileEdit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
-import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/savedOffersService';
+import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/saved';
 import BackButton from '@/components/navigation/BackButton';
 import {
   Select,
@@ -25,7 +25,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draft';
 import { Card, CardContent } from '@/components/ui/card';
 
 const SavedOffersContent: React.FC = () => {
