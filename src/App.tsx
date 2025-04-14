@@ -38,6 +38,25 @@ const RouteTracker = () => {
   return null;
 };
 
+// Shared layout for protected routes
+const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <ProtectedRoute>
+      <div className="flex flex-col min-h-screen w-full">
+        <TopNavBar />
+        <div className="flex flex-1 w-full">
+          <div className="hidden md:block">
+            <MainSidebar />
+          </div>
+          <div className="flex-1">
+            {children}
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -53,132 +72,52 @@ function App() {
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/login" element={<Login />} />
                   
-                  {/* Protected routes */}
+                  {/* Protected routes with shared layout */}
                   <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <div className="flex flex-col min-h-screen w-full">
-                        <TopNavBar />
-                        <div className="flex flex-1 w-full">
-                          <MainSidebar />
-                          <div className="flex-1">
-                            <Dashboard />
-                          </div>
-                        </div>
-                      </div>
-                    </ProtectedRoute>
+                    <ProtectedLayout>
+                      <Dashboard />
+                    </ProtectedLayout>
                   } />
-                  <Route
-                    path="/new-offer"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <NewOfferPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/saved-offers"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <SavedOffersPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/saved-clients"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <SavedClientsPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/saved-products"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <SavedProductsPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/templates"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <TemplatesPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/settings"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <Settings />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/company-management"
-                    element={
-                      <ProtectedRoute>
-                        <div className="flex flex-col min-h-screen w-full">
-                          <TopNavBar />
-                          <div className="flex flex-1 w-full">
-                            <MainSidebar />
-                            <div className="flex-1">
-                              <CompanyManagementPage />
-                            </div>
-                          </div>
-                        </div>
-                      </ProtectedRoute>
-                    }
-                  />
+                  <Route path="/new-offer" element={
+                    <ProtectedLayout>
+                      <NewOfferPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/saved-offers" element={
+                    <ProtectedLayout>
+                      <SavedOffersPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/saved-clients" element={
+                    <ProtectedLayout>
+                      <SavedClientsPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/saved-products" element={
+                    <ProtectedLayout>
+                      <SavedProductsPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/templates" element={
+                    <ProtectedLayout>
+                      <TemplatesPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/settings" element={
+                    <ProtectedLayout>
+                      <Settings />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/company-management" element={
+                    <ProtectedLayout>
+                      <CompanyManagementPage />
+                    </ProtectedLayout>
+                  } />
+                  <Route path="/analytics" element={
+                    <ProtectedLayout>
+                      <div>Analytics Page</div>
+                    </ProtectedLayout>
+                  } />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Toaster />
