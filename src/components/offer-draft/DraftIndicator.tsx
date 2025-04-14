@@ -40,6 +40,7 @@ export const DraftIndicator = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [hasDraft, setHasDraft] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   
   // Check for draft presence when component loads
   useEffect(() => {
@@ -72,29 +73,43 @@ export const DraftIndicator = () => {
   }
 
   const handleNavigateToOffer = async () => {
-    if (user && hasDraft) {
-      try {
-        // First reset current offer
-        await resetOffer();
+    if (isNavigating) return; // Prevent multiple clicks
+    setIsNavigating(true);
+    
+    try {
+      if (user && hasDraft) {
+        console.log("DraftIndicator: Starting draft loading process");
         
-        // Добавям малко забавяне преди да заредя черновата за да е сигурно, че resetOffer е завършил
-        setTimeout(async () => {
-          // Then load the draft
-          const draftOffer = await getLatestDraftFromDatabase(user.id);
-          if (draftOffer && hasMeaningfulContent(draftOffer)) {
-            console.log("Навигирам към чернова с данни:", draftOffer);
-            // Load draft directly into context
-            setOffer(draftOffer);
-            // Navigate to new offer page
-            navigate('/new-offer');
-          }
-        }, 50);
-      } catch (error) {
-        console.error("Error loading draft:", error);
+        // First check if we can get the draft
+        const draftOffer = await getLatestDraftFromDatabase(user.id);
+        
+        if (draftOffer && hasMeaningfulContent(draftOffer)) {
+          console.log("DraftIndicator: Draft found with data:", draftOffer);
+          
+          // Navigate first, then we'll load the draft in NewOfferPage
+          navigate('/new-offer', { 
+            state: { 
+              loadDraft: true,
+              draftId: user.id // Use user ID as draft identifier
+            } 
+          });
+        } else {
+          console.log("DraftIndicator: No valid draft found, creating new offer");
+          await resetOffer();
+          navigate('/new-offer');
+        }
+      } else {
+        // Just navigate to new offer page
+        console.log("DraftIndicator: No user or draft, creating new offer");
+        navigate('/new-offer');
       }
-    } else {
-      // Navigate to new offer page
+    } catch (error) {
+      console.error("Error in draft navigation:", error);
+      // Fall back to starting a new offer
+      await resetOffer();
       navigate('/new-offer');
+    } finally {
+      setIsNavigating(false);
     }
   };
 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -37,6 +36,7 @@ const SavedOffersContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isNavigating, setIsNavigating] = useState(false);
   
   // Filter states
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -135,52 +135,52 @@ const SavedOffersContent: React.FC = () => {
     }
   };
 
-  const handleLoadOffer = (savedOffer: SavedOffer) => {
-    console.log("Зареждане на оферта с данни:", savedOffer.offer_data);
+  const handleLoadOffer = async (savedOffer: SavedOffer) => {
+    if (isNavigating) return; // Prevent multiple clicks
+    setIsNavigating(true);
     
     try {
-      // Reset first
-      resetOffer();
+      console.log("SavedOffersContent: Loading offer with data:", savedOffer.offer_data);
       
-      // Добавям малко забавяне преди да заредя офертата за да е сигурно, че resetOffer е завършил
-      setTimeout(() => {
-        // Then set the offer data
-        if (savedOffer.offer_data) {
-          setOffer(savedOffer.offer_data);
-          
-          toast({
-            title: t.common.success,
-            description: t.savedOffers.offerLoaded,
-          });
-          
-          // Navigate to the edit page
-          navigate('/new-offer');
-        } else {
-          console.error("Невалидни данни за оферта:", savedOffer);
-          toast({
-            title: t.common.error,
-            description: "Невалидни данни за оферта",
-            variant: 'destructive',
-          });
-        }
-      }, 50);
+      if (savedOffer.offer_data) {
+        // Navigate with state that indicates we're loading a saved offer
+        navigate('/new-offer', {
+          state: { 
+            loadSavedOffer: true,
+            savedOfferId: savedOffer.id,
+            offerData: savedOffer.offer_data
+          }
+        });
+      } else {
+        console.error("SavedOffersContent: Invalid offer data:", savedOffer);
+        toast({
+          title: t.common.error,
+          description: "Невалидни данни за оферта",
+          variant: 'destructive',
+        });
+        
+        await resetOffer();
+        navigate('/new-offer');
+      }
     } catch (error) {
-      console.error("Error loading offer:", error);
+      console.error("SavedOffersContent: Error loading offer:", error);
       toast({
         title: t.common.error,
         description: "Failed to load offer data",
         variant: 'destructive',
       });
+      
+      await resetOffer();
+      navigate('/new-offer');
+    } finally {
+      setIsNavigating(false);
     }
   };
 
-  const handleCreateNewOffer = () => {
+  const handleCreateNewOffer = async () => {
     // Reset offer state before creating a new one
-    resetOffer();
-    // Добавяме малко забавяне преди да навигираме към страницата за нова оферта
-    setTimeout(() => {
-      navigate('/new-offer');
-    }, 50);
+    await resetOffer();
+    navigate('/new-offer');
   };
   
   const getFilteredOffers = () => {

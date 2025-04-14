@@ -13,6 +13,14 @@ export const useCompanyData = (companyId: string | null) => {
   const { t } = useLanguage();
   const fetchedRef = useRef(false);
   const previousCompanyId = useRef<string | null>(null);
+  const isMountedRef = useRef(true);
+
+  // Set isMounted to false when component unmounts
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const fetchCompanyData = useCallback(async (id: string) => {
     if (!id) return;
@@ -21,7 +29,7 @@ export const useCompanyData = (companyId: string | null) => {
     setError(null);
     
     try {
-      console.log("Fetching company data for ID:", id);
+      console.log("useCompanyData: Fetching company data for ID:", id);
       
       const { data, error } = await supabase
         .from('organizations')
@@ -31,8 +39,11 @@ export const useCompanyData = (companyId: string | null) => {
       
       if (error) throw error;
       
+      // Check if component is still mounted before updating state
+      if (!isMountedRef.current) return;
+      
       if (data) {
-        console.log("Company data loaded successfully:", data);
+        console.log("useCompanyData: Company data loaded successfully:", data);
         
         // Update the offer context with company data
         updateCompanyInfo({
@@ -53,6 +64,9 @@ export const useCompanyData = (companyId: string | null) => {
         fetchedRef.current = true;
       }
     } catch (err: any) {
+      // Check if component is still mounted before updating state
+      if (!isMountedRef.current) return;
+      
       console.error('Error fetching company data:', err);
       setError(err.message);
       toast({
@@ -61,7 +75,10 @@ export const useCompanyData = (companyId: string | null) => {
         variant: 'destructive'
       });
     } finally {
-      setIsLoading(false);
+      // Check if component is still mounted before updating state
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [updateCompanyInfo, toast, t]);
 

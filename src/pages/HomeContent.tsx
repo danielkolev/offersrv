@@ -20,6 +20,7 @@ const HomeContent = () => {
   const { setOffer, resetOffer } = useOffer();
   const [recentOffers, setRecentOffers] = useState<SavedOffer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -86,21 +87,40 @@ const HomeContent = () => {
     }
   };
 
-  const handleOfferClick = (offer: SavedOffer) => {
-    // Важна промяна: първо ресетвайте текущата оферта преди да заредите новата
-    resetOffer();
+  const handleOfferClick = async (offer: SavedOffer) => {
+    if (isNavigating) return; // Prevent multiple clicks
+    setIsNavigating(true);
     
-    // Задайте малко забавяне за да може ресетът да приключи преди да заредим новата оферта
-    setTimeout(() => {
-      console.log("Зареждане на оферта с данни:", offer.offer_data);
+    try {
+      console.log("HomeContent: Loading offer with data:", offer.offer_data);
+      
       if (offer?.offer_data) {
-        // Проверка дали offer_data съществува и не е null
-        setOffer(offer.offer_data);
-        navigate('/new-offer');
+        // Navigate to the new offer page with state that indicates we should load this offer
+        navigate('/new-offer', {
+          state: { 
+            loadSavedOffer: true,
+            savedOfferId: offer.id,
+            offerData: offer.offer_data
+          }
+        });
       } else {
-        console.error("Невалидни данни за оферта:", offer);
+        console.error("HomeContent: Invalid offer data:", offer);
+        await resetOffer();
+        navigate('/new-offer');
       }
-    }, 50);
+    } catch (error) {
+      console.error("HomeContent: Error loading offer:", error);
+      await resetOffer();
+      navigate('/new-offer');
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
+  const handleCreateNewOffer = async () => {
+    // Reset offer state before creating a new one
+    await resetOffer();
+    navigate('/new-offer');
   };
 
   return (
@@ -171,7 +191,7 @@ const HomeContent = () => {
                 <div className="mb-2">{t.home.noRecentOffers}</div>
                 <Button 
                   variant="outline" 
-                  onClick={() => navigate('/new-offer')}
+                  onClick={handleCreateNewOffer}
                 >
                   {t.common.newOffer}
                 </Button>
