@@ -1,92 +1,41 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, Save, Loader2, PlusCircle, Filter, FileEdit } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { saveOfferToDatabase } from '@/components/management/offers/saved';
+
+// Import hooks
+import { useSavedOffers } from './saved-offers-list/hooks/useSavedOffers';
+import { useDraftOfferCheck } from './saved-offers-list/hooks/useDraftOfferCheck';
+import { useOfferNavigation } from './saved-offers-list/hooks/useOfferNavigation';
+import { useOfferFilters } from './saved-offers-list/hooks/useOfferFilters';
+
+// Import components
 import SavedOffersList from '@/components/management/offers/SavedOffersList';
-import { fetchSavedOffers, saveOfferToDatabase, deleteOfferFromDatabase } from '@/components/management/offers/saved';
-import BackButton from '@/components/navigation/BackButton';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { getLatestDraftFromDatabase } from '@/components/management/offers/draft';
-import { Card, CardContent } from '@/components/ui/card';
+import OffersHeader from './saved-offers-list/OffersHeader';
+import DraftOfferCard from './saved-offers-list/DraftOfferCard';
+import OffersFilter from './saved-offers-list/OffersFilter';
 
 const SavedOffersContent: React.FC = () => {
   const { user } = useAuth();
-  const { offer, setOffer, resetOffer } = useOffer();
+  const { offer } = useOffer();
   const { toast } = useToast();
   const { t, language, currency } = useLanguage();
-  const navigate = useNavigate();
-  const [savedOffers, setSavedOffers] = useState<SavedOffer[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [hasDraft, setHasDraft] = useState(false);
   
-  // Filter states
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
-  const [showFilters, setShowFilters] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      handleFetchSavedOffers();
-      checkForDraftOffer();
-    }
-  }, [user]);
-
-  // Check for existing draft offer
-  const checkForDraftOffer = async () => {
-    if (!user) return;
-    
-    try {
-      const draftOffer = await getLatestDraftFromDatabase(user.id);
-      if (draftOffer) {
-        setHasDraft(true);
-      } else {
-        setHasDraft(false);
-      }
-    } catch (error) {
-      console.error("Error checking for draft offer:", error);
-    }
-  };
-
-  const handleFetchSavedOffers = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    try {
-      const offers = await fetchSavedOffers();
-      setSavedOffers(offers as SavedOffer[]);
-    } catch (error: any) {
-      console.error('Error fetching saved offers:', error);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Use custom hooks
+  const { savedOffers, setSavedOffers, isLoading, handleDeleteOffer } = useSavedOffers();
+  const { hasDraft } = useDraftOfferCheck();
+  const { handleOpenDraftOffer, handleCreateNewOffer, handleLoadOffer } = useOfferNavigation();
+  const { 
+    searchTerm, setSearchTerm,
+    statusFilter, setStatusFilter,
+    dateFilter, setDateFilter,
+    showFilters, setShowFilters,
+    getFilteredOffers, resetFilters
+  } = useOfferFilters(savedOffers);
 
   const handleSaveOffer = async () => {
     if (!user) {
@@ -101,7 +50,7 @@ const SavedOffersContent: React.FC = () => {
     setIsSaving(true);
     try {
       const newOffer = await saveOfferToDatabase(user.id, offer);
-      setSavedOffers(prev => [newOffer as SavedOffer, ...prev]);
+      setSavedOffers(prev => [newOffer as any, ...prev]);
       toast({
         title: t.common.success,
         description: t.savedOffers.offerSaved,
@@ -118,283 +67,31 @@ const SavedOffersContent: React.FC = () => {
     }
   };
 
-  const handleDeleteOffer = async (id: string) => {
-    try {
-      await deleteOfferFromDatabase(id);
-      setSavedOffers(prev => prev.filter(offer => offer.id !== id));
-      toast({
-        title: t.common.success,
-        description: t.savedOffers.offerDeleted,
-      });
-    } catch (error: any) {
-      console.error('Error deleting offer:', error);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleLoadOffer = async (savedOffer: SavedOffer) => {
-    if (isNavigating) return; // Prevent multiple clicks
-    setIsNavigating(true);
-    
-    try {
-      console.log("SavedOffersContent: Loading offer with data:", savedOffer.offer_data);
-      
-      if (savedOffer.offer_data) {
-        // Navigate with state that indicates we're loading a saved offer
-        navigate('/new-offer', {
-          state: { 
-            loadSavedOffer: true,
-            savedOfferId: savedOffer.id,
-            offerData: savedOffer.offer_data,
-            timestamp: new Date().getTime()
-          },
-          replace: true
-        });
-      } else {
-        console.error("SavedOffersContent: Invalid offer data:", savedOffer);
-        toast({
-          title: t.common.error,
-          description: "Invalid offer data",
-          variant: 'destructive',
-        });
-        
-        await resetOffer();
-        navigate('/new-offer', { replace: true });
-      }
-    } catch (error) {
-      console.error("SavedOffersContent: Error loading offer:", error);
-      toast({
-        title: t.common.error,
-        description: "Failed to load offer data",
-        variant: 'destructive',
-      });
-      
-      await resetOffer();
-      navigate('/new-offer', { replace: true });
-    } finally {
-      setIsNavigating(false);
-    }
-  };
-
-  const handleOpenDraftOffer = async () => {
-    if (isNavigating) return;
-    setIsNavigating(true);
-    
-    try {
-      if (user && hasDraft) {
-        console.log("SavedOffersContent: Opening draft offer");
-        
-        // Navigate with state that indicates we're loading a draft
-        navigate('/new-offer', {
-          state: { 
-            loadDraft: true,
-            draftId: user.id,
-            timestamp: new Date().getTime()
-          },
-          replace: true
-        });
-      } else {
-        console.log("SavedOffersContent: No draft found");
-        await resetOffer();
-        navigate('/new-offer', { replace: true });
-      }
-    } catch (error) {
-      console.error("Error opening draft:", error);
-      toast({
-        title: t.common.error,
-        description: "Error opening draft offer",
-        variant: 'destructive'
-      });
-      await resetOffer();
-      navigate('/new-offer', { replace: true });
-    } finally {
-      setIsNavigating(false);
-    }
-  };
-
-  const handleCreateNewOffer = async () => {
-    // Reset offer state before creating a new one
-    await resetOffer();
-    navigate('/new-offer', { replace: true });
-  };
-  
-  const getFilteredOffers = () => {
-    let filtered = [...savedOffers];
-    
-    // Apply search filter
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(offer => {
-        // Check if offer_data exists before accessing properties
-        if (!offer.offer_data) return false;
-        
-        const clientName = offer.offer_data.client?.name?.toLowerCase() || '';
-        const offerNumber = offer.offer_data.details?.offerNumber?.toLowerCase() || '';
-        return clientName.includes(searchLower) || offerNumber.includes(searchLower);
-      });
-    }
-    
-    // Apply status filter
-    if (statusFilter && statusFilter !== 'all') {
-      filtered = filtered.filter(offer => {
-        if (statusFilter === 'draft') {
-          return offer.is_draft === true;
-        }
-        // Add more status filters when implemented
-        return true;
-      });
-    }
-    
-    // Apply date filter
-    if (dateFilter) {
-      const filterDate = new Date(dateFilter);
-      filtered = filtered.filter(offer => {
-        const offerDate = new Date(offer.created_at);
-        return offerDate.toDateString() === filterDate.toDateString();
-      });
-    }
-    
-    // Only show non-draft offers in the main list
-    return filtered.filter(offer => !offer.is_draft);
-  };
-  
-  const resetFilters = () => {
-    setStatusFilter('all');
-    setDateFilter(undefined);
-    setSearchTerm('');
-  };
-
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-2">
-          <BackButton label={t.common.back} to="/" />
-          <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button 
-            variant="outline"
-            className="gap-2"
-            onClick={handleCreateNewOffer}
-          >
-            <PlusCircle className="h-4 w-4" />
-            {t.savedOffers.createNew}
-          </Button>
-          
-          <Button 
-            onClick={handleSaveOffer} 
-            className="gap-2"
-            disabled={isSaving}
-          >
-            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            {t.savedOffers.saveOffer}
-          </Button>
-        </div>
-      </div>
+      <OffersHeader 
+        onCreateNew={handleCreateNewOffer}
+        onSaveOffer={handleSaveOffer}
+        isSaving={isSaving}
+        t={t}
+      />
       
       {hasDraft && (
-        <div className="mb-6">
-          <h2 className="text-lg font-medium mb-2">{t.offer.draftStatus}</h2>
-          <Card 
-            className="hover:shadow-md transition-shadow cursor-pointer border-amber-200 bg-amber-50"
-            onClick={handleOpenDraftOffer}
-          >
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="bg-amber-100 p-2 rounded-full text-amber-700">
-                    <FileEdit size={18} />
-                  </div>
-                  <div>
-                    <div className="font-medium text-amber-800">
-                      {t.offer.draftInProgress}
-                    </div>
-                    <div className="text-sm text-amber-600">
-                      {t.offer.continueWorking}
-                    </div>
-                  </div>
-                </div>
-                <Button variant="outline" className="border-amber-400 text-amber-700 hover:bg-amber-100">
-                  {t.offer.openDraft}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <DraftOfferCard onOpenDraft={handleOpenDraftOffer} t={t} />
       )}
       
-      <div className="flex gap-2 mb-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t.savedOffers.searchPlaceholder}
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <Popover open={showFilters} onOpenChange={setShowFilters}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              <Filter className="h-4 w-4" />
-              {t.savedOffers.filter}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="space-y-4">
-              <h3 className="font-medium">{t.savedOffers.filter}</h3>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t.offer.status}</label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t.offer.status} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t.common.all}</SelectItem>
-                    <SelectItem value="draft">{t.offer.statuses.draft}</SelectItem>
-                    <SelectItem value="sent">{t.offer.statuses.sent}</SelectItem>
-                    <SelectItem value="accepted">{t.offer.statuses.accepted}</SelectItem>
-                    <SelectItem value="rejected">{t.offer.statuses.rejected}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t.savedOffers.date}</label>
-                <Calendar
-                  mode="single"
-                  selected={dateFilter}
-                  onSelect={setDateFilter}
-                  className="rounded-md border"
-                />
-              </div>
-              
-              <div className="flex justify-between pt-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={resetFilters}
-                >
-                  {t.common.reset}
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => setShowFilters(false)}
-                >
-                  {t.common.apply}
-                </Button>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+      <OffersFilter
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        dateFilter={dateFilter}
+        setDateFilter={setDateFilter}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+        resetFilters={resetFilters}
+        t={t}
+      />
       
       <SavedOffersList
         savedOffers={getFilteredOffers()}
