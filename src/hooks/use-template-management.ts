@@ -57,7 +57,7 @@ const sampleTemplates: TemplateType[] = [
     }
   },
   {
-    id: 'sample-dark',
+    id: 'sample-modern-dark',
     name: 'Modern Dark',
     description: 'Contemporary dark mode design with vibrant accents',
     language: 'all',
@@ -120,7 +120,6 @@ const sampleTemplates: TemplateType[] = [
         logoPosition: 'right',
         compactMode: false,
         fullWidth: false,
-        floatingHeader: true,
       },
       content: {
         boldPrices: true,
@@ -146,7 +145,7 @@ const sampleTemplates: TemplateType[] = [
     }
   },
   {
-    id: 'sample-business',
+    id: 'sample-business-pro',
     name: 'Business Pro',
     description: 'Clean professional layout with modern typography',
     language: 'all',
@@ -209,7 +208,7 @@ export const useTemplateManagement = () => {
     setIsLoading(true);
     try {
       const { data: templatesData, error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -221,12 +220,12 @@ export const useTemplateManagement = () => {
       // Get default template
       const { data: defaultData } = await supabase
         .from('user_settings')
-        .select('default_template_id')
+        .select('*')
         .eq('user_id', user.id)
         .single();
 
-      if (defaultData && defaultData.default_template_id) {
-        setDefaultTemplateId(defaultData.default_template_id);
+      if (defaultData && defaultData.offer_settings && defaultData.offer_settings.default_template_id) {
+        setDefaultTemplateId(defaultData.offer_settings.default_template_id);
       } else {
         // If no default template is set, use first sample template
         setDefaultTemplateId(sampleTemplates[0].id);
@@ -235,10 +234,10 @@ export const useTemplateManagement = () => {
       // Format templates
       const formattedTemplates: TemplateType[] = templatesData.map(template => ({
         id: template.id,
-        name: template.name,
+        name: template.template_name || 'Unnamed Template',
         description: template.description || '',
         language: template.language || 'all',
-        isDefault: defaultData?.default_template_id === template.id,
+        isDefault: defaultData?.offer_settings?.default_template_id === template.id,
         settings: template.settings || {},
       }));
 
@@ -274,14 +273,14 @@ export const useTemplateManagement = () => {
     try {
       const newTemplate = {
         user_id: user.id,
-        name,
+        template_name: name,
         description,
         language: extraData.language || 'all',
         settings: extraData.settings || {}
       };
 
       const { data, error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .insert(newTemplate)
         .select()
         .single();
@@ -294,7 +293,7 @@ export const useTemplateManagement = () => {
       setUserTemplates(prev => [
         {
           id: data.id,
-          name: data.name,
+          name: data.template_name || 'Unnamed Template',
           description: data.description || '',
           language: data.language || 'all',
           settings: data.settings || {},
@@ -324,7 +323,7 @@ export const useTemplateManagement = () => {
     setIsLoading(true);
     try {
       const { error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .delete()
         .eq('id', templateId)
         .eq('user_id', user.id);
@@ -339,10 +338,24 @@ export const useTemplateManagement = () => {
       // If this was the default template, reset the default
       if (defaultTemplateId === templateId) {
         setDefaultTemplateId(null);
-        await supabase
+        
+        // Get current user settings
+        const { data: settingsData } = await supabase
           .from('user_settings')
-          .update({ default_template_id: null })
-          .eq('user_id', user.id);
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        
+        // Update settings with new default_template_id set to null
+        if (settingsData) {
+          const offerSettings = settingsData.offer_settings || {};
+          offerSettings.default_template_id = null;
+          
+          await supabase
+            .from('user_settings')
+            .update({ offer_settings: offerSettings })
+            .eq('user_id', user.id);
+        }
       }
     } catch (error) {
       console.error('Error deleting template:', error);
@@ -358,7 +371,7 @@ export const useTemplateManagement = () => {
 
   // Update a template
   const updateTemplate = async (templateId: string, updates: Partial<TemplateType>) => {
-    if (!user || !templateId) return;
+    if (!user || !templateId) return null;
 
     setIsLoading(true);
     try {
@@ -375,9 +388,9 @@ export const useTemplateManagement = () => {
       }
 
       const { error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .update({
-          name: updates.name,
+          template_name: updates.name,
           description: updates.description,
           language: updates.language,
           settings: updates.settings
@@ -441,15 +454,21 @@ export const useTemplateManagement = () => {
       
       if (existingSettings) {
         // Update existing settings
+        const offerSettings = existingSettings.offer_settings || {};
+        offerSettings.default_template_id = templateId;
+        
         await supabase
           .from('user_settings')
-          .update({ default_template_id: templateId })
+          .update({ offer_settings: offerSettings })
           .eq('user_id', user.id);
       } else {
         // Create new settings
         await supabase
           .from('user_settings')
-          .insert({ user_id: user.id, default_template_id: templateId });
+          .insert({ 
+            user_id: user.id, 
+            offer_settings: { default_template_id: templateId }
+          });
       }
       
       // Update state
@@ -491,18 +510,26 @@ export const useTemplateManagement = () => {
     fetchUserTemplates();
   };
 
+  // Get the default template
+  const getDefaultTemplate = () => {
+    if (defaultTemplateId) {
+      return getTemplateById(defaultTemplateId);
+    }
+    return sampleTemplates[0];
+  };
+
   return {
     userTemplates,
     sampleTemplates,
     isLoading,
     createTemplate,
     deleteTemplate,
-    editTemplate: updateTemplate,
     updateTemplate,
     getTemplateById,
     refreshTemplates,
     setAsDefaultTemplate,
     defaultTemplateId,
-    resetToDefaultTemplate
+    resetToDefaultTemplate,
+    getDefaultTemplate
   };
 };
