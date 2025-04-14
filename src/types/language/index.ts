@@ -14,6 +14,7 @@ import { CompanyInfoTranslations } from './companyInfo';
 import { HomeTranslations } from './home';
 import { OfferDetailsTranslations } from './offerDetails';
 import { TotalsTranslations } from './totals';
+import { NavigationTranslations } from './navigation';
 
 // Export all types for easy access
 export type {
@@ -35,5 +36,6 @@ export type {
   ProductsTranslations,
   HomeTranslations,
   OfferDetailsTranslations,
-  TotalsTranslations
+  TotalsTranslations,
+  NavigationTranslations
 };
