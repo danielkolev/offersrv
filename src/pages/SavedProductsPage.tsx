@@ -8,8 +8,9 @@ import ProductPageHeader from '@/components/management/products/ProductPageHeade
 import ProductFormDialog from '@/components/management/products/ProductFormDialog';
 import { useProductsManagement } from '@/components/management/products/hooks/useProductsManagement';
 import BackButton from '@/components/navigation/BackButton';
+import { OfferProvider } from '@/context/offer';
 
-const SavedProductsPage = () => {
+const SavedProductsContent = () => {
   const { t } = useLanguage();
   
   const {
@@ -28,7 +29,6 @@ const SavedProductsPage = () => {
     handleOpenAddDialog,
     handleEditProduct,
     handleSaveProduct,
-    handleSaveFromOffer,
     handleDeleteProduct,
     handleSelectProduct
   } = useProductsManagement(t);
@@ -74,6 +74,15 @@ const SavedProductsPage = () => {
         t={t}
       />
     </div>
+  );
+};
+
+// This is the main component that wraps the content with OfferProvider
+const SavedProductsPage = () => {
+  return (
+    <OfferProvider>
+      <SavedProductsContent />
+    </OfferProvider>
   );
 };
 

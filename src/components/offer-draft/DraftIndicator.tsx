@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useOffer } from '@/context/offer';
 import { useAuth } from '@/context/AuthContext';
 import { FileEdit } from 'lucide-react';
@@ -19,8 +18,14 @@ export const DraftIndicator = () => {
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [hasDraft, setHasDraft] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  
+  // Don't show indicator on /saved-products page as it has its own OfferProvider
+  if (location.pathname === '/saved-products') {
+    return null;
+  }
   
   // Check for draft presence when component loads
   useEffect(() => {
