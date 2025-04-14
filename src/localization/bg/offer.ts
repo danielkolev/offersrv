@@ -39,7 +39,6 @@ export const offer = {
   savedSuccessfully: "Запазено успешно",
   saveFailed: "Грешка при запазване",
   generatePdf: "Генерирай PDF",
-  templates: "Шаблони",
   applyTemplate: "Приложи шаблон",
   noTemplatesFound: "Не са намерени шаблони",
   templateApplied: "Шаблонът е приложен успешно",
@@ -156,10 +155,21 @@ export const offer = {
     english: "Английски",
   },
   
+  // Required fields that were missing
+  offerLanguage: "Език на офертата",
+  bulgarian: "Български",
+  english: "Английски",
+  templateName: "Име на шаблона",
+  templateDescription: "Описание на шаблона",
+  templateNamePlaceholder: "Въведете име на шаблона",
+  templateDescriptionPlaceholder: "Въведете описание на шаблона",
+  applyThisTemplate: "Приложи този шаблон",
+  offerNamePlaceholder: "Въведете име на офертата",
+  
   // Preview related translations
   offerPreview: "Преглед на офертата",
   
-  // Templates related translations
+  // Templates related translations (removing the duplicate property)
   templates: {
     title: "Шаблони",
     description: "Управление на вашите шаблони",

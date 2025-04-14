@@ -6,8 +6,11 @@ export interface OfferTranslations {
   clientInfo: string;
   productsAndServices: string;
   previewAndSave: string;
+  previewAndFinish: string;
+  offerName: string;
   offerNumber: string;
   offerDate: string;
+  date: string;
   validUntil: string;
   notes: string;
   transportCost: string;
@@ -52,7 +55,6 @@ export interface OfferTranslations {
   bgn: string;
   eur: string;
   usd: string;
-  offerName: string;
   offerNamePlaceholder: string;
   draftInProgress: string;
   notSavedYet: string;
@@ -74,7 +76,7 @@ export interface OfferTranslations {
   draftRestoredDescription: string;
   returnToDraft: string;
   
-  // Additional required fields from the error
+  // Additional required fields
   saveOffer: string;
   confirmSave: string;
   saveDescription: string;
@@ -88,7 +90,6 @@ export interface OfferTranslations {
   header: string;
   fromCompany: string;
   toCompany: string;
-  date: string;
   reference: string;
   item: string;
   qty: string;
