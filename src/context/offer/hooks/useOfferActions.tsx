@@ -1,5 +1,6 @@
+
 import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { useTemplateManagement } from '@/hooks/use-template-management';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
@@ -7,11 +8,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 
 export const useOfferActions = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { resetToDefaultTemplate } = useTemplateManagement();
+  const { resetToDefaultTemplate, getDefaultTemplate } = useTemplateManagement();
 
   const createNewOffer = useCallback(() => {
     // Get default template
@@ -19,11 +20,11 @@ export const useOfferActions = () => {
     
     // Navigate to create offer page with template
     if (defaultTemplate) {
-      router.push(`/create-offer?template=${defaultTemplate.id}`);
+      navigate(`/new-offer?template=${defaultTemplate.id}`);
     } else {
-      router.push('/create-offer');
+      navigate('/new-offer');
     }
-  }, [router, resetToDefaultTemplate]);
+  }, [navigate, resetToDefaultTemplate]);
 
   const saveOffer = useCallback(async (offerData: any, isTemplate: boolean = false) => {
     if (!user) {

@@ -4,7 +4,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import { SavedOffer } from '@/types/database';
 
 export interface TemplateType {
   id: string;
@@ -217,27 +216,35 @@ export const useTemplateManagement = () => {
         throw error;
       }
 
-      // Get default template
+      // Get default template from user settings
       const { data: defaultData } = await supabase
         .from('user_settings')
         .select('*')
         .eq('user_id', user.id)
         .single();
 
-      if (defaultData && defaultData.offer_settings && defaultData.offer_settings.default_template_id) {
-        setDefaultTemplateId(defaultData.offer_settings.default_template_id);
-      } else {
-        // If no default template is set, use first sample template
+      // Check if user has a default template set in their settings
+      let defaultId = null;
+      if (defaultData && defaultData.offer_settings) {
+        const offerSettings = defaultData.offer_settings as Record<string, any>;
+        if (offerSettings && offerSettings.default_template_id) {
+          defaultId = offerSettings.default_template_id;
+          setDefaultTemplateId(defaultId);
+        }
+      }
+
+      // If no default template is set, use first sample template
+      if (!defaultId) {
         setDefaultTemplateId(sampleTemplates[0].id);
       }
 
       // Format templates
       const formattedTemplates: TemplateType[] = templatesData.map(template => ({
         id: template.id,
-        name: template.template_name || 'Unnamed Template',
+        name: template.name || 'Unnamed Template',
         description: template.description || '',
-        language: template.language || 'all',
-        isDefault: defaultData?.offer_settings?.default_template_id === template.id,
+        language: (template.language as 'bg' | 'en' | 'all') || 'all',
+        isDefault: defaultId === template.id,
         settings: template.settings || {},
       }));
 
@@ -246,7 +253,7 @@ export const useTemplateManagement = () => {
       console.error('Error fetching templates:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToLoadTemplates,
+        description: t.offer.templates.failedToLoadTemplates || 'Failed to load templates',
         variant: 'destructive',
       });
     } finally {
@@ -273,7 +280,7 @@ export const useTemplateManagement = () => {
     try {
       const newTemplate = {
         user_id: user.id,
-        template_name: name,
+        name: name,
         description,
         language: extraData.language || 'all',
         settings: extraData.settings || {}
@@ -293,9 +300,9 @@ export const useTemplateManagement = () => {
       setUserTemplates(prev => [
         {
           id: data.id,
-          name: data.template_name || 'Unnamed Template',
+          name: data.name || 'Unnamed Template',
           description: data.description || '',
-          language: data.language || 'all',
+          language: (data.language as 'bg' | 'en' | 'all') || 'all',
           settings: data.settings || {},
         },
         ...prev
@@ -307,7 +314,7 @@ export const useTemplateManagement = () => {
       console.error('Error creating template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToCreateTemplate,
+        description: t.offer.templates.failedToCreateTemplate || 'Failed to create template',
         variant: 'destructive',
       });
       return null;
@@ -348,7 +355,7 @@ export const useTemplateManagement = () => {
         
         // Update settings with new default_template_id set to null
         if (settingsData) {
-          const offerSettings = settingsData.offer_settings || {};
+          const offerSettings = settingsData.offer_settings as Record<string, any> || {};
           offerSettings.default_template_id = null;
           
           await supabase
@@ -361,7 +368,7 @@ export const useTemplateManagement = () => {
       console.error('Error deleting template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToDeleteTemplate,
+        description: t.offer.templates.failedToDeleteTemplate || 'Failed to delete template',
         variant: 'destructive',
       });
     } finally {
@@ -370,7 +377,7 @@ export const useTemplateManagement = () => {
   };
 
   // Update a template
-  const updateTemplate = async (templateId: string, updates: Partial<TemplateType>) => {
+  const updateTemplate = async (templateId: string, updates: Partial<TemplateType>): Promise<string | null> => {
     if (!user || !templateId) return null;
 
     setIsLoading(true);
@@ -390,7 +397,7 @@ export const useTemplateManagement = () => {
       const { error } = await supabase
         .from('templates')
         .update({
-          template_name: updates.name,
+          name: updates.name,
           description: updates.description,
           language: updates.language,
           settings: updates.settings
@@ -415,7 +422,7 @@ export const useTemplateManagement = () => {
       console.error('Error updating template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToUpdateTemplate,
+        description: t.offer.templates.failedToUpdateTemplate || 'Failed to update template',
         variant: 'destructive',
       });
       return null;
@@ -454,7 +461,7 @@ export const useTemplateManagement = () => {
       
       if (existingSettings) {
         // Update existing settings
-        const offerSettings = existingSettings.offer_settings || {};
+        const offerSettings = existingSettings.offer_settings as Record<string, any> || {};
         offerSettings.default_template_id = templateId;
         
         await supabase
@@ -482,13 +489,13 @@ export const useTemplateManagement = () => {
       
       toast({
         title: t.common.success,
-        description: t.offer.templates.defaultTemplateSet,
+        description: t.offer.templates.defaultTemplateSet || 'Default template set',
       });
     } catch (error) {
       console.error('Error setting default template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToSetDefaultTemplate,
+        description: t.offer.templates.failedToSetDefaultTemplate || 'Failed to set default template',
         variant: 'destructive',
       });
     } finally {
