@@ -28,7 +28,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   language,
   settings
 }) => {
-  const { currency } = useLanguage();
+  const { currency, t } = useLanguage();
   
   const isBoldPrices = settings?.content?.boldPrices !== false;
   const isCompactMode = settings?.layout?.compactMode === true;
@@ -41,7 +41,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
       )}>
         <div className="flex justify-between py-1">
           <span className="text-sm text-gray-600">
-            {language === 'bg' ? 'Междинна сума' : 'Subtotal'}:
+            {t.totals.subtotal}:
           </span>
           <span className={cn(
             "text-gray-800",
@@ -54,7 +54,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
         {transportCost > 0 && (
           <div className="flex justify-between py-1">
             <span className="text-sm text-gray-600">
-              {language === 'bg' ? 'Транспорт' : 'Transport'}:
+              {t.totals.transport}:
             </span>
             <span className={cn(
               "text-gray-800",
@@ -68,7 +68,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
         {otherCosts > 0 && (
           <div className="flex justify-between py-1">
             <span className="text-sm text-gray-600">
-              {language === 'bg' ? 'Други разходи' : 'Other costs'}:
+              {t.totals.otherCosts}:
             </span>
             <span className={cn(
               "text-gray-800",
@@ -82,7 +82,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
         {includeVat && (
           <div className="flex justify-between py-1">
             <span className="text-sm text-gray-600">
-              {language === 'bg' ? `ДДС (${vatRate}%)` : `VAT (${vatRate}%)`}:
+              {`${t.totals.vat} (${vatRate}%)`}:
             </span>
             <span className={cn(
               "text-gray-800",
@@ -103,7 +103,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
           borderColor: settings?.appearance?.primaryColor || ""
         }}>
           <span>
-            {language === 'bg' ? 'Обща сума' : 'Total'}:
+            {t.totals.total}:
           </span>
           <span>{formatCurrency(total, language, currency)}</span>
         </div>

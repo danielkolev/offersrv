@@ -2,7 +2,10 @@
 export const totals = {
   subtotal: "Subtotal",
   vat: "VAT",
+  vatRate: "VAT Rate",
   transport: "Transport",
   otherCosts: "Other Costs",
-  totalAmount: "Total Amount"
+  total: "Total",
+  totalAmount: "Total Amount",
+  discount: "Discount"
 };
