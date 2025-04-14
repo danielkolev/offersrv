@@ -19,10 +19,14 @@ export const savedClients = {
   searchPlaceholder: "Search by name, email or company",
   searchByName: "Search by name",
   searchByVat: "Search by VAT",
-  searchByEik: "Search by EIK", // Ensuring it exists here
+  searchByEik: "Search by EIK",
   selectClient: "Select Client",
   cancel: "Cancel",
   importFromOffer: "Import from Offer",
   deleteConfirmation: "Are you sure you want to delete this client?",
-  recentClients: "Recent Clients"
+  recentClients: "Recent Clients",
+  clientCreated: "Client has been created successfully",
+  clientUpdated: "Client has been updated successfully",
+  noClients: "No Clients",
+  filterBy: "Filter By"
 };

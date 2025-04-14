@@ -19,10 +19,14 @@ export const savedClients = {
   searchPlaceholder: "Търсене по име, имейл или компания",
   searchByName: "Търсене по име",
   searchByVat: "Търсене по ДДС номер",
-  searchByEik: "Търсене по ЕИК", // Ensuring it exists here
+  searchByEik: "Търсене по ЕИК",
   selectClient: "Избери клиент",
   cancel: "Отказ",
   importFromOffer: "Импортиране от оферта",
   deleteConfirmation: "Сигурни ли сте, че искате да изтриете този клиент?",
-  recentClients: "Скорошни клиенти"
+  recentClients: "Скорошни клиенти",
+  clientCreated: "Клиентът е създаден успешно",
+  clientUpdated: "Клиентът е обновен успешно",
+  noClients: "Няма клиенти",
+  filterBy: "Филтрирай по"
 };

@@ -1,6 +1,7 @@
 
 export interface OfferDetailsTranslations {
   title: string;
+  description: string;
   offerNumber: string;
   offerNumberInfo: string;
   date: string;

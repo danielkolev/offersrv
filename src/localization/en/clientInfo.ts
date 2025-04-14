@@ -1,14 +1,19 @@
 
 export const clientInfo = {
   title: "Client Information",
-  description: "Enter client information", // Added description
+  description: "Enter client information",
+  clientDetails: "Client Details",
   name: "Name",
   contactPerson: "Contact Person",
+  contactPersonName: "Contact Person Name",
+  contactPersonPosition: "Position",
+  contactPersonEmail: "Email",
+  contactPersonPhone: "Phone",
   address: "Address",
   city: "City",
   country: "Country",
-  vatNumber: "VAT Number", // Keeping English translation as is
-  eikNumber: "EIK", // Simplified English translation
+  vatNumber: "VAT Number",
+  eikNumber: "EIK",
   email: "Email",
   phone: "Phone",
   website: "Website",
@@ -18,12 +23,17 @@ export const clientInfo = {
   cityPlaceholder: "e.g. London",
   countryPlaceholder: "e.g. United Kingdom",
   vatNumberPlaceholder: "e.g. GB123456789",
-  eikNumberPlaceholder: "e.g. 123456789", // Updated placeholder
+  eikNumberPlaceholder: "e.g. 123456789",
   emailPlaceholder: "e.g. office@example.com",
   phonePlaceholder: "e.g. +44 1234 567890",
   websitePlaceholder: "e.g. example.com",
   selectClient: "Select Client",
   selectExisting: "Select Existing Client",
   searchClients: "Search Clients",
-  nameRequired: "Name is required"
+  nameRequired: "Name is required",
+  addContact: "Add Contact",
+  removeContact: "Remove Contact",
+  billingAddress: "Billing Address",
+  shippingAddress: "Shipping Address",
+  sameAsBilling: "Same as Billing"
 };

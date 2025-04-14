@@ -1,14 +1,19 @@
 
 export const clientInfo = {
   title: "Информация за клиента",
-  description: "Въведете информация за клиента", // Added description
+  description: "Въведете информация за клиента",
+  clientDetails: "Детайли за клиента",
   name: "Име",
   contactPerson: "Лице за контакт",
+  contactPersonName: "Име на лицето за контакт",
+  contactPersonPosition: "Позиция",
+  contactPersonEmail: "Имейл",
+  contactPersonPhone: "Телефон",
   address: "Адрес",
   city: "Град",
   country: "Държава",
-  vatNumber: "Номер по ДДС", // Updated label
-  eikNumber: "ЕИК", // Updated label
+  vatNumber: "Номер по ДДС",
+  eikNumber: "ЕИК",
   email: "Имейл",
   phone: "Телефон",
   website: "Уебсайт",
@@ -18,12 +23,17 @@ export const clientInfo = {
   cityPlaceholder: "напр. София",
   countryPlaceholder: "напр. България",
   vatNumberPlaceholder: "напр. BG123456789",
-  eikNumberPlaceholder: "напр. 123456789", // Updated placeholder
+  eikNumberPlaceholder: "напр. 123456789",
   emailPlaceholder: "напр. office@example.com",
   phonePlaceholder: "напр. +359 888 123 456",
   websitePlaceholder: "напр. example.com",
   selectClient: "Избери клиент",
   selectExisting: "Избери съществуващ клиент",
   searchClients: "Търси клиенти",
-  nameRequired: "Името е задължително"
+  nameRequired: "Името е задължително",
+  addContact: "Добави контакт",
+  removeContact: "Премахни контакт",
+  billingAddress: "Адрес за фактуриране",
+  shippingAddress: "Адрес за доставка",
+  sameAsBilling: "Същият като за фактуриране"
 };

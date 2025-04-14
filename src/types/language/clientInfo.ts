@@ -1,12 +1,36 @@
 
 export interface ClientInfoTranslations {
   title: string;
+  description: string;
   clientDetails: string;
+  name: string;
   contactPerson: string;
   contactPersonName: string;
   contactPersonPosition: string;
   contactPersonEmail: string;
   contactPersonPhone: string;
+  address: string;
+  city: string;
+  country: string;
+  vatNumber: string;
+  eikNumber: string;
+  email: string;
+  phone: string;
+  website?: string;
+  namePlaceholder: string;
+  contactPersonPlaceholder: string;
+  addressPlaceholder: string;
+  cityPlaceholder: string;
+  countryPlaceholder: string;
+  vatNumberPlaceholder: string;
+  eikNumberPlaceholder: string;
+  emailPlaceholder: string;
+  phonePlaceholder: string;
+  websitePlaceholder?: string;
+  selectClient: string;
+  selectExisting: string;
+  searchClients: string;
+  nameRequired: string;
   addContact: string;
   removeContact: string;
   billingAddress: string;

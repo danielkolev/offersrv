@@ -1,158 +1,266 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { PlusCircle, BookOpen } from 'lucide-react';
+import { useTemplateManagement, TemplateType } from '@/hooks/use-template-management';
 import { useLanguage } from '@/context/LanguageContext';
-import { useTemplateManagement } from '@/hooks/use-template-management';
-import OfferTemplateSettings from '@/components/settings/OfferTemplateSettings';
-import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
 import { useToast } from '@/hooks/use-toast';
+import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
+import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Trash } from 'lucide-react';
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from '@/components/ui/alert-dialog';
 
 const TemplatesPage = () => {
-  const { t } = useLanguage();
+  const { templateId } = useParams();
   const navigate = useNavigate();
-  const [isCreating, setIsCreating] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const location = useLocation();
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const [selectedSettings, setSelectedSettings] = useState<any>({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('settings');
+  
+  // Get template management hooks
+  const templateManagement = useTemplateManagement();
   const {
     userTemplates,
     isLoading,
     createTemplate,
-    updateTemplate,
     deleteTemplate,
-    setDefaultTemplate,
-    refreshTemplates
-  } = useTemplateManagement();
-  const { toast } = useToast();
+    refreshTemplates,
+    editTemplate
+  } = templateManagement;
   
-  useEffect(() => {
-    refreshTemplates();
-  }, [refreshTemplates]);
+  // Get the current template
+  const selectedTemplate = userTemplates.find(template => template.id === templateId);
   
-  const handleCreateTemplate = async (name: string, description: string, settings?: any, isDefault?: boolean) => {
-    try {
-      await createTemplate(name, description, settings, isDefault);
-      setIsCreating(false);
-      toast({
-        title: t.common.success,
-        description: t.settings.templateCreated,
-      });
-    } catch (error) {
-      console.error("Error creating template:", error);
-      toast({
-        title: t.common.error,
-        description: t.settings.saveTemplateFailed,
-        variant: "destructive",
-      });
-    }
-  };
-  
-  const handleUpdateTemplate = async (id: string, settings: any) => {
-    try {
-      await updateTemplate(id, settings);
-      setIsEditing(false);
-      setSelectedTemplateId(null);
-      toast({
-        title: t.common.success,
-        description: t.settings.templateUpdated,
-      });
-    } catch (error) {
-      console.error("Error updating template:", error);
-      toast({
-        title: t.common.error,
-        description: t.settings.saveTemplateFailed,
-        variant: "destructive",
-      });
-    }
-  };
-  
-  const handleDeleteTemplate = async (id: string) => {
-    if (!window.confirm(t.settings.confirmDeleteTemplate)) {
-      return;
-    }
+  // Handle template deletion
+  const handleDeleteTemplate = async () => {
+    if (!templateId) return;
     
     try {
-      await deleteTemplate(id);
+      await deleteTemplate(templateId);
       toast({
         title: t.common.success,
         description: t.settings.templateDeleted,
       });
+      navigate('/settings/templates');
     } catch (error) {
-      console.error("Error deleting template:", error);
       toast({
         title: t.common.error,
         description: t.settings.deleteTemplateFailed,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
   
-  const handleSetDefaultTemplate = async (id: string) => {
-    try {
-      await setDefaultTemplate(id);
+  // Handle template update
+  const handleUpdateTemplate = async (name: string, description: string, settings: any) => {
+    if (!templateId || templateId === 'new') {
+      // Create new template
+      await createTemplate(name, description, settings);
+      navigate('/settings/templates');
+    } else {
+      // Update existing template
+      await editTemplate(templateId, {
+        name,
+        description,
+        settings
+      });
+    }
+  };
+  
+  // Handle setting a template as default
+  const handleSetAsDefault = async () => {
+    if (!templateId || !templateManagement.setDefaultTemplate) return;
+    
+    await templateManagement.setDefaultTemplate(templateId);
+  };
+  
+  // Listen for template updates
+  useEffect(() => {
+    if (templateManagement.templateUpdated) {
+      toast({
+        title: t.common.success,
+        description: t.settings.templateUpdated,
+      });
+      refreshTemplates();
+    }
+  }, [templateManagement.templateUpdated, t.common.success, t.settings.templateUpdated, toast, refreshTemplates]);
+  
+  // Listen for template creation
+  useEffect(() => {
+    if (templateManagement.templateCreated) {
+      toast({
+        title: t.common.success,
+        description: t.settings.templateCreated,
+      });
+      refreshTemplates();
+    }
+  }, [templateManagement.templateCreated, t.common.success, t.settings.templateCreated, toast, refreshTemplates]);
+  
+  // Listen for template save failures
+  useEffect(() => {
+    if (templateManagement.saveTemplateFailed) {
+      toast({
+        title: t.common.error,
+        description: t.settings.saveTemplateFailed,
+        variant: 'destructive',
+      });
+    }
+  }, [templateManagement.saveTemplateFailed, t.common.error, t.settings.saveTemplateFailed, toast]);
+  
+  // Listen for default template set
+  useEffect(() => {
+    if (templateManagement.defaultTemplateSet) {
       toast({
         title: t.common.success,
         description: t.settings.defaultTemplateSet,
       });
-    } catch (error) {
-      console.error("Error setting default template:", error);
+    }
+  }, [templateManagement.defaultTemplateSet, t.common.success, t.settings.defaultTemplateSet, toast]);
+  
+  // Listen for default template set failures
+  useEffect(() => {
+    if (templateManagement.setDefaultFailed) {
       toast({
         title: t.common.error,
         description: t.settings.setDefaultFailed,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
+  }, [templateManagement.setDefaultFailed, t.common.error, t.settings.setDefaultFailed, toast]);
+  
+  // Initialize settings from the template
+  useEffect(() => {
+    if (selectedTemplate) {
+      setSelectedSettings(selectedTemplate.settings || {});
+    }
+  }, [selectedTemplate]);
+  
+  // Handle settings change
+  const handleSettingsChange = (newSettings: any) => {
+    setSelectedSettings(newSettings);
   };
   
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setSelectedTemplateId(null);
-  };
-  
-  const handleUseTemplate = (templateId: string) => {
-    navigate(`/new-offer?template=${templateId}`);
+  // Handle back button click
+  const handleBackClick = () => {
+    navigate('/settings/templates');
   };
 
-  const templateOptions = t.settings.templates;
-  const templateOptionsNode = React.useMemo(() => (
-    <>
-      <span>{templateOptions.classic}</span>
-      <span>{templateOptions.modernDark}</span>
-      <span>{templateOptions.gradient}</span>
-      <span>{templateOptions.businessPro}</span>
-      <span>{templateOptions.selectDesign}</span>
-    </>
-  ), [templateOptions]);
-  
-  const handleCreateNew = () => {
-    setIsCreating(true);
-  };
-  
-  const handleEditTemplate = (id: string) => {
-    setSelectedTemplateId(id);
-    setIsEditing(true);
-  };
-  
-  const handleShowUserTemplatesOnly = (showOnlyUserTemplates: boolean) => {
-    // Implement logic to filter templates based on user preference
-    console.log("Show User Templates Only:", showOnlyUserTemplates);
-  };
-  
   return (
-    <div>
-      <div className="container mx-auto py-10">
-        <h1 className="text-3xl font-semibold mb-6">{t.settings.offerTemplates}</h1>
+    <div className="container mx-auto py-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleBackClick}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-2xl font-bold">
+            {templateId === 'new' ? t.settings.newTemplate : selectedTemplate?.name || t.settings.editTemplate}
+          </h1>
+        </div>
         
-        {isLoading ? (
-          <div className="text-center py-4">{t.common.loading}</div>
-        ) : (
-          <>
-            <OfferTemplateSettings />
-          </>
+        {templateId !== 'new' && (
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={handleSetAsDefault}
+              disabled={selectedTemplate?.is_default}
+            >
+              {t.settings.setAsDefault}
+            </Button>
+            
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash className="h-4 w-4 mr-2" />
+                  {t.common.delete}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{t.common.confirmation}</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t.settings.confirmDeleteTemplate}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteTemplate}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {t.common.delete}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         )}
       </div>
+      
+      <Tabs defaultValue="settings" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="mb-4">
+          <TabsTrigger value="settings">{t.settings.details}</TabsTrigger>
+          <TabsTrigger value="preview">{t.settings.preview}</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="settings">
+          {templateId === 'new' ? (
+            <div className="flex flex-col h-full space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                <div className="flex flex-col">
+                  <TemplateSettings 
+                    selectedTemplateId={templateId}
+                    onSettingsChange={handleSettingsChange}
+                    onSave={handleUpdateTemplate}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <TemplatePreview settings={selectedSettings} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col h-full space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                <div className="flex flex-col">
+                  <TemplateSettings 
+                    selectedTemplateId={templateId || ''}
+                    onSettingsChange={handleSettingsChange}
+                    onSave={handleUpdateTemplate}
+                    initialSettings={selectedTemplate?.settings}
+                    initialName={selectedTemplate?.name}
+                    initialDescription={selectedTemplate?.description}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <TemplatePreview settings={selectedSettings} />
+                </div>
+              </div>
+            </div>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="preview">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <TemplatePreview 
+              settings={selectedSettings} 
+              fullScreen={true} 
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

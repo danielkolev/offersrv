@@ -13,4 +13,21 @@ export interface SavedClientsTranslations {
   deleteClient: string;
   confirmDeleteClient: string;
   confirmDeleteClientText: string;
+  createNew: string; 
+  updateClient: string;
+  cancel: string;
+  selectClient: string;
+  importFromOffer: string;
+  searchByName: string;
+  searchByVat: string;
+  searchByEik: string;
+  clientUpdatedSuccess: string;
+  clientAddedSuccess: string;
+  clientDeletedSuccess: string;
+  clientLoaded: string;
+  recentClients: string;
+  search: string;
+  noClientsFound: string;
+  noClientsFoundSearch: string;
+  deleteConfirmation: string;
 }
