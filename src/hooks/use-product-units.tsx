@@ -19,7 +19,7 @@ export function useProductUnits() {
 
   // Start with a default "no unit" option that has a non-empty ID
   const defaultUnits: ProductUnit[] = [
-    { id: 'none', name: '-', name_en: '-' }, // Non-empty ID for "no unit" option
+    { id: 'none', name: '-', name_en: '-' }, // Empty unit for default
     { id: 'pieces', name: 'брой', name_en: 'pieces' },
   ];
 

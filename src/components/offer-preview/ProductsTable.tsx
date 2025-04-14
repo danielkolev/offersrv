@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Product } from '@/types/offer';
 import { useLanguage } from '@/context/LanguageContext';
@@ -39,9 +40,8 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
             }}
           >
             <th className="p-2 text-left">{t.offer.item}</th>
-            {showPartNumber && <th className="p-2 text-left">{t.offer.partNo}</th>}
+            {showPartNumber && <th className="p-2 text-left">{t.products.partNo}</th>}
             <th className="p-2 text-right">{t.offer.qty}</th>
-            <th className="p-2 text-right">{t.offer.unit}</th>
             <th className="p-2 text-right">{t.offer.unitPrice}</th>
             <th className="p-2 text-right">{t.offer.total}</th>
           </tr>
@@ -65,8 +65,14 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
                 </div>
               </td>
               {showPartNumber && <td className="p-2">{product.partNumber}</td>}
-              <td className="p-2 text-right">{product.quantity}</td>
-              <td className="p-2 text-right">{product.unit || 'бр.'}</td>
+              <td className="p-2 text-right">
+                <div className="flex flex-col items-end">
+                  <span>{product.quantity}</span>
+                  {product.unit && product.unit !== 'none' && (
+                    <span className="text-xs text-gray-500">{product.unit}</span>
+                  )}
+                </div>
+              </td>
               <td className="p-2 text-right">
                 <span className={cn(isBoldPrices ? 'font-medium' : '')}>
                   {formatCurrency(product.unitPrice, displayLanguage)}

@@ -1,665 +1,953 @@
-
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '@/context/LanguageContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { 
-  Palette, 
-  AlignCenter, 
-  AlignLeft, 
-  AlignRight,
-  LayoutGrid,
-  SquareStack,
-  Settings,
-  CreditCard,
-  FileText,
-  RefreshCw,
-  Save,
-  Star,
-  Undo
-} from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/context/LanguageContext';
+import { useOffer } from '@/context/offer/OfferContext';
+import { HexColorPicker } from 'react-colorful';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import TemplatePreview from './TemplatePreview';
-import { useTemplateManagement, TemplateType } from '@/hooks/use-template-management';
+import { useToast } from '@/components/ui/use-toast';
+import { Slider } from '@/components/ui/slider';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Palette, Type, LayoutGrid, FileText, Brush, Cog, Check } from 'lucide-react';
+
+// Define the schema for template settings
+const templateSettingsSchema = z.object({
+  // Appearance settings
+  appearance: z.object({
+    primaryColor: z.string().default('#0891B2'),
+    secondaryColor: z.string().default('#F0F9FF'),
+    textColor: z.string().default('#FFFFFF'),
+    fontFamily: z.string().default('Inter'),
+    fontSize: z.string().default('medium'),
+    roundedCorners: z.boolean().default(true),
+  }),
+  
+  // Layout settings
+  layout: z.object({
+    showLogo: z.boolean().default(true),
+    logoPosition: z.string().default('left'),
+    compactMode: z.boolean().default(false),
+    fullWidth: z.boolean().default(false),
+    borderless: z.boolean().default(false),
+  }),
+  
+  // Content settings
+  content: z.object({
+    boldPrices: z.boolean().default(true),
+    alternateRowColors: z.boolean().default(false),
+    showLineNumbers: z.boolean().default(false),
+    showFooter: z.boolean().default(true),
+    footerText: z.string().default(''),
+  }),
+  
+  // Header settings
+  header: z.object({
+    showCompanySlogan: z.boolean().default(true),
+    companyNameSize: z.string().default('medium'),
+    showOfferLabel: z.boolean().default(true),
+    shadow: z.boolean().default(false),
+  }),
+  
+  // Footer settings
+  footer: z.object({
+    showBankDetails: z.boolean().default(false),
+    showSignatureArea: z.boolean().default(true),
+    signatureText: z.string().default(''),
+    useQRCode: z.boolean().default(false),
+  }),
+  
+  // Template metadata
+  template: z.object({
+    name: z.string().min(1, 'Template name is required'),
+    description: z.string().optional(),
+    language: z.string().default('bg'),
+  }),
+  
+  // Design template selection
+  designTemplate: z.string().default('classic'),
+});
+
+type TemplateSettingsFormValues = z.infer<typeof templateSettingsSchema>;
 
 interface TemplateSettingsProps {
-  selectedTemplateId?: string;
+  initialSettings?: any;
+  onSave?: (settings: any) => void;
+  onCancel?: () => void;
+  isEditing?: boolean;
 }
 
-const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId }) => {
+const TemplateSettings: React.FC<TemplateSettingsProps> = ({
+  initialSettings,
+  onSave,
+  onCancel,
+  isEditing = false,
+}) => {
   const { t, language } = useLanguage();
+  const { offer } = useOffer();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('appearance');
-  const { 
-    editTemplate, 
-    getTemplateById, 
-    sampleTemplates, 
-    saveTemplateSettings,
-    setAsDefaultTemplate,
-    resetToDefaultTemplate,
-    defaultTemplateId
-  } = useTemplateManagement();
   
-  // Default template settings
-  const [settings, setSettings] = useState({
+  // Default values for the form
+  const defaultValues: TemplateSettingsFormValues = {
     appearance: {
-      primaryColor: '#7e69ab',
-      secondaryColor: '#f8f9fa',
-      textColor: '#ffffff',
-      fontFamily: 'Inter, sans-serif',
+      primaryColor: '#0891B2',
+      secondaryColor: '#F0F9FF',
+      textColor: '#FFFFFF',
+      fontFamily: 'Inter',
       fontSize: 'medium',
       roundedCorners: true,
-      headerStyle: 'standard',
     },
     layout: {
       showLogo: true,
       logoPosition: 'left',
-      headerLayout: 'standard',
       compactMode: false,
+      fullWidth: false,
+      borderless: false,
     },
     content: {
       boldPrices: true,
+      alternateRowColors: false,
+      showLineNumbers: false,
       showFooter: true,
-      footerText: language === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!',
-      showBankDetails: false,
+      footerText: language === 'bg' 
+        ? 'Благодарим Ви за доверието!' 
+        : 'Thank you for your business!',
     },
     header: {
       showCompanySlogan: true,
-      companyNameSize: 'large',
+      companyNameSize: 'medium',
       showOfferLabel: true,
+      shadow: false,
     },
     footer: {
       showBankDetails: false,
-      showSignatureArea: false,
-      signatureText: language === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:',
+      showSignatureArea: true,
+      signatureText: language === 'bg' 
+        ? 'Подпис и печат:' 
+        : 'Signature and stamp:',
+      useQRCode: false,
     },
     template: {
-      name: selectedTemplateId ? '' : 'New Template',
+      name: '',
       description: '',
-      language: 'all' as 'bg' | 'en' | 'all',
-    }
+      language: language,
+    },
+    designTemplate: 'classic',
+  };
+  
+  // Create form with react-hook-form
+  const form = useForm<TemplateSettingsFormValues>({
+    resolver: zodResolver(templateSettingsSchema),
+    defaultValues: initialSettings || defaultValues,
   });
   
-  const [isPreviewVisible, setIsPreviewVisible] = useState(true);
-  const [isDefault, setIsDefault] = useState(selectedTemplateId === defaultTemplateId);
+  // Watch form values for preview
+  const formValues = form.watch();
   
-  // Handle template loading if ID is provided
-  useEffect(() => {
-    if (selectedTemplateId) {
-      // Get template data
-      const template = getTemplateById(selectedTemplateId);
-      
-      if (template) {
-        // Update settings from template data
-        if (template.settings) {
-          setSettings(prevSettings => ({
-            ...prevSettings,
-            ...template.settings,
-            template: {
-              ...prevSettings.template,
-              name: template.name,
-              description: template.description || '',
-              language: template.language || 'all'
-            }
-          }));
-        } else {
-          // Just update name and description
-          setSettings(prevSettings => ({
-            ...prevSettings,
-            template: {
-              ...prevSettings.template,
-              name: template.name,
-              description: template.description || '',
-              language: template.language || 'all'
-            }
-          }));
-        }
-        
-        // Check if this is the default template
-        setIsDefault(template.id === defaultTemplateId || template.isDefault);
-      }
-    }
-  }, [selectedTemplateId, defaultTemplateId]);
-  
-  const handleAppearanceChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      appearance: {
-        ...settings.appearance,
-        [key]: value
-      }
-    });
-  };
-  
-  const handleLayoutChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      layout: {
-        ...settings.layout,
-        [key]: value
-      }
-    });
-  };
-  
-  const handleContentChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      content: {
-        ...settings.content,
-        [key]: value
-      }
-    });
-  };
-
-  const handleHeaderChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      header: {
-        ...settings.header,
-        [key]: value
-      }
-    });
-  };
-
-  const handleFooterChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      footer: {
-        ...settings.footer,
-        [key]: value
-      }
-    });
-  };
-  
-  const handleTemplateChange = (key: string, value: any) => {
-    setSettings({
-      ...settings,
-      template: {
-        ...settings.template,
-        [key]: value
-      }
-    });
-  };
-  
-  const togglePreview = () => {
-    setIsPreviewVisible(!isPreviewVisible);
-  };
-  
-  const handleSetAsDefault = () => {
-    if (selectedTemplateId) {
-      setAsDefaultTemplate(selectedTemplateId);
-      setIsDefault(true);
-    }
-  };
-  
-  const handleResetToDefault = () => {
-    const defaultTemplate = resetToDefaultTemplate();
-    if (defaultTemplate && defaultTemplate.settings) {
-      // Apply default template settings
-      setSettings(prevSettings => ({
-        ...prevSettings,
-        ...defaultTemplate.settings,
-        template: {
-          ...prevSettings.template,
-          name: defaultTemplate.name,
-          description: defaultTemplate.description || '',
-          language: defaultTemplate.language || 'all'
-        }
-      }));
-    }
-  };
-  
-  const saveSettings = () => {
-    // Filter out the template metadata from settings
-    const { template, ...settingsToSave } = settings;
-    
-    // Save settings to the database
-    if (selectedTemplateId) {
-      saveTemplateSettings(selectedTemplateId, settingsToSave);
-      
-      // Update template name and description
-      editTemplate(selectedTemplateId, {
-        name: template.name,
-        description: template.description,
-        settings: settingsToSave
+  // Handle form submission
+  const onSubmit = (data: TemplateSettingsFormValues) => {
+    if (onSave) {
+      onSave(data);
+    } else {
+      toast({
+        title: t.success,
+        description: t.settings.templateSaved,
       });
     }
-    
-    toast({
-      title: t.common.success,
-      description: language === 'bg' 
-        ? 'Настройките на шаблона са запазени успешно' 
-        : 'Template settings saved successfully',
-    });
   };
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Settings panel */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+  
+  // Font family options
+  const fontFamilies = [
+    { value: 'Inter', label: 'Inter (Default)' },
+    { value: 'DM Sans', label: 'DM Sans' },
+    { value: 'Roboto', label: 'Roboto' },
+    { value: 'Open Sans', label: 'Open Sans' },
+    { value: 'Lato', label: 'Lato' },
+    { value: 'Montserrat', label: 'Montserrat' },
+    { value: 'Poppins', label: 'Poppins' },
+    { value: 'Arial', label: 'Arial' },
+    { value: 'Helvetica', label: 'Helvetica' },
+    { value: 'Times New Roman', label: 'Times New Roman' },
+  ];
+  
+  // Font size options
+  const fontSizes = [
+    { value: 'small', label: t.settings.small },
+    { value: 'medium', label: t.settings.medium },
+    { value: 'large', label: t.settings.large },
+  ];
+  
+  // Logo position options
+  const logoPositions = [
+    { value: 'left', label: t.settings.left },
+    { value: 'center', label: t.settings.center },
+    { value: 'right', label: t.settings.right },
+  ];
+  
+  // Company name size options
+  const companyNameSizes = [
+    { value: 'small', label: t.settings.small },
+    { value: 'medium', label: t.settings.medium },
+    { value: 'large', label: t.settings.large },
+  ];
+  
+  // Design template options
+  const designTemplates = [
+    { value: 'classic', label: t.settings.templates.classic },
+    { value: 'modern-dark', label: t.settings.templates.modernDark },
+    { value: 'gradient', label: t.settings.templates.gradient },
+    { value: 'business-pro', label: t.settings.templates.businessPro },
+  ];
+  
+  // Color picker component
+  const ColorPicker = ({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    
+    return (
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button 
+            variant="outline" 
+            className="w-full justify-start text-left font-normal h-10"
+            onClick={() => setIsOpen(true)}
+          >
             <div className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              {language === 'bg' ? 'Настройки на шаблона' : 'Template Settings'}
+              <div 
+                className="h-5 w-5 rounded-md border" 
+                style={{ backgroundColor: value }}
+              />
+              <span>{label}</span>
             </div>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-3" align="start">
+          <div className="flex flex-col gap-3">
+            <HexColorPicker color={value} onChange={onChange} />
+            <Input 
+              value={value} 
+              onChange={(e) => onChange(e.target.value)}
+              className="mt-2"
+            />
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  };
+  
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left column - Settings */}
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                  <TabsList className="mb-4 grid grid-cols-5">
+                    <TabsTrigger value="appearance" className="flex items-center gap-1">
+                      <Palette className="h-4 w-4" />
+                      <span className="hidden sm:inline">{t.settings.appearance}</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="layout" className="flex items-center gap-1">
+                      <LayoutGrid className="h-4 w-4" />
+                      <span className="hidden sm:inline">{t.settings.layout}</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="content" className="flex items-center gap-1">
+                      <FileText className="h-4 w-4" />
+                      <span className="hidden sm:inline">{t.settings.content}</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="template" className="flex items-center gap-1">
+                      <Brush className="h-4 w-4" />
+                      <span className="hidden sm:inline">{t.settings.template}</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="details" className="flex items-center gap-1">
+                      <Cog className="h-4 w-4" />
+                      <span className="hidden sm:inline">{t.settings.details}</span>
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  {/* Appearance Tab */}
+                  <TabsContent value="appearance" className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="designTemplate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.templates.selectDesign}</FormLabel>
+                            <FormControl>
+                              <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="grid grid-cols-2 gap-4"
+                              >
+                                {designTemplates.map((template) => (
+                                  <div key={template.value}>
+                                    <RadioGroupItem
+                                      value={template.value}
+                                      id={template.value}
+                                      className="peer sr-only"
+                                    />
+                                    <Label
+                                      htmlFor={template.value}
+                                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                    >
+                                      <div className="mb-2 rounded-md bg-primary/10 p-1 text-primary">
+                                        <Check className={cn(
+                                          "h-4 w-4 text-primary",
+                                          field.value === template.value ? "opacity-100" : "opacity-0"
+                                        )} />
+                                      </div>
+                                      {template.label}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <Separator />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.primaryColor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.primaryColor}</FormLabel>
+                            <FormControl>
+                              <ColorPicker
+                                value={field.value}
+                                onChange={field.onChange}
+                                label={field.value}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.secondaryColor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.secondaryColor}</FormLabel>
+                            <FormControl>
+                              <ColorPicker
+                                value={field.value}
+                                onChange={field.onChange}
+                                label={field.value}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.textColor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.textColor}</FormLabel>
+                            <FormControl>
+                              <ColorPicker
+                                value={field.value}
+                                onChange={field.onChange}
+                                label={field.value}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.fontFamily"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.fontFamily}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t.settings.selectFont} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {fontFamilies.map((font) => (
+                                  <SelectItem key={font.value} value={font.value}>
+                                    {font.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.fontSize"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.fontSize}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t.settings.selectFontSize} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {fontSizes.map((size) => (
+                                  <SelectItem key={size.value} value={size.value}>
+                                    {size.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="appearance.roundedCorners"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.roundedCorners}</FormLabel>
+                              <FormDescription>
+                                {t.settings.roundedCornersDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </TabsContent>
+                  
+                  {/* Layout Tab */}
+                  <TabsContent value="layout" className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="layout.showLogo"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.showLogo}</FormLabel>
+                              <FormDescription>
+                                {t.settings.showLogoDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      {form.watch('layout.showLogo') && (
+                        <FormField
+                          control={form.control}
+                          name="layout.logoPosition"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t.settings.logoPosition}</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder={t.settings.selectLogoPosition} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {logoPositions.map((position) => (
+                                    <SelectItem key={position.value} value={position.value}>
+                                      {position.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      
+                      <FormField
+                        control={form.control}
+                        name="layout.compactMode"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.compactMode}</FormLabel>
+                              <FormDescription>
+                                {t.settings.compactModeDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="layout.fullWidth"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.fullWidth}</FormLabel>
+                              <FormDescription>
+                                {t.settings.fullWidthDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="layout.borderless"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.borderless}</FormLabel>
+                              <FormDescription>
+                                {t.settings.borderlessDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="header.shadow"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.useShadows}</FormLabel>
+                              <FormDescription>
+                                {t.settings.useShadowsDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </TabsContent>
+                  
+                  {/* Content Tab */}
+                  <TabsContent value="content" className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="content.boldPrices"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.boldPrices}</FormLabel>
+                              <FormDescription>
+                                {t.settings.boldPricesDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="content.alternateRowColors"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.alternateRowColors}</FormLabel>
+                              <FormDescription>
+                                {t.settings.alternateRowColorsDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="content.showLineNumbers"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.showLineNumbers}</FormLabel>
+                              <FormDescription>
+                                {t.settings.showLineNumbersDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="content.showFooter"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.showFooter}</FormLabel>
+                              <FormDescription>
+                                {t.settings.showFooterDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      {form.watch('content.showFooter') && (
+                        <FormField
+                          control={form.control}
+                          name="content.footerText"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t.settings.footerText}</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  placeholder={language === 'bg' 
+                                    ? 'Благодарим Ви за доверието!' 
+                                    : 'Thank you for your business!'}
+                                  className="resize-none"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      
+                      {form.watch('content.showFooter') && (
+                        <>
+                          <FormField
+                            control={form.control}
+                            name="footer.showBankDetails"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                  <FormLabel>{t.settings.showBankDetails}</FormLabel>
+                                  <FormDescription>
+                                    {t.settings.showBankDetailsDescription}
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="footer.showSignatureArea"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                  <FormLabel>{t.settings.showSignatureArea}</FormLabel>
+                                  <FormDescription>
+                                    {t.settings.showSignatureAreaDescription}
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          
+                          {form.watch('footer.showSignatureArea') && (
+                            <FormField
+                              control={form.control}
+                              name="footer.signatureText"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t.settings.signatureText}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder={language === 'bg' 
+                                        ? 'Подпис и печат:' 
+                                        : 'Signature and stamp:'}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          )}
+                          
+                          <FormField
+                            control={form.control}
+                            name="footer.useQRCode"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                  <FormLabel>{t.settings.useQRCode}</FormLabel>
+                                  <FormDescription>
+                                    {t.settings.useQRCodeDescription}
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </TabsContent>
+                  
+                  {/* Template Tab */}
+                  <TabsContent value="template" className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="header.showCompanySlogan"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.showCompanySlogan}</FormLabel>
+                              <FormDescription>
+                                {t.settings.showCompanySloganDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="header.companyNameSize"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.companyNameSize}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t.settings.selectSize} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {companyNameSizes.map((size) => (
+                                  <SelectItem key={size.value} value={size.value}>
+                                    {size.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="header.showOfferLabel"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>{t.settings.showOfferLabel}</FormLabel>
+                              <FormDescription>
+                                {t.settings.showOfferLabelDescription}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </TabsContent>
+                  
+                  {/* Details Tab */}
+                  <TabsContent value="details" className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="template.name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.templateName}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder={t.settings.templateNamePlaceholder}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="template.description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.templateDescription}</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder={t.settings.templateDescriptionPlaceholder}
+                                className="resize-none"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="template.language"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t.settings.templateLanguage}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t.settings.selectLanguage} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="bg">Български</SelectItem>
+                                <SelectItem value="en">English</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
             
-            {selectedTemplateId && (
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleSetAsDefault}
-                  disabled={isDefault}
-                  className="gap-1"
-                >
-                  <Star className="h-4 w-4" />
-                  {t.offer.templates.setAsDefault}
+            <div className="flex justify-between">
+              {onCancel && (
+                <Button type="button" variant="outline" onClick={onCancel}>
+                  {t.cancel}
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleResetToDefault}
-                  className="gap-1"
-                >
-                  <Undo className="h-4 w-4" />
-                  {t.offer.templates.resetToDefault}
-                </Button>
-              </div>
-            )}
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent>
-          {/* Template basic info */}
-          <div className="mb-6 border-b pb-4">
-            <h3 className="text-lg font-medium mb-3">
-              {language === 'bg' ? 'Информация за шаблона' : 'Template Information'}
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="templateName">
-                  {language === 'bg' ? 'Име на шаблона' : 'Template Name'}
-                </Label>
-                <Input 
-                  id="templateName" 
-                  value={settings.template.name} 
-                  onChange={(e) => handleTemplateChange('name', e.target.value)}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="templateDescription">
-                  {language === 'bg' ? 'Описание' : 'Description'}
-                </Label>
-                <Textarea 
-                  id="templateDescription" 
-                  value={settings.template.description} 
-                  onChange={(e) => handleTemplateChange('description', e.target.value)}
-                  rows={2}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="templateLanguage">
-                  {language === 'bg' ? 'Език на шаблона' : 'Template Language'}
-                </Label>
-                <select 
-                  id="templateLanguage" 
-                  className="w-full p-2 border rounded-md"
-                  value={settings.template.language}
-                  onChange={(e) => handleTemplateChange('language', e.target.value)}
-                >
-                  <option value="all">{language === 'bg' ? 'Всички езици' : 'All Languages'}</option>
-                  <option value="bg">{language === 'bg' ? 'Български' : 'Bulgarian'}</option>
-                  <option value="en">{language === 'bg' ? 'Английски' : 'English'}</option>
-                </select>
-              </div>
+              )}
+              <Button type="submit" className="ml-auto">
+                {isEditing ? t.settings.updateTemplate : t.settings.saveTemplate}
+              </Button>
             </div>
           </div>
           
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-4">
-              <TabsTrigger value="appearance">
-                <Palette className="h-4 w-4 mr-2" />
-                {language === 'bg' ? 'Визия' : 'Appearance'}
-              </TabsTrigger>
-              <TabsTrigger value="layout">
-                <LayoutGrid className="h-4 w-4 mr-2" />
-                {language === 'bg' ? 'Оформление' : 'Layout'}
-              </TabsTrigger>
-              <TabsTrigger value="header">
-                <FileText className="h-4 w-4 mr-2" />
-                {language === 'bg' ? 'Хедър' : 'Header'}
-              </TabsTrigger>
-              <TabsTrigger value="content">
-                <SquareStack className="h-4 w-4 mr-2" />
-                {language === 'bg' ? 'Съдържание' : 'Content'}
-              </TabsTrigger>
-              <TabsTrigger value="footer">
-                <CreditCard className="h-4 w-4 mr-2" />
-                {language === 'bg' ? 'Футър' : 'Footer'}
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="appearance" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="primaryColor">
-                    {language === 'bg' ? 'Основен цвят' : 'Primary Color'}
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="primaryColor"
-                      type="color"
-                      value={settings.appearance.primaryColor}
-                      onChange={(e) => handleAppearanceChange('primaryColor', e.target.value)}
-                      className="w-12 h-9 p-1"
-                    />
-                    <Input 
-                      type="text"
-                      value={settings.appearance.primaryColor}
-                      onChange={(e) => handleAppearanceChange('primaryColor', e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="textColor">
-                    {t.offer.templates.textColor}
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="textColor"
-                      type="color"
-                      value={settings.appearance.textColor}
-                      onChange={(e) => handleAppearanceChange('textColor', e.target.value)}
-                      className="w-12 h-9 p-1"
-                    />
-                    <Input 
-                      type="text"
-                      value={settings.appearance.textColor}
-                      onChange={(e) => handleAppearanceChange('textColor', e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="secondaryColor">
-                    {language === 'bg' ? 'Вторичен цвят' : 'Secondary Color'}
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="secondaryColor"
-                      type="color"
-                      value={settings.appearance.secondaryColor}
-                      onChange={(e) => handleAppearanceChange('secondaryColor', e.target.value)}
-                      className="w-12 h-9 p-1"
-                    />
-                    <Input 
-                      type="text"
-                      value={settings.appearance.secondaryColor}
-                      onChange={(e) => handleAppearanceChange('secondaryColor', e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="fontSize">
-                    {language === 'bg' ? 'Размер на шрифта' : 'Font Size'}
-                  </Label>
-                  <select 
-                    id="fontSize"
-                    className="w-full p-2 border rounded-md"
-                    value={settings.appearance.fontSize}
-                    onChange={(e) => handleAppearanceChange('fontSize', e.target.value)}
-                  >
-                    <option value="small">{language === 'bg' ? 'Малък' : 'Small'}</option>
-                    <option value="medium">{language === 'bg' ? 'Среден' : 'Medium'}</option>
-                    <option value="large">{language === 'bg' ? 'Голям' : 'Large'}</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="roundedCorners"
-                  checked={settings.appearance.roundedCorners}
-                  onCheckedChange={(checked) => handleAppearanceChange('roundedCorners', checked)}
-                />
-                <Label htmlFor="roundedCorners">
-                  {language === 'bg' ? 'Заоблени ъгли' : 'Rounded Corners'}
-                </Label>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="layout" className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showLogo"
-                  checked={settings.layout.showLogo}
-                  onCheckedChange={(checked) => handleLayoutChange('showLogo', checked)}
-                />
-                <Label htmlFor="showLogo">
-                  {language === 'bg' ? 'Покажи лого' : 'Show Logo'}
-                </Label>
-              </div>
-              
-              {settings.layout.showLogo && (
-                <div className="space-y-2 pl-6">
-                  <Label>{language === 'bg' ? 'Позиция на логото' : 'Logo Position'}</Label>
-                  <div className="flex gap-2">
-                    <Button
-                      variant={settings.layout.logoPosition === 'left' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLayoutChange('logoPosition', 'left')}
-                      className="flex-1"
-                    >
-                      <AlignLeft className="h-4 w-4 mr-2" />
-                      {language === 'bg' ? 'Ляво' : 'Left'}
-                    </Button>
-                    <Button
-                      variant={settings.layout.logoPosition === 'center' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLayoutChange('logoPosition', 'center')}
-                      className="flex-1"
-                    >
-                      <AlignCenter className="h-4 w-4 mr-2" />
-                      {language === 'bg' ? 'Център' : 'Center'}
-                    </Button>
-                    <Button
-                      variant={settings.layout.logoPosition === 'right' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLayoutChange('logoPosition', 'right')}
-                      className="flex-1"
-                    >
-                      <AlignRight className="h-4 w-4 mr-2" />
-                      {language === 'bg' ? 'Дясно' : 'Right'}
-                    </Button>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="compactMode"
-                  checked={settings.layout.compactMode}
-                  onCheckedChange={(checked) => handleLayoutChange('compactMode', checked)}
-                />
-                <Label htmlFor="compactMode">
-                  {language === 'bg' ? 'Компактен режим' : 'Compact Mode'}
-                </Label>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="header" className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showCompanySlogan"
-                  checked={settings.header.showCompanySlogan}
-                  onCheckedChange={(checked) => handleHeaderChange('showCompanySlogan', checked)}
-                />
-                <Label htmlFor="showCompanySlogan">
-                  {language === 'bg' ? 'Покажи слоган на компанията' : 'Show Company Slogan'}
-                </Label>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="companyNameSize">
-                  {language === 'bg' ? 'Размер на името на компанията' : 'Company Name Size'}
-                </Label>
-                <select 
-                  id="companyNameSize"
-                  className="w-full p-2 border rounded-md"
-                  value={settings.header.companyNameSize}
-                  onChange={(e) => handleHeaderChange('companyNameSize', e.target.value)}
-                >
-                  <option value="small">{language === 'bg' ? 'Малък' : 'Small'}</option>
-                  <option value="medium">{language === 'bg' ? 'Среден' : 'Medium'}</option>
-                  <option value="large">{language === 'bg' ? 'Голям' : 'Large'}</option>
-                </select>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showOfferLabel"
-                  checked={settings.header.showOfferLabel}
-                  onCheckedChange={(checked) => handleHeaderChange('showOfferLabel', checked)}
-                />
-                <Label htmlFor="showOfferLabel">
-                  {language === 'bg' ? 'Покажи етикет "Оферта"' : 'Show "Offer" Label'}
-                </Label>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="content" className="space-y-4">            
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="boldPrices"
-                  checked={settings.content.boldPrices}
-                  onCheckedChange={(checked) => handleContentChange('boldPrices', checked)}
-                />
-                <Label htmlFor="boldPrices">
-                  {language === 'bg' ? 'Удебелени цени' : 'Bold Prices'}
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showFooter"
-                  checked={settings.content.showFooter}
-                  onCheckedChange={(checked) => handleContentChange('showFooter', checked)}
-                />
-                <Label htmlFor="showFooter">
-                  {language === 'bg' ? 'Покажи долен колонтитул' : 'Show Footer'}
-                </Label>
-              </div>
-              
-              {settings.content.showFooter && (
-                <div className="space-y-2 pl-6">
-                  <Label htmlFor="footerText">
-                    {language === 'bg' ? 'Текст в долния колонтитул' : 'Footer Text'}
-                  </Label>
-                  <Input 
-                    id="footerText"
-                    value={settings.content.footerText}
-                    onChange={(e) => handleContentChange('footerText', e.target.value)}
-                  />
-                </div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="footer" className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showBankDetails"
-                  checked={settings.footer.showBankDetails}
-                  onCheckedChange={(checked) => handleFooterChange('showBankDetails', checked)}
-                />
-                <Label htmlFor="showBankDetails">
-                  {language === 'bg' ? 'Покажи банкови детайли' : 'Show Bank Details'}
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="showSignatureArea"
-                  checked={settings.footer.showSignatureArea}
-                  onCheckedChange={(checked) => handleFooterChange('showSignatureArea', checked)}
-                />
-                <Label htmlFor="showSignatureArea">
-                  {language === 'bg' ? 'Покажи зона за подпис' : 'Show Signature Area'}
-                </Label>
-              </div>
-              
-              {settings.footer.showSignatureArea && (
-                <div className="space-y-2 pl-6">
-                  <Label htmlFor="signatureText">
-                    {language === 'bg' ? 'Текст за подпис' : 'Signature Text'}
-                  </Label>
-                  <Input 
-                    id="signatureText"
-                    value={settings.footer.signatureText}
-                    onChange={(e) => handleFooterChange('signatureText', e.target.value)}
-                  />
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-6 flex justify-between">
-            <Button 
-              variant="outline" 
-              onClick={togglePreview}
-              className="gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              {isPreviewVisible 
-                ? (language === 'bg' ? 'Скрий визуализация' : 'Hide Preview') 
-                : (language === 'bg' ? 'Покажи визуализация' : 'Show Preview')}
-            </Button>
-            
-            <Button onClick={saveSettings} className="gap-2">
-              <Save className="h-4 w-4" />
-              {language === 'bg' ? 'Запази настройки' : 'Save Settings'}
-            </Button>
+          {/* Right column - Preview */}
+          <div>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-semibold mb-4">{t.settings.preview}</h3>
+                <TemplatePreview settings={formValues} />
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
-      
-      {/* Preview panel */}
-      {isPreviewVisible && (
-        <div className="mb-6 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                {language === 'bg' ? 'Визуализация на шаблона' : 'Template Preview'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TemplatePreview settings={settings} />
-            </CardContent>
-          </Card>
-          
-          <p className="text-sm text-muted-foreground text-center">
-            {language === 'bg' 
-              ? 'Това е примерна визуализация. Реалната оферта може да се различава.' 
-              : 'This is a sample preview. The actual offer may look different.'}
-          </p>
         </div>
-      )}
-    </div>
+      </form>
+    </Form>
   );
 };
 

@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { formatDate } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { Mail, Phone } from 'lucide-react';
 
 interface OfferHeaderProps {
   offer: Offer;
@@ -18,7 +19,7 @@ const OfferHeader = ({ offer, settings }: OfferHeaderProps) => {
     <div className="mb-6">
       {/* Company info with logo */}
       <div className="flex items-start justify-between mb-4">
-        {/* Logo and company name section */}
+        {/* Logo and company slogan section (left side) */}
         <div className="flex items-center space-x-4">
           {offer.company.logo ? (
             <div className="flex-shrink-0">
@@ -30,65 +31,50 @@ const OfferHeader = ({ offer, settings }: OfferHeaderProps) => {
             </div>
           ) : null}
           
-          <div>
-            <h2 className={cn(
-              "text-xl font-bold",
-              settings?.appearance?.primaryColor ? "" : ""
-            )}
-            style={{ 
-              color: settings?.header?.companyNameSize === 'large' ? settings?.appearance?.primaryColor : '',
-              fontSize: settings?.header?.companyNameSize === 'small' ? '1.1rem' :
-                      settings?.header?.companyNameSize === 'large' ? '1.5rem' : '1.25rem'
-            }}>
-              {offer.company.name}
-            </h2>
-            
-            {(offer.company.slogan && settings?.header?.showCompanySlogan !== false) && (
-              <div className="text-sm italic text-muted-foreground">
-                {offer.company.slogan}
-              </div>
-            )}
-          </div>
+          {(offer.company.slogan && settings?.header?.showCompanySlogan !== false) && (
+            <div className="text-sm italic text-muted-foreground">
+              {offer.company.slogan}
+            </div>
+          )}
         </div>
         
-        {/* Company contact details */}
+        {/* Company details (right side) */}
         <div className="text-sm text-right">
+          {/* Company name and address */}
+          <h2 className={cn(
+            "text-xl font-bold mb-1",
+            settings?.appearance?.primaryColor ? "" : ""
+          )}
+          style={{ 
+            color: settings?.header?.companyNameSize === 'large' ? settings?.appearance?.primaryColor : '',
+            fontSize: settings?.header?.companyNameSize === 'small' ? '1.1rem' :
+                    settings?.header?.companyNameSize === 'large' ? '1.5rem' : '1.25rem'
+          }}>
+            {offer.company.name}
+          </h2>
+          
           {offer.company.address && (
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-1">
               {offer.company.address}
               {offer.company.city ? `, ${offer.company.city}` : ''}
               {language !== 'bg' && offer.company.country ? `, ${offer.company.country}` : ''}
             </p>
           )}
           
-          <div className="mt-1 flex flex-col gap-1">
-            {offer.company.eikNumber && (
-              <p className="text-muted-foreground">
-                <span className="font-medium">{language === 'bg' ? 'ЕИК' : 'Company ID'}:</span> {offer.company.eikNumber}
-              </p>
+          {/* Email and phone on a single line with icons */}
+          <div className="flex justify-end gap-4 mt-1">
+            {offer.company.email && (
+              <div className="flex items-center">
+                <Mail className="h-4 w-4 mr-1 text-muted-foreground" />
+                <span className="text-muted-foreground">{offer.company.email}</span>
+              </div>
             )}
-            {offer.company.vatNumber && (
-              <p className="text-muted-foreground">
-                <span className="font-medium">{language === 'bg' ? 'ДДС №' : 'VAT No'}:</span> {offer.company.vatNumber}
-              </p>
+            {offer.company.phone && (
+              <div className="flex items-center">
+                <Phone className="h-4 w-4 mr-1 text-muted-foreground" />
+                <span className="text-muted-foreground">{offer.company.phone}</span>
+              </div>
             )}
-            <div className="flex gap-x-4 justify-end flex-wrap">
-              {offer.company.phone && (
-                <p className="text-muted-foreground">
-                  <span className="font-medium">{language === 'bg' ? 'Тел' : 'Phone'}:</span> {offer.company.phone}
-                </p>
-              )}
-              {offer.company.email && (
-                <p className="text-muted-foreground">
-                  <span className="font-medium">{language === 'bg' ? 'Имейл' : 'Email'}:</span> {offer.company.email}
-                </p>
-              )}
-              {offer.company.website && (
-                <p className="text-muted-foreground">
-                  <span className="font-medium">{language === 'bg' ? 'Уеб' : 'Web'}:</span> {offer.company.website}
-                </p>
-              )}
-            </div>
           </div>
         </div>
       </div>
