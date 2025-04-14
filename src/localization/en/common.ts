@@ -104,10 +104,5 @@ export const common = {
   templates: 'Templates',
   navigation: 'Navigation',
   noName: 'No Name',
-  retry: 'Retry',
-  
-  // Color preset translations
-  colorPresets: 'Color Presets',
-  applyPreset: 'Apply Preset',
-  customColors: 'Custom Colors'
+  retry: 'Retry'
 };

@@ -24,7 +24,7 @@ const TemplatesPage = () => {
     isLoading, 
     createTemplate, 
     deleteTemplate, 
-    updateTemplate,
+    editTemplate,
     setAsDefaultTemplate,
     defaultTemplateId
   } = useTemplateManagement();

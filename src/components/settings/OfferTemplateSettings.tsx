@@ -17,7 +17,7 @@ const OfferTemplateSettings = () => {
     isLoading,
     createTemplate,
     deleteTemplate,
-    updateTemplate
+    editTemplate
   } = useTemplateManagement();
   
   const handleSaveTemplate = async (name: string, description: string) => {
@@ -64,7 +64,7 @@ const OfferTemplateSettings = () => {
             isUserTemplates={true}
             onCreateNew={() => setSaveDialogOpen(true)}
             onDeleteTemplate={deleteTemplate}
-            onEditTemplate={updateTemplate}
+            onEditTemplate={editTemplate}
           />
         </TabsContent>
       </Tabs>

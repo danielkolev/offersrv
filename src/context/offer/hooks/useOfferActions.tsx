@@ -1,82 +1,169 @@
 
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Offer, Product, CompanyInfo, ClientInfo, OfferDetails } from '@/types/offer';
+import { useEffect } from 'react';
 import { useTemplateManagement } from '@/hooks/use-template-management';
-import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/context/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
+import { TemplateType } from '@/hooks/use-template-management';
 
-export const useOfferActions = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { resetToDefaultTemplate } = useTemplateManagement();
+export function useOfferActions(
+  offer: Offer,
+  setOffer: React.Dispatch<React.SetStateAction<Offer>>,
+  markUserInteraction: () => void
+) {
+  const { getDefaultTemplate, getTemplateById, defaultTemplateId } = useTemplateManagement();
 
-  const createNewOffer = useCallback(() => {
-    // Get default template
-    const defaultTemplate = resetToDefaultTemplate();
+  // Apply template settings to the offer
+  const applyTemplate = (templateId?: string) => {
+    markUserInteraction();
     
-    // Navigate to create offer page with template
-    if (defaultTemplate) {
-      navigate(`/new-offer?template=${defaultTemplate.id}`);
-    } else {
-      navigate('/new-offer');
-    }
-  }, [navigate, resetToDefaultTemplate]);
-
-  const saveOffer = useCallback(async (offerData: any, isTemplate: boolean = false) => {
-    if (!user) {
-      toast({
-        title: t.common.error,
-        description: t.auth.notAuthenticated,
-        variant: 'destructive',
-      });
-      return false;
-    }
-
-    try {
-      // Save to Supabase
-      const { data, error } = await supabase
-        .from('saved_offers')
-        .insert([
-          { 
-            ...offerData, 
-            creator_id: user.id,
-            is_template: isTemplate
-          },
-        ])
-        .select();
-
-      if (error) {
-        console.error('Error saving offer:', error);
-        toast({
-          title: t.common.error,
-          description: t.offer.saveFailed,
-          variant: 'destructive',
-        });
-        return false;
+    // Check if it's a temporary template ID
+    if (templateId?.startsWith('temp-')) {
+      const tempTemplateData = window.localStorage.getItem(`temp-template-${templateId}`);
+      if (tempTemplateData) {
+        try {
+          const templateData = JSON.parse(tempTemplateData);
+          // Apply the template data directly
+          setOffer(prevOffer => ({
+            ...prevOffer,
+            ...templateData
+          }));
+          
+          // Clean up the temporary storage
+          window.localStorage.removeItem(`temp-template-${templateId}`);
+          return;
+        } catch (e) {
+          console.error('Error parsing temporary template:', e);
+        }
       }
-
-      toast({
-        title: t.common.success,
-        description: t.offer.savedSuccessfully,
-      });
-      return true;
-    } catch (error) {
-      console.error('Unexpected error saving offer:', error);
-      toast({
-        title: t.common.error,
-        description: t.offer.saveFailed,
-        variant: 'destructive',
-      });
-      return false;
     }
-  }, [user, toast, t]);
+    
+    // Regular template handling
+    const template = templateId 
+      ? getTemplateById(templateId) 
+      : getDefaultTemplate();
+    
+    if (!template || !template.settings) {
+      console.log('No template settings found');
+      return null;
+    }
+    
+    // Set template settings in offer
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      templateSettings: template.settings,
+      templateId: template.id
+    }));
+    
+    return template;
+  };
+  
+  // Apply default template on first load - only if no template is set yet
+  useEffect(() => {
+    if (!offer.templateId && !offer.templateSettings && defaultTemplateId) {
+      applyTemplate(defaultTemplateId);
+    }
+  }, [defaultTemplateId, offer.templateId, offer.templateSettings]);
+
+  // Update company information
+  const updateCompanyInfo = (companyInfo: Partial<CompanyInfo>) => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      company: {
+        ...prevOffer.company,
+        ...companyInfo
+      }
+    }));
+  };
+
+  // Update client information
+  const updateClientInfo = (clientInfo: Partial<ClientInfo>) => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      client: {
+        ...prevOffer.client,
+        ...clientInfo
+      }
+    }));
+  };
+
+  // Update offer details
+  const updateOfferDetails = (details: Partial<OfferDetails>) => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      details: {
+        ...prevOffer.details,
+        ...details
+      }
+    }));
+  };
+
+  // Add a new product
+  const addProduct = (product: Product) => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      products: [...prevOffer.products, product]
+    }));
+  };
+
+  // Update an existing product - using id instead of index for better reliability
+  const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
+    markUserInteraction();
+    setOffer(prevOffer => {
+      const productIndex = prevOffer.products.findIndex(p => p.id === id);
+      if (productIndex === -1) return prevOffer;
+      
+      const newProducts = [...prevOffer.products];
+      newProducts[productIndex] = {
+        ...newProducts[productIndex],
+        ...updatedProduct
+      };
+      
+      return {
+        ...prevOffer,
+        products: newProducts
+      };
+    });
+  };
+
+  // Remove a product - using id instead of index for better reliability
+  const removeProduct = (id: string) => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      products: prevOffer.products.filter(product => product.id !== id)
+    }));
+  };
+
+  // Clear all products
+  const clearProducts = () => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      products: []
+    }));
+  };
+
+  // Reset products to default state
+  const resetProducts = () => {
+    markUserInteraction();
+    setOffer(prevOffer => ({
+      ...prevOffer,
+      products: []
+    }));
+  };
 
   return {
-    createNewOffer,
-    saveOffer
+    updateCompanyInfo,
+    updateClientInfo,
+    updateOfferDetails,
+    addProduct,
+    updateProduct,
+    removeProduct,
+    clearProducts,
+    resetProducts,
+    applyTemplate
   };
-};
+}

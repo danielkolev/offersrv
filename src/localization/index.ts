@@ -1,10 +1,10 @@
 
 import { Translations } from '@/types/language/base';
-import { en } from './en';
-import { bg } from './bg';
+import { en, enTranslations } from './en';
+import { bg, bgTranslations } from './bg';
 
 // Create a unified translations object
-export const translations: Record<string, any> = {
-  en,
-  bg
+export const translations: Record<string, Translations> = {
+  en: enTranslations,
+  bg: bgTranslations
 };

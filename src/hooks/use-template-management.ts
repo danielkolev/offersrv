@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SavedOffer } from '@/types/database';
 
 export interface TemplateType {
   id: string;
@@ -18,9 +18,9 @@ export interface TemplateType {
 // Sample templates with different designs
 const sampleTemplates: TemplateType[] = [
   {
-    id: 'sample-classic',
-    name: 'Classic Template',
-    description: 'Clean professional layout with classic styling',
+    id: 'sample-1',
+    name: 'Modern Blue',
+    description: 'Clean modern design with blue accents',
     language: 'all',
     isSample: true,
     settings: {
@@ -56,8 +56,85 @@ const sampleTemplates: TemplateType[] = [
     }
   },
   {
-    id: 'sample-modern-dark',
-    name: 'Modern Dark',
+    id: 'sample-2',
+    name: 'Corporate Purple',
+    description: 'Professional corporate design with purple theme',
+    language: 'all',
+    isSample: true,
+    settings: {
+      appearance: {
+        primaryColor: '#7E69AB',
+        secondaryColor: '#f1f0fb',
+        textColor: '#ffffff',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: 'medium',
+        roundedCorners: false,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'center',
+        compactMode: false,
+      },
+      content: {
+        boldPrices: true,
+        showFooter: true,
+        footerText: 'Thank you for choosing our services!'
+      },
+      header: {
+        showCompanySlogan: true,
+        companyNameSize: 'large',
+        showOfferLabel: true,
+      },
+      footer: {
+        showBankDetails: true,
+        showSignatureArea: true,
+        signatureText: 'Signature:',
+      },
+      designTemplate: 'classic'
+    }
+  },
+  {
+    id: 'sample-3',
+    name: 'Minimalist Green',
+    description: 'Clean minimalist design with green accents',
+    language: 'all',
+    isSample: true,
+    settings: {
+      appearance: {
+        primaryColor: '#4CAF50',
+        secondaryColor: '#f2fce2',
+        textColor: '#ffffff',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: 'small',
+        roundedCorners: true,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'right',
+        compactMode: true,
+      },
+      content: {
+        boldPrices: false,
+        showFooter: true,
+        footerText: 'Environmentally friendly company'
+      },
+      header: {
+        showCompanySlogan: false,
+        companyNameSize: 'medium',
+        showOfferLabel: true,
+      },
+      footer: {
+        showBankDetails: false,
+        showSignatureArea: true,
+        signatureText: 'Authorized by:',
+      },
+      designTemplate: 'classic'
+    }
+  },
+  // Modern Design Templates
+  {
+    id: 'modern-1',
+    name: 'Ultra Modern Dark',
     description: 'Contemporary dark mode design with vibrant accents',
     language: 'all',
     isSample: true,
@@ -99,7 +176,7 @@ const sampleTemplates: TemplateType[] = [
     }
   },
   {
-    id: 'sample-gradient',
+    id: 'modern-2',
     name: 'Gradient Elegance',
     description: 'Sleek design with beautiful gradient accents',
     language: 'all',
@@ -119,6 +196,7 @@ const sampleTemplates: TemplateType[] = [
         logoPosition: 'right',
         compactMode: false,
         fullWidth: false,
+        floatingHeader: true,
       },
       content: {
         boldPrices: true,
@@ -144,7 +222,7 @@ const sampleTemplates: TemplateType[] = [
     }
   },
   {
-    id: 'sample-business-pro',
+    id: 'modern-3',
     name: 'Business Pro',
     description: 'Clean professional layout with modern typography',
     language: 'all',
@@ -183,357 +261,429 @@ const sampleTemplates: TemplateType[] = [
       footer: {
         showBankDetails: true,
         showSignatureArea: true,
-        signatureText: 'Authorized by:',
+        signatureText: 'Authorized signature:',
         includeSocialMedia: false,
         useQRCode: true,
       },
       designTemplate: 'business-pro'
     }
+  },
+  {
+    id: 'default',
+    name: 'Default Template',
+    description: 'Standard offer template',
+    language: 'all',
+    isDefault: true,
+    isSample: false,
+    settings: {
+      appearance: {
+        primaryColor: '#1E88E5',
+        secondaryColor: '#f8f9fa',
+        textColor: '#ffffff',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: 'medium',
+        roundedCorners: true,
+      },
+      layout: {
+        showLogo: true,
+        logoPosition: 'left',
+        compactMode: false,
+      },
+      content: {
+        boldPrices: true,
+        showFooter: true,
+        footerText: 'Thank you for your business!'
+      },
+      header: {
+        showCompanySlogan: true,
+        companyNameSize: 'large',
+        showOfferLabel: true,
+      },
+      footer: {
+        showBankDetails: false,
+        showSignatureArea: false,
+        signatureText: 'Signature and stamp:',
+      },
+      designTemplate: 'classic'
+    }
   }
 ];
 
-export const useTemplateManagement = () => {
+export function useTemplateManagement() {
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { language, t } = useLanguage();
   const [userTemplates, setUserTemplates] = useState<TemplateType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [defaultTemplateId, setDefaultTemplateId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultTemplateId, setDefaultTemplateId] = useState<string>('default');
 
-  // Fetch user templates from Supabase
+  useEffect(() => {
+    if (user) {
+      fetchUserTemplates();
+    } else {
+      // When not logged in, just show sample templates
+      setUserTemplates([...sampleTemplates]);
+    }
+  }, [user]);
+
   const fetchUserTemplates = async () => {
     if (!user) return;
-
+    
     setIsLoading(true);
     try {
-      const { data: templatesData, error } = await supabase
-        .from('templates')
+      const { data, error } = await supabase
+        .from('saved_offers')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
+        .eq('is_template', true);
+        
       if (error) {
         throw error;
       }
-
-      // Get default template from user settings
-      const { data: defaultData } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      // Check if user has a default template set in their settings
-      let defaultId = null;
-      if (defaultData && defaultData.offer_settings) {
-        const offerSettings = defaultData.offer_settings as Record<string, any>;
-        if (offerSettings && offerSettings.default_template_id) {
-          defaultId = offerSettings.default_template_id;
-          setDefaultTemplateId(defaultId);
+      
+      if (data) {
+        const templates: TemplateType[] = data.map(item => ({
+          id: item.id,
+          name: item.name || 'Unnamed Template',
+          description: item.description || '',
+          language: ((item.offer_data as any)?.details?.offerLanguage || 'all') as 'bg' | 'en' | 'all',
+          isDefault: item.is_default || false,
+          settings: item.settings || null
+        }));
+        
+        // Find default template
+        const defaultTemplate = templates.find(t => t.isDefault);
+        if (defaultTemplate) {
+          setDefaultTemplateId(defaultTemplate.id);
         }
+        
+        // Merge user templates with sample templates
+        setUserTemplates([...templates, ...sampleTemplates]);
+      } else {
+        // If no templates found, just use the sample templates
+        setUserTemplates([...sampleTemplates]);
       }
-
-      // If no default template is set, use first sample template
-      if (!defaultId) {
-        setDefaultTemplateId(sampleTemplates[0].id);
-      }
-
-      // Format templates
-      const formattedTemplates: TemplateType[] = templatesData.map(template => ({
-        id: template.id,
-        name: template.name || 'Unnamed Template',
-        description: template.description || '',
-        language: 'all', // Default to 'all' since it's not in the DB schema
-        isDefault: defaultId === template.id,
-        settings: {}, // Default to empty settings since it's not in the DB schema
-      }));
-
-      setUserTemplates(formattedTemplates);
     } catch (error) {
       console.error('Error fetching templates:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToLoadTemplates || 'Failed to load templates',
-        variant: 'destructive',
+        description: 'Failed to load templates',
+        variant: 'destructive'
       });
+      
+      // Fallback to sample templates
+      setUserTemplates([...sampleTemplates]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fetch templates on component mount
-  useEffect(() => {
-    if (user) {
-      fetchUserTemplates();
-    }
-  }, [user]);
-
-  // Create a new template
   const createTemplate = async (
     name: string, 
-    description: string = '',
-    extraData: { language?: string, settings?: any } = {}
+    description: string, 
+    settings?: any, 
+    isDefault?: boolean
   ) => {
-    if (!user) return null;
-
+    if (!user) {
+      toast({
+        title: t.common.error,
+        description: t.auth.notAuthenticated,
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    if (!name.trim()) {
+      toast({
+        title: t.common.error,
+        description: 'Please enter a template name',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
-      // Map the template data to match the actual database schema
-      const newTemplate = {
-        user_id: user.id,
-        name: name,
-        description,
-        is_default: false,
-        premium: false,
-        colors: JSON.stringify({
-          primary: '#1E88E5',
-          secondary: '#f8f9fa'
-        }), // Required field 
-        font_family: 'Inter, sans-serif',
-        show_logo: true,
-        show_header: true,
-        show_footer: true
-      };
-
-      const { data, error } = await supabase
-        .from('templates')
-        .insert(newTemplate)
-        .select()
-        .single();
-
+      const { error, data } = await supabase
+        .from('saved_offers')
+        .insert({
+          user_id: user.id,
+          name: name,
+          description: description,
+          is_template: true,
+          is_default: isDefault || false,
+          settings: settings || null,
+          offer_data: {} // Empty template to be customized later
+        })
+        .select();
+        
       if (error) {
         throw error;
       }
-
-      // Add the new template to the state
-      setUserTemplates(prev => [
-        {
-          id: data.id,
-          name: data.name || 'Unnamed Template',
-          description: data.description || '',
-          language: 'all',
-          settings: {},
-        },
-        ...prev
-      ]);
       
-      // Return the new template ID
-      return data.id;
+      toast({
+        title: t.common.success,
+        description: t.settings.templateCreated
+      });
+      
+      await fetchUserTemplates();
+      
+      // Return the newly created template
+      return data?.[0]?.id;
     } catch (error) {
-      console.error('Error creating template:', error);
+      console.error('Error saving template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToCreateTemplate || 'Failed to create template',
-        variant: 'destructive',
+        description: 'Failed to save template',
+        variant: 'destructive'
       });
-      return null;
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Delete a template
   const deleteTemplate = async (templateId: string) => {
     if (!user) return;
-
+    
+    // Can't delete sample templates
+    const template = userTemplates.find(t => t.id === templateId);
+    if (template?.isSample) {
+      toast({
+        title: t.common.error,
+        description: 'Sample templates cannot be deleted',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    if (!window.confirm(t.offer.templates.confirmDelete)) {
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const { error } = await supabase
-        .from('templates')
+        .from('saved_offers')
         .delete()
         .eq('id', templateId)
         .eq('user_id', user.id);
-
+        
       if (error) {
         throw error;
       }
-
-      // Remove the template from the state
-      setUserTemplates(prev => prev.filter(template => template.id !== templateId));
       
-      // If this was the default template, reset the default
-      if (defaultTemplateId === templateId) {
-        setDefaultTemplateId(null);
-        
-        // Get current user settings
-        const { data: settingsData } = await supabase
-          .from('user_settings')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
-        
-        // Update settings with new default_template_id set to null
-        if (settingsData) {
-          const offerSettings = settingsData.offer_settings as Record<string, any> || {};
-          offerSettings.default_template_id = null;
-          
-          await supabase
-            .from('user_settings')
-            .update({ offer_settings: offerSettings })
-            .eq('user_id', user.id);
-        }
-      }
+      setUserTemplates(userTemplates.filter(template => template.id !== templateId));
+      
+      toast({
+        title: t.common.success,
+        description: t.offer.templates.templateDeleted
+      });
     } catch (error) {
       console.error('Error deleting template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToDeleteTemplate || 'Failed to delete template',
-        variant: 'destructive',
+        description: 'Failed to delete template',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Update a template
-  const updateTemplate = async (templateId: string, updates: Partial<TemplateType>): Promise<string | null> => {
-    if (!user || !templateId) return null;
-
-    setIsLoading(true);
-    try {
-      // If it's a sample template, create a new one instead
-      if (templateId.startsWith('sample-')) {
-        return await createTemplate(
-          updates.name || 'Copy of Sample Template',
-          updates.description || '',
-          {
-            language: updates.language as string,
-            settings: updates.settings
-          }
-        );
-      }
-
-      // Map updates to match the database schema
-      const dbUpdates = {
-        name: updates.name,
-        description: updates.description,
-        // We can't update language and settings directly as they don't exist in the DB schema
-      };
-
-      const { error } = await supabase
-        .from('templates')
-        .update(dbUpdates)
-        .eq('id', templateId)
-        .eq('user_id', user.id);
-
-      if (error) {
-        console.error('Error updating template:', error);
-        throw error;
-      }
-
-      // Update the template in the state
-      setUserTemplates(prev => prev.map(template => 
-        template.id === templateId 
-          ? { ...template, ...updates } 
-          : template
-      ));
-
-      return templateId;
-    } catch (error) {
-      console.error('Error updating template:', error);
-      toast({
-        title: t.common.error,
-        description: t.offer.templates.failedToUpdateTemplate || 'Failed to update template',
-        variant: 'destructive',
-      });
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Get a template by ID
-  const getTemplateById = (templateId: string): TemplateType | null => {
-    if (!templateId) return null;
-    
-    // Check user templates
-    const userTemplate = userTemplates.find(template => template.id === templateId);
-    if (userTemplate) return userTemplate;
-    
-    // Check sample templates
-    const sampleTemplate = sampleTemplates.find(template => template.id === templateId);
-    if (sampleTemplate) return sampleTemplate;
-    
-    return null;
-  };
-
-  // Set a template as default
   const setAsDefaultTemplate = async (templateId: string) => {
     if (!user) return;
     
-    setIsLoading(true);
-    try {
-      // Check if user settings exist
-      const { data: existingSettings } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (existingSettings) {
-        // Update existing settings
-        const offerSettings = existingSettings.offer_settings as Record<string, any> || {};
-        offerSettings.default_template_id = templateId;
-        
-        await supabase
-          .from('user_settings')
-          .update({ offer_settings: offerSettings })
-          .eq('user_id', user.id);
-      } else {
-        // Create new settings
-        await supabase
-          .from('user_settings')
-          .insert({ 
-            user_id: user.id, 
-            offer_settings: { default_template_id: templateId }
-          });
-      }
-      
-      // Update state
+    // Can't set sample templates as default via database
+    const template = userTemplates.find(t => t.id === templateId);
+    if (template?.isSample) {
+      // Just set it as default locally
       setDefaultTemplateId(templateId);
-      
-      // Update isDefault flag in templates
-      setUserTemplates(prev => prev.map(template => ({
-        ...template,
-        isDefault: template.id === templateId
-      })));
       
       toast({
         title: t.common.success,
-        description: t.offer.templates.defaultTemplateSet || 'Default template set',
+        description: language === 'bg' 
+          ? 'Шаблонът е зададен като основен' 
+          : 'Template set as default'
       });
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      // First, reset all templates to non-default
+      await supabase
+        .from('saved_offers')
+        .update({ is_default: false })
+        .eq('user_id', user.id)
+        .eq('is_template', true);
+      
+      // Then set the selected one as default
+      const { error } = await supabase
+        .from('saved_offers')
+        .update({ is_default: true })
+        .eq('id', templateId)
+        .eq('user_id', user.id);
+        
+      if (error) {
+        throw error;
+      }
+      
+      setDefaultTemplateId(templateId);
+      
+      toast({
+        title: t.common.success,
+        description: language === 'bg' 
+          ? 'Шаблонът е зададен като основен' 
+          : 'Template set as default'
+      });
+      
+      await fetchUserTemplates();
     } catch (error) {
       console.error('Error setting default template:', error);
       toast({
         title: t.common.error,
-        description: t.offer.templates.failedToSetDefaultTemplate || 'Failed to set default template',
-        variant: 'destructive',
+        description: 'Failed to set default template',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Reset to the default template
-  const resetToDefaultTemplate = (): TemplateType | null => {
-    const defaultTemplate = defaultTemplateId 
-      ? getTemplateById(defaultTemplateId)
-      : sampleTemplates[0];
-      
+  const resetToDefaultTemplate = () => {
+    // Check if we have a default template
+    const defaultTemplate = userTemplates.find(t => t.id === defaultTemplateId);
+    if (!defaultTemplate) {
+      toast({
+        title: t.common.error,
+        description: 'No default template found',
+        variant: 'destructive'
+      });
+      return null;
+    }
+    
+    toast({
+      title: t.common.success,
+      description: language === 'bg' 
+        ? 'Възстановен е основният шаблон' 
+        : 'Reset to default template'
+    });
+    
     return defaultTemplate;
   };
 
-  // Refresh templates
-  const refreshTemplates = () => {
-    fetchUserTemplates();
+  const saveTemplateSettings = async (templateId: string, settings: any) => {
+    if (!user) return;
+    
+    // Can't modify sample templates in the database
+    const template = userTemplates.find(t => t.id === templateId);
+    if (template?.isSample) {
+      // Just update locally
+      const updatedTemplates = userTemplates.map(t => 
+        t.id === templateId ? { ...t, settings } : t
+      );
+      setUserTemplates(updatedTemplates);
+      
+      toast({
+        title: t.common.success,
+        description: t.offer.templates.saved
+      });
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('saved_offers')
+        .update({ settings })
+        .eq('id', templateId)
+        .eq('user_id', user.id);
+        
+      if (error) {
+        throw error;
+      }
+      
+      // Update local state
+      const updatedTemplates = userTemplates.map(t => 
+        t.id === templateId ? { ...t, settings } : t
+      );
+      setUserTemplates(updatedTemplates);
+      
+      toast({
+        title: t.common.success,
+        description: t.offer.templates.saved
+      });
+    } catch (error) {
+      console.error('Error saving template settings:', error);
+      toast({
+        title: t.common.error,
+        description: 'Failed to save template settings',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Get the default template
+  const getTemplateById = (templateId: string) => {
+    return userTemplates.find(t => t.id === templateId) || null;
+  };
+
   const getDefaultTemplate = () => {
-    if (defaultTemplateId) {
-      return getTemplateById(defaultTemplateId);
+    return userTemplates.find(t => t.id === defaultTemplateId) || 
+           userTemplates.find(t => t.isDefault) ||
+           userTemplates.find(t => t.id === 'default') || null;
+  };
+
+  const editTemplate = async (templateId: string, newData: Partial<TemplateType> = {}) => {
+    if (!user) return;
+    
+    // Can't edit sample templates
+    const template = userTemplates.find(t => t.id === templateId);
+    if (template?.isSample) {
+      toast({
+        title: t.common.info,
+        description: 'Sample templates cannot be edited',
+      });
+      return;
     }
-    return sampleTemplates[0];
+    
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('saved_offers')
+        .update({ 
+          name: newData.name,
+          description: newData.description,
+          settings: newData.settings
+        })
+        .eq('id', templateId)
+        .eq('user_id', user.id);
+        
+      if (error) {
+        throw error;
+      }
+      
+      // Update local state
+      const updatedTemplates = userTemplates.map(t => 
+        t.id === templateId ? { ...t, ...newData } : t
+      );
+      setUserTemplates(updatedTemplates);
+      
+      toast({
+        title: t.common.success,
+        description: t.offer.templates.saved
+      });
+    } catch (error) {
+      console.error('Error updating template:', error);
+      toast({
+        title: t.common.error,
+        description: 'Failed to update template',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
@@ -542,12 +692,13 @@ export const useTemplateManagement = () => {
     isLoading,
     createTemplate,
     deleteTemplate,
-    updateTemplate,
-    getTemplateById,
-    refreshTemplates,
+    editTemplate,
     setAsDefaultTemplate,
-    defaultTemplateId,
     resetToDefaultTemplate,
-    getDefaultTemplate
+    getTemplateById,
+    getDefaultTemplate,
+    defaultTemplateId,
+    saveTemplateSettings,
+    refreshTemplates: fetchUserTemplates
   };
-};
+}

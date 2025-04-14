@@ -117,9 +117,4 @@ export interface CommonTranslations {
   
   // Add the missing retry property
   retry: string;
-  
-  // Add color preset translations
-  colorPresets: string;
-  applyPreset: string;
-  customColors: string;
 }
