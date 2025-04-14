@@ -75,6 +75,9 @@ export interface OfferTranslations {
   draftLoaded: string;
   draftRestoredDescription: string;
   returnToDraft: string;
+  draftSavedToLocalStorage: string;
+  continueWorking: string;
+  openDraft: string;
   
   // Additional required fields
   saveOffer: string;

@@ -7,7 +7,7 @@ import QuickActionCards from '@/components/home/QuickActionCards';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { SavedOffer } from '@/types/database';
-import { ArrowUpRight, Calendar, User } from 'lucide-react';
+import { ArrowUpRight, Calendar, User, FileEdit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer';
 import { formatDistanceToNow } from 'date-fns';
