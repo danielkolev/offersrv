@@ -69,8 +69,106 @@ export const offer = {
   draftSaveError: "Error saving draft",
   noContentToSave: "No Content to Save",
   addContentToSave: "Add some content to save as a draft.",
-  returnToDraft: "Return to Draft",
   draftLoaded: "Draft Loaded",
   draftRestoredDescription: "Successfully restored your draft",
   returnToDraft: "Continue working from your saved draft",
+  
+  // Additional required fields
+  saveOffer: "Save Offer",
+  confirmSave: "Confirm Save",
+  saveDescription: "Save your offer to access it later",
+  saveAsTemplate: "Save as Template",
+  saveAsDraft: "Save as Draft",
+  saveAsFinalized: "Save as Finalized",
+  savedSuccessfully: "Saved Successfully",
+  saveFailed: "Save Failed",
+  clearConfirm: "Clear Confirmation",
+  fromTemplate: "From Template",
+  header: "Header",
+  fromCompany: "From Company",
+  toCompany: "To Company",
+  date: "Date",
+  reference: "Reference",
+  item: "Item",
+  qty: "Qty",
+  total: "Total",
+  subtotal: "Subtotal",
+  vat: "VAT",
+  totalAmount: "Total Amount",
+  previewTitle: "Preview",
+  previewDescription: "Preview your offer before saving",
+  
+  // Status related translations
+  status: "Status",
+  draftStatus: "Draft",
+  draftStatusInfo: "This offer is saved as a draft",
+  statuses: {
+    draft: "Draft",
+    saved: "Saved",
+    sent: "Sent",
+    accepted: "Accepted",
+    rejected: "Rejected",
+  },
+  
+  // Time related translations
+  createdAt: "Created at",
+  lastEdited: "Last edited",
+  
+  // Client info related translations
+  toLabel: "To",
+  attention: "Attention",
+  
+  // Language options
+  languageOptions: {
+    bulgarian: "Bulgarian",
+    english: "English",
+  },
+  
+  // Templates related translations
+  templates: {
+    title: "Templates",
+    description: "Manage your templates",
+    empty: "No templates found",
+    create: "Create Template",
+    delete: "Delete Template",
+    confirmDelete: "Are you sure you want to delete this template?",
+    templateDeleted: "Template deleted",
+    apply: "Apply Template",
+    createNew: "Create New Template",
+    name: "Template Name",
+    namePlaceholder: "Enter template name",
+    descriptionPlaceholder: "Enter template description",
+    save: "Save Template",
+    cancel: "Cancel",
+    saved: "Template Saved",
+    error: "Error saving template",
+    defaultTemplates: "Default Templates",
+    userTemplates: "Your Templates",
+    templateName: "Template Name",
+    noTemplates: "No templates found",
+    templateSaved: "Template saved",
+    useTemplate: "Use Template",
+    createFromCurrent: "Create from current",
+    saveAsTemplate: "Save as Template",
+    noDescription: "No description",
+    availableTemplates: "Available Templates",
+    noTemplatesFound: "No templates found",
+    templatePreview: "Template Preview",
+    setAsDefault: "Set as Default",
+    resetToDefault: "Reset to Default",
+    defaultTemplate: "Default Template",
+    sampleTemplates: "Sample Templates",
+    textColor: "Text Color",
+    backgroundColor: "Background Color",
+    designTemplateType: "Design Template",
+    designTemplates: {
+      classic: "Classic",
+      modernDark: "Modern Dark",
+      gradient: "Gradient",
+      businessPro: "Business Pro",
+    }
+  },
+  
+  // Preview related translations
+  offerPreview: "Offer Preview"
 };

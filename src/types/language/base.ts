@@ -15,6 +15,7 @@ import { ProductsTranslations } from './products';
 import { OfferDetailsTranslations } from './offerDetails';
 import { TotalsTranslations } from './totals';
 import { CompanyInfoTranslations } from './companyInfo';
+import { NavigationTranslations } from './navigation';
 
 export type SupportedLanguage = 'bg' | 'en';
 export type SupportedCurrency = 'BGN' | 'EUR' | 'USD';
@@ -36,4 +37,5 @@ export interface Translations {
   offerDetails: OfferDetailsTranslations;
   totals: TotalsTranslations;
   companyInfo: CompanyInfoTranslations;
+  navigation: NavigationTranslations;
 }

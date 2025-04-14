@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -45,8 +46,8 @@ const TopNavBar = () => {
     try {
       await signOut();
       toast({
-        title: t.auth.signedOut,
-        description: t.auth.signedOutSuccess,
+        title: t.auth.signOut,
+        description: t.auth.signOutSuccess,
       });
     } catch (error) {
       console.error('Error signing out:', error);
