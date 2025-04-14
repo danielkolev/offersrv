@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Menu, X, LogOut, User, Settings, FileText, Home, BarChart2, Building, FileEdit } from 'lucide-react';
+import { Menu, X, LogOut, User, Settings, Home, BarChart2, Building, FileEdit } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +64,6 @@ const TopNavBar = () => {
   const navLinks = [
     { href: '/', label: t.navigation.home, icon: <Home className="h-4 w-4 mr-2" /> },
     { href: '/new-offer', label: t.navigation.newOffer, icon: <FileEdit className="h-4 w-4 mr-2" /> },
-    { href: '/saved-offers', label: t.navigation.savedOffers, icon: <FileText className="h-4 w-4 mr-2" /> },
     { href: '/companies', label: t.navigation.companies, icon: <Building className="h-4 w-4 mr-2" /> },
     { href: '/analytics', label: t.navigation.analytics, icon: <BarChart2 className="h-4 w-4 mr-2" /> },
   ];
@@ -114,10 +113,10 @@ const TopNavBar = () => {
           {/* Draft indicator */}
           {user && <DraftIndicator />}
 
-          {/* Language Switcher - Improved presentation */}
+          {/* Language Switcher */}
           <LanguageSwitcher />
           
-          {/* Account Button - Improved presentation */}
+          {/* Account Management */}
           {user ? (
             <AccountButton />
           ) : (
