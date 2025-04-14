@@ -10,6 +10,7 @@ import { useProductsManagement } from '@/components/management/products/hooks/us
 import BackButton from '@/components/navigation/BackButton';
 import { OfferProvider } from '@/context/offer';
 
+// This is the content component that will be wrapped with OfferProvider
 const SavedProductsContent = () => {
   const { t } = useLanguage();
   

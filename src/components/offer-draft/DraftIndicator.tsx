@@ -15,18 +15,19 @@ import {
 } from '@/components/ui/tooltip';
 
 export const DraftIndicator = () => {
+  const location = useLocation();
+  // Don't show indicator on /saved-products page as it has its own OfferProvider
+  // We need to check this before using any hooks
+  if (location.pathname === '/saved-products') {
+    return null;
+  }
+
   const { hasUserInteracted, lastSaved } = useOffer();
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
-  const location = useLocation();
   const [hasDraft, setHasDraft] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  
-  // Don't show indicator on /saved-products page as it has its own OfferProvider
-  if (location.pathname === '/saved-products') {
-    return null;
-  }
   
   // Check for draft presence when component loads
   useEffect(() => {
