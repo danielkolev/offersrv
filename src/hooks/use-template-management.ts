@@ -31,7 +31,7 @@ export function useTemplateManagement() {
     try {
       // Fetch user templates
       const { data: userTemplatesData, error: userTemplatesError } = await supabase
-        .from('templates')
+        .from('offer_templates')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -60,28 +60,8 @@ export function useTemplateManagement() {
       }
       
       // Fetch sample templates (if any)
-      const { data: sampleTemplatesData, error: sampleTemplatesError } = await supabase
-        .from('templates')
-        .select('*')
-        .eq('is_sample', true)
-        .order('created_at', { ascending: false });
-      
-      if (sampleTemplatesError) throw sampleTemplatesError;
-      
-      // Convert database rows to TemplateType
-      const formattedSampleTemplates: TemplateType[] = (sampleTemplatesData || []).map((template: any) => ({
-        id: template.id,
-        name: template.name,
-        description: template.description || '',
-        settings: template.settings,
-        created_at: template.created_at,
-        updated_at: template.updated_at,
-        user_id: template.user_id,
-        is_default: template.is_default,
-        language: template.language || 'all'
-      }));
-      
-      setSampleTemplates(formattedSampleTemplates);
+      // Note: You might want to implement a way to store sample templates in the future
+      setSampleTemplates([]);
       
     } catch (error) {
       console.error('Error fetching templates:', error);
@@ -105,14 +85,15 @@ export function useTemplateManagement() {
     try {
       // Create the template
       const { data, error } = await supabase
-        .from('templates')
+        .from('offer_templates')
         .insert([
           {
             name,
             description,
             settings,
             user_id: user.id,
-            is_default: isDefault || false
+            is_default: isDefault || false,
+            language: settings?.template?.language || 'all'
           }
         ])
         .select();
@@ -145,8 +126,13 @@ export function useTemplateManagement() {
     
     try {
       const { error } = await supabase
-        .from('templates')
-        .update(updates)
+        .from('offer_templates')
+        .update({
+          name: updates.name,
+          description: updates.description,
+          settings: updates.settings,
+          language: updates.settings?.template?.language || 'all'
+        })
         .eq('id', templateId)
         .eq('user_id', user.id);
       
@@ -175,7 +161,7 @@ export function useTemplateManagement() {
     
     try {
       const { error } = await supabase
-        .from('templates')
+        .from('offer_templates')
         .delete()
         .eq('id', templateId)
         .eq('user_id', user.id);
@@ -206,7 +192,7 @@ export function useTemplateManagement() {
     try {
       // First, clear any existing default templates
       const { error: clearError } = await supabase
-        .from('templates')
+        .from('offer_templates')
         .update({ is_default: false })
         .eq('user_id', user.id)
         .eq('is_default', true);
@@ -215,7 +201,7 @@ export function useTemplateManagement() {
       
       // Then set the new default template
       const { error: setError } = await supabase
-        .from('templates')
+        .from('offer_templates')
         .update({ is_default: true })
         .eq('id', templateId)
         .eq('user_id', user.id);
