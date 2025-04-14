@@ -14,7 +14,7 @@ import {
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building, LayoutTemplate, BarChart2, FileEdit } from 'lucide-react';
+import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building, LayoutTemplate, FileEdit } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
 
@@ -81,11 +81,6 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
       icon: Building
     },
     {
-      name: t.navigation?.analytics || "Analytics",
-      path: '/analytics',
-      icon: BarChart2
-    },
-    {
       name: t.settings?.title || "Settings",
       path: '/settings',
       icon: Settings
@@ -98,8 +93,8 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
       <Sidebar variant={isMobile ? "floating" : "sidebar"}>
         <SidebarHeader className="px-4">
           <div className="flex items-center space-x-2 py-4">
-            <img src="/logo.svg" alt="Offer Forge Logo" className="h-6" />
-            <span className="font-bold text-xl">Offer Forge</span>
+            <img src="/logo.svg" alt="Offersrv Logo" className="h-6" />
+            <span className="font-bold text-xl">Offersrv</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -126,8 +121,8 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
     <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
       <SidebarHeader className="px-4">
         <div className="flex items-center space-x-2 py-4">
-          <img src="/logo.svg" alt="Offer Forge Logo" className="h-6" />
-          <span className="font-bold text-xl">Offer Forge</span>
+          <img src="/logo.svg" alt="Offersrv Logo" className="h-6" />
+          <span className="font-bold text-xl">Offersrv</span>
         </div>
         
         {/* Company selector below the logo */}

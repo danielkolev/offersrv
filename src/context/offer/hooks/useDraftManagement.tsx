@@ -33,6 +33,12 @@ export interface DraftActions {
 
 // Helper to check if an offer has meaningful content
 const hasMeaningfulContent = (offer: Offer): boolean => {
+  // Ensure we have a valid offer object with all required properties
+  if (!offer || !offer.client || !offer.products || !offer.details) {
+    console.log("Invalid offer structure for meaningful content check");
+    return false;
+  }
+  
   // Check if client has at least a name
   const hasClientInfo = offer.client.name && offer.client.name.trim() !== '';
   
@@ -71,8 +77,11 @@ export function useDraftManagement(
     const loadDraft = async () => {
       if (user) {
         try {
+          console.log("Attempting to load draft for user:", user.id);
           const draft = await getLatestDraftFromDatabase(user.id);
+          
           if (draft) {
+            console.log("Draft found, checking for meaningful content");
             // Only load drafts that have meaningful content
             if (hasMeaningfulContent(draft)) {
               console.log("useDraftManagement: Loading draft with data:", draft);
@@ -89,9 +98,12 @@ export function useDraftManagement(
                 description: t.offer.draftRestoredDescription,
               });
             } else {
+              console.log("Draft has no meaningful content, deleting it");
               // If draft doesn't have meaningful content, delete it
               await deleteDraftFromDatabase(user.id);
             }
+          } else {
+            console.log("No draft found for user");
           }
         } catch (error) {
           console.error('Error loading draft:', error);
@@ -106,6 +118,7 @@ export function useDraftManagement(
   useEffect(() => {
     if (hasUserInteracted) {
       const meaningful = hasMeaningfulContent(offer);
+      console.log("Checking if offer has meaningful changes:", meaningful);
       setHasMeaningfulChanges(meaningful);
     }
   }, [offer, hasUserInteracted]);
@@ -123,6 +136,7 @@ export function useDraftManagement(
     const autoSaveDraft = async () => {
       setIsAutoSaving(true);
       try {
+        console.log("Auto-saving draft");
         // Add creation and last edited timestamps to the draft
         const draftToSave = {
           ...offer,
@@ -133,6 +147,7 @@ export function useDraftManagement(
         await saveDraftToDatabase(user.id, draftToSave);
         setLastSaved(new Date());
         setIsDirty(false);
+        console.log("Draft auto-saved successfully");
       } catch (error) {
         console.error('Error auto-saving draft:', error);
         // Silent error handling for auto-save - don't show toast for every failed autosave
@@ -166,6 +181,7 @@ export function useDraftManagement(
     
     setIsAutoSaving(true);
     try {
+      console.log("Manually saving draft");
       // Only save if user has interacted with the offer AND there are meaningful changes
       if (hasUserInteracted && hasMeaningfulChanges) {
         // Add creation and last edited timestamps
@@ -182,8 +198,10 @@ export function useDraftManagement(
           title: t.offer.draftSaved,
           description: t.offer.draftSavedDescription,
         });
+        console.log("Draft saved successfully");
       } else if (hasUserInteracted && !hasMeaningfulChanges) {
         // If user interacted but no meaningful changes, show different message
+        console.log("No meaningful changes to save");
         toast({
           title: t.offer.noContentToSave,
           description: t.offer.addContentToSave,
@@ -220,6 +238,7 @@ export function useDraftManagement(
     // Clear any saved drafts when explicitly resetting
     if (user) {
       try {
+        console.log("Deleting draft during reset");
         await deleteDraftFromDatabase(user.id);
       } catch (error) {
         console.error('Error deleting draft:', error);

@@ -39,10 +39,11 @@ export const useCompanyData = (companyId: string | null) => {
         if (error) throw error;
         
         if (data) {
-          console.log("Company data loaded successfully");
+          console.log("Company data loaded successfully:", data);
           
           // Update the offer context with company data
           updateCompanyInfo({
+            id: data.id,
             name: data.name || '',
             vatNumber: data.vat_number || '',
             address: data.address || '',
