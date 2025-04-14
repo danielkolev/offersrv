@@ -36,12 +36,6 @@ const hasMeaningfulContent = (offer: Offer): boolean => {
 
 // Save draft to local storage for temporary storage and backup
 export const saveDraftToLocalStorage = (offer: Offer): void => {
-  // Only save if there's meaningful content
-  if (!hasMeaningfulContent(offer)) {
-    console.log("Not saving draft to local storage - no meaningful content");
-    return;
-  }
-  
   try {
     localStorage.setItem(DRAFT_OFFER_KEY, JSON.stringify(offer));
     console.log("Draft saved to local storage successfully");
@@ -57,13 +51,7 @@ export const getDraftFromLocalStorage = (): Offer | null => {
     if (!draftString) return null;
     
     const draft = JSON.parse(draftString) as Offer;
-    
-    // Only return the draft if it has meaningful content
-    if (hasMeaningfulContent(draft)) {
-      return draft;
-    }
-    
-    return null;
+    return draft;
   } catch (error) {
     console.error('Error retrieving draft from local storage:', error);
     return null;
@@ -82,7 +70,7 @@ export const clearDraftFromLocalStorage = (): void => {
 
 // Save draft to database for persistent storage
 export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise<void> => {
-  // Skip saving if there's no meaningful content
+  // Skip saving if there's no meaningful content and we're not forcing the save
   if (!hasMeaningfulContent(offer)) {
     console.log('Skipping draft save to database - no meaningful content');
     return;
@@ -192,16 +180,8 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
           // Explicit casting to handle type conversion from Json to Offer
           const offerData = (data[0].offer_data as unknown) as Offer;
           
-          // Check if the draft has meaningful content
-          if (hasMeaningfulContent(offerData)) {
-            console.log("Draft has meaningful content, returning");
-            return offerData;
-          } else {
-            // If draft doesn't have meaningful content, delete it
-            console.log("Draft has no meaningful content, deleting");
-            await deleteDraftFromDatabase(userId);
-            return null;
-          }
+          // All drafts saved to the database should have meaningful content
+          return offerData;
         } else {
           console.log("No draft found for user in database");
         }

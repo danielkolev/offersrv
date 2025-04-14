@@ -14,26 +14,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-// Helper to check if a draft has meaningful content
-const hasMeaningfulContent = (draft: any): boolean => {
-  if (!draft) return false;
-  
-  // Check if client has at least a name
-  const hasClientInfo = draft.client?.name && draft.client.name.trim() !== '';
-  
-  // Check if there are any products
-  const hasProducts = draft.products && draft.products.length > 0;
-  
-  // Check if there are meaningful offer details (notes, custom number, etc.)
-  const hasOfferDetails = 
-    (draft.details?.notes && draft.details.notes.trim() !== '') || 
-    (draft.details?.offerNumber && 
-     draft.details.offerNumber !== '00000' && 
-     draft.details.offerNumber.trim() !== '');
-  
-  return hasClientInfo || hasProducts || hasOfferDetails;
-};
-
 export const DraftIndicator = () => {
   const { hasUserInteracted, lastSaved } = useOffer();
   const { user } = useAuth();
@@ -49,10 +29,11 @@ export const DraftIndicator = () => {
       
       try {
         const draftOffer = await getLatestDraftFromDatabase(user.id);
-        // Only set hasDraft to true if the draft has meaningful content
-        if (draftOffer && hasMeaningfulContent(draftOffer)) {
+        if (draftOffer) {
+          console.log("DraftIndicator: Draft found with data");
           setHasDraft(true);
         } else {
+          console.log("DraftIndicator: No draft found");
           setHasDraft(false);
         }
       } catch (error) {
@@ -78,30 +59,23 @@ export const DraftIndicator = () => {
     
     try {
       if (user && hasDraft) {
-        console.log("DraftIndicator: Starting draft loading process");
+        console.log("DraftIndicator: Navigating to draft offer page");
         
-        // First check if we can get the draft
-        const draftOffer = await getLatestDraftFromDatabase(user.id);
+        // Generate timestamp to ensure we get a fresh state
+        const timestamp = new Date().getTime();
         
-        if (draftOffer && hasMeaningfulContent(draftOffer)) {
-          console.log("DraftIndicator: Draft found with data:", draftOffer);
-          
-          // Navigate with clear state that we want to load this draft
-          navigate('/new-offer', { 
-            state: { 
-              loadDraft: true,
-              draftId: user.id, // Use user ID as draft identifier
-              timestamp: new Date().getTime() // Add timestamp to ensure state freshness
-            },
-            replace: true // Replace current history entry to prevent back issues
-          });
-        } else {
-          console.log("DraftIndicator: No valid draft found, creating new offer");
-          navigate('/new-offer', { replace: true });
-        }
+        // Navigate with clear state that we want to load this draft
+        navigate('/new-offer', { 
+          state: { 
+            loadDraft: true,
+            draftId: user.id,
+            timestamp
+          },
+          replace: true
+        });
       } else {
         // Just navigate to new offer page
-        console.log("DraftIndicator: No user or draft, creating new offer");
+        console.log("DraftIndicator: No draft or user, navigating to new offer page");
         navigate('/new-offer', { replace: true });
       }
     } catch (error) {

@@ -27,6 +27,11 @@ const NewOfferPage = () => {
   const draftId = location.state?.draftId;
   const stateTimestamp = location.state?.timestamp || 0;
   
+  // Should we load a saved offer?
+  const shouldLoadSavedOffer = location.state?.loadSavedOffer === true;
+  const savedOfferId = location.state?.savedOfferId;
+  const savedOfferData = location.state?.offerData;
+  
   // Use custom hook for loading company data
   const { isLoading: isCompanyLoading } = useCompanyData(selectedCompanyId);
 
@@ -39,9 +44,37 @@ const NewOfferPage = () => {
       
       setIsDraftLoading(true);
       try {
-        console.log("NewOfferPage: Initializing offer state, shouldLoadDraft:", shouldLoadDraft, "timestamp:", stateTimestamp);
+        console.log("NewOfferPage: Initializing offer state, shouldLoadDraft:", shouldLoadDraft, 
+                  "shouldLoadSavedOffer:", shouldLoadSavedOffer, "timestamp:", stateTimestamp);
         
-        if (shouldLoadDraft && draftId) {
+        // First, always reset the offer to clear any previous state
+        await resetOffer();
+        
+        // Small delay to ensure reset is complete
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        if (!isMounted) return;
+        
+        if (shouldLoadSavedOffer && savedOfferData) {
+          console.log('NewOfferPage: Loading saved offer with data:', savedOfferData);
+          
+          setOffer(savedOfferData);
+          
+          toast({
+            title: t.savedOffers.offerLoaded,
+            description: t.savedOffers.offerLoaded,
+          });
+          
+          // If the saved offer has a company selected, use that
+          if (savedOfferData.company && (savedOfferData.company.id || savedOfferData.company.vatNumber)) {
+            const companyId = savedOfferData.company.id || savedOfferData.company.vatNumber;
+            if (companyId) {
+              console.log("NewOfferPage: Setting company ID from saved offer:", companyId);
+              setSelectedCompanyId(companyId);
+              localStorage.setItem('selectedCompanyId', companyId);
+            }
+          }
+        } else if (shouldLoadDraft && draftId) {
           console.log("NewOfferPage: Should load draft with ID:", draftId);
           
           // Explicitly load the draft if we came from a "load draft" action
@@ -50,81 +83,41 @@ const NewOfferPage = () => {
           if (draftOffer && isMounted) {
             console.log('NewOfferPage: Loading draft with data:', draftOffer);
             
-            // Make sure we have valid offer data before setting it
-            if (draftOffer.client && draftOffer.products && draftOffer.details) {
-              // Important: wait for previous state to clear before setting new state
-              await resetOffer();
-              
-              // Small delay to ensure reset is complete
-              await new Promise(resolve => setTimeout(resolve, 200));
-              
-              if (!isMounted) return;
-              
-              // Now set the offer with the draft data
-              setOffer(draftOffer);
-              
-              toast({
-                title: t.offer.draftLoaded,
-                description: t.offer.draftRestoredDescription,
-              });
-              
-              // If the draft has a company selected, use that
-              if (draftOffer.company && (draftOffer.company.id || draftOffer.company.vatNumber)) {
-                const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
-                if (companyId) {
-                  console.log("NewOfferPage: Setting company ID from draft:", companyId);
-                  setSelectedCompanyId(companyId);
-                  localStorage.setItem('selectedCompanyId', companyId);
-                }
+            // Now set the offer with the draft data
+            setOffer(draftOffer);
+            
+            toast({
+              title: t.offer.draftLoaded,
+              description: t.offer.draftRestoredDescription,
+            });
+            
+            // If the draft has a company selected, use that
+            if (draftOffer.company && (draftOffer.company.id || draftOffer.company.vatNumber)) {
+              const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
+              if (companyId) {
+                console.log("NewOfferPage: Setting company ID from draft:", companyId);
+                setSelectedCompanyId(companyId);
+                localStorage.setItem('selectedCompanyId', companyId);
               }
-            } else {
-              console.error('NewOfferPage: Draft has invalid data:', draftOffer);
-              if (isMounted) await resetOffer();
             }
           } else {
-            console.log('NewOfferPage: No draft found, resetting offer');
-            if (isMounted) await resetOffer();
+            console.log('NewOfferPage: No draft found, preparing new offer');
+            // No need to reset again, we already did it at the beginning
           }
         } else {
-          // Normal initialization - check for draft as fallback
-          console.log('NewOfferPage: Normal initialization, checking for draft');
-          const draftOffer = await getLatestDraftFromDatabase(user.id);
-          
-          if (draftOffer && isMounted) {
-            console.log('NewOfferPage: Found draft during normal initialization:', draftOffer);
-            
-            if (draftOffer.client && draftOffer.products && draftOffer.details) {
-              await resetOffer();
-              await new Promise(resolve => setTimeout(resolve, 200));
-              
-              if (!isMounted) return;
-              
-              setOffer(draftOffer);
-              
-              // If the draft has a company selected, use that
-              if (draftOffer.company) {
-                const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
-                if (companyId) {
-                  setSelectedCompanyId(companyId);
-                  localStorage.setItem('selectedCompanyId', companyId);
-                }
-              }
-            } else {
-              console.error('NewOfferPage: Draft has invalid data:', draftOffer);
-              if (isMounted) await resetOffer();
-            }
-          } else {
-            // No draft found, reset to default state
-            console.log('NewOfferPage: No draft found, resetting offer');
-            if (isMounted) await resetOffer();
-          }
+          // Normal initialization - clean state was already set with resetOffer
+          console.log('NewOfferPage: Normal initialization, starting with new offer');
         }
         
         if (isMounted) setHasInitialized(true);
       } catch (error) {
         console.error('Error during offer initialization:', error);
         if (isMounted) {
-          await resetOffer();
+          toast({
+            title: t.common.error,
+            description: "Error initializing offer",
+            variant: 'destructive'
+          });
           setHasInitialized(true);
         }
       } finally {
@@ -137,7 +130,7 @@ const NewOfferPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, draftId, toast, t.offer.draftLoaded, t.offer.draftRestoredDescription, stateTimestamp]);
+  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, shouldLoadSavedOffer, draftId, savedOfferId, savedOfferData, toast, t, stateTimestamp]);
 
   // Use the company selected in the main menu (stored in localStorage)
   useEffect(() => {
