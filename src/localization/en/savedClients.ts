@@ -8,6 +8,8 @@ export const savedClients = {
   addNewClient: "Add New Client",
   deleteClient: "Delete Client",
   confirmDelete: "Are you sure you want to delete this client?",
+  confirmDeleteClient: "Confirm Delete Client",
+  confirmDeleteClientText: "Are you sure you want to delete this client? This action cannot be undone.",
   clientDeleted: "Client has been deleted successfully",
   clientUpdatedSuccess: "Client has been updated successfully",
   clientAddedSuccess: "Client has been added successfully",

@@ -2,14 +2,15 @@
 import { Offer, Product, CompanyInfo, ClientInfo, OfferDetails } from '@/types/offer';
 import { useEffect } from 'react';
 import { useTemplateManagement } from '@/hooks/use-template-management';
-import { TemplateType } from '@/hooks/use-template-management';
 
 export function useOfferActions(
   offer: Offer,
   setOffer: React.Dispatch<React.SetStateAction<Offer>>,
   markUserInteraction: () => void
 ) {
-  const { getDefaultTemplate, getTemplateById, defaultTemplateId } = useTemplateManagement();
+  const templateManagement = useTemplateManagement();
+  const { getDefaultTemplate, getTemplateById } = templateManagement;
+  const defaultTemplateId = templateManagement.defaultTemplateId;
 
   // Apply template settings to the offer
   const applyTemplate = (templateId?: string) => {

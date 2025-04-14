@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -84,17 +83,25 @@ const templateSettingsSchema = z.object({
 export type TemplateSettingsFormValues = z.infer<typeof templateSettingsSchema>;
 
 export interface TemplateSettingsProps {
+  selectedTemplateId?: string;
   initialSettings?: any;
-  onSave?: (settings: any) => void;
+  onSettingsChange?: (settings: any) => void;
+  onSave?: (name: string, description: string, settings: any) => void;
   onCancel?: () => void;
   isEditing?: boolean;
+  initialName?: string;
+  initialDescription?: string;
 }
 
 const TemplateSettings: React.FC<TemplateSettingsProps> = ({
+  selectedTemplateId,
   initialSettings,
+  onSettingsChange,
   onSave,
   onCancel,
   isEditing = false,
+  initialName,
+  initialDescription
 }) => {
   const { t, language } = useLanguage();
   const { offer } = useOffer();
@@ -142,8 +149,8 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
       useQRCode: false,
     },
     template: {
-      name: '',
-      description: '',
+      name: initialName || '',
+      description: initialDescription || '',
       language: language,
     },
     designTemplate: 'classic',
@@ -161,7 +168,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
   // Handle form submission
   const onSubmit = (data: TemplateSettingsFormValues) => {
     if (onSave) {
-      onSave(data);
+      onSave(data.template.name, data.template.description || '', data);
     } else {
       toast({
         title: t.common.success,
@@ -169,6 +176,13 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
       });
     }
   };
+  
+  // Update parent component when settings change
+  useEffect(() => {
+    if (onSettingsChange) {
+      onSettingsChange(formValues);
+    }
+  }, [formValues, onSettingsChange]);
   
   // Font family options
   const fontFamilies = [

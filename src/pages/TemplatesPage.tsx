@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useTemplateManagement, TemplateType } from '@/hooks/use-template-management';
+import { useTemplateManagement } from '@/hooks/use-template-management';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
@@ -31,7 +32,6 @@ const TemplatesPage = () => {
   const [activeTab, setActiveTab] = useState('settings');
   
   // Get template management hooks
-  const templateManagement = useTemplateManagement();
   const {
     userTemplates,
     isLoading,
@@ -39,7 +39,7 @@ const TemplatesPage = () => {
     deleteTemplate,
     refreshTemplates,
     editTemplate
-  } = templateManagement;
+  } = useTemplateManagement();
   
   // Get the current template
   const selectedTemplate = userTemplates.find(template => template.id === templateId);
@@ -80,74 +80,6 @@ const TemplatesPage = () => {
     }
   };
   
-  // Handle setting a template as default
-  const handleSetAsDefault = async () => {
-    if (!templateId || !templateManagement.setDefaultTemplate) return;
-    
-    await templateManagement.setDefaultTemplate(templateId);
-  };
-  
-  // Listen for template updates
-  useEffect(() => {
-    if (templateManagement.templateUpdated) {
-      toast({
-        title: t.common.success,
-        description: t.settings.templateUpdated,
-      });
-      refreshTemplates();
-    }
-  }, [templateManagement.templateUpdated, t.common.success, t.settings.templateUpdated, toast, refreshTemplates]);
-  
-  // Listen for template creation
-  useEffect(() => {
-    if (templateManagement.templateCreated) {
-      toast({
-        title: t.common.success,
-        description: t.settings.templateCreated,
-      });
-      refreshTemplates();
-    }
-  }, [templateManagement.templateCreated, t.common.success, t.settings.templateCreated, toast, refreshTemplates]);
-  
-  // Listen for template save failures
-  useEffect(() => {
-    if (templateManagement.saveTemplateFailed) {
-      toast({
-        title: t.common.error,
-        description: t.settings.saveTemplateFailed,
-        variant: 'destructive',
-      });
-    }
-  }, [templateManagement.saveTemplateFailed, t.common.error, t.settings.saveTemplateFailed, toast]);
-  
-  // Listen for default template set
-  useEffect(() => {
-    if (templateManagement.defaultTemplateSet) {
-      toast({
-        title: t.common.success,
-        description: t.settings.defaultTemplateSet,
-      });
-    }
-  }, [templateManagement.defaultTemplateSet, t.common.success, t.settings.defaultTemplateSet, toast]);
-  
-  // Listen for default template set failures
-  useEffect(() => {
-    if (templateManagement.setDefaultFailed) {
-      toast({
-        title: t.common.error,
-        description: t.settings.setDefaultFailed,
-        variant: 'destructive',
-      });
-    }
-  }, [templateManagement.setDefaultFailed, t.common.error, t.settings.setDefaultFailed, toast]);
-  
-  // Initialize settings from the template
-  useEffect(() => {
-    if (selectedTemplate) {
-      setSelectedSettings(selectedTemplate.settings || {});
-    }
-  }, [selectedTemplate]);
-  
   // Handle settings change
   const handleSettingsChange = (newSettings: any) => {
     setSelectedSettings(newSettings);
@@ -172,14 +104,6 @@ const TemplatesPage = () => {
         
         {templateId !== 'new' && (
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleSetAsDefault}
-              disabled={selectedTemplate?.is_default}
-            >
-              {t.settings.setAsDefault}
-            </Button>
-            
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">

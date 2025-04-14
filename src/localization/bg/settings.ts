@@ -139,5 +139,6 @@ export const settings: SettingsTranslations = {
   unitDeleteError: "Грешка при изтриване на единицата",
   validationError: "Грешка при валидация",
   unitNameRequired: "Името на единицата е задължително",
-  settingsSaved: "Настройките са запазени успешно"
+  settingsSaved: "Настройките са запазени успешно",
+  offerSettings: "Настройки на офертата"
 };

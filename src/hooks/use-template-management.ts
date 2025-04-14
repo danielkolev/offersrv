@@ -4,19 +4,9 @@ import { useToast } from './use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
+import { TemplateType } from '@/types/template';
 
-// Define the TemplateType interface
-export interface TemplateType {
-  id: string;
-  name: string;
-  description: string;
-  settings?: any;
-  created_at?: string;
-  updated_at?: string;
-  user_id?: string;
-  is_default?: boolean;
-  language?: string;
-}
+export { TemplateType };
 
 export function useTemplateManagement() {
   const [userTemplates, setUserTemplates] = useState<TemplateType[]>([]);
@@ -28,6 +18,7 @@ export function useTemplateManagement() {
   const [saveTemplateFailed, setSaveTemplateFailed] = useState(false);
   const [defaultTemplateSet, setDefaultTemplateSet] = useState(false);
   const [setDefaultFailed, setSetDefaultFailed] = useState(false);
+  const [defaultTemplateId, setDefaultTemplateId] = useState<string | null>(null);
   
   const { user } = useAuth();
   const { t } = useLanguage();
@@ -40,22 +31,57 @@ export function useTemplateManagement() {
     try {
       // Fetch user templates
       const { data: userTemplatesData, error: userTemplatesError } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (userTemplatesError) throw userTemplatesError;
-      setUserTemplates(userTemplatesData || []);
+      
+      // Convert database rows to TemplateType
+      const formattedUserTemplates: TemplateType[] = (userTemplatesData || []).map((template: any) => ({
+        id: template.id,
+        name: template.name,
+        description: template.description || '',
+        settings: template.settings,
+        created_at: template.created_at,
+        updated_at: template.updated_at,
+        user_id: template.user_id,
+        is_default: template.is_default,
+        language: template.language || 'all'
+      }));
+      
+      setUserTemplates(formattedUserTemplates);
+      
+      // Get default template ID
+      const defaultTemplate = formattedUserTemplates.find(template => template.is_default);
+      if (defaultTemplate) {
+        setDefaultTemplateId(defaultTemplate.id);
+      }
       
       // Fetch sample templates (if any)
       const { data: sampleTemplatesData, error: sampleTemplatesError } = await supabase
-        .from('sample_offer_templates')
+        .from('templates')
         .select('*')
+        .eq('is_sample', true)
         .order('created_at', { ascending: false });
       
       if (sampleTemplatesError) throw sampleTemplatesError;
-      setSampleTemplates(sampleTemplatesData || []);
+      
+      // Convert database rows to TemplateType
+      const formattedSampleTemplates: TemplateType[] = (sampleTemplatesData || []).map((template: any) => ({
+        id: template.id,
+        name: template.name,
+        description: template.description || '',
+        settings: template.settings,
+        created_at: template.created_at,
+        updated_at: template.updated_at,
+        user_id: template.user_id,
+        is_default: template.is_default,
+        language: template.language || 'all'
+      }));
+      
+      setSampleTemplates(formattedSampleTemplates);
       
     } catch (error) {
       console.error('Error fetching templates:', error);
@@ -79,7 +105,7 @@ export function useTemplateManagement() {
     try {
       // Create the template
       const { data, error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .insert([
           {
             name,
@@ -119,7 +145,7 @@ export function useTemplateManagement() {
     
     try {
       const { error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .update(updates)
         .eq('id', templateId)
         .eq('user_id', user.id);
@@ -149,7 +175,7 @@ export function useTemplateManagement() {
     
     try {
       const { error } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .delete()
         .eq('id', templateId)
         .eq('user_id', user.id);
@@ -180,7 +206,7 @@ export function useTemplateManagement() {
     try {
       // First, clear any existing default templates
       const { error: clearError } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .update({ is_default: false })
         .eq('user_id', user.id)
         .eq('is_default', true);
@@ -189,7 +215,7 @@ export function useTemplateManagement() {
       
       // Then set the new default template
       const { error: setError } = await supabase
-        .from('offer_templates')
+        .from('templates')
         .update({ is_default: true })
         .eq('id', templateId)
         .eq('user_id', user.id);
@@ -197,6 +223,7 @@ export function useTemplateManagement() {
       if (setError) throw setError;
       
       setDefaultTemplateSet(true);
+      setDefaultTemplateId(templateId);
       await fetchTemplates(); // Refresh the templates list
     } catch (error) {
       console.error('Error setting default template:', error);
@@ -209,6 +236,24 @@ export function useTemplateManagement() {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  // Add helper functions for get templates by ID and get default template
+  const getTemplateById = (id: string): TemplateType | null => {
+    // Look in user templates first
+    const userTemplate = userTemplates.find(template => template.id === id);
+    if (userTemplate) return userTemplate;
+    
+    // Then look in sample templates
+    const sampleTemplate = sampleTemplates.find(template => template.id === id);
+    if (sampleTemplate) return sampleTemplate;
+    
+    return null;
+  };
+  
+  const getDefaultTemplate = (): TemplateType | null => {
+    const defaultTemplate = userTemplates.find(template => template.is_default);
+    return defaultTemplate || null;
   };
   
   const refreshTemplates = async () => {
@@ -236,6 +281,9 @@ export function useTemplateManagement() {
     saveTemplateFailed,
     defaultTemplateSet,
     setDefaultFailed,
+    defaultTemplateId,
+    getTemplateById,
+    getDefaultTemplate,
     refreshTemplates
   };
 }

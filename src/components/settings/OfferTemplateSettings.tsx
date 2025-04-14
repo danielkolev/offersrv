@@ -6,6 +6,7 @@ import { BookOpen, PlusCircle } from 'lucide-react';
 import { useTemplateManagement } from '@/hooks/use-template-management';
 import CreateTemplateDialog from './offer-templates/CreateTemplateDialog';
 import TemplatesList from './offer-templates/TemplatesList';
+import { TemplateType } from '@/types/template';
 
 const OfferTemplateSettings = () => {
   const { t } = useLanguage();
@@ -22,6 +23,10 @@ const OfferTemplateSettings = () => {
   
   const handleSaveTemplate = async (name: string, description: string) => {
     await createTemplate(name, description);
+  };
+
+  const handleEditTemplate = (id: string) => {
+    // Logic to handle template editing
   };
 
   return (
@@ -64,7 +69,7 @@ const OfferTemplateSettings = () => {
             isUserTemplates={true}
             onCreateNew={() => setSaveDialogOpen(true)}
             onDeleteTemplate={deleteTemplate}
-            onEditTemplate={editTemplate}
+            onEditTemplate={handleEditTemplate}
           />
         </TabsContent>
       </Tabs>

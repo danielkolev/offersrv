@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,20 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Plus, Check, Trash, Pencil } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTemplateManagement } from '@/hooks/use-template-management';
+import { TemplateType } from '@/types/template';
 import TemplateCard from '@/components/settings/offer-templates/TemplateCard';
 import { useToast } from '@/hooks/use-toast';
 import CreateTemplateDialog from '@/components/settings/offer-templates/CreateTemplateDialog';
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import EmptyTemplateState from '@/components/settings/offer-templates/EmptyTemplateState';
-
-interface TemplateType {
-  id: string;
-  name: string;
-  description: string;
-  language: 'bg' | 'en' | 'all';
-  isDefault?: boolean;
-}
 
 const OfferTemplatesSection = () => {
   const { t } = useLanguage();
@@ -31,69 +25,15 @@ const OfferTemplatesSection = () => {
   const [templateToDelete, setTemplateToDelete] = useState<string | null>(null);
   const [templateToEdit, setTemplateToEdit] = useState<TemplateType | null>(null);
   
+  // Get complete template management hooks
   const {
     userTemplates,
     isLoading,
     createTemplate,
     deleteTemplate,
     editTemplate,
-    setDefaultTemplate,
-    templateUpdated,
-    templateCreated,
-    saveTemplateFailed,
-    defaultTemplateSet,
-    setDefaultFailed,
     refreshTemplates
   } = useTemplateManagement();
-  
-  useEffect(() => {
-    if (templateUpdated) {
-      toast({
-        title: t.common.success,
-        description: t.settings.templateUpdated,
-      });
-      refreshTemplates();
-    }
-  }, [templateUpdated, t.common.success, t.settings.templateUpdated, toast, refreshTemplates]);
-  
-  useEffect(() => {
-    if (templateCreated) {
-      toast({
-        title: t.common.success,
-        description: t.settings.templateCreated,
-      });
-      refreshTemplates();
-    }
-  }, [templateCreated, t.common.success, t.settings.templateCreated, toast, refreshTemplates]);
-  
-  useEffect(() => {
-    if (saveTemplateFailed) {
-      toast({
-        title: t.common.error,
-        description: t.settings.saveTemplateFailed,
-        variant: 'destructive',
-      });
-    }
-  }, [saveTemplateFailed, t.common.error, t.settings.saveTemplateFailed, toast]);
-  
-  useEffect(() => {
-    if (defaultTemplateSet) {
-      toast({
-        title: t.common.success,
-        description: t.settings.defaultTemplateSet,
-      });
-    }
-  }, [defaultTemplateSet, t.common.success, t.settings.defaultTemplateSet, toast]);
-  
-  useEffect(() => {
-    if (setDefaultFailed) {
-      toast({
-        title: t.common.error,
-        description: t.settings.setDefaultFailed,
-        variant: 'destructive',
-      });
-    }
-  }, [setDefaultFailed, t.common.error, t.settings.setDefaultFailed, toast]);
   
   const handleSaveTemplate = async (name: string, description: string, settings?: any, isDefault?: boolean) => {
     await createTemplate(name, description, settings, isDefault);
@@ -102,10 +42,6 @@ const OfferTemplatesSection = () => {
   const handleEditTemplate = (template: TemplateType) => {
     setTemplateToEdit(template);
     navigate(`/settings/templates/${template.id}`);
-  };
-  
-  const handleSetDefaultTemplate = async (templateId: string) => {
-    await setDefaultTemplate(templateId);
   };
   
   const handleDeleteTemplate = async () => {
@@ -171,7 +107,7 @@ const OfferTemplatesSection = () => {
                         <h4 className="font-medium flex items-center gap-2 mb-2">
                           {template.name}
                         </h4>
-                        {template.language && template.language !== 'all' && (
+                        {template.language && (
                           <div className="text-xs inline-flex items-center gap-1 text-muted-foreground mb-2">
                             {template.language === 'bg' ? 'Български' : 'English'}
                           </div>
