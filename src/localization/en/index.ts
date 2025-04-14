@@ -3,7 +3,7 @@ import { auth } from './auth';
 import { client } from './client';
 import { common } from './common';
 import { company } from './company';
-import { offer } from './offer';
+import { offer } from './offer/index';
 import { settings } from './settings';
 import { user } from './user';
 import { home } from './home';
