@@ -118,12 +118,14 @@ const OfferSidebar = () => {
           <span className="font-bold text-xl">Offer Forge</span>
         </div>
         
-        {/* Company selector below the logo */}
-        <div className="mt-4 mb-2">
-          <CompanyManager 
-            onSelectCompany={handleSelectCompany} 
-            selectedCompanyId={selectedCompanyId}
-          />
+        {/* Company selector below the logo - Add truncation to handle long names */}
+        <div className="mt-4 mb-2 max-w-full">
+          <div className="truncate">
+            <CompanyManager 
+              onSelectCompany={handleSelectCompany} 
+              selectedCompanyId={selectedCompanyId}
+            />
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -140,7 +142,7 @@ const OfferSidebar = () => {
                   >
                     <Link to={item.path}>
                       <item.icon className="mr-2 h-4 w-4" />
-                      <span>{item.name}</span>
+                      <span className="truncate">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

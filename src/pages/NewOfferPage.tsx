@@ -6,24 +6,56 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useOffer } from '@/context/offer';
 import { supabase } from '@/integrations/supabase/client';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { resetOffer } = useOffer();
+  const { resetOffer, setOffer } = useOffer();
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [isDraftLoading, setIsDraftLoading] = useState(false);
 
-  // Reset offer state only once when the component mounts
+  // Check for draft and initialize the offer state
   useEffect(() => {
-    if (!hasInitialized) {
-      resetOffer();
-      setHasInitialized(true);
-    }
-  }, [hasInitialized, resetOffer]);
+    const initializeOfferState = async () => {
+      if (!user || hasInitialized) return;
+      
+      setIsDraftLoading(true);
+      try {
+        // First check if there's a draft to load
+        const draftOffer = await getLatestDraftFromDatabase(user.id);
+        
+        // If there's a draft, load it instead of resetting
+        if (draftOffer) {
+          console.log('Loading draft offer from database', draftOffer);
+          setOffer(draftOffer);
+          // If the draft has a company selected, use that
+          if (draftOffer.company && draftOffer.company.id) {
+            setSelectedCompanyId(draftOffer.company.id);
+            localStorage.setItem('selectedCompanyId', draftOffer.company.id);
+          }
+        } else {
+          // No draft found, reset to default state
+          console.log('No draft found, resetting offer');
+          resetOffer();
+        }
+        
+        setHasInitialized(true);
+      } catch (error) {
+        console.error('Error initializing offer state:', error);
+        resetOffer();
+        setHasInitialized(true);
+      } finally {
+        setIsDraftLoading(false);
+      }
+    };
+
+    initializeOfferState();
+  }, [user, resetOffer, setOffer, hasInitialized]);
 
   // Fetch user's default company or first company on load
   const fetchDefaultCompany = useCallback(async () => {
@@ -66,10 +98,12 @@ const NewOfferPage = () => {
     }
   }, [user, toast, t.common.error]);
 
-  // Only fetch default company on initial mount
+  // Only fetch default company after checking for draft
   useEffect(() => {
-    fetchDefaultCompany();
-  }, []);  // Intentionally empty dependency array
+    if (hasInitialized && !selectedCompanyId) {
+      fetchDefaultCompany();
+    }
+  }, [hasInitialized, fetchDefaultCompany, selectedCompanyId]);
 
   const handleSelectCompany = useCallback((companyId: string) => {
     setSelectedCompanyId(companyId);
@@ -97,7 +131,7 @@ const NewOfferPage = () => {
       </div>
       
       <OfferAccordion 
-        isLoadingCompanyData={isLoadingCompanyData}
+        isLoadingCompanyData={isLoadingCompanyData || isDraftLoading}
         fetchError={fetchError}
         selectedCompanyId={selectedCompanyId}
         onSelectCompany={handleSelectCompany}

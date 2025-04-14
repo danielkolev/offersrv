@@ -17,10 +17,10 @@ export function useProductUnits() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Start with a default "no unit" option that has a non-empty ID
+  // Start with only a default "no unit" option that has a non-empty ID
+  // Removed the "pieces/брой" default unit
   const defaultUnits: ProductUnit[] = [
     { id: 'none', name: '-', name_en: '-' }, // Empty unit for default
-    { id: 'pieces', name: 'брой', name_en: 'pieces' },
   ];
 
   useEffect(() => {
