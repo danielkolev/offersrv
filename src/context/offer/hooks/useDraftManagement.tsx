@@ -75,6 +75,7 @@ export function useDraftManagement(
           if (draft) {
             // Only load drafts that have meaningful content
             if (hasMeaningfulContent(draft)) {
+              console.log("useDraftManagement: Loading draft with data:", draft);
               setOffer(draft);
               setLastSaved(new Date());
               setHasUserInteracted(true);

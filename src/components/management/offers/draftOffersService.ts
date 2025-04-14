@@ -141,6 +141,7 @@ export const saveDraftToDatabase = async (userId: string, offer: Offer): Promise
 // Get latest draft from database
 export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer | null> => {
   try {
+    console.log("Attempting to fetch draft for user:", userId);
     const { data, error } = await supabase
       .from('saved_offers')
       .select('*')
@@ -154,17 +155,23 @@ export const getLatestDraftFromDatabase = async (userId: string): Promise<Offer 
     }
     
     if (data && data.length > 0) {
+      console.log("Draft found:", data[0]);
+      
       // Explicit casting to handle type conversion from Json to Offer
       const offerData = (data[0].offer_data as unknown) as Offer;
       
       // Check if the draft has meaningful content
       if (hasMeaningfulContent(offerData)) {
+        console.log("Draft has meaningful content, returning");
         return offerData;
       } else {
         // If draft doesn't have meaningful content, delete it
+        console.log("Draft has no meaningful content, deleting");
         await deleteDraftFromDatabase(userId);
         return null;
       }
+    } else {
+      console.log("No draft found for user");
     }
     
     return null;

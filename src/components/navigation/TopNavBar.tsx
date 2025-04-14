@@ -1,42 +1,273 @@
-
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import AccountButton from '@/components/AccountButton';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Menu, X, Globe, ChevronDown, LogOut, User, Settings, FileText, Home, BarChart2, Building, FileEdit } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 import DraftIndicator from '@/components/offer-draft/DraftIndicator';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const TopNavBar = () => {
-  const { t } = useLanguage();
-  const isMobile = useIsMobile();
+  const { user, signOut } = useAuth();
+  const { t, language, setLanguage } = useLanguage();
   const location = useLocation();
-  
-  // Hide the draft indicator on the new offer page itself
-  const shouldShowDraftIndicator = location.pathname !== '/new-offer';
-  
+  const { toast } = useToast();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu when location changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: t.auth.signedOut,
+        description: t.auth.signedOutSuccess,
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: t.common.error,
+        description: t.auth.signOutError,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'bg' : 'en');
+  };
+
+  const navLinks = [
+    { href: '/', label: t.navigation.home, icon: <Home className="h-4 w-4 mr-2" /> },
+    { href: '/new-offer', label: t.navigation.newOffer, icon: <FileEdit className="h-4 w-4 mr-2" /> },
+    { href: '/saved-offers', label: t.navigation.savedOffers, icon: <FileText className="h-4 w-4 mr-2" /> },
+    { href: '/companies', label: t.navigation.companies, icon: <Building className="h-4 w-4 mr-2" /> },
+    { href: '/analytics', label: t.navigation.analytics, icon: <BarChart2 className="h-4 w-4 mr-2" /> },
+  ];
+
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
-    <>
-      {/* Desktop navigation */}
-      <div className="bg-background border-b py-2 px-4 hidden md:flex justify-between items-center">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur transition-all duration-100",
+        scrolled ? "shadow-sm" : ""
+      )}
+    >
+      <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
-          {/* Left side is empty now */}
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
+            <span className="font-bold text-xl hidden md:inline-block">OfferFlow</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6 ml-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary flex items-center",
+                  isActive(link.href)
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                )}
+              >
+                {link.icon}
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-        
-        <div className="flex items-center gap-4">
-          {shouldShowDraftIndicator && <DraftIndicator />}
-          <LanguageSwitcher />
-          <AccountButton />
+
+        <div className="flex items-center gap-2">
+          {/* Draft indicator */}
+          {user && <DraftIndicator />}
+
+          {/* Language Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleLanguage}
+            className="text-muted-foreground"
+          >
+            <Globe className="h-5 w-5" />
+          </Button>
+
+          {/* User Menu (Desktop) */}
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
+                    <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.user_metadata?.full_name || user.email}</p>
+                    <p className="text-xs leading-none text-muted-foreground truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer flex w-full items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>{t.navigation.profile}</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="cursor-pointer flex w-full items-center">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>{t.navigation.settings}</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>{t.auth.signOut}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="default" size="sm">
+              <Link to="/login">{t.auth.signIn}</Link>
+            </Button>
+          )}
+
+          {/* Mobile Menu */}
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="pr-0">
+              <div className="px-7">
+                <Link to="/" className="flex items-center gap-2 mb-6">
+                  <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
+                  <span className="font-bold text-xl">OfferFlow</span>
+                </Link>
+              </div>
+              <nav className="flex flex-col gap-4 px-7">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={cn(
+                      "flex items-center py-2 text-base font-medium transition-colors hover:text-primary",
+                      isActive(link.href)
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {link.icon}
+                    {link.label}
+                  </Link>
+                ))}
+                <div className="h-px bg-border my-4" />
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 py-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
+                        <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium truncate max-w-[200px]">
+                          {user.user_metadata?.full_name || user.email}
+                        </span>
+                        <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                          {user.email}
+                        </span>
+                      </div>
+                    </div>
+                    <Link
+                      to="/profile"
+                      className="flex items-center py-2 text-base font-medium text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      {t.navigation.profile}
+                    </Link>
+                    <Link
+                      to="/settings"
+                      className="flex items-center py-2 text-base font-medium text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      <Settings className="h-4 w-4 mr-2" />
+                      {t.navigation.settings}
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center py-2 text-base font-medium text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      {t.auth.signOut}
+                    </button>
+                  </>
+                ) : (
+                  <Button asChild variant="default" className="w-full">
+                    <Link to="/login">{t.auth.signIn}</Link>
+                  </Button>
+                )}
+                <div className="h-px bg-border my-4" />
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center py-2 text-base font-medium text-muted-foreground transition-colors hover:text-primary"
+                >
+                  <Globe className="h-4 w-4 mr-2" />
+                  {language === 'en' ? 'Български' : 'English'}
+                </button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-      
-      {/* Mobile indicator - shown at the top when there's a draft */}
-      {isMobile && shouldShowDraftIndicator && (
-        <div className="md:hidden bg-amber-50 px-4 py-2 flex justify-center">
-          <DraftIndicator />
-        </div>
-      )}
-    </>
+    </header>
   );
 };
 

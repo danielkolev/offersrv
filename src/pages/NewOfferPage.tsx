@@ -33,6 +33,7 @@ const NewOfferPage = () => {
         if (draftOffer) {
           console.log('Loading draft offer from database', draftOffer);
           setOffer(draftOffer);
+          
           // If the draft has a company selected, use that
           if (draftOffer.company) {
             const companyId = draftOffer.company.id || draftOffer.company.vatNumber;

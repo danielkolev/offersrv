@@ -80,15 +80,19 @@ export const DraftIndicator = () => {
         // Then load the draft
         const draftOffer = await getLatestDraftFromDatabase(user.id);
         if (draftOffer && hasMeaningfulContent(draftOffer)) {
+          console.log("Navigating to draft with data:", draftOffer);
           // Load draft directly into context
           setOffer(draftOffer);
+          // Navigate to new offer page
+          navigate('/new-offer');
         }
       } catch (error) {
         console.error("Error loading draft:", error);
       }
+    } else {
+      // Navigate to new offer page
+      navigate('/new-offer');
     }
-    // Navigate to new offer page
-    navigate('/new-offer');
   };
 
   const formatLastSaved = () => {
