@@ -34,9 +34,12 @@ const NewOfferPage = () => {
           console.log('Loading draft offer from database', draftOffer);
           setOffer(draftOffer);
           // If the draft has a company selected, use that
-          if (draftOffer.company && draftOffer.company.id) {
-            setSelectedCompanyId(draftOffer.company.id);
-            localStorage.setItem('selectedCompanyId', draftOffer.company.id);
+          if (draftOffer.company) {
+            const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
+            if (companyId) {
+              setSelectedCompanyId(companyId);
+              localStorage.setItem('selectedCompanyId', companyId);
+            }
           }
         } else {
           // No draft found, reset to default state

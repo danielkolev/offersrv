@@ -1,5 +1,5 @@
-
 export interface CompanyInfo {
+  id?: string; // Add optional id property
   name: string;
   address: string;
   city: string;
