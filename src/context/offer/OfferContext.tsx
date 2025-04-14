@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Offer } from '@/types/offer';
+import { Offer, Product } from '@/types/offer';
 import { OfferContextType } from './types';
 import { defaultOffer } from './defaultValues';
 import { calculateSubtotal, calculateVat, calculateTotal } from './calculations';
@@ -28,12 +29,12 @@ export function OfferProvider({ children }: { children: ReactNode }) {
 
   // These functions should be implemented properly, but for now we'll keep stub implementations
   const updateCompanyInfo = (data: any) => {
-    setOffer(prev => ({ ...prev, companyInfo: { ...prev.companyInfo, ...data } }));
+    setOffer(prev => ({ ...prev, company: { ...prev.company, ...data } }));
     markUserInteraction();
   };
 
   const updateClientInfo = (data: any) => {
-    setOffer(prev => ({ ...prev, clientInfo: { ...prev.clientInfo, ...data } }));
+    setOffer(prev => ({ ...prev, client: { ...prev.client, ...data } }));
     markUserInteraction();
   };
 
@@ -47,19 +48,23 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     markUserInteraction();
   };
 
-  const updateProduct = (index: number, product: any) => {
+  // Update to match type signature (string id instead of number index)
+  const updateProduct = (id: string, productUpdates: Partial<Product>) => {
     setOffer(prev => {
+      const index = prev.products.findIndex(p => p.id === id);
+      if (index === -1) return prev;
+      
       const products = [...prev.products];
-      products[index] = product;
+      products[index] = { ...products[index], ...productUpdates };
       return { ...prev, products };
     });
     markUserInteraction();
   };
 
-  const removeProduct = (index: number) => {
+  // Update to match type signature (string id instead of number index)
+  const removeProduct = (id: string) => {
     setOffer(prev => {
-      const products = [...prev.products];
-      products.splice(index, 1);
+      const products = prev.products.filter(p => p.id !== id);
       return { ...prev, products };
     });
     markUserInteraction();

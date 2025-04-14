@@ -12,7 +12,7 @@ export const useOfferActions = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { resetToDefaultTemplate, getDefaultTemplate } = useTemplateManagement();
+  const { resetToDefaultTemplate } = useTemplateManagement();
 
   const createNewOffer = useCallback(() => {
     // Get default template

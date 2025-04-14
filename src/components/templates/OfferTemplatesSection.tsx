@@ -30,7 +30,7 @@ const OfferTemplatesSection = () => {
     isLoading,
     createTemplate,
     deleteTemplate,
-    editTemplate,
+    updateTemplate, // Changed from editTemplate to updateTemplate
     refreshTemplates,
     getTemplateById,
     setAsDefaultTemplate,

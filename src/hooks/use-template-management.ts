@@ -243,9 +243,9 @@ export const useTemplateManagement = () => {
         id: template.id,
         name: template.name || 'Unnamed Template',
         description: template.description || '',
-        language: (template.language as 'bg' | 'en' | 'all') || 'all',
+        language: 'all', // Default to 'all' since it's not in the DB schema
         isDefault: defaultId === template.id,
-        settings: template.settings || {},
+        settings: {}, // Default to empty settings since it's not in the DB schema
       }));
 
       setUserTemplates(formattedTemplates);
@@ -278,12 +278,21 @@ export const useTemplateManagement = () => {
 
     setIsLoading(true);
     try {
+      // Map the template data to match the actual database schema
       const newTemplate = {
         user_id: user.id,
         name: name,
         description,
-        language: extraData.language || 'all',
-        settings: extraData.settings || {}
+        is_default: false,
+        premium: false,
+        colors: JSON.stringify({
+          primary: '#1E88E5',
+          secondary: '#f8f9fa'
+        }), // Required field 
+        font_family: 'Inter, sans-serif',
+        show_logo: true,
+        show_header: true,
+        show_footer: true
       };
 
       const { data, error } = await supabase
@@ -302,8 +311,8 @@ export const useTemplateManagement = () => {
           id: data.id,
           name: data.name || 'Unnamed Template',
           description: data.description || '',
-          language: (data.language as 'bg' | 'en' | 'all') || 'all',
-          settings: data.settings || {},
+          language: 'all',
+          settings: {},
         },
         ...prev
       ]);
@@ -394,14 +403,16 @@ export const useTemplateManagement = () => {
         );
       }
 
+      // Map updates to match the database schema
+      const dbUpdates = {
+        name: updates.name,
+        description: updates.description,
+        // We can't update language and settings directly as they don't exist in the DB schema
+      };
+
       const { error } = await supabase
         .from('templates')
-        .update({
-          name: updates.name,
-          description: updates.description,
-          language: updates.language,
-          settings: updates.settings
-        })
+        .update(dbUpdates)
         .eq('id', templateId)
         .eq('user_id', user.id);
 

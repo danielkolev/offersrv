@@ -24,11 +24,6 @@ const OfferTemplateSettings = () => {
     await createTemplate(name, description);
   };
 
-  // Create a wrapper function to match the expected type
-  const handleUpdateTemplate = (id: string, updates: any) => {
-    updateTemplate(id, updates);
-  };
-
   return (
     <div className="mb-8 pb-8 border-b">
       <div className="flex flex-row items-center justify-between pb-2">
@@ -69,7 +64,7 @@ const OfferTemplateSettings = () => {
             isUserTemplates={true}
             onCreateNew={() => setSaveDialogOpen(true)}
             onDeleteTemplate={deleteTemplate}
-            onEditTemplate={handleUpdateTemplate}
+            onEditTemplate={updateTemplate}
           />
         </TabsContent>
       </Tabs>

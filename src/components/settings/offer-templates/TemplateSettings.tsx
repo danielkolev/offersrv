@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -278,7 +277,6 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
       form.setValue('appearance.textColor', '#F9FAFB');
     } else if (designId === 'gradient') {
       form.setValue('header.useGradient', true);
-      form.setValue('layout.floatingHeader', true);
       form.setValue('appearance.primaryColor', '#EC4899');
       form.setValue('appearance.secondaryColor', '#F9FAFB');
       form.setValue('content.highlightTotals', true);
@@ -296,13 +294,12 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
     }
   };
   
-  // Update form when template changes
   useEffect(() => {
     if (template?.settings) {
       form.reset({
         name: template.name,
         description: template.description || '',
-        language: template.language || 'all',
+        language: (template.language || 'all') as 'all' | 'bg' | 'en',
         designTemplate: template.settings.designTemplate || 'classic',
         appearance: {
           primaryColor: template.settings.appearance?.primaryColor || defaultValues.appearance.primaryColor,
@@ -896,236 +893,4 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({ selectedTemplateId 
                       />
                     </div>
                     
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">{t.offer.templates.content}</h3>
-                      
-                      <FormField
-                        control={form.control}
-                        name="content.boldPrices"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between">
-                            <div className="space-y-0.5">
-                              <FormLabel>{t.offer.templates.boldPrices}</FormLabel>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="content.showLineNumbers"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between">
-                            <div className="space-y-0.5">
-                              <FormLabel>{t.offer.templates.showLineNumbers}</FormLabel>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="content.alternateRowColors"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between">
-                            <div className="space-y-0.5">
-                              <FormLabel>{t.offer.templates.alternateRowColors}</FormLabel>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="content.highlightTotals"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between">
-                            <div className="space-y-0.5">
-                              <FormLabel>{t.offer.templates.highlightTotals}</FormLabel>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="content.showFooter"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between">
-                            <div className="space-y-0.5">
-                              <FormLabel>{t.offer.templates.showFooter}</FormLabel>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      {form.watch('content.showFooter') && (
-                        <FormField
-                          control={form.control}
-                          name="content.footerText"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t.offer.templates.footerText}</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder={t.offer.templates.footerTextPlaceholder} 
-                                  {...field} 
-                                  value={field.value || ''}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">{t.offer.templates.footer}</h3>
-                    
-                    <FormField
-                      control={form.control}
-                      name="footer.showBankDetails"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel>{t.offer.templates.showBankDetails}</FormLabel>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="footer.showSignatureArea"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel>{t.offer.templates.showSignatureArea}</FormLabel>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    {form.watch('footer.showSignatureArea') && (
-                      <FormField
-                        control={form.control}
-                        name="footer.signatureText"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t.offer.templates.signatureText}</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder={t.offer.templates.signatureTextPlaceholder} 
-                                {...field} 
-                                value={field.value || ''}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    )}
-                    
-                    <FormField
-                      control={form.control}
-                      name="footer.includeSocialMedia"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel>{t.offer.templates.includeSocialMedia}</FormLabel>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="footer.useQRCode"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel>{t.offer.templates.useQRCode}</FormLabel>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-          
-          {/* Action Buttons */}
-          <div className="flex justify-between">
-            <Button type="button" variant="outline">
-              <Eye className="mr-2 h-4 w-4" />
-              {t.common.preview}
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              <Save className="mr-2 h-4 w-4" />
-              {isLoading ? t.common.saving : t.common.save}
-            </Button>
-          </div>
-        </div>
-      </form>
-    </Form>
-  );
-};
-
-export default TemplateSettings;
+                    <div className="space-y-4
