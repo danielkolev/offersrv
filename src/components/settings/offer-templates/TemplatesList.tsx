@@ -4,14 +4,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
 import TemplateCard from './TemplateCard';
 import EmptyTemplateState from './EmptyTemplateState';
-
-interface TemplateType {
-  id: string;
-  name: string;
-  description: string;
-  language: 'bg' | 'en' | 'all';
-  isDefault?: boolean;
-}
+import { TemplateType } from '@/types/template';
 
 interface TemplatesListProps {
   templates: TemplateType[];

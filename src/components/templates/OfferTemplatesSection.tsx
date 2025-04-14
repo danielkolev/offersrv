@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -31,7 +31,6 @@ const OfferTemplatesSection = () => {
     isLoading,
     createTemplate,
     deleteTemplate,
-    editTemplate,
     refreshTemplates
   } = useTemplateManagement();
   

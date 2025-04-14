@@ -8,6 +8,8 @@ export const savedClients = {
   addNewClient: "Добави нов клиент",
   deleteClient: "Изтрий клиент",
   confirmDelete: "Сигурни ли сте, че искате да изтриете този клиент?",
+  confirmDeleteClient: "Потвърди изтриване на клиент",
+  confirmDeleteClientText: "Сигурни ли сте, че искате да изтриете този клиент? Това действие не може да бъде отменено.",
   clientDeleted: "Клиентът е изтрит успешно",
   clientUpdatedSuccess: "Клиентът е обновен успешно",
   clientAddedSuccess: "Клиентът е добавен успешно",

@@ -1,6 +1,7 @@
 
 export const offerDetails = {
   title: "Детайли на офертата",
+  description: "Конфигурирайте детайлите на вашата оферта",
   offerNumber: "Номер на офертата",
   offerNumberInfo: "Този номер се генерира автоматично",
   date: "Дата",

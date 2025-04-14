@@ -1,6 +1,7 @@
 
 export const offerDetails = {
   title: "Offer Details",
+  description: "Configure the details of your offer",
   offerNumber: "Offer Number",
   offerNumberInfo: "This number is automatically generated",
   date: "Date",

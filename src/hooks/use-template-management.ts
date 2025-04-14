@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { TemplateType } from '@/types/template';
 
-export { TemplateType };
+export type { TemplateType };
 
 export function useTemplateManagement() {
   const [userTemplates, setUserTemplates] = useState<TemplateType[]>([]);

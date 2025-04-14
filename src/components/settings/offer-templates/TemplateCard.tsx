@@ -4,14 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import { FileText, Languages, Trash2 } from 'lucide-react';
-
-interface TemplateType {
-  id: string;
-  name: string;
-  description: string;
-  language: 'bg' | 'en' | 'all';
-  isDefault?: boolean;
-}
+import { TemplateType } from '@/types/template';
 
 interface TemplateCardProps {
   template: TemplateType;
