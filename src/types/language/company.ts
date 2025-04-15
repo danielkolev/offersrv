@@ -1,55 +1,54 @@
 
 export interface CompanyTranslations {
-  createCompany: string;
-  editCompany: string;
-  updateCompany: string;
+  companyInfo: string;
   companyName: string;
-  companyAddress: string;
-  companyCity: string;
-  companyCountry: string;
-  companyVatNumber: string;
-  companyPhone: string;
-  companyEmail: string;
-  companyWebsite: string;
-  companyLogo: string;
-  uploadLogo: string;
-  removeLogo: string;
+  vatNumber: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+  email: string;
+  website: string;
+  logoUrl: string;
+  description: string;
+  contactPerson: string;
+  title: string;
+  position: string;
+  noCompany: string;
+  selectFirst: string;
   selectCompany: string;
-  noCompanies: string;
-  createFirst: string;
+  createCompany: string;
   companyCreated: string;
   companyUpdated: string;
-  selectFirst: string;
-  companySettings: string;
-  deleteCompany: string;
-  confirmDelete: string;
   companyDeleted: string;
-  manageCompanies: string;
-  
-  // Adding missing properties
-  create: string;
-  createButton: string;
-  updateButton: string;
-  manage: string;
-  info: string;
-  error: string;
-  success: string;
-  nameRequired: string;
-  createdSuccessfully: string;
-  useSelector: string;
-  
-  // Placeholder texts
-  namePlaceholder: string;
-  vatPlaceholder: string;
-  addressPlaceholder: string;
-  cityPlaceholder: string;
-  countryPlaceholder: string;
-  phonePlaceholder: string;
-  emailPlaceholder: string;
-  websitePlaceholder: string;
+  companyDetails: string;
+  addCompanyLogo: string;
+  logoUploadSuccess: string;
+  logoUploadFail: string;
   selectPlaceholder: string;
   createNew: string;
-  
-  // Add title property
-  title: string;
+  createFirst: string;
+  useSelector: string;
+  companySettings: string;
+  regNumber: string;
+  companyInfo_bg: string;
+  companyInfo_en: string;
+  bankInfo: string;
+  bankName: string;
+  bankAccount: string;
+  bankCode: string;
+  swift: string;
+  iban: string;
+  bankDetails: string;
+  members: string;
+  inviteMembers: string;
+  owner: string;
+  admin: string;
+  member: string;
+  viewer: string;
+  companySelected: string;
+  companyChanged: string;
+  offerPreparation: string;
+  updatingOffer: string;
 }

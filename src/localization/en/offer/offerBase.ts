@@ -2,11 +2,11 @@
 export const offerBase = {
   createOffer: "Create Offer",
   offerDetails: "Offer Details",
-  companyInfo: "Company Info",
-  clientInfo: "Client Info",
-  productsAndServices: "Products & Services",
-  previewAndSave: "Preview & Save",
-  previewAndFinish: "Preview & Finish",
+  companyInfo: "Company Information",
+  clientInfo: "Client Information",
+  productsAndServices: "Products and Services",
+  previewAndSave: "Preview and Save",
+  previewAndFinish: "Preview and Finish",
   offerName: "Offer Name",
   offerNumber: "Offer Number",
   offerDate: "Offer Date",
@@ -32,5 +32,14 @@ export const offerBase = {
   languageOptions: {
     bulgarian: "Bulgarian",
     english: "English",
-  }
+  },
+  
+  // Additional translations for loading and errors
+  preparingOffer: "Preparing your offer...",
+  errorLoading: "An error occurred while loading the offer. Please try again.",
+  draftLoaded: "Draft Loaded",
+  draftRestoredDescription: "Your last draft has been restored",
+  draftInProgress: "Draft in progress",
+  returnToDraft: "Return to your draft",
+  saved: "Saved"
 };
