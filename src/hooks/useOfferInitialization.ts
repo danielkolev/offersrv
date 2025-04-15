@@ -16,12 +16,9 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
   const [isDraftLoading, setIsDraftLoading] = useState(false);
   const location = useLocation();
   
-  // Check if we should load a draft based on navigation state
+  // Check if we should load data based on navigation state
   const shouldLoadDraft = location.state?.loadDraft === true;
   const draftId = location.state?.draftId;
-  const stateTimestamp = location.state?.timestamp || 0;
-  
-  // Should we load a saved offer?
   const shouldLoadSavedOffer = location.state?.loadSavedOffer === true;
   const savedOfferId = location.state?.savedOfferId;
   const savedOfferData = location.state?.offerData;
@@ -35,8 +32,7 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
       
       setIsDraftLoading(true);
       try {
-        console.log("useOfferInitialization: Initializing offer state, shouldLoadDraft:", shouldLoadDraft, 
-                  "shouldLoadSavedOffer:", shouldLoadSavedOffer, "timestamp:", stateTimestamp);
+        console.log("useOfferInitialization: Initializing offer state");
         
         // First, always reset the offer to clear any previous state
         await resetOffer();
@@ -47,7 +43,7 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
         if (!isMounted) return;
         
         if (shouldLoadSavedOffer && savedOfferData) {
-          console.log('useOfferInitialization: Loading saved offer with data:', savedOfferData);
+          console.log('useOfferInitialization: Loading saved offer with data');
           
           setOffer(savedOfferData);
           
@@ -57,8 +53,8 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
           });
           
           // If the saved offer has a company selected, use that
-          if (savedOfferData.company && (savedOfferData.company.id || savedOfferData.company.vatNumber)) {
-            const companyId = savedOfferData.company.id || savedOfferData.company.vatNumber;
+          if (savedOfferData.company && savedOfferData.company.id) {
+            const companyId = savedOfferData.company.id;
             if (companyId) {
               console.log("useOfferInitialization: Setting company ID from saved offer:", companyId);
               setSelectedCompanyId(companyId);
@@ -68,32 +64,35 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
         } else if (shouldLoadDraft && draftId) {
           console.log("useOfferInitialization: Should load draft with ID:", draftId);
           
-          // Explicitly load the draft if we came from a "load draft" action
-          const draftOffer = await getLatestDraftFromDatabase(user.id);
-          
-          if (draftOffer && isMounted) {
-            console.log('useOfferInitialization: Loading draft with data:', draftOffer);
+          try {
+            // Explicitly load the draft if we came from a "load draft" action
+            const draftOffer = await getLatestDraftFromDatabase(user.id);
             
-            // Now set the offer with the draft data
-            setOffer(draftOffer);
-            
-            toast({
-              title: t.offer.draftLoaded,
-              description: t.offer.draftRestoredDescription,
-            });
-            
-            // If the draft has a company selected, use that
-            if (draftOffer.company && (draftOffer.company.id || draftOffer.company.vatNumber)) {
-              const companyId = draftOffer.company.id || draftOffer.company.vatNumber;
-              if (companyId) {
-                console.log("useOfferInitialization: Setting company ID from draft:", companyId);
-                setSelectedCompanyId(companyId);
-                localStorage.setItem('selectedCompanyId', companyId);
+            if (draftOffer && isMounted) {
+              console.log('useOfferInitialization: Loading draft');
+              
+              // Now set the offer with the draft data
+              setOffer(draftOffer);
+              
+              toast({
+                title: t.offer.draftLoaded,
+                description: t.offer.draftRestoredDescription,
+              });
+              
+              // If the draft has a company selected, use that
+              if (draftOffer.company && draftOffer.company.id) {
+                const companyId = draftOffer.company.id;
+                if (companyId) {
+                  console.log("useOfferInitialization: Setting company ID from draft:", companyId);
+                  setSelectedCompanyId(companyId);
+                  localStorage.setItem('selectedCompanyId', companyId);
+                }
               }
+            } else {
+              console.log('useOfferInitialization: No draft found, preparing new offer');
             }
-          } else {
-            console.log('useOfferInitialization: No draft found, preparing new offer');
-            // No need to reset again, we already did it at the beginning
+          } catch (draftError) {
+            console.error("Error loading draft:", draftError);
           }
         } else {
           // Normal initialization - clean state was already set with resetOffer
@@ -121,7 +120,7 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
     return () => {
       isMounted = false;
     };
-  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, shouldLoadSavedOffer, draftId, savedOfferId, savedOfferData, toast, t, stateTimestamp, setSelectedCompanyId]);
+  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, shouldLoadSavedOffer, draftId, savedOfferId, savedOfferData, toast, t, setSelectedCompanyId]);
 
   return {
     hasInitialized,

@@ -20,7 +20,7 @@ export const useCompanySelection = (hasInitialized: boolean) => {
     }
   }, [hasInitialized, user]);
 
-  // Fetch user's company
+  // Fetch user's company with retry mechanism
   const fetchUserCompany = useCallback(async () => {
     if (!user) return;
     
@@ -29,7 +29,7 @@ export const useCompanySelection = (hasInitialized: boolean) => {
     try {
       console.log("useCompanySelection: Fetching user's company");
       
-      // First try to find a company where the user is the owner
+      // Try to find a company where the user is the owner
       const { data: ownedCompanies, error: ownedError } = await supabase
         .from('organizations')
         .select('id')
@@ -48,35 +48,19 @@ export const useCompanySelection = (hasInitialized: boolean) => {
         return;
       }
       
-      // If no owned company, look for companies the user is a member of
-      const { data: memberData, error: memberError } = await supabase
-        .from('organization_members')
-        .select('organization_id')
-        .eq('user_id', user.id)
-        .limit(1);
-        
-      if (memberError) throw memberError;
-      
-      // If user is a member of a company, use that one
-      if (memberData && memberData.length > 0) {
-        const companyId = memberData[0].organization_id;
-        console.log("useCompanySelection: Found user's membership company:", companyId);
-        setSelectedCompanyId(companyId);
-        localStorage.setItem('selectedCompanyId', companyId);
-      } else {
-        // User has no companies yet
-        console.log("useCompanySelection: User has no companies yet");
-      }
-      
       setFetchError(false);
     } catch (error: any) {
       console.error('Error fetching company data:', error);
       setFetchError(true);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive'
-      });
+      
+      // Don't show toast error for network issues - they're common and annoying
+      if (!error.message?.includes('Failed to fetch')) {
+        toast({
+          title: t.common.error,
+          description: error.message,
+          variant: 'destructive'
+        });
+      }
     } finally {
       setIsLoadingCompanyData(false);
     }

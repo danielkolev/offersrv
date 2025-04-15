@@ -1,14 +1,13 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
 import { useAuth } from '@/context/AuthContext';
-import { useCompanyData } from '@/hooks/useCompanyData';
-import { useOfferInitialization } from '@/hooks/useOfferInitialization';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
+import { useOfferInitialization } from '@/hooks/useOfferInitialization';
 import UnauthorizedState from '@/components/offer/UnauthorizedState';
-import { Button } from '@/components/ui/button';  // Changed from card to button
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Loader2, Building } from 'lucide-react';
 
@@ -27,20 +26,6 @@ const NewOfferPage = () => {
   } = useCompanySelection(true);
   
   const { isDraftLoading, hasInitialized } = useOfferInitialization(setSelectedCompanyId);
-  
-  // Fetch company data and automatically populate the offer
-  const { isLoading: isCompanyLoading, error: companyError } = useCompanyData(selectedCompanyId);
-
-  // Debug logs to track loading state
-  useEffect(() => {
-    console.log('NewOfferPage: Loading states', {
-      isLoadingCompanyData,
-      isDraftLoading,
-      isCompanyLoading,
-      hasInitialized,
-      selectedCompanyId
-    });
-  }, [isLoadingCompanyData, isDraftLoading, isCompanyLoading, hasInitialized, selectedCompanyId]);
 
   // Unauthorized state for users who aren't logged in
   if (!user) {
@@ -48,7 +33,7 @@ const NewOfferPage = () => {
   }
 
   // Determine if we're in a loading state
-  const isLoading = isLoadingCompanyData || isDraftLoading || isCompanyLoading;
+  const isLoading = isLoadingCompanyData || isDraftLoading;
 
   // Show a company creation prompt when no company exists
   if (!selectedCompanyId && !isLoadingCompanyData) {
@@ -56,7 +41,6 @@ const NewOfferPage = () => {
       <div className="container mx-auto py-8 px-4">
         <Card className="p-6">
           <h1 className="text-2xl font-bold mb-6">{t.offer.createOffer}</h1>
-          <p className="mb-4">{t.company.selectFirst}</p>
           
           <div className="flex flex-col items-center justify-center py-8">
             <Building className="h-16 w-16 text-gray-400 mb-4" />
@@ -95,7 +79,7 @@ const NewOfferPage = () => {
   }
 
   // Show an error state if there was a problem
-  if (fetchError || companyError) {
+  if (fetchError) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
@@ -142,7 +126,7 @@ const NewOfferPage = () => {
       
       <OfferAccordion 
         isLoadingCompanyData={isLoading}
-        fetchError={fetchError || companyError ? true : false}
+        fetchError={fetchError}
         selectedCompanyId={selectedCompanyId}
       />
     </div>
