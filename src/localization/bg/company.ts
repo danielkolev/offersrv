@@ -52,5 +52,28 @@ export const company: CompanyTranslations = {
   companySelected: "Компания избрана",
   companyChanged: "Компанията е променена",
   offerPreparation: "Подготвя се оферта за избраната компания...",
-  updatingOffer: "Офертата се актуализира с новата компания..."
+  updatingOffer: "Офертата се актуализира с новата компания...",
+  
+  // Adding missing placeholders
+  vatPlaceholder: "Въведете ДДС номер",
+  phonePlaceholder: "Въведете телефонен номер",
+  emailPlaceholder: "Въведете имейл адрес",
+  websitePlaceholder: "Въведете URL адрес на уебсайт",
+  addressPlaceholder: "Въведете адрес",
+  cityPlaceholder: "Въведете град",
+  countryPlaceholder: "Въведете държава",
+  namePlaceholder: "Въведете име на компанията",
+  
+  // Adding missing buttons and messages
+  updateButton: "Обнови компанията",
+  create: "Създай компания",
+  createButton: "Създай компания",
+  manage: "Управление на компании",
+  info: "Преглед и редактиране на информацията за компанията",
+  
+  // Adding missing error and success messages
+  error: "Грешка",
+  success: "Успех",
+  nameRequired: "Името на компанията е задължително",
+  createdSuccessfully: "Компанията е създадена успешно"
 };

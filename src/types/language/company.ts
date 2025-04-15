@@ -51,4 +51,27 @@ export interface CompanyTranslations {
   companyChanged: string;
   offerPreparation: string;
   updatingOffer: string;
+  
+  // Adding missing placeholders
+  vatPlaceholder: string;
+  phonePlaceholder: string;
+  emailPlaceholder: string;
+  websitePlaceholder: string;
+  addressPlaceholder: string;
+  cityPlaceholder: string;
+  countryPlaceholder: string;
+  namePlaceholder: string;
+  
+  // Adding missing buttons and messages
+  updateButton: string;
+  create: string;
+  createButton: string;
+  manage: string;
+  info: string;
+  
+  // Adding missing error and success messages
+  error: string;
+  success: string;
+  nameRequired: string;
+  createdSuccessfully: string;
 }

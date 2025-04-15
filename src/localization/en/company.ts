@@ -52,5 +52,28 @@ export const company: CompanyTranslations = {
   companySelected: "Company Selected",
   companyChanged: "Company Changed",
   offerPreparation: "Preparing offer for the selected company...",
-  updatingOffer: "Updating offer with the new company..."
+  updatingOffer: "Updating offer with the new company...",
+  
+  // Adding missing placeholders
+  vatPlaceholder: "Enter VAT number",
+  phonePlaceholder: "Enter phone number",
+  emailPlaceholder: "Enter email address",
+  websitePlaceholder: "Enter website URL",
+  addressPlaceholder: "Enter address",
+  cityPlaceholder: "Enter city",
+  countryPlaceholder: "Enter country",
+  namePlaceholder: "Enter company name",
+  
+  // Adding missing buttons and messages
+  updateButton: "Update Company",
+  create: "Create Company",
+  createButton: "Create Company",
+  manage: "Manage Companies",
+  info: "View and edit your company information",
+  
+  // Adding missing error and success messages
+  error: "Error",
+  success: "Success",
+  nameRequired: "Company name is required",
+  createdSuccessfully: "Company created successfully"
 };
