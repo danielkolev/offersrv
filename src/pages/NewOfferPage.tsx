@@ -8,7 +8,7 @@ import { useCompanyData } from '@/hooks/useCompanyData';
 import { useOfferInitialization } from '@/hooks/useOfferInitialization';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
 import UnauthorizedState from '@/components/offer/UnauthorizedState';
-import { Button } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';  // Changed from card to button
 import { Card } from '@/components/ui/card';
 import { Loader2, Building } from 'lucide-react';
 
