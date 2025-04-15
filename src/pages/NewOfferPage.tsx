@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import OfferAccordion from '@/components/wizard/OfferAccordion';
@@ -8,24 +8,22 @@ import { useCompanyData } from '@/hooks/useCompanyData';
 import { useOfferInitialization } from '@/hooks/useOfferInitialization';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
 import UnauthorizedState from '@/components/offer/UnauthorizedState';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/card';
 import { Card } from '@/components/ui/card';
-import { CompanySelector } from '@/components/company/CompanySelector';
-import { Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Loader2, Building } from 'lucide-react';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  
+
   // Use our custom hooks to manage state
   const {
     selectedCompanyId,
     setSelectedCompanyId,
     isLoadingCompanyData,
-    fetchError
+    fetchError,
+    fetchUserCompany
   } = useCompanySelection(true);
   
   const { isDraftLoading, hasInitialized } = useOfferInitialization(setSelectedCompanyId);
@@ -49,46 +47,27 @@ const NewOfferPage = () => {
     return <UnauthorizedState />;
   }
 
-  // Handle creating new company
-  const handleCreateCompany = () => {
-    navigate('/company-management');
-  };
-
   // Determine if we're in a loading state
   const isLoading = isLoadingCompanyData || isDraftLoading || isCompanyLoading;
 
-  // Show a better company selector screen when no company is selected
+  // Show a company creation prompt when no company exists
   if (!selectedCompanyId && !isLoadingCompanyData) {
     return (
       <div className="container mx-auto py-8 px-4">
         <Card className="p-6">
           <h1 className="text-2xl font-bold mb-6">{t.offer.createOffer}</h1>
-          <p className="mb-4">{t.common.selectCompanyToContinue}</p>
+          <p className="mb-4">{t.company.selectFirst}</p>
           
-          <CompanySelector 
-            onSelectCompany={(id) => {
-              if (id) {
-                console.log("NewOfferPage: Selected company ID:", id);
-                setSelectedCompanyId(id);
-                localStorage.setItem('selectedCompanyId', id);
-                
-                // Notify the user that the company was selected
-                toast({
-                  title: t.company.companySelected,
-                  description: t.company.offerPreparation,
-                });
-              }
-            }}
-            onCreateCompany={handleCreateCompany}
-            selectedCompanyId={null}
-          />
-          
-          <div className="mt-4">
+          <div className="flex flex-col items-center justify-center py-8">
+            <Building className="h-16 w-16 text-gray-400 mb-4" />
+            <p className="text-lg font-medium mb-2">{t.company.noCompany}</p>
+            <p className="text-gray-500 mb-6">{t.company.createFirst}</p>
+            
             <Button 
-              variant="outline" 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/company-management')}
+              className="px-6"
             >
-              {t.common.back}
+              {t.company.createCompany}
             </Button>
           </div>
         </Card>
@@ -136,7 +115,9 @@ const NewOfferPage = () => {
               {t.common.back}
             </Button>
             <Button 
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                fetchUserCompany();
+              }}
             >
               {t.common.retry}
             </Button>
@@ -153,25 +134,10 @@ const NewOfferPage = () => {
           {t.offer.createOffer}
         </h1>
         
-        {selectedCompanyId && (
-          <CompanySelector 
-            onSelectCompany={(id) => {
-              if (id) {
-                console.log("NewOfferPage: Changed company ID to:", id);
-                setSelectedCompanyId(id);
-                localStorage.setItem('selectedCompanyId', id);
-                
-                // Notify the user that the company was changed
-                toast({
-                  title: t.company.companyChanged,
-                  description: t.company.updatingOffer,
-                });
-              }
-            }}
-            onCreateCompany={handleCreateCompany}
-            selectedCompanyId={selectedCompanyId}
-          />
-        )}
+        <div className="text-sm flex items-center gap-2 text-muted-foreground">
+          <Building className="h-4 w-4" />
+          <span>{t.company.singleCompanyMode}</span>
+        </div>
       </div>
       
       <OfferAccordion 

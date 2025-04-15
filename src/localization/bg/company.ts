@@ -18,7 +18,7 @@ export const company: CompanyTranslations = {
   title: "Заглавие",
   position: "Позиция",
   noCompany: "Няма избрана компания",
-  selectFirst: "Моля, изберете компания първо",
+  selectFirst: "Моля, създайте компания първо",
   selectCompany: "Изберете компания",
   createCompany: "Създайте компания",
   companyCreated: "Компанията е създадена успешно",
@@ -53,6 +53,8 @@ export const company: CompanyTranslations = {
   companyChanged: "Компанията е променена",
   offerPreparation: "Подготвя се оферта за избраната компания...",
   updatingOffer: "Офертата се актуализира с новата компания...",
+  singleCompanyMode: "Използване на регистрираната компания",
+  usingRegisteredCompany: "Използване на данните на вашата регистрирана компания за всички оферти",
   
   // Adding missing placeholders
   vatPlaceholder: "Въведете ДДС номер",

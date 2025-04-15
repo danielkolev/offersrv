@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -16,7 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building, LayoutTemplate, FileEdit } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import CompanyManager from '@/components/company/CompanyManager';
+import { useCompanySelection } from '@/hooks/useCompanySelection';
 
 interface OfferSidebarProps {
   isMobile?: boolean;
@@ -26,22 +26,9 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
   const { t } = useLanguage();
   const location = useLocation();
   const { user } = useAuth();
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const { selectedCompanyId } = useCompanySelection(true);
   
   const isActive = (path: string) => location.pathname === path;
-  
-  const handleSelectCompany = (companyId: string) => {
-    setSelectedCompanyId(companyId);
-    localStorage.setItem('selectedCompanyId', companyId);
-  };
-  
-  // Load selected company from localStorage on initial load
-  useEffect(() => {
-    const storedCompanyId = localStorage.getItem('selectedCompanyId');
-    if (storedCompanyId) {
-      setSelectedCompanyId(storedCompanyId);
-    }
-  }, []);
   
   // Navigation items
   const navItems = [
@@ -76,7 +63,7 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
       icon: LayoutTemplate
     },
     {
-      name: t.navigation?.companies || "Companies", 
+      name: t.company?.title || "Company", 
       path: '/company-management',
       icon: Building
     },
@@ -125,15 +112,15 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
           <span className="font-bold text-xl">Offersrv</span>
         </div>
         
-        {/* Company selector below the logo */}
-        <div className="mt-4 mb-2 max-w-full">
-          <div className="truncate">
-            <CompanyManager 
-              onSelectCompany={handleSelectCompany} 
-              selectedCompanyId={selectedCompanyId}
-            />
+        {/* Company indicator - simplified from selector */}
+        {selectedCompanyId && (
+          <div className="mt-4 mb-2 px-4 py-2 bg-primary/10 rounded-md truncate">
+            <div className="flex items-center gap-2">
+              <Building className="h-4 w-4 text-primary" />
+              <span className="text-sm">{t.company.usingRegisteredCompany}</span>
+            </div>
           </div>
-        </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

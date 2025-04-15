@@ -51,6 +51,8 @@ export interface CompanyTranslations {
   companyChanged: string;
   offerPreparation: string;
   updatingOffer: string;
+  singleCompanyMode: string;
+  usingRegisteredCompany: string;
   
   // Adding missing placeholders
   vatPlaceholder: string;

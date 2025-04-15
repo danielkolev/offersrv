@@ -13,41 +13,59 @@ export const useCompanySelection = (hasInitialized: boolean) => {
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
-  // Use the company selected in the main menu (stored in localStorage)
+  // Find the user's company
   useEffect(() => {
-    if (hasInitialized && !selectedCompanyId) {
-      const storedCompanyId = localStorage.getItem('selectedCompanyId');
-      if (storedCompanyId) {
-        console.log("useCompanySelection: Using company from localStorage:", storedCompanyId);
-        setSelectedCompanyId(storedCompanyId);
-      } else {
-        // If no company is selected in the main menu, fetch the default company
-        fetchDefaultCompany();
-      }
+    if (hasInitialized && !selectedCompanyId && user) {
+      fetchUserCompany();
     }
-  }, [hasInitialized]);
+  }, [hasInitialized, user]);
 
-  // Fetch user's default company or first company if none is selected
-  const fetchDefaultCompany = useCallback(async () => {
+  // Fetch user's company
+  const fetchUserCompany = useCallback(async () => {
     if (!user) return;
     
     setIsLoadingCompanyData(true);
     
     try {
-      // Get companies the user is a member of through the organization_members table
+      console.log("useCompanySelection: Fetching user's company");
+      
+      // First try to find a company where the user is the owner
+      const { data: ownedCompanies, error: ownedError } = await supabase
+        .from('organizations')
+        .select('id')
+        .eq('owner_id', user.id)
+        .limit(1);
+        
+      if (ownedError) throw ownedError;
+      
+      // If user has an owned company, use it
+      if (ownedCompanies && ownedCompanies.length > 0) {
+        const companyId = ownedCompanies[0].id;
+        console.log("useCompanySelection: Found user's owned company:", companyId);
+        setSelectedCompanyId(companyId);
+        localStorage.setItem('selectedCompanyId', companyId);
+        setFetchError(false);
+        return;
+      }
+      
+      // If no owned company, look for companies the user is a member of
       const { data: memberData, error: memberError } = await supabase
         .from('organization_members')
         .select('organization_id')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .limit(1);
         
       if (memberError) throw memberError;
       
-      // If user has companies, select the first one as default
+      // If user is a member of a company, use that one
       if (memberData && memberData.length > 0) {
-        const defaultCompanyId = memberData[0].organization_id;
-        console.log("useCompanySelection: Setting default company ID:", defaultCompanyId);
-        setSelectedCompanyId(defaultCompanyId);
-        localStorage.setItem('selectedCompanyId', defaultCompanyId);
+        const companyId = memberData[0].organization_id;
+        console.log("useCompanySelection: Found user's membership company:", companyId);
+        setSelectedCompanyId(companyId);
+        localStorage.setItem('selectedCompanyId', companyId);
+      } else {
+        // User has no companies yet
+        console.log("useCompanySelection: User has no companies yet");
       }
       
       setFetchError(false);
@@ -68,6 +86,7 @@ export const useCompanySelection = (hasInitialized: boolean) => {
     selectedCompanyId,
     setSelectedCompanyId,
     isLoadingCompanyData,
-    fetchError
+    fetchError,
+    fetchUserCompany
   };
 };

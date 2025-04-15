@@ -11,12 +11,12 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CompanySettingsModal from './CompanySettingsModal';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Company } from '@/types/company';
+import { useNavigate } from 'react-router-dom';
 
 interface UserProfileModalProps {
   open: boolean;
@@ -27,50 +27,55 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [companyModalOpen, setCompanyModalOpen] = useState(false);
-  const [userCompanies, setUserCompanies] = useState<Company[]>([]);
+  const [userCompany, setUserCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (open && user) {
-      fetchUserCompanies();
+      fetchUserCompany();
     }
   }, [open, user]);
 
-  const fetchUserCompanies = async () => {
+  const fetchUserCompany = async () => {
     if (!user) return;
     
     setIsLoading(true);
     try {
-      // First check for organizations owned by the user
-      const { data: ownedOrgs, error: ownedError } = await supabase
+      // Check for organization owned by the user
+      const { data: ownedOrg, error: ownedError } = await supabase
         .from('organizations')
         .select('*')
-        .eq('owner_id', user.id);
+        .eq('owner_id', user.id)
+        .single();
       
-      if (ownedError) throw ownedError;
+      if (ownedError && ownedError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+        throw ownedError;
+      }
       
-      // Then check for organizations where the user is a member
-      const { data: memberOrgs, error: memberError } = await supabase
+      if (ownedOrg) {
+        setUserCompany(ownedOrg);
+        return;
+      }
+      
+      // If no owned organization, check for membership
+      const { data: memberOrg, error: memberError } = await supabase
         .from('organization_members')
-        .select('organization_id, role, organizations:organization_id(*)')
-        .eq('user_id', user.id);
+        .select('organizations:organization_id(*)')
+        .eq('user_id', user.id)
+        .single();
       
-      if (memberError) throw memberError;
+      if (memberError && memberError.code !== 'PGRST116') {
+        throw memberError;
+      }
       
-      // Combine owned organizations and member organizations
-      const ownedCompanies = ownedOrgs || [];
-      const memberCompanies = memberOrgs ? memberOrgs.map(m => m.organizations) : [];
-      
-      // Remove duplicates by id
-      const allCompanies = [...ownedCompanies, ...memberCompanies];
-      const uniqueCompanies = Array.from(
-        new Map(allCompanies.map(item => [item.id, item])).values()
-      );
-      
-      setUserCompanies(uniqueCompanies);
+      if (memberOrg) {
+        setUserCompany(memberOrg.organizations);
+      } else {
+        setUserCompany(null);
+      }
     } catch (error) {
-      console.error('Error fetching user companies:', error);
+      console.error('Error fetching user company:', error);
       toast({
         title: t.common.error,
         description: "Failed to load company data",
@@ -81,8 +86,9 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
     }
   };
 
-  const openCompanySettings = () => {
-    setCompanyModalOpen(true);
+  const handleManageCompany = () => {
+    onOpenChange(false);
+    navigate('/company-management');
   };
 
   // Get user initials for avatar
@@ -91,10 +97,10 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
     return user.email.substring(0, 2).toUpperCase();
   };
 
-  // Обработка на затварянето на модалния прозорец
+  // Handle closing the modal
   const handleOpenChange = (newOpenState: boolean) => {
     onOpenChange(newOpenState);
-    // Малко забавяне преди да се възстанови фокуса
+    // Small delay before restoring focus
     if (!newOpenState) {
       setTimeout(() => {
         document.body.style.pointerEvents = 'auto';
@@ -116,7 +122,7 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
           <Tabs defaultValue="account" className="mt-4">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="account">{t.user.profile}</TabsTrigger>
-              <TabsTrigger value="companies">{t.company.manage}</TabsTrigger>
+              <TabsTrigger value="company">{t.company.title}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="account" className="py-4">
@@ -132,66 +138,53 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
                     </p>
                   </div>
                 </div>
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{t.company.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoading ? (
-                      <div className="text-center py-2">{t.common.loading}</div>
-                    ) : userCompanies.length > 0 ? (
-                      <div className="space-y-2">
-                        {userCompanies.map((company) => (
-                          <div key={company.id} className="p-3 border rounded-md">
-                            <h4 className="font-medium">{company.name}</h4>
-                            {company.vat_number && (
-                              <p className="text-sm text-muted-foreground">
-                                {t.companyInfo.vatNumber}: {company.vat_number}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-2">
-                        {t.company.noCompanies}
-                      </div>
-                    )}
-                    
-                    <Button onClick={openCompanySettings} variant="outline" className="w-full mt-3">
-                      {t.company.manage}
-                    </Button>
-                  </CardContent>
-                </Card>
               </div>
             </TabsContent>
             
-            <TabsContent value="companies" className="py-4">
+            <TabsContent value="company" className="py-4">
               <div className="space-y-4">
-                <Button onClick={openCompanySettings} className="w-full">
-                  {t.company.manage}
-                </Button>
-                
-                {userCompanies.length > 0 && (
-                  <div className="space-y-3 mt-4">
-                    <h3 className="font-medium">{t.company.title}</h3>
-                    {userCompanies.map((company) => (
-                      <Card key={company.id}>
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <h4 className="font-medium">{company.name}</h4>
-                              {company.vat_number && (
-                                <p className="text-sm text-muted-foreground">
-                                  {t.companyInfo.vatNumber}: {company.vat_number}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                {isLoading ? (
+                  <div className="text-center py-6">{t.common.loading}</div>
+                ) : userCompany ? (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>{userCompany.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {userCompany.vat_number && (
+                          <p className="text-sm">
+                            <span className="font-medium">{t.company.vatNumber}:</span> {userCompany.vat_number}
+                          </p>
+                        )}
+                        {userCompany.address && (
+                          <p className="text-sm">
+                            <span className="font-medium">{t.company.address}:</span> {userCompany.address}
+                          </p>
+                        )}
+                        {userCompany.email && (
+                          <p className="text-sm">
+                            <span className="font-medium">{t.company.email}:</span> {userCompany.email}
+                          </p>
+                        )}
+                        {userCompany.phone && (
+                          <p className="text-sm">
+                            <span className="font-medium">{t.company.phone}:</span> {userCompany.phone}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <Button onClick={handleManageCompany} className="w-full mt-4">
+                        {t.company.manage}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="mb-4">{t.company.noCompanies}</p>
+                    <Button onClick={handleManageCompany}>
+                      {t.company.createCompany}
+                    </Button>
                   </div>
                 )}
               </div>
@@ -199,11 +192,6 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
           </Tabs>
         </DialogContent>
       </Dialog>
-      
-      <CompanySettingsModal 
-        open={companyModalOpen} 
-        onOpenChange={setCompanyModalOpen} 
-      />
     </>
   );
 };

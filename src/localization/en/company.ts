@@ -17,8 +17,8 @@ export const company: CompanyTranslations = {
   contactPerson: "Contact Person",
   title: "Title",
   position: "Position",
-  noCompany: "No Company Selected",
-  selectFirst: "Please select a company first",
+  noCompany: "No Company Created",
+  selectFirst: "Please create a company first",
   selectCompany: "Select Company",
   createCompany: "Create Company",
   companyCreated: "Company created successfully",
@@ -53,6 +53,8 @@ export const company: CompanyTranslations = {
   companyChanged: "Company Changed",
   offerPreparation: "Preparing offer for the selected company...",
   updatingOffer: "Updating offer with the new company...",
+  singleCompanyMode: "Using your registered company",
+  usingRegisteredCompany: "Using your registered company data for all offers",
   
   // Adding missing placeholders
   vatPlaceholder: "Enter VAT number",
