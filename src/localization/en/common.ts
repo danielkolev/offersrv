@@ -83,5 +83,6 @@ export const common: CommonTranslations = {
   unauthorized: "Unauthorized",
   expandAll: "Expand All",
   collapseAll: "Collapse All",
-  language: "Language" // Added missing property
+  language: "Language", // Added missing property
+  selectCompanyToContinue: "Please select a company to continue" // Added missing translation
 };

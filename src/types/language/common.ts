@@ -82,4 +82,5 @@ export interface CommonTranslations {
   expandAll: string;
   collapseAll: string;
   language: string; // Added missing property
+  selectCompanyToContinue: string; // Added missing translation property
 }

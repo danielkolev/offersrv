@@ -36,6 +36,11 @@ const NewOfferPage = () => {
     return <UnauthorizedState />;
   }
 
+  // Handle creating new company
+  const handleCreateCompany = () => {
+    navigate('/company-management');
+  };
+
   // Show a better company selector screen when no company is selected
   if (!selectedCompanyId && !isLoadingCompanyData) {
     return (
@@ -45,12 +50,13 @@ const NewOfferPage = () => {
           <p className="mb-4">{t.common.selectCompanyToContinue}</p>
           
           <CompanySelector 
-            onCompanySelect={(id) => {
+            onSelectCompany={(id) => {
               if (id) {
                 setSelectedCompanyId(id);
                 localStorage.setItem('selectedCompanyId', id);
               }
             }}
+            onCreateCompany={handleCreateCompany}
             selectedCompanyId={null}
           />
           
@@ -76,12 +82,13 @@ const NewOfferPage = () => {
         
         {selectedCompanyId && (
           <CompanySelector 
-            onCompanySelect={(id) => {
+            onSelectCompany={(id) => {
               if (id) {
                 setSelectedCompanyId(id);
                 localStorage.setItem('selectedCompanyId', id);
               }
             }}
+            onCreateCompany={handleCreateCompany}
             selectedCompanyId={selectedCompanyId}
           />
         )}
