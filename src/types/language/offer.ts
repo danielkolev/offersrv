@@ -176,4 +176,8 @@ export interface OfferTranslations {
   
   // Preview related translations
   offerPreview: string;
+  
+  // Adding missing properties for NewOfferPage
+  preparingOffer: string;
+  errorLoading: string;
 }

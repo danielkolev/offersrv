@@ -75,5 +75,8 @@ export const company: CompanyTranslations = {
   error: "Грешка",
   success: "Успех",
   nameRequired: "Името на компанията е задължително",
-  createdSuccessfully: "Компанията е създадена успешно"
+  createdSuccessfully: "Компанията е създадена успешно",
+  
+  // Adding the missing property for UserProfileModal
+  noCompanies: "Няма намерени компании"
 };

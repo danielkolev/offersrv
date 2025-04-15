@@ -75,5 +75,8 @@ export const company: CompanyTranslations = {
   error: "Error",
   success: "Success",
   nameRequired: "Company name is required",
-  createdSuccessfully: "Company created successfully"
+  createdSuccessfully: "Company created successfully",
+  
+  // Adding the missing property for UserProfileModal
+  noCompanies: "No companies found"
 };

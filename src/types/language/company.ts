@@ -74,4 +74,7 @@ export interface CompanyTranslations {
   success: string;
   nameRequired: string;
   createdSuccessfully: string;
+  
+  // Adding the missing property for UserProfileModal
+  noCompanies: string;
 }
