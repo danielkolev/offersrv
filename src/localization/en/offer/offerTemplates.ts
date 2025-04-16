@@ -84,6 +84,13 @@ export const offerTemplates = {
       modernDark: "Modern Dark",
       gradient: "Gradient",
       businessPro: "Business Pro",
-    }
+    },
+    // Add missing properties
+    title: "Templates",
+    description: "Manage your templates",
+    confirmDelete: "Are you sure you want to delete this template?",
+    defaultTemplates: "Default Templates",
+    userTemplates: "Your Templates",
+    createFromCurrent: "Create from current"
   }
 };

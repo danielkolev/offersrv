@@ -1,4 +1,3 @@
-
 import { SupportedLanguage } from './base';
 
 export interface OfferTemplatesTranslations {
@@ -38,6 +37,13 @@ export interface OfferTemplatesTranslations {
   contentOptions: string;
   applyTemplate: string;
   makeDefault: string;
+  // Add missing properties used in components
+  title: string;
+  description: string;
+  confirmDelete: string;
+  defaultTemplates: string;
+  userTemplates: string;
+  createFromCurrent: string;
 }
 
 export interface OfferPreviewTranslations {
@@ -226,6 +232,8 @@ export interface OfferTranslations {
   offerPreview: OfferPreviewTranslations;
   templates: OfferTemplatesTranslations;
   [key: string]: any; // This allows for additional properties
+  
+  // These are the root-level properties
   createOffer: string;
   offerDetails: string;
   companyInfo: string;
@@ -254,6 +262,8 @@ export interface OfferTranslations {
   eur: string;
   usd: string;
   cancel: string;
+  
+  // Properties that should be maintained at the root level for backwards compatibility
   currentTemplate: string;
   chooseTemplate: string;
   noTemplates: string;
@@ -263,9 +273,13 @@ export interface OfferTranslations {
   chooseDefaultTemplate: string;
   templateNameRequired: string;
   useTemplate: string;
+  
+  // Status related
   status: string;
   draftStatus: string;
   draftStatusInfo: string;
+  
+  // Products related
   addProducts: string;
   addNewProduct: string;
   noProductsAdded: string;
@@ -292,6 +306,8 @@ export interface OfferTranslations {
   totalAmount: string;
   item: string;
   qty: string;
+  
+  // Draft related
   draftInProgress: string;
   draftSaved: string;
   draftSavedDescription: string;

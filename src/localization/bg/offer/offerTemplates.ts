@@ -84,6 +84,13 @@ export const offerTemplates = {
       modernDark: "Модерен тъмен",
       gradient: "Градиент",
       businessPro: "Бизнес Про",
-    }
+    },
+    // Add missing properties
+    title: "Шаблони",
+    description: "Управление на вашите шаблони",
+    confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
+    defaultTemplates: "Шаблони по подразбиране",
+    userTemplates: "Вашите шаблони",
+    createFromCurrent: "Създай от текущия"
   }
 };
