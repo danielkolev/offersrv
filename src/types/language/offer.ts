@@ -75,9 +75,6 @@ export interface OfferTranslations {
   draftLoaded: string;
   draftRestoredDescription: string;
   returnToDraft: string;
-  draftSavedToLocalStorage: string;
-  continueWorking: string;
-  openDraft: string;
   
   // Additional required fields
   saveOffer: string;
@@ -176,8 +173,4 @@ export interface OfferTranslations {
   
   // Preview related translations
   offerPreview: string;
-  
-  // Adding missing properties for NewOfferPage
-  preparingOffer: string;
-  errorLoading: string;
 }

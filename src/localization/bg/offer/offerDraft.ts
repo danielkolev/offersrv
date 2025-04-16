@@ -4,7 +4,6 @@ export const offerDraft = {
   draftSaved: "Черновата е запазена",
   draftSavedDescription: "Вашата чернова е запазена успешно",
   draftSaveError: "Грешка при запазване на черновата",
-  draftSavedToLocalStorage: "Черновата е запазена локално като резервно копие.",
   autoSaveDisabled: "Автоматичното запазване е изключено",
   autoSaveEnabled: "Автоматичното запазване е включено",
   noContentToSave: "Няма съдържание за запазване",
@@ -19,8 +18,5 @@ export const offerDraft = {
   unsavedChanges: "Незапазени промени",
   saveManually: "Запази ръчно",
   disableAutoSave: "Изключи автоматичното запазване",
-  enableAutoSave: "Включи автоматичното запазване",
-  draftStatus: "Чернова на оферта",
-  continueWorking: "Продължете работата си по черновата на офертата",
-  openDraft: "Отвори черновата"
+  enableAutoSave: "Включи автоматичното запазване"
 };

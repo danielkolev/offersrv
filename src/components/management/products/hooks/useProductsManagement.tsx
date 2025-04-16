@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useProductsManagement = (t: Translations) => {
   const { user } = useAuth();
-  const offerContext = useOffer();
+  const { offer, addProduct } = useOffer();
   const { toast } = useToast();
   
   const [products, setProducts] = useState<SavedProduct[]>([]);
@@ -142,7 +142,7 @@ export const useProductsManagement = (t: Translations) => {
   };
 
   const handleSaveFromOffer = () => {
-    if (!offerContext || !offerContext.offer.products.length) {
+    if (offer.products.length === 0) {
       toast({
         title: t.common.error,
         description: 'No products in current offer to save',
@@ -152,7 +152,7 @@ export const useProductsManagement = (t: Translations) => {
     }
     
     // Open dialog with data from the first product in the offer
-    const productToSave = offerContext.offer.products[0];
+    const productToSave = offer.products[0];
     setCurrentProduct({
       name: productToSave.name,
       description: productToSave.description || '',
@@ -185,21 +185,13 @@ export const useProductsManagement = (t: Translations) => {
     // Convert saved product to offer product format
     const product = convertToOfferProduct(savedProduct);
     
-    // Add the product to the offer if offerContext is available
-    if (offerContext && offerContext.addProduct) {
-      offerContext.addProduct(product);
-      
-      toast({
-        title: t.common.success,
-        description: 'Product added to offer',
-      });
-    } else {
-      // If we're not within an offer context, notify the user
-      toast({
-        title: t.common.info,
-        description: 'Product selected but no active offer to add it to',
-      });
-    }
+    // Add the product to the offer
+    addProduct(product);
+    
+    toast({
+      title: t.common.success,
+      description: 'Product added to offer',
+    });
   };
 
   const filteredProducts = products.filter(product => {

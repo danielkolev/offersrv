@@ -4,8 +4,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from "@/hooks/use-toast";
 import { useOffer } from '@/context/offer/OfferContext';
-import { saveOfferToDatabase } from '../management/offers/saved';
-import { deleteDraftFromDatabase } from '../management/offers/draft';
+import { saveOfferToDatabase } from '../management/offers/savedOffersService';
+import { deleteDraftFromDatabase } from '../management/offers/draftOffersService';
 import SaveOfferDialog from '../SaveOfferDialog';
 import { useNavigate } from 'react-router-dom';
 

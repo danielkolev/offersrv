@@ -32,14 +32,5 @@ export const offerBase = {
   languageOptions: {
     bulgarian: "Български",
     english: "Английски",
-  },
-  
-  // Допълнителни преводи за зареждане и грешки
-  preparingOffer: "Подготвя се вашата оферта...",
-  errorLoading: "Възникна грешка при зареждането на офертата. Моля, опитайте отново.",
-  draftLoaded: "Черновата е заредена",
-  draftRestoredDescription: "Последната ви чернова е възстановена",
-  draftInProgress: "Чернова в процес",
-  returnToDraft: "Върнете се към вашата чернова",
-  saved: "Запазено"
+  }
 };

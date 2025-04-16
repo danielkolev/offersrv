@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useOffer } from '@/context/offer';
 import { useAuth } from '@/context/AuthContext';
 import { FileEdit } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Badge } from '@/components/ui/badge';
-import { getLatestDraftFromDatabase } from '@/components/management/offers/draft';
+import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
 import {
   Tooltip,
   TooltipContent,
@@ -14,15 +14,28 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-export const DraftIndicator = () => {
-  const location = useLocation();
-  // Don't show indicator on /saved-products page as it has its own OfferProvider
-  // We need to check this before using any hooks
-  if (location.pathname === '/saved-products') {
-    return null;
-  }
+// Helper to check if a draft has meaningful content
+const hasMeaningfulContent = (draft: any): boolean => {
+  if (!draft) return false;
+  
+  // Check if client has at least a name
+  const hasClientInfo = draft.client?.name && draft.client.name.trim() !== '';
+  
+  // Check if there are any products
+  const hasProducts = draft.products && draft.products.length > 0;
+  
+  // Check if there are meaningful offer details (notes, custom number, etc.)
+  const hasOfferDetails = 
+    (draft.details?.notes && draft.details.notes.trim() !== '') || 
+    (draft.details?.offerNumber && 
+     draft.details.offerNumber !== '00000' && 
+     draft.details.offerNumber.trim() !== '');
+  
+  return hasClientInfo || hasProducts || hasOfferDetails;
+};
 
-  const { hasUserInteracted, lastSaved } = useOffer();
+export const DraftIndicator = () => {
+  const { hasUserInteracted, lastSaved, setOffer, resetOffer } = useOffer();
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
@@ -36,11 +49,10 @@ export const DraftIndicator = () => {
       
       try {
         const draftOffer = await getLatestDraftFromDatabase(user.id);
-        if (draftOffer) {
-          console.log("DraftIndicator: Draft found with data");
+        // Only set hasDraft to true if the draft has meaningful content
+        if (draftOffer && hasMeaningfulContent(draftOffer)) {
           setHasDraft(true);
         } else {
-          console.log("DraftIndicator: No draft found");
           setHasDraft(false);
         }
       } catch (error) {
@@ -66,29 +78,36 @@ export const DraftIndicator = () => {
     
     try {
       if (user && hasDraft) {
-        console.log("DraftIndicator: Navigating to draft offer page");
+        console.log("DraftIndicator: Starting draft loading process");
         
-        // Generate timestamp to ensure we get a fresh state
-        const timestamp = new Date().getTime();
+        // First check if we can get the draft
+        const draftOffer = await getLatestDraftFromDatabase(user.id);
         
-        // Navigate with clear state that we want to load this draft
-        navigate('/new-offer', { 
-          state: { 
-            loadDraft: true,
-            draftId: user.id,
-            timestamp
-          },
-          replace: true
-        });
+        if (draftOffer && hasMeaningfulContent(draftOffer)) {
+          console.log("DraftIndicator: Draft found with data:", draftOffer);
+          
+          // Navigate first, then we'll load the draft in NewOfferPage
+          navigate('/new-offer', { 
+            state: { 
+              loadDraft: true,
+              draftId: user.id // Use user ID as draft identifier
+            } 
+          });
+        } else {
+          console.log("DraftIndicator: No valid draft found, creating new offer");
+          await resetOffer();
+          navigate('/new-offer');
+        }
       } else {
         // Just navigate to new offer page
-        console.log("DraftIndicator: No draft or user, navigating to new offer page");
-        navigate('/new-offer', { replace: true });
+        console.log("DraftIndicator: No user or draft, creating new offer");
+        navigate('/new-offer');
       }
     } catch (error) {
       console.error("Error in draft navigation:", error);
       // Fall back to starting a new offer
-      navigate('/new-offer', { replace: true });
+      await resetOffer();
+      navigate('/new-offer');
     } finally {
       setIsNavigating(false);
     }

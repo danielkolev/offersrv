@@ -4,7 +4,6 @@ export const offerDraft = {
   draftSaved: "Draft Saved",
   draftSavedDescription: "Your offer has been saved as a draft.",
   draftSaveError: "Error saving draft",
-  draftSavedToLocalStorage: "Draft saved to local storage as a backup.",
   autoSaveDisabled: "Auto-save Disabled",
   autoSaveEnabled: "Auto-save Enabled",
   noContentToSave: "No Content to Save",
@@ -19,8 +18,5 @@ export const offerDraft = {
   unsavedChanges: "Unsaved Changes",
   saveManually: "Save Manually",
   disableAutoSave: "Disable Auto Save",
-  enableAutoSave: "Enable Auto Save",
-  draftStatus: "Draft Offer",
-  continueWorking: "Continue working on your draft offer",
-  openDraft: "Open Draft"
+  enableAutoSave: "Enable Auto Save"
 };
