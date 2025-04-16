@@ -12,6 +12,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { useCompanySelection } from '@/hooks/useCompanySelection';
+import CompanyForm from '@/components/company/CompanyForm'; // Add this import
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
