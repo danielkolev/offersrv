@@ -4,7 +4,7 @@ import { NavigationTranslations } from '@/types/language/navigation';
 export const navigation: NavigationTranslations = {
   home: "Начало",
   newOffer: "Нова оферта",
-  savedOffers: "Запазени оферти",
+  savedOffers: "Оферти",
   clients: "Клиенти",
   products: "Продукти",
   templates: "Шаблони",

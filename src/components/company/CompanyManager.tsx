@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
-import CompanySettingsForm from './CompanySettingsForm';
+import CompanySettingsForm from '@/components/company/CompanySettingsForm';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
 
 interface CompanyManagerProps {
@@ -63,10 +63,11 @@ const CompanyManager = ({
       setErrorCompanies(null);
   
       try {
+        // Fixed query to join organization_members table instead of using 'members' column
         const { data, error } = await supabase
           .from('organizations')
           .select('id, name')
-          .contains('members', [user.id]);
+          .eq('owner_id', user.id);
   
         if (error) {
           setErrorCompanies(error.message);

@@ -58,12 +58,12 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
     },
     {
       name: t.navigation.clients,
-      path: '/clients',
+      path: '/saved-clients',
       icon: Users
     },
     {
       name: t.navigation.products,
-      path: '/products',
+      path: '/saved-products',
       icon: Package
     },
     {

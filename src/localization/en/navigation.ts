@@ -4,7 +4,7 @@ import { NavigationTranslations } from '@/types/language/navigation';
 export const navigation: NavigationTranslations = {
   home: "Home",
   newOffer: "New Offer",
-  savedOffers: "Saved Offers",
+  savedOffers: "Offers",
   clients: "Clients",
   products: "Products",
   templates: "Templates",
