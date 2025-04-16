@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
@@ -12,18 +12,22 @@ export const useCompanySelection = (hasInitialized: boolean) => {
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoadingCompanyData, setIsLoadingCompanyData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
+  const isFetchingRef = useRef(false);
+  const retryCountRef = useRef(0);
+  const maxRetries = 3;
 
   // Find the user's company
   useEffect(() => {
-    if (hasInitialized && !selectedCompanyId && user) {
+    if (hasInitialized && !selectedCompanyId && user && !isFetchingRef.current) {
       fetchUserCompany();
     }
-  }, [hasInitialized, user]);
+  }, [hasInitialized, user, selectedCompanyId]);
 
   // Fetch user's company with retry mechanism
   const fetchUserCompany = useCallback(async () => {
-    if (!user) return;
+    if (!user || isFetchingRef.current) return;
     
+    isFetchingRef.current = true;
     setIsLoadingCompanyData(true);
     
     try {
@@ -45,16 +49,34 @@ export const useCompanySelection = (hasInitialized: boolean) => {
         setSelectedCompanyId(companyId);
         localStorage.setItem('selectedCompanyId', companyId);
         setFetchError(false);
+        retryCountRef.current = 0;
         return;
       }
       
       setFetchError(false);
+      retryCountRef.current = 0;
     } catch (error: any) {
       console.error('Error fetching company data:', error);
+      
+      // If network error and retries remain, try again
+      if (error.message?.includes('Failed to fetch') && retryCountRef.current < maxRetries) {
+        retryCountRef.current++;
+        console.log(`Attempt ${retryCountRef.current} failed. Retrying...`);
+        
+        // Exponential backoff: wait longer between each retry
+        const delay = Math.pow(2, retryCountRef.current) * 1000;
+        setTimeout(() => {
+          isFetchingRef.current = false;
+          fetchUserCompany();
+        }, delay);
+        
+        return;
+      }
+      
       setFetchError(true);
       
-      // Don't show toast error for network issues - they're common and annoying
-      if (!error.message?.includes('Failed to fetch')) {
+      // Only show toast for terminal errors (after retries or non-network errors)
+      if (!error.message?.includes('Failed to fetch') || retryCountRef.current >= maxRetries) {
         toast({
           title: t.common.error,
           description: error.message,
@@ -62,7 +84,10 @@ export const useCompanySelection = (hasInitialized: boolean) => {
         });
       }
     } finally {
-      setIsLoadingCompanyData(false);
+      if (retryCountRef.current >= maxRetries || !isFetchingRef.current) {
+        setIsLoadingCompanyData(false);
+        isFetchingRef.current = false;
+      }
     }
   }, [user, toast, t]);
 

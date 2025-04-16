@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +16,9 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
   const [isDraftLoading, setIsDraftLoading] = useState(false);
   const location = useLocation();
   
+  // Create a ref to track initialization
+  const initializationInProgress = useRef(false);
+  
   // Check if we should load data based on navigation state
   const shouldLoadDraft = location.state?.loadDraft === true;
   const draftId = location.state?.draftId;
@@ -25,12 +28,13 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
 
   // Check for draft and initialize the offer state
   useEffect(() => {
-    let isMounted = true;
+    if (!user || hasInitialized || initializationInProgress.current) return;
     
     const initializeOfferState = async () => {
-      if (!user || hasInitialized || !isMounted) return;
-      
+      // Set the ref to prevent duplicate initializations
+      initializationInProgress.current = true;
       setIsDraftLoading(true);
+      
       try {
         console.log("useOfferInitialization: Initializing offer state");
         
@@ -38,9 +42,7 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
         await resetOffer();
         
         // Small delay to ensure reset is complete
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        if (!isMounted) return;
+        await new Promise(resolve => setTimeout(resolve, 150));
         
         if (shouldLoadSavedOffer && savedOfferData) {
           console.log('useOfferInitialization: Loading saved offer with data');
@@ -68,7 +70,7 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
             // Explicitly load the draft if we came from a "load draft" action
             const draftOffer = await getLatestDraftFromDatabase(user.id);
             
-            if (draftOffer && isMounted) {
+            if (draftOffer) {
               console.log('useOfferInitialization: Loading draft');
               
               // Now set the offer with the draft data
@@ -99,28 +101,27 @@ export const useOfferInitialization = (setSelectedCompanyId: (id: string | null)
           console.log('useOfferInitialization: Normal initialization, starting with new offer');
         }
         
-        if (isMounted) setHasInitialized(true);
+        setHasInitialized(true);
       } catch (error) {
         console.error('Error during offer initialization:', error);
-        if (isMounted) {
-          toast({
-            title: t.common.error,
-            description: "Error initializing offer",
-            variant: 'destructive'
-          });
-          setHasInitialized(true);
-        }
+        toast({
+          title: t.common.error,
+          description: "Error initializing offer",
+          variant: 'destructive'
+        });
+        setHasInitialized(true);
       } finally {
-        if (isMounted) setIsDraftLoading(false);
+        setIsDraftLoading(false);
       }
     };
 
     initializeOfferState();
     
     return () => {
-      isMounted = false;
+      // Reset the ref when component unmounts
+      initializationInProgress.current = false;
     };
-  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, shouldLoadSavedOffer, draftId, savedOfferId, savedOfferData, toast, t, setSelectedCompanyId]);
+  }, [user, resetOffer, setOffer, shouldLoadDraft, shouldLoadSavedOffer, draftId, savedOfferId, savedOfferData, toast, t, setSelectedCompanyId]);
 
   return {
     hasInitialized,

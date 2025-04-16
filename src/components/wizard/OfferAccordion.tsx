@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 
 // Import our components
 import AccordionHeader from './accordion/AccordionHeader';
@@ -17,12 +15,17 @@ const OfferAccordion = ({
   fetchError,
   selectedCompanyId
 }: OfferAccordionProps) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [expandAll, setExpandAll] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>("client"); // Set first step to client
   const accordionRef = useRef<HTMLDivElement>(null);
+  const renderCountRef = useRef(0);
+  
+  // Log render count (for debugging)
+  useEffect(() => {
+    renderCountRef.current += 1;
+    console.log(`OfferAccordion rendering: ${renderCountRef.current}`);
+  });
   
   // Log selected company information
   useEffect(() => {
@@ -39,9 +42,6 @@ const OfferAccordion = ({
     setIsSaveDialogOpen
   });
   
-  // Visible sections are all sections
-  const visibleSections = sections;
-
   // Force rerender when expandAll changes to ensure Collapsible state syncs properly
   useEffect(() => {
     // This is just to make sure the UI reflects the expandAll state
@@ -84,9 +84,9 @@ const OfferAccordion = ({
   };
 
   const handleNavigateNext = (currentSectionId: string) => {
-    const currentIndex = visibleSections.findIndex(section => section.id === currentSectionId);
-    if (currentIndex < visibleSections.length - 1) {
-      const nextSection = visibleSections[currentIndex + 1];
+    const currentIndex = sections.findIndex(section => section.id === currentSectionId);
+    if (currentIndex < sections.length - 1) {
+      const nextSection = sections[currentIndex + 1];
       setActiveSection(nextSection.id);
       
       // Scroll to next section
@@ -103,10 +103,18 @@ const OfferAccordion = ({
     return <NoCompanySelected />;
   }
 
-  if (isLoadingCompanyData || fetchError) {
+  if (isLoadingCompanyData) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-        {isLoadingCompanyData ? "Зареждане..." : "Възникна грешка при зареждането"}
+        <p className="text-gray-600">Зареждане...</p>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+        <p className="text-red-600">Възникна грешка при зареждането</p>
       </div>
     );
   }
@@ -122,12 +130,12 @@ const OfferAccordion = ({
         <div className={expandAll ? "expanded-sections" : "collapsed-sections"}>
           {expandAll ? (
             <ExpandedAccordion
-              sections={visibleSections}
+              sections={sections}
               onNavigateNext={handleNavigateNext}
             />
           ) : (
             <CollapsedAccordion
-              sections={visibleSections}
+              sections={sections}
               activeSection={activeSection}
               onSectionChange={setActiveSection}
               onNavigateNext={handleNavigateNext}
