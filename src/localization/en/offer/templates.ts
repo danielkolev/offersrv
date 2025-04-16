@@ -2,6 +2,7 @@
 export const offerTemplates = {
   createTemplate: "Create Template",
   saveAsTemplate: "Save as Template",
+  deleteTemplate: "Delete Template",
   applyTemplate: "Apply Template",
   noTemplatesFound: "No templates found",
   templateApplied: "Template applied successfully",
@@ -41,6 +42,7 @@ export const offerTemplates = {
   offerTemplateName: "Offer template name",
   offerTemplateDescription: "Offer template description",
   fromTemplate: "From Template",
+  deleteTemplateConfirm: "Are you sure you want to delete this template?",
   
   // Templates related translations
   templates: {

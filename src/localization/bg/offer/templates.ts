@@ -2,6 +2,7 @@
 export const offerTemplates = {
   createTemplate: "Създай темплейт",
   saveAsTemplate: "Запази като шаблон",
+  deleteTemplate: "Изтрий шаблон",
   applyTemplate: "Приложи шаблон",
   noTemplatesFound: "Не са намерени шаблони",
   templateApplied: "Шаблонът е приложен успешно",
@@ -41,6 +42,7 @@ export const offerTemplates = {
   offerTemplateName: "Име на шаблон за оферта",
   offerTemplateDescription: "Описание на шаблон за оферта",
   fromTemplate: "От шаблон",
+  deleteTemplateConfirm: "Сигурни ли сте, че искате да изтриете този шаблон?",
   
   // Templates related translations
   templates: {

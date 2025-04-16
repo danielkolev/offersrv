@@ -26,8 +26,9 @@ export const offer = {
   chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate,
   templateNameRequired: offerTemplates.templates.templateNameRequired,
   useTemplate: offerTemplates.templates.useTemplate,
-  saveAsTemplate: offerTemplates.saveAsTemplate,  // Add this property
-  createTemplate: offerTemplates.createTemplate,  // Add this property
-  deleteTemplate: offerTemplates.deleteTemplate,  // Add this property
-  deleteTemplateConfirm: offerTemplates.templates.confirmDelete  // Add this property
+  saveAsTemplate: offerTemplates.saveAsTemplate,
+  createTemplate: offerTemplates.createTemplate,
+  deleteTemplate: offerTemplates.deleteTemplate,
+  deleteTemplateConfirm: offerTemplates.deleteTemplateConfirm,
+  createFromCurrent: offerTemplates.templates.createFromCurrent
 };
