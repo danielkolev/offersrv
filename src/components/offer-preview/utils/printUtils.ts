@@ -26,7 +26,7 @@ export const printContent = (includeDateAndSignature = false) => {
   if (includeDateAndSignature) {
     if (!signatureArea) {
       signatureArea = document.createElement('div');
-      signatureArea.className = 'signature-area-print no-print';
+      signatureArea.className = 'signature-area-print';
       signatureArea.innerHTML = `
         <div style="display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ccc;">
           <div>

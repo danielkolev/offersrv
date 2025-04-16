@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,6 +99,7 @@
     padding: 1cm !important;
     width: 100% !important;
     box-shadow: none !important;
+    position: relative !important;
   }
   
   .print-full-content {
@@ -117,6 +119,17 @@
     color: gray;
     z-index: 1000;
     pointer-events: none;
+  }
+  
+  /* Make sure the dialog is hidden during printing */
+  [data-state="open"].fixed.inset-0.z-50,
+  [data-radix-portal],
+  [data-radix-popper-content-wrapper],
+  .ui-dialog-overlay,
+  div[role="dialog"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
   
   /* Hide elements that shouldn't be printed */

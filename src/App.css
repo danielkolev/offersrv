@@ -25,7 +25,7 @@
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
+ 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
@@ -131,6 +131,16 @@
     background-color: #fff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+  
+  /* Make sure dialogs and overlays are hidden when printing */
+  [data-radix-portal], 
+  [data-state="open"],
+  .fixed.inset-0.z-50,
+  .dialog-overlay {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
   
   /* Fix for multiple pages issue */

@@ -35,6 +35,7 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   const { offer } = useOffer();
   const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
   const [includeDateAndSignature, setIncludeDateAndSignature] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrint = () => {
     // Only allow printing in view mode
@@ -51,8 +52,19 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   };
 
   const handleConfirmPrint = () => {
+    // Set printing state to prevent multiple clicks
+    setIsPrinting(true);
+    
+    // First close the dialog
     setIsPrintDialogOpen(false);
-    printContent(includeDateAndSignature);
+    
+    // Wait for dialog animation to complete before printing
+    setTimeout(() => {
+      // Execute print after dialog is closed
+      printContent(includeDateAndSignature);
+      // Reset printing state
+      setIsPrinting(false);
+    }, 300);
   };
 
   const handleExportPDF = () => {
@@ -141,7 +153,10 @@ const OfferActions: React.FC<OfferActionsProps> = ({
             <Button variant="outline" onClick={() => setIsPrintDialogOpen(false)}>
               {t.common.cancel || "Отказ"}
             </Button>
-            <Button onClick={handleConfirmPrint}>
+            <Button 
+              onClick={handleConfirmPrint} 
+              disabled={isPrinting}
+            >
               {t.common.print || "Принтирай"}
             </Button>
           </DialogFooter>
