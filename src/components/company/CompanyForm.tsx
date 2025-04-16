@@ -32,6 +32,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
           <CompanyFormFields
             name={formData.name}
             vatNumber={formData.vatNumber}
+            eikNumber={formData.eikNumber}
             address={formData.address}
             city={formData.city}
             country={formData.country}
@@ -40,6 +41,7 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
             website={formData.website}
             onNameChange={(e) => setters.setName(e.target.value)}
             onVatNumberChange={(e) => setters.setVatNumber(e.target.value)}
+            onEikNumberChange={(e) => setters.setEikNumber?.(e.target.value)}
             onAddressChange={(e) => setters.setAddress(e.target.value)}
             onCityChange={(e) => setters.setCity(e.target.value)}
             onCountryChange={(e) => setters.setCountry(e.target.value)}

@@ -7,6 +7,7 @@ import { useLanguage } from '@/context/LanguageContext';
 interface CompanyFormFieldsProps {
   name: string;
   vatNumber: string;
+  eikNumber?: string; // Add EIK field to the props
   address: string;
   city: string;
   country: string;
@@ -15,6 +16,7 @@ interface CompanyFormFieldsProps {
   website: string;
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onVatNumberChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onEikNumberChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add handler for EIK field
   onAddressChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCountryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -26,6 +28,7 @@ interface CompanyFormFieldsProps {
 export const CompanyFormFields = ({
   name,
   vatNumber,
+  eikNumber = '', // Default to empty string if not provided
   address,
   city,
   country,
@@ -34,6 +37,7 @@ export const CompanyFormFields = ({
   website,
   onNameChange,
   onVatNumberChange,
+  onEikNumberChange,
   onAddressChange,
   onCityChange,
   onCountryChange,
@@ -63,6 +67,16 @@ export const CompanyFormFields = ({
           value={vatNumber}
           onChange={onVatNumberChange}
           placeholder={t.company.vatPlaceholder}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="companyEik">{t.companyInfo.eikNumber}</Label>
+        <Input
+          id="companyEik"
+          value={eikNumber}
+          onChange={onEikNumberChange}
+          placeholder={t.company.eikPlaceholder}
         />
       </div>
       

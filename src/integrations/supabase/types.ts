@@ -295,6 +295,7 @@ export type Database = {
           country: string | null
           country_en: string | null
           created_at: string
+          eik_number: string | null
           email: string | null
           id: string
           logo_url: string | null
@@ -315,6 +316,7 @@ export type Database = {
           country?: string | null
           country_en?: string | null
           created_at?: string
+          eik_number?: string | null
           email?: string | null
           id?: string
           logo_url?: string | null
@@ -335,6 +337,7 @@ export type Database = {
           country?: string | null
           country_en?: string | null
           created_at?: string
+          eik_number?: string | null
           email?: string | null
           id?: string
           logo_url?: string | null

@@ -42,7 +42,7 @@ export const useOfferInitialization = (
           id: data.id,
           name: data.name,
           vatNumber: data.vat_number || '',
-          eikNumber: (data as any).eik_number || '', // Type assertion to handle potentially missing field
+          eikNumber: data.eik_number || '', // Now that column exists, we can safely access it
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',

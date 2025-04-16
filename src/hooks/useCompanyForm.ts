@@ -1,18 +1,23 @@
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { v4 as uuidv4 } from 'uuid';
-import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UseCompanyFormProps {
   onSuccess?: (companyId: string) => void;
 }
 
 export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const { user } = useAuth();
+  
+  // Form state
   const [name, setName] = useState('');
   const [vatNumber, setVatNumber] = useState('');
+  const [eikNumber, setEikNumber] = useState(''); // Add EIK number state
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
@@ -22,37 +27,14 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
   const [logo, setLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const isSubmitting = useRef(false);
-  
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const { t } = useLanguage();
   
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check file size (limit to 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: t.company.error,
-          description: "File is too large. Maximum size is 5MB.",
-          variant: 'destructive'
-        });
-        return;
-      }
-      
       setLogo(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result as string);
-      };
-      reader.onerror = () => {
-        toast({
-          title: t.company.error,
-          description: "Failed to read file. Please try another image.",
-          variant: 'destructive'
-        });
       };
       reader.readAsDataURL(file);
     }
@@ -63,125 +45,116 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
     setLogoPreview(null);
   };
   
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Prevent double submission
-    if (isSubmitting.current) return;
-    isSubmitting.current = true;
-    
-    if (!name) {
+    if (!name.trim()) {
       toast({
-        title: t.company.error,
+        title: t.common.error,
         description: t.company.nameRequired,
-        variant: 'destructive'
+        variant: 'destructive',
       });
-      isSubmitting.current = false;
       return;
     }
     
     if (!user) {
       toast({
-        title: t.company.error,
-        description: "You must be logged in to create a company",
-        variant: 'destructive'
+        title: t.common.error,
+        description: 'User not authenticated',
+        variant: 'destructive',
       });
-      isSubmitting.current = false;
       return;
     }
     
     setLoading(true);
-    setSubmitError(null);
     
     try {
-      // Upload logo if selected
-      let logoUrl = null;
-      if (logo) {
-        const fileExt = logo.name.split('.').pop();
-        const fileName = `${uuidv4()}.${fileExt}`;
-        const filePath = `${fileName}`;
-        
-        const { error: uploadError, data } = await supabase.storage
-          .from('company_logos')
-          .upload(filePath, logo);
-          
-        if (uploadError) throw uploadError;
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('company_logos')
-          .getPublicUrl(filePath);
-          
-        logoUrl = publicUrl;
-      }
-      
-      // Create company record
-      const { data: company, error: companyError } = await supabase
+      // Create the organization
+      const { data, error } = await supabase
         .from('organizations')
         .insert({
           name,
           vat_number: vatNumber,
+          eik_number: eikNumber, // Add EIK number to the database
           address,
-          // Note: city and country fields are not included as they don't exist in the organizations table
+          city,
+          country,
           phone,
           email,
-          // website field is removed as it doesn't exist in the organizations table
-          logo_url: logoUrl,
-          owner_id: user.id
+          website,
+          owner_id: user.id,
         })
-        .select('id')
-        .single();
-        
-      if (companyError) throw companyError;
+        .select();
       
-      // Create organization member record for the creator (as admin)
-      const { error: memberError } = await supabase
-        .from('organization_members')
-        .insert({
-          user_id: user.id,
-          organization_id: company.id,
-          role: 'admin'
-        });
+      if (error) throw error;
+      
+      const companyId = data[0].id;
+      
+      // Upload logo if it exists
+      if (logo) {
+        const fileExt = logo.name.split('.').pop();
+        const fileName = `${companyId}.${fileExt}`;
         
-      if (memberError) throw memberError;
+        const { error: storageError } = await supabase.storage
+          .from('logos')
+          .upload(fileName, logo);
+          
+        if (storageError) {
+          console.error('Error uploading logo:', storageError);
+          // Continue anyway, the company was created successfully
+        } else {
+          // Get the URL of the uploaded logo
+          const { data: urlData } = supabase.storage
+            .from('logos')
+            .getPublicUrl(fileName);
+            
+          // Update the company with the logo URL
+          await supabase
+            .from('organizations')
+            .update({ logo_url: urlData.publicUrl })
+            .eq('id', companyId);
+        }
+      }
       
       toast({
-        title: t.company.success,
-        description: t.company.createdSuccessfully
+        title: t.common.success,
+        description: t.company.createdSuccessfully || 'Company created successfully',
       });
       
-      // Reset form
+      // Call the onSuccess callback with the new company ID
+      if (onSuccess) {
+        onSuccess(companyId);
+      }
+      
+      // Reset the form
       setName('');
       setVatNumber('');
+      setEikNumber('');
       setAddress('');
       setCity('');
       setCountry('');
       setPhone('');
       setEmail('');
       setWebsite('');
-      setLogo(null);
-      setLogoPreview(null);
+      clearLogo();
       
-      if (onSuccess && company) {
-        onSuccess(company.id);
-      }
     } catch (error: any) {
       console.error('Error creating company:', error);
-      setSubmitError(error.message);
       toast({
-        title: t.company.error,
+        title: t.common.error,
         description: error.message,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
-      isSubmitting.current = false;
     }
   };
-
+  
   return {
     formData: {
       name,
       vatNumber,
+      eikNumber,
       address,
       city,
       country,
@@ -191,20 +164,20 @@ export const useCompanyForm = ({ onSuccess }: UseCompanyFormProps) => {
       logo,
       logoPreview,
       loading,
-      submitError
     },
     setters: {
       setName,
       setVatNumber,
+      setEikNumber,
       setAddress,
       setCity,
       setCountry,
       setPhone,
       setEmail,
-      setWebsite
+      setWebsite,
     },
     handleLogoChange,
     clearLogo,
-    handleSubmit
+    handleSubmit,
   };
 };

@@ -59,7 +59,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           id: data.id,
           name: data.name || '',
           vat_number: data.vat_number || '',
-          eik_number: data.eik_number as string || '', // Type assertion to handle the field that might not exist in the DB yet
+          eik_number: data.eik_number || '', // Now that column exists, we can safely access it
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',
@@ -94,6 +94,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
       const updateData: any = {
         name: company.name,
         vat_number: company.vat_number,
+        eik_number: company.eik_number, // Include eik_number in the update
         address: company.address,
         city: company.city,
         country: company.country,
@@ -107,11 +108,6 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
         country_en: company.country_en,
         slogan: company.slogan
       };
-      
-      // Only add eik_number if it's defined in our company object
-      if (company.eik_number !== undefined) {
-        updateData.eik_number = company.eik_number;
-      }
       
       // Update organization record
       const { error } = await supabase
