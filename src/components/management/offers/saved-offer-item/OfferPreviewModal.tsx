@@ -49,7 +49,7 @@ const OfferPreviewModal = ({ savedOffer, isOpen, onClose }: OfferPreviewModalPro
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
-        <DialogTitle className="sr-only">{t.offer.offerPreview}</DialogTitle>
+        <DialogTitle className="sr-only">{t.offer.offerPreview.offerPreview}</DialogTitle>
         <OfferPreview
           isSaveDialogOpen={false}
           setIsSaveDialogOpen={() => {}}

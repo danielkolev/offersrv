@@ -13,5 +13,5 @@ export const offer = {
   ...offerTemplates,
   ...offerStatus,
   ...offerDraft,
-  offerPreview // Export the offerPreview object as a nested property
+  offerPreview // Keep as a nested property
 };

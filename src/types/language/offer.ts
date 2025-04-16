@@ -173,13 +173,33 @@ export interface OfferTranslations {
   
   // Preview related translations
   offerPreview: {
+    previewTitle: string;
+    previewDescription: string;
+    offerPreview: string;
+    saveOffer: string;
+    confirmSave: string;
+    saveDescription: string;
+    saveAsTemplate: string;
+    saveAsDraft: string;
+    saveAsFinalized: string;
+    savedSuccessfully: string;
+    saveFailed: string;
+    generatePdf: string;
+    clearConfirm: string;
+    cancel: string;
+    unauthorized: string;
+    createFirstOffer: string;
+    createNewOffer: string;
+    returnToDashboard: string;
+    noOffersFound: string;
+    loadingOffers: string;
     generatingPdf: string;
     pdfGenerated: string;
     pdfError: string;
     contentCopied: string;
   };
   
-  // Workflow related translations - NEW
+  // Workflow related translations
   workflow: {
     stepByStep: string;
     quickMode: string;
@@ -190,7 +210,7 @@ export interface OfferTranslations {
     quickTips: string;
     requiredFields: string;
     
-    // Draft workflow - NEW
+    // Draft workflow
     continueFromDraft: string;
     createNewOffer: string;
     recentDrafts: string;
