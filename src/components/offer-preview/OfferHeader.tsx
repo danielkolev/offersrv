@@ -33,7 +33,7 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
             <img 
               src={offer.company.logo} 
               alt={companyName} 
-              className="w-16 h-16 object-contain" 
+              className="w-16 h-16 object-contain pdf-preserve-ratio" 
             />
             {offer.company.slogan && (
               <div className="text-xs text-center mt-1 max-w-32 text-gray-600">{offer.company.slogan}</div>

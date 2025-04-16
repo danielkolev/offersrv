@@ -35,8 +35,8 @@ export const generatePdf = (
     });
 };
 
-export const getOfferFileName = (clientName: string) => {
+export const getOfferFileName = (clientName: string, offerNumber?: string) => {
   const sanitizedClientName = clientName || 'Client';
   const date = new Date().toLocaleDateString().replace(/\//g, '-');
-  return `Offer-${sanitizedClientName}-${date}`;
+  return `Offer-${offerNumber ? `${offerNumber}-` : ''}${sanitizedClientName}-${date}`;
 };

@@ -64,6 +64,19 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       <div className="p-6">
         <OfferHeader offer={offer} settings={settings} />
         
+        {/* Display offer number prominently if available */}
+        {!isDraft && offer.details.offerNumber && (
+          <div className="text-center mb-4">
+            <h2 className={cn(
+              "text-xl font-bold",
+              settings?.appearance?.primaryColor ? "" : "text-gray-900"
+            )}
+            style={{ color: settings?.appearance?.primaryColor || "" }}>
+              {displayLanguage === 'bg' ? 'Оферта №:' : 'Offer #:'} {offer.details.offerNumber}
+            </h2>
+          </div>
+        )}
+        
         {/* Client and Offer Details in two columns on the same level */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {/* Left column: Client info */}
@@ -93,12 +106,6 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
             </h3>
             
             <div className="text-sm space-y-1">
-              {!isDraft && offer.details.offerNumber && (
-                <p>
-                  <span className="font-medium">{displayLanguage === 'bg' ? 'Номер' : 'Number'}:</span> <span className="font-bold">{offer.details.offerNumber}</span>
-                </p>
-              )}
-              
               {offer.details.date && (
                 <p>
                   <span className="font-medium">{displayLanguage === 'bg' ? 'Дата' : 'Date'}:</span> {formatDate(offer.details.date, displayLanguage)}
@@ -148,7 +155,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
             {settings?.footer?.showBankDetails && (
               <div className="mt-2 text-xs text-muted-foreground">
                 <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                <p>{bankDetails.name}: {bankDetails.name}</p>
+                <p>{bankDetails.name}</p>
                 <p>IBAN: {bankDetails.iban}</p>
                 {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
               </div>

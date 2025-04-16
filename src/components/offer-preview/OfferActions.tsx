@@ -48,7 +48,7 @@ const OfferActions: React.FC<OfferActionsProps> = ({
     if (!offerContentRef.current) return;
 
     const element = offerContentRef.current;
-    const filename = `${getOfferFileName(offer.client.name)}.pdf`;
+    const filename = `${getOfferFileName(offer.client.name, offer.details.offerNumber)}.pdf`;
     
     generatePdf(
       element,
@@ -56,19 +56,19 @@ const OfferActions: React.FC<OfferActionsProps> = ({
       () => {
         toast({
           title: t.common.processing,
-          description: "Generating PDF...",
+          description: t.offerPreview.generatingPdf || "Generating PDF...",
         });
       },
       () => {
         toast({
           title: t.common.success,
-          description: "PDF successfully generated",
+          description: t.offerPreview.pdfGenerated || "PDF successfully generated",
         });
       },
       (error) => {
         toast({
           title: t.common.error,
-          description: "Failed to generate PDF",
+          description: t.offerPreview.pdfError || "Failed to generate PDF",
           variant: 'destructive',
         });
       }
@@ -78,8 +78,8 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   const handleCopy = () => {
     copyToClipboard('.offer-preview-content', () => {
       toast({
-        title: 'Copied to clipboard',
-        description: 'The offer content has been copied to your clipboard',
+        title: t.common.copied || 'Copied to clipboard',
+        description: t.offerPreview.contentCopied || 'The offer content has been copied to your clipboard',
       });
     });
   };
