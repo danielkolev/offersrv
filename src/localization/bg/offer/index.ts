@@ -1,7 +1,7 @@
 
 import { offerBase } from './offerBase';
 import { offerProducts } from './offerProducts';
-import { offerTemplates } from './offerTemplates';
+import { offerTemplates } from './templates';
 import { offerStatus } from './offerStatus';
 import { offerDraft } from './offerDraft';
 import { offerPreview } from './offerPreview';
@@ -26,4 +26,8 @@ export const offer = {
   chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate,
   templateNameRequired: offerTemplates.templates.templateNameRequired,
   useTemplate: offerTemplates.templates.useTemplate,
+  saveAsTemplate: offerTemplates.saveAsTemplate,  // Add this property
+  createTemplate: offerTemplates.createTemplate,  // Add this property
+  deleteTemplate: offerTemplates.deleteTemplate,  // Add this property
+  deleteTemplateConfirm: offerTemplates.templates.confirmDelete  // Add this property
 };
