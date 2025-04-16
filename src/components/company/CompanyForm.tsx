@@ -9,9 +9,11 @@ import CompanyFormFields from './CompanyFormFields';
 
 interface CompanyFormProps {
   onSuccess?: (companyId: string) => void;
+  onClose?: () => void;
+  refreshCompanySelection?: () => void;
 }
 
-export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
+export const CompanyForm = ({ onSuccess, onClose, refreshCompanySelection }: CompanyFormProps) => {
   const { t } = useLanguage();
   
   const {
@@ -20,7 +22,13 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
     handleLogoChange,
     clearLogo,
     handleSubmit
-  } = useCompanyForm({ onSuccess });
+  } = useCompanyForm({ 
+    onSuccess: (companyId) => {
+      if (onSuccess) onSuccess(companyId);
+      if (refreshCompanySelection) refreshCompanySelection();
+      if (onClose) onClose();
+    } 
+  });
 
   return (
     <Card>
@@ -56,9 +64,20 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
             onClearLogo={clearLogo}
           />
           
-          <Button type="submit" className="w-full mt-6" disabled={formData.loading}>
-            {formData.loading ? t.common.processing : t.company.createButton}
-          </Button>
+          <div className="flex justify-between mt-6">
+            {onClose && (
+              <Button type="button" variant="outline" onClick={onClose}>
+                {t.common.cancel}
+              </Button>
+            )}
+            <Button 
+              type="submit" 
+              className={onClose ? "" : "w-full"} 
+              disabled={formData.loading}
+            >
+              {formData.loading ? t.common.processing : t.company.createButton}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
@@ -66,3 +85,4 @@ export const CompanyForm = ({ onSuccess }: CompanyFormProps) => {
 };
 
 export default CompanyForm;
+

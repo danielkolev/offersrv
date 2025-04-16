@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -25,6 +24,7 @@ const CompanyManager = ({
   selectedCompanyId,
   disableCreate = false
 }: CompanyManagerProps) => {
+  
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -170,7 +170,10 @@ const CompanyManager = ({
               {t.company.manageCompanies || "Manage your company settings here."}
             </SheetDescription>
           </SheetHeader>
-          <CompanyForm onClose={handleCloseSettings} refreshCompanySelection={refreshCompanySelection} />
+          <CompanyForm 
+            onClose={handleCloseSettings} 
+            refreshCompanySelection={refreshCompanySelection} 
+          />
         </SheetContent>
       </Sheet>
     </div>
