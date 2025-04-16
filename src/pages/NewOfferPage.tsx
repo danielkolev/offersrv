@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -44,6 +43,14 @@ const NewOfferPage = () => {
       </div>
     );
   }
+
+  // Use the useCompanySelection hook to get the current company ID
+  const { selectedCompanyId: currentCompanyId } = useCompanySelection();
+  useEffect(() => {
+    if (selectedCompanyId) {
+      localStorage.setItem('selectedCompanyId', selectedCompanyId);
+    }
+  }, [selectedCompanyId]);
 
   return (
     <div className="container mx-auto py-8 px-4">
