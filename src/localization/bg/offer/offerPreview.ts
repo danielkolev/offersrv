@@ -19,5 +19,10 @@ export const offerPreview = {
   createNewOffer: "Създай нова оферта",
   returnToDashboard: "Върнете се в таблото за управление",
   noOffersFound: "Не са намерени оферти",
-  loadingOffers: "Зареждане на оферти..."
+  loadingOffers: "Зареждане на оферти...",
+  // Added missing translations for PDF and copy operations
+  generatingPdf: "Генериране на PDF...",
+  pdfGenerated: "PDF успешно генериран",
+  pdfError: "Грешка при генериране на PDF",
+  contentCopied: "Съдържанието на офертата е копирано в клипборда"
 };

@@ -83,5 +83,6 @@ export const common: CommonTranslations = {
   unauthorized: "Неоторизиран достъп",
   expandAll: "Разгъни всички",
   collapseAll: "Свий всички",
-  language: "Език" // Added missing property
+  language: "Език", // Added missing property
+  copied: "Копирано в клипборда" // Added the missing copied property
 };

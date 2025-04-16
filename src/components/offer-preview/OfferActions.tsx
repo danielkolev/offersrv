@@ -56,19 +56,19 @@ const OfferActions: React.FC<OfferActionsProps> = ({
       () => {
         toast({
           title: t.common.processing,
-          description: t.offerPreview.generatingPdf || "Generating PDF...",
+          description: t.offer.offerPreview.generatingPdf || "Generating PDF...",
         });
       },
       () => {
         toast({
           title: t.common.success,
-          description: t.offerPreview.pdfGenerated || "PDF successfully generated",
+          description: t.offer.offerPreview.pdfGenerated || "PDF successfully generated",
         });
       },
       (error) => {
         toast({
           title: t.common.error,
-          description: t.offerPreview.pdfError || "Failed to generate PDF",
+          description: t.offer.offerPreview.pdfError || "Failed to generate PDF",
           variant: 'destructive',
         });
       }
@@ -79,7 +79,7 @@ const OfferActions: React.FC<OfferActionsProps> = ({
     copyToClipboard('.offer-preview-content', () => {
       toast({
         title: t.common.copied || 'Copied to clipboard',
-        description: t.offerPreview.contentCopied || 'The offer content has been copied to your clipboard',
+        description: t.offer.offerPreview.contentCopied || 'The offer content has been copied to your clipboard',
       });
     });
   };

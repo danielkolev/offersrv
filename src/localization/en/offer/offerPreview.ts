@@ -19,5 +19,10 @@ export const offerPreview = {
   createNewOffer: "Create New Offer",
   returnToDashboard: "Return to dashboard",
   noOffersFound: "No offers found",
-  loadingOffers: "Loading offers..."
+  loadingOffers: "Loading offers...",
+  // Added missing translations for PDF and copy operations
+  generatingPdf: "Generating PDF...",
+  pdfGenerated: "PDF successfully generated",
+  pdfError: "Failed to generate PDF",
+  contentCopied: "The offer content has been copied to your clipboard"
 };

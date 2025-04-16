@@ -172,7 +172,12 @@ export interface OfferTranslations {
   };
   
   // Preview related translations
-  offerPreview: string;
+  offerPreview: {
+    generatingPdf: string;
+    pdfGenerated: string;
+    pdfError: string;
+    contentCopied: string;
+  };
   
   // Workflow related translations - NEW
   workflow: {
