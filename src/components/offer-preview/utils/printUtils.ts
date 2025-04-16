@@ -41,9 +41,9 @@ export const printContent = (includeDateAndSignature = false) => {
       `;
       offerPreviewContent?.appendChild(signatureArea);
     }
-    signatureArea.style.display = 'block';
+    (signatureArea as HTMLElement).style.display = 'block';
   } else if (signatureArea) {
-    signatureArea.style.display = 'none';
+    (signatureArea as HTMLElement).style.display = 'none';
   }
   
   // Prepare for printing

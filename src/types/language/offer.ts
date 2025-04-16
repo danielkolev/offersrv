@@ -1,5 +1,174 @@
 
-export interface OfferTranslations {
+import { SupportedLanguage } from './base';
+
+export interface OfferTemplatesTranslations {
+  templates: string;
+  defaultTemplate: string;
+  currentTemplate: string;
+  chooseTemplate: string;
+  templateName: string;
+  noTemplates: string;
+  createTemplate: string;
+  saveAsTemplate: string;
+  overwriteTemplate: string;
+  deleteTemplate: string;
+  deleteTemplateConfirm: string;
+  templateSaved: string;
+  templateDeleted: string;
+  defaultTemplateSet: string;
+  chooseDefaultTemplate: string;
+  templateNameRequired: string;
+  useTemplate: string;
+  previewTemplate: string;
+  editTemplate: string;
+  emptyState: {
+    title: string;
+    description: string;
+    createFirst: string;
+  };
+  designTemplates: {
+    classic: string;
+    modernDark: string;
+    gradient: string;
+    businessPro: string;
+  };
+  customizeTemplate: string;
+  stylingOptions: string;
+  layoutOptions: string;
+  contentOptions: string;
+  applyTemplate: string;
+  makeDefault: string;
+}
+
+export interface OfferPreviewTranslations {
+  previewTitle: string;
+  previewDescription: string;
+  offerPreview: string;
+  saveOffer: string;
+  confirmSave: string;
+  saveDescription: string;
+  saveAsTemplate: string;
+  saveAsDraft: string;
+  saveAsFinalized: string;
+  savedSuccessfully: string;
+  saveFailed: string;
+  generatePdf: string;
+  clearConfirm: string;
+  cancel: string;
+  unauthorized: string;
+  createFirstOffer: string;
+  createNewOffer: string;
+  returnToDashboard: string;
+  noOffersFound: string;
+  loadingOffers: string;
+  generatingPdf: string;
+  pdfGenerated: string;
+  pdfError: string;
+  contentCopied: string;
+  printOptionsDescription: string;
+  includeDateAndSignature: string;
+}
+
+export interface OfferStatusTranslations {
+  status: string;
+  draftStatus: string;
+  draftStatusInfo: string;
+  statuses: {
+    draft: string;
+    saved: string;
+    sent: string;
+    accepted: string;
+    rejected: string;
+  };
+  createdAt: string;
+  lastEdited: string;
+  edit: string;
+  delete: string;
+  deleteConfirmation: string;
+  yes: string;
+  no: string;
+  offerDeleted: string;
+  offerUpdated: string;
+  create: string;
+}
+
+export interface OfferDraftTranslations {
+  draftInProgress: string;
+  draftSaved: string;
+  draftSavedDescription: string;
+  draftSaveError: string;
+  autoSaveDisabled: string;
+  autoSaveEnabled: string;
+  noContentToSave: string;
+  addContentToSave: string;
+  returnToDraft: string;
+  draftLoaded: string;
+  draftRestoredDescription: string;
+  lastSaved: string;
+  notSavedYet: string;
+  saving: string;
+  saved: string;
+  unsavedChanges: string;
+  saveManually: string;
+  disableAutoSave: string;
+  enableAutoSave: string;
+  workflow: {
+    continueFromDraft: string;
+    createNewOffer: string;
+    recentDrafts: string;
+    quickStart: string;
+    draftTip: string;
+    stepByStep: string;
+    quickMode: string;
+    nextStep: string;
+    previousStep: string;
+    requiredField: string;
+    saveAndContinue: string;
+    quickTips: string;
+    requiredFields: string;
+  };
+}
+
+export interface OfferProductsTranslations {
+  addProducts: string;
+  addNewProduct: string;
+  noProductsAdded: string;
+  productName: string;
+  quantity: string;
+  unitPrice: string;
+  totalPrice: string;
+  removeProduct: string;
+  editProduct: string;
+  productDetails: string;
+  productNamePlaceholder: string;
+  quantityPlaceholder: string;
+  unitPricePlaceholder: string;
+  saveProduct: string;
+  showPartNumber: string;
+  partNumber: string;
+  includeVat: string;
+  vatRate: string;
+  transportCost: string;
+  otherCosts: string;
+  total: string;
+  subtotal: string;
+  vat: string;
+  totalAmount: string;
+  item: string;
+  qty: string;
+  productDescription: string;
+  descriptionPlaceholder: string;
+  unit: string;
+  selectUnit: string;
+  noUnit: string;
+  productImage: string;
+  uploadImage: string;
+  imageUploaded: string;
+  imageDeleted: string;
+  noImage: string;
+}
+
+export interface OfferBaseTranslations {
   createOffer: string;
   offerDetails: string;
   companyInfo: string;
@@ -12,170 +181,24 @@ export interface OfferTranslations {
   offerDate: string;
   date: string;
   validUntil: string;
+  currency: string;
   notes: string;
-  transportCost: string;
-  otherCosts: string;
-  productName: string;
-  quantity: string;
-  unitPrice: string;
-  totalPrice: string;
-  addNewProduct: string;
-  noProductsAdded: string;
-  removeProduct: string;
-  editProduct: string;
-  productDetails: string;
-  productNamePlaceholder: string;
-  quantityPlaceholder: string;
-  unitPricePlaceholder: string;
-  saveProduct: string;
-  cancel: string;
-  showPartNumber: string;
-  partNumber: string;
-  includeVat: string;
-  vatRate: string;
   offerLanguage: string;
   bulgarian: string;
   english: string;
-  createTemplate: string;
-  templateName: string;
-  templateDescription: string;
-  templateSaved: string;
-  templateSaveError: string;
-  templateNamePlaceholder: string;
-  templateDescriptionPlaceholder: string;
-  applyTemplate: string;
-  noTemplatesFound: string;
-  applyThisTemplate: string;
-  productDescription: string;
-  descriptionPlaceholder: string;
-  unit: string;
-  selectUnit: string;
-  noUnit: string;
-  currency: string;
+  offerNamePlaceholder: string;
+  header: string;
+  fromCompany: string;
+  toCompany: string;
+  reference: string;
+  toLabel: string;
+  attention: string;
   bgn: string;
   eur: string;
   usd: string;
-  offerNamePlaceholder: string;
-  draftInProgress: string;
-  notSavedYet: string;
-  lastSaved: string;
-  saving: string;
-  unsavedChanges: string;
-  saveManually: string;
-  disableAutoSave: string;
-  enableAutoSave: string;
-  saved: string;
-  draftSaved: string;
-  draftSavedDescription: string;
-  autoSaveDisabled: string;
-  autoSaveEnabled: string;
-  draftSaveError: string;
-  noContentToSave: string;
-  addContentToSave: string;
-  draftLoaded: string;
-  draftRestoredDescription: string;
-  returnToDraft: string;
-  
-  // Status related translations
-  status: string;
-  draftStatus: string;
-  draftStatusInfo: string;
-  statuses: {
-    draft: string;
-    saved: string;
-    sent: string;
-    accepted: string;
-    rejected: string;
-  };
-  
-  // Time related translations
-  createdAt: string;
-  lastEdited: string;
-  
-  // Client info related translations
-  toLabel: string;
-  attention: string;
-  
-  // Language options
-  languageOptions: {
-    bulgarian: string;
-    english: string;
-  };
-  
-  // Templates related translations
-  templates: {
-    title: string;
-    description: string;
-    empty: string;
-    create: string;
-    delete: string;
-    confirmDelete: string;
-    templateDeleted: string;
-    apply: string;
-    createNew: string;
-    name: string;
-    namePlaceholder: string;
-    descriptionPlaceholder: string;
-    save: string;
-    cancel: string;
-    saved: string;
-    error: string;
-    defaultTemplates: string;
-    userTemplates: string;
-    templateName: string;
-    noTemplates: string;
-    templateSaved: string;
-    useTemplate: string;
-    createFromCurrent: string;
-    saveAsTemplate: string;
-    noDescription: string;
-    availableTemplates: string;
-    noTemplatesFound: string;
-    templatePreview: string;
-    setAsDefault: string;
-    resetToDefault: string;
-    defaultTemplate: string;
-    sampleTemplates: string;
-    textColor: string;
-    backgroundColor: string;
-    designTemplateType: string;
-    designTemplates: {
-      classic: string;
-      modernDark: string;
-      gradient: string;
-      businessPro: string;
-    }
-  };
-  
-  // Preview related translations
-  offerPreview: {
-    previewTitle: string;
-    previewDescription: string;
-    offerPreview: string;
-    saveOffer: string;
-    confirmSave: string;
-    saveDescription: string;
-    saveAsTemplate: string;
-    saveAsDraft: string;
-    saveAsFinalized: string;
-    savedSuccessfully: string;
-    saveFailed: string;
-    generatePdf: string;
-    clearConfirm: string;
-    cancel: string;
-    unauthorized: string;
-    createFirstOffer: string;
-    createNewOffer: string;
-    returnToDashboard: string;
-    noOffersFound: string;
-    loadingOffers: string;
-    generatingPdf: string;
-    pdfGenerated: string;
-    pdfError: string;
-    contentCopied: string;
-  };
-  
-  // These properties need to be added to match the expected structure in the OfferTranslations interface
+  cancel: string;
+  previewTitle: string;
+  previewDescription: string;
   saveOffer: string;
   confirmSave: string;
   saveDescription: string;
@@ -186,36 +209,115 @@ export interface OfferTranslations {
   saveFailed: string;
   generatePdf: string;
   clearConfirm: string;
-  previewTitle: string;
-  previewDescription: string;
   fromTemplate: string;
-  header: string;
-  fromCompany: string;
-  toCompany: string;
-  reference: string;
   item: string;
   qty: string;
   total: string;
   subtotal: string;
   vat: string;
   totalAmount: string;
-  
-  // Workflow related translations
-  workflow: {
-    stepByStep: string;
-    quickMode: string;
-    nextStep: string;
-    previousStep: string;
-    requiredField: string;
-    saveAndContinue: string;
-    quickTips: string;
-    requiredFields: string;
-    
-    // Draft workflow
-    continueFromDraft: string;
-    createNewOffer: string;
-    recentDrafts: string;
-    quickStart: string;
-    draftTip: string;
+  languageOptions: {
+    bulgarian: string;
+    english: string;
   };
+}
+
+export interface OfferTranslations {
+  offerPreview: OfferPreviewTranslations;
+  [key: string]: any; // This allows for additional properties
+  createOffer: string;
+  offerDetails: string;
+  companyInfo: string;
+  clientInfo: string;
+  productsAndServices: string;
+  previewAndSave: string;
+  previewAndFinish: string;
+  offerName: string;
+  offerNumber: string;
+  offerDate: string;
+  date: string;
+  validUntil: string;
+  currency: string;
+  notes: string;
+  offerLanguage: string;
+  bulgarian: string;
+  english: string;
+  offerNamePlaceholder: string;
+  header: string;
+  fromCompany: string;
+  toCompany: string;
+  reference: string;
+  toLabel: string;
+  attention: string;
+  bgn: string;
+  eur: string;
+  usd: string;
+  cancel: string;
+  templates: string;
+  defaultTemplate: string;
+  currentTemplate: string;
+  chooseTemplate: string;
+  templateName: string;
+  noTemplates: string;
+  createTemplate: string;
+  saveAsTemplate: string;
+  overwriteTemplate: string;
+  deleteTemplate: string;
+  deleteTemplateConfirm: string;
+  templateSaved: string;
+  templateDeleted: string;
+  defaultTemplateSet: string;
+  chooseDefaultTemplate: string;
+  templateNameRequired: string;
+  useTemplate: string;
+  previewTemplate: string;
+  editTemplate: string;
+  status: string;
+  draftStatus: string;
+  draftStatusInfo: string;
+  addProducts: string;
+  addNewProduct: string;
+  noProductsAdded: string;
+  productName: string;
+  quantity: string;
+  unitPrice: string;
+  totalPrice: string;
+  removeProduct: string;
+  editProduct: string;
+  productDetails: string;
+  productNamePlaceholder: string;
+  quantityPlaceholder: string;
+  unitPricePlaceholder: string;
+  saveProduct: string;
+  showPartNumber: string;
+  partNumber: string;
+  includeVat: string;
+  vatRate: string;
+  transportCost: string;
+  otherCosts: string;
+  total: string;
+  subtotal: string;
+  vat: string;
+  totalAmount: string;
+  item: string;
+  qty: string;
+  draftInProgress: string;
+  draftSaved: string;
+  draftSavedDescription: string;
+  draftSaveError: string;
+  autoSaveDisabled: string;
+  autoSaveEnabled: string;
+  noContentToSave: string;
+  addContentToSave: string;
+  returnToDraft: string;
+  draftLoaded: string;
+  draftRestoredDescription: string;
+  lastSaved: string;
+  notSavedYet: string;
+  saving: string;
+  saved: string;
+  unsavedChanges: string;
+  saveManually: string;
+  disableAutoSave: string;
+  enableAutoSave: string;
 }
