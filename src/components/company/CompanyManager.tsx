@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -105,11 +106,10 @@ const CompanyManager = ({
       fetchCompanies();
     }, [fetchCompanies]);
   
-  const handleSelect = (value: string) => {
-    localStorage.setItem('selectedCompanyId', value);
-    setCompanyId(value);
-    onSelectCompany(value);
-  };
+    const handleSelect = (value: string) => {
+      setCompanyId(value);
+      onSelectCompany(value);
+    };
   
     return (
       <Select onValueChange={handleSelect} defaultValue={selectedCompanyId || ""}>
