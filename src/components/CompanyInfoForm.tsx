@@ -55,6 +55,15 @@ const CompanyInfoForm = () => {
           </div>
           
           <div className="space-y-2">
+            <Label htmlFor="companyEik">{t.companyInfo.eikNumber}</Label>
+            <Input
+              id="companyEik"
+              value={offer.company.eikNumber || ''}
+              onChange={(e) => updateCompanyInfo({ eikNumber: e.target.value })}
+            />
+          </div>
+          
+          <div className="space-y-2">
             <Label htmlFor="companyAddress">{t.companyInfo.address}</Label>
             <Input
               id="companyAddress"

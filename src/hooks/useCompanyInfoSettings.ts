@@ -59,7 +59,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           id: data.id,
           name: data.name || '',
           vat_number: data.vat_number || '',
-          eik_number: data.eik_number || '', // Handle potentially missing field
+          eik_number: data.eik_number as string || '', // Type assertion to handle the field that might not exist in the DB yet
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',
