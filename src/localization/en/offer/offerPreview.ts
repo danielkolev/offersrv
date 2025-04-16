@@ -20,9 +20,12 @@ export const offerPreview = {
   returnToDashboard: "Return to dashboard",
   noOffersFound: "No offers found",
   loadingOffers: "Loading offers...",
-  // Added missing translations for PDF and copy operations
+  // PDF and copy operations translations
   generatingPdf: "Generating PDF...",
   pdfGenerated: "PDF successfully generated",
   pdfError: "Failed to generate PDF",
-  contentCopied: "The offer content has been copied to your clipboard"
+  contentCopied: "The offer content has been copied to your clipboard",
+  // Added missing print options translations
+  printOptionsDescription: "Choose printing options",
+  includeDateAndSignature: "Add date and signature fields"
 };

@@ -20,9 +20,12 @@ export const offerPreview = {
   returnToDashboard: "Върнете се в таблото за управление",
   noOffersFound: "Не са намерени оферти",
   loadingOffers: "Зареждане на оферти...",
-  // Added missing translations for PDF and copy operations
+  // PDF and copy operations translations
   generatingPdf: "Генериране на PDF...",
   pdfGenerated: "PDF успешно генериран",
   pdfError: "Грешка при генериране на PDF",
-  contentCopied: "Съдържанието на офертата е копирано в клипборда"
+  contentCopied: "Съдържанието на офертата е копирано в клипборда",
+  // Added missing print options translations
+  printOptionsDescription: "Изберете опции за принтиране",
+  includeDateAndSignature: "Добавете полета за дата и подпис"
 };
