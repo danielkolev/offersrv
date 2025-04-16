@@ -85,12 +85,10 @@ export const offerTemplates = {
       gradient: "Gradient",
       businessPro: "Business Pro",
     },
-    // Add missing properties
-    title: "Templates",
-    description: "Manage your templates",
-    confirmDelete: "Are you sure you want to delete this template?",
-    defaultTemplates: "Default Templates",
-    userTemplates: "Your Templates",
-    createFromCurrent: "Create from current"
+    currentTemplate: "Current Template",
+    chooseTemplate: "Choose Template",
+    overwriteTemplate: "Overwrite Template",
+    chooseDefaultTemplate: "Choose Default Template",
+    templateNameRequired: "Template name is required"
   }
 };

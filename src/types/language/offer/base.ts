@@ -1,0 +1,54 @@
+
+export interface OfferBaseTranslations {
+  createOffer: string;
+  offerDetails: string;
+  companyInfo: string;
+  clientInfo: string;
+  productsAndServices: string;
+  previewAndSave: string;
+  previewAndFinish: string;
+  offerName: string;
+  offerNumber: string;
+  offerDate: string;
+  date: string;
+  validUntil: string;
+  currency: string;
+  notes: string;
+  offerLanguage: string;
+  bulgarian: string;
+  english: string;
+  offerNamePlaceholder: string;
+  header: string;
+  fromCompany: string;
+  toCompany: string;
+  reference: string;
+  toLabel: string;
+  attention: string;
+  bgn: string;
+  eur: string;
+  usd: string;
+  cancel: string;
+  previewTitle: string;
+  previewDescription: string;
+  saveOffer: string;
+  confirmSave: string;
+  saveDescription: string;
+  saveAsTemplate: string;
+  saveAsDraft: string;
+  saveAsFinalized: string;
+  savedSuccessfully: string;
+  saveFailed: string;
+  generatePdf: string;
+  clearConfirm: string;
+  fromTemplate: string;
+  item: string;
+  qty: string;
+  total: string;
+  subtotal: string;
+  vat: string;
+  totalAmount: string;
+  languageOptions: {
+    bulgarian: string;
+    english: string;
+  };
+}

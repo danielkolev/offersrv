@@ -17,13 +17,13 @@ export const offer = {
   
   // Add additional properties that are referenced directly from offer.templates in components
   // but need to be kept at the root level for backward compatibility
-  currentTemplate: offerTemplates.currentTemplate,
-  chooseTemplate: offerTemplates.chooseTemplate,
-  noTemplates: offerTemplates.noTemplates,
-  overwriteTemplate: offerTemplates.overwriteTemplate,
-  templateSaved: offerTemplates.templateSaved,
-  templateDeleted: offerTemplates.templateDeleted,
-  chooseDefaultTemplate: offerTemplates.chooseDefaultTemplate,
-  templateNameRequired: offerTemplates.templateNameRequired,
-  useTemplate: offerTemplates.useTemplate,
+  currentTemplate: offerTemplates.templates.currentTemplate,
+  chooseTemplate: offerTemplates.templates.chooseTemplate,
+  noTemplates: offerTemplates.templates.noTemplates,
+  overwriteTemplate: offerTemplates.templates.overwriteTemplate,
+  templateSaved: offerTemplates.templates.templateSaved,
+  templateDeleted: offerTemplates.templates.templateDeleted,
+  chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate,
+  templateNameRequired: offerTemplates.templates.templateNameRequired,
+  useTemplate: offerTemplates.templates.useTemplate,
 };

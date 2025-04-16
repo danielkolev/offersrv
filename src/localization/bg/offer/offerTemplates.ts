@@ -85,12 +85,10 @@ export const offerTemplates = {
       gradient: "Градиент",
       businessPro: "Бизнес Про",
     },
-    // Add missing properties
-    title: "Шаблони",
-    description: "Управление на вашите шаблони",
-    confirmDelete: "Сигурни ли сте, че искате да изтриете този шаблон?",
-    defaultTemplates: "Шаблони по подразбиране",
-    userTemplates: "Вашите шаблони",
-    createFromCurrent: "Създай от текущия"
+    currentTemplate: "Текущ шаблон",
+    chooseTemplate: "Избери шаблон",
+    overwriteTemplate: "Презапиши шаблон",
+    chooseDefaultTemplate: "Избери шаблон по подразбиране",
+    templateNameRequired: "Името на шаблона е задължително"
   }
 };

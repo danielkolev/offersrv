@@ -1,0 +1,39 @@
+
+export interface OfferProductsTranslations {
+  addProducts: string;
+  addNewProduct: string;
+  noProductsAdded: string;
+  productName: string;
+  quantity: string;
+  unitPrice: string;
+  totalPrice: string;
+  removeProduct: string;
+  editProduct: string;
+  productDetails: string;
+  productNamePlaceholder: string;
+  quantityPlaceholder: string;
+  unitPricePlaceholder: string;
+  saveProduct: string;
+  showPartNumber: string;
+  partNumber: string;
+  includeVat: string;
+  vatRate: string;
+  transportCost: string;
+  otherCosts: string;
+  total: string;
+  subtotal: string;
+  vat: string;
+  totalAmount: string;
+  item: string;
+  qty: string;
+  productDescription: string;
+  descriptionPlaceholder: string;
+  unit: string;
+  selectUnit: string;
+  noUnit: string;
+  productImage: string;
+  uploadImage: string;
+  imageUploaded: string;
+  imageDeleted: string;
+  noImage: string;
+}
