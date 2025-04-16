@@ -20,12 +20,22 @@ export const offerDraft = {
   disableAutoSave: "Изключи автоматичното запазване",
   enableAutoSave: "Включи автоматичното запазване",
   
-  // Quick workflow messages
+  // Workflow messages
   workflow: {
     continueFromDraft: "Продължи от чернова",
     createNewOffer: "Създай нова оферта",
     recentDrafts: "Последни чернови",
     quickStart: "Бърз старт с шаблон",
-    draftTip: "Запазете работния процес по всяко време, за да продължите по-късно"
+    draftTip: "Запазете работния процес по всяко време, за да продължите по-късно",
+    
+    // Adding the missing properties required by the type definition
+    stepByStep: "Стъпка по стъпка",
+    quickMode: "Бърз режим (Всички полета)",
+    nextStep: "Следваща стъпка",
+    previousStep: "Предишна стъпка",
+    requiredField: "Това поле е задължително",
+    saveAndContinue: "Запази и продължи",
+    quickTips: "Бързи съвети",
+    requiredFields: "Задължителните полета са отбелязани с *"
   }
 };

@@ -20,12 +20,22 @@ export const offerDraft = {
   disableAutoSave: "Disable Auto Save",
   enableAutoSave: "Enable Auto Save",
   
-  // Quick workflow messages
+  // Workflow messages
   workflow: {
     continueFromDraft: "Continue from draft",
     createNewOffer: "Create new offer",
     recentDrafts: "Recent drafts",
     quickStart: "Quick start with template",
-    draftTip: "Save your progress anytime to continue later"
+    draftTip: "Save your progress anytime to continue later",
+    
+    // Adding the missing properties required by the type definition
+    stepByStep: "Step by Step",
+    quickMode: "Quick Mode (All fields)",
+    nextStep: "Next Step",
+    previousStep: "Previous Step",
+    requiredField: "This field is required",
+    saveAndContinue: "Save and Continue",
+    quickTips: "Quick Tips",
+    requiredFields: "Required fields are marked with *"
   }
 };
