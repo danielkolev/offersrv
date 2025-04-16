@@ -42,7 +42,7 @@ export const useOfferInitialization = (
           id: data.id,
           name: data.name,
           vatNumber: data.vat_number || '',
-          eikNumber: data.eik_number || '',
+          eikNumber: data.eik_number || '', // Safely handle potentially missing field
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',

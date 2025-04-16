@@ -59,7 +59,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           id: data.id,
           name: data.name || '',
           vat_number: data.vat_number || '',
-          eik_number: data.eik_number || '', // Added EIK field
+          eik_number: data.eik_number || '', // Handle potentially missing field
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',
@@ -90,26 +90,33 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     try {
       setIsSaving(true);
       
+      // Prepare the update data, making sure we only include valid fields
+      const updateData: any = {
+        name: company.name,
+        vat_number: company.vat_number,
+        address: company.address,
+        city: company.city,
+        country: company.country,
+        phone: company.phone,
+        email: company.email,
+        website: company.website,
+        logo_url: company.logo_url,
+        name_en: company.name_en,
+        address_en: company.address_en,
+        city_en: company.city_en,
+        country_en: company.country_en,
+        slogan: company.slogan
+      };
+      
+      // Only add eik_number if it's defined in our company object
+      if (company.eik_number !== undefined) {
+        updateData.eik_number = company.eik_number;
+      }
+      
       // Update organization record
       const { error } = await supabase
         .from('organizations')
-        .update({
-          name: company.name,
-          vat_number: company.vat_number,
-          eik_number: company.eik_number, // Added EIK field
-          address: company.address,
-          city: company.city,
-          country: company.country,
-          phone: company.phone,
-          email: company.email,
-          website: company.website,
-          logo_url: company.logo_url,
-          name_en: company.name_en,
-          address_en: company.address_en,
-          city_en: company.city_en,
-          country_en: company.country_en,
-          slogan: company.slogan
-        })
+        .update(updateData)
         .eq('id', companyId);
         
       if (error) throw error;
