@@ -32,5 +32,17 @@ export const offerBase = {
   languageOptions: {
     bulgarian: "Bulgarian",
     english: "English",
+  },
+  
+  // Workflow messages and instructions
+  workflow: {
+    stepByStep: "Step by Step",
+    quickMode: "Quick Mode (All fields)",
+    nextStep: "Next Step",
+    previousStep: "Previous Step",
+    requiredField: "This field is required",
+    saveAndContinue: "Save and Continue",
+    quickTips: "Quick Tips",
+    requiredFields: "Required fields are marked with *"
   }
 };

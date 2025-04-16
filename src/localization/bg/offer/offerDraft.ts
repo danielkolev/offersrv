@@ -18,5 +18,14 @@ export const offerDraft = {
   unsavedChanges: "Незапазени промени",
   saveManually: "Запази ръчно",
   disableAutoSave: "Изключи автоматичното запазване",
-  enableAutoSave: "Включи автоматичното запазване"
+  enableAutoSave: "Включи автоматичното запазване",
+  
+  // Quick workflow messages
+  workflow: {
+    continueFromDraft: "Продължи от чернова",
+    createNewOffer: "Създай нова оферта",
+    recentDrafts: "Последни чернови",
+    quickStart: "Бърз старт с шаблон",
+    draftTip: "Запазете работния процес по всяко време, за да продължите по-късно"
+  }
 };

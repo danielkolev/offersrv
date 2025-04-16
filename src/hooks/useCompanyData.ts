@@ -14,11 +14,18 @@ export const useCompanyData = (companyId: string | null) => {
   const fetchedRef = useRef(false);
   const previousCompanyId = useRef<string | null>(null);
   const isMountedRef = useRef(true);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 3;
 
-  // Set isMounted to false when component unmounts
+  // Устанавливаем isMounted в false при размонтировании компонента
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
+      // Очищаем таймер повторных попыток при размонтировании
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -39,13 +46,13 @@ export const useCompanyData = (companyId: string | null) => {
       
       if (error) throw error;
       
-      // Check if component is still mounted before updating state
+      // Проверяем, что компонент все еще смонтирован
       if (!isMountedRef.current) return;
       
       if (data) {
-        console.log("useCompanyData: Company data loaded successfully:", data);
+        console.log("useCompanyData: Company data loaded successfully");
         
-        // Update the offer context with company data
+        // Обновляем контекст оферты данными компании
         updateCompanyInfo({
           id: data.id,
           name: data.name || '',
@@ -60,33 +67,65 @@ export const useCompanyData = (companyId: string | null) => {
           slogan: data.slogan || ''
         });
         
-        // Mark data as fetched
+        // Отмечаем, что данные были загружены
         fetchedRef.current = true;
+        retryCountRef.current = 0; // Сбрасываем счетчик попыток
       }
     } catch (err: any) {
-      // Check if component is still mounted before updating state
+      // Проверяем, что компонент все еще смонтирован
       if (!isMountedRef.current) return;
       
       console.error('Error fetching company data:', err);
       setError(err.message);
-      toast({
-        title: t.common.error,
-        description: `Error loading company data: ${err.message}`,
-        variant: 'destructive'
-      });
+      
+      // Проверяем, была ли ошибка связана с сетью
+      const isNetworkError = err.message?.includes('fetch') || 
+                             err.message?.includes('network') ||
+                             err.message?.includes('failed');
+      
+      // Пробуем повторно загрузить данные в случае сетевой ошибки
+      if (isNetworkError && retryCountRef.current < MAX_RETRIES) {
+        retryCountRef.current += 1;
+        const retryDelay = Math.min(1000 * Math.pow(2, retryCountRef.current), 10000); // Экспоненциальная задержка с ограничением
+        
+        console.log(`useCompanyData: Network error, retry ${retryCountRef.current}/${MAX_RETRIES} in ${retryDelay}ms`);
+        
+        if (retryTimeoutRef.current) {
+          clearTimeout(retryTimeoutRef.current);
+        }
+        
+        retryTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current) {
+            fetchCompanyData(id);
+          }
+        }, retryDelay);
+      } else if (retryCountRef.current >= MAX_RETRIES) {
+        // Показываем сообщение об ошибке только если исчерпали все попытки
+        toast({
+          title: t.common.error,
+          description: `Error loading company data: ${err.message}`,
+          variant: 'destructive'
+        });
+      }
     } finally {
-      // Check if component is still mounted before updating state
+      // Проверяем, что компонент все еще смонтирован
       if (isMountedRef.current) {
         setIsLoading(false);
       }
     }
-  }, [updateCompanyInfo, toast, t]);
+  }, [updateCompanyInfo, toast, t.common.error]);
 
   useEffect(() => {
-    // Reset fetched status when company ID changes
+    // Сбрасываем статус загрузки при изменении ID компании
     if (companyId !== previousCompanyId.current) {
       fetchedRef.current = false;
       previousCompanyId.current = companyId;
+      retryCountRef.current = 0;
+      
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
     }
     
     if (!companyId || fetchedRef.current) return;
@@ -94,13 +133,19 @@ export const useCompanyData = (companyId: string | null) => {
     fetchCompanyData(companyId);
   }, [companyId, fetchCompanyData]);
 
-  // Add a reset method to allow refetching in some cases
-  const reset = useCallback(() => {
-    fetchedRef.current = false;
+  // Метод для ручного обновления данных
+  const refetch = useCallback(() => {
     if (companyId) {
+      fetchedRef.current = false;
+      retryCountRef.current = 0;
       fetchCompanyData(companyId);
     }
   }, [companyId, fetchCompanyData]);
 
-  return { isLoading, error, reset, fetchCompanyData };
+  return { 
+    isLoading, 
+    error, 
+    refetch, 
+    fetchCompanyData 
+  };
 };

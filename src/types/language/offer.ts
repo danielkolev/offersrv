@@ -173,4 +173,23 @@ export interface OfferTranslations {
   
   // Preview related translations
   offerPreview: string;
+  
+  // Workflow related translations - NEW
+  workflow: {
+    stepByStep: string;
+    quickMode: string;
+    nextStep: string;
+    previousStep: string;
+    requiredField: string;
+    saveAndContinue: string;
+    quickTips: string;
+    requiredFields: string;
+    
+    // Draft workflow - NEW
+    continueFromDraft: string;
+    createNewOffer: string;
+    recentDrafts: string;
+    quickStart: string;
+    draftTip: string;
+  };
 }

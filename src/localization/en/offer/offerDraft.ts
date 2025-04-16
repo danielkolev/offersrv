@@ -18,5 +18,14 @@ export const offerDraft = {
   unsavedChanges: "Unsaved Changes",
   saveManually: "Save Manually",
   disableAutoSave: "Disable Auto Save",
-  enableAutoSave: "Enable Auto Save"
+  enableAutoSave: "Enable Auto Save",
+  
+  // Quick workflow messages
+  workflow: {
+    continueFromDraft: "Continue from draft",
+    createNewOffer: "Create new offer",
+    recentDrafts: "Recent drafts",
+    quickStart: "Quick start with template",
+    draftTip: "Save your progress anytime to continue later"
+  }
 };
