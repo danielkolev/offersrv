@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Select,
   SelectContent,
@@ -15,7 +17,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
@@ -49,7 +50,8 @@ const CompanyManager = ({
   const handleOpenSettings = () => setOpenSettings(true);
   const handleCloseSettings = () => setOpenSettings(false);
 
-  const CompanySelector = () => {
+  // Define the CompanySelector as a functional component
+  const InnerCompanySelector = () => {
     const [companies, setCompanies] = useState<{ id: string; name: string; }[]>([]);
     const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
     const [errorCompanies, setErrorCompanies] = useState<string | null>(null);
@@ -136,10 +138,7 @@ const CompanyManager = ({
 
   return (
     <div className="flex items-center space-x-2">
-      <CompanySelector
-        selectedCompanyId={selectedCompanyId}
-        onSelectCompany={onSelectCompany}
-      />
+      <InnerCompanySelector />
       {!disableCreate && (
         <Button
           variant="outline"

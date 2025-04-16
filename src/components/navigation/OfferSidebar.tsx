@@ -19,9 +19,10 @@ import {
   Files, 
   Users, 
   Package, 
-  LayoutTemplate, 
   Building, 
-  Settings 
+  Settings,
+  FileText,
+  LayoutTemplate
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
@@ -54,6 +55,21 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
       name: t.navigation.savedOffers,
       path: '/saved-offers',
       icon: Files
+    },
+    {
+      name: t.navigation.clients,
+      path: '/clients',
+      icon: Users
+    },
+    {
+      name: t.navigation.products,
+      path: '/products',
+      icon: Package
+    },
+    {
+      name: t.navigation.templates,
+      path: '/templates',
+      icon: LayoutTemplate
     },
     {
       name: t.navigation.companies,
