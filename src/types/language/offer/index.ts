@@ -21,6 +21,11 @@ export interface OfferTranslations {
   chooseDefaultTemplate: string;
   templateNameRequired: string;
   useTemplate: string;
+  saveAsTemplate: string;
+  createTemplate: string;
+  deleteTemplate: string;
+  deleteTemplateConfirm: string;
+  createFromCurrent: string;
   
   // Base offer properties
   createOffer: string;

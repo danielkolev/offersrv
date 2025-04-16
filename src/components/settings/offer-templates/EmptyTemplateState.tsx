@@ -20,7 +20,7 @@ const EmptyTemplateState: React.FC<EmptyTemplateStateProps> = ({ onCreateNew }) 
         className="mt-2"
         onClick={onCreateNew}
       >
-        {t.settings.createNewTemplate}
+        {t.offer.templates.createFromCurrent}
       </Button>
     </div>
   );
