@@ -43,6 +43,7 @@ export const bgCompanyTranslations: CompanyTranslations = {
   // Placeholder texts
   namePlaceholder: 'Въведете име на фирма',
   vatPlaceholder: 'Въведете ДДС номер',
+  eikPlaceholder: 'Въведете ЕИК номер', // Added EIK placeholder
   addressPlaceholder: 'Въведете адрес на фирмата',
   cityPlaceholder: 'Въведете град',
   countryPlaceholder: 'Въведете държава',

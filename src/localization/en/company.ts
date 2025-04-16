@@ -43,6 +43,7 @@ export const enCompanyTranslations: CompanyTranslations = {
   // Placeholder texts
   namePlaceholder: 'Enter company name',
   vatPlaceholder: 'Enter VAT number',
+  eikPlaceholder: 'Enter EIK number', // Added EIK placeholder
   addressPlaceholder: 'Enter company address',
   cityPlaceholder: 'Enter city',
   countryPlaceholder: 'Enter country',

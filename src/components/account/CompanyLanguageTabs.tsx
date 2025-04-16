@@ -1,8 +1,8 @@
 
 import React from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Company } from '@/types/company';
 import { Translations } from '@/types/language';
 
@@ -12,114 +12,99 @@ interface CompanyLanguageTabsProps {
   t: Translations;
 }
 
-const CompanyLanguageTabs = ({ 
-  company, 
-  onFieldChange, 
-  t 
-}: CompanyLanguageTabsProps) => {
+const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsProps) => {
   return (
-    <Tabs defaultValue="bulgarian">
-      <div className="mb-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="bulgarian">Български</TabsTrigger>
-          <TabsTrigger value="english">English</TabsTrigger>
-        </TabsList>
-      </div>
+    <Tabs defaultValue="bulgarian" className="mt-4">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="bulgarian">Български</TabsTrigger>
+        <TabsTrigger value="english">English</TabsTrigger>
+      </TabsList>
       
-      <TabsContent value="bulgarian" className="space-y-4">
+      {/* Bulgarian content */}
+      <TabsContent value="bulgarian" className="space-y-4 mt-2">
+        <div className="space-y-2">
+          <Label htmlFor="name">{t.companyInfo?.name || 'Company Name'}</Label>
+          <Input
+            id="name"
+            placeholder={t.company?.namePlaceholder || 'Enter company name'}
+            value={company.name || ''}
+            onChange={(e) => onFieldChange('name', e.target.value)}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="address">{t.companyInfo?.address || 'Address'}</Label>
+          <Input
+            id="address"
+            placeholder={t.company?.addressPlaceholder || 'Enter company address'}
+            value={company.address || ''}
+            onChange={(e) => onFieldChange('address', e.target.value)}
+          />
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="companyName">{t.companyInfo.name} *</Label>
+            <Label htmlFor="city">{t.companyInfo?.city || 'City'}</Label>
             <Input
-              id="companyName"
-              value={company.name}
-              onChange={(e) => onFieldChange('name', e.target.value)}
-              placeholder={t.company.namePlaceholder}
-              required
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="companyVat">{t.companyInfo.vatNumber}</Label>
-            <Input
-              id="companyVat"
-              value={company.vat_number || ''}
-              onChange={(e) => onFieldChange('vat_number', e.target.value)}
-              placeholder={t.company.vatPlaceholder}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="companyAddress">{t.companyInfo.address}</Label>
-            <Input
-              id="companyAddress"
-              value={company.address || ''}
-              onChange={(e) => onFieldChange('address', e.target.value)}
-              placeholder={t.company.addressPlaceholder}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="companyCity">{t.companyInfo.city}</Label>
-            <Input
-              id="companyCity"
+              id="city"
+              placeholder={t.company?.cityPlaceholder || 'Enter city'}
               value={company.city || ''}
               onChange={(e) => onFieldChange('city', e.target.value)}
-              placeholder={t.company.cityPlaceholder}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="companyCountry">{t.companyInfo.country}</Label>
+            <Label htmlFor="country">{t.companyInfo?.country || 'Country'}</Label>
             <Input
-              id="companyCountry"
+              id="country"
+              placeholder={t.company?.countryPlaceholder || 'Enter country'}
               value={company.country || ''}
               onChange={(e) => onFieldChange('country', e.target.value)}
-              placeholder={t.company.countryPlaceholder}
             />
           </div>
         </div>
       </TabsContent>
       
-      <TabsContent value="english" className="space-y-4">
+      {/* English content */}
+      <TabsContent value="english" className="space-y-4 mt-2">
+        <div className="space-y-2">
+          <Label htmlFor="name_en">{t.companyInfo?.name || 'Company Name'} (EN)</Label>
+          <Input
+            id="name_en"
+            placeholder="Enter company name in English"
+            value={company.name_en || ''}
+            onChange={(e) => onFieldChange('name_en', e.target.value)}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="address_en">{t.companyInfo?.address || 'Address'} (EN)</Label>
+          <Input
+            id="address_en"
+            placeholder="Enter company address in English"
+            value={company.address_en || ''}
+            onChange={(e) => onFieldChange('address_en', e.target.value)}
+          />
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="companyNameEn">{t.companyInfo.name} (English) *</Label>
+            <Label htmlFor="city_en">{t.companyInfo?.city || 'City'} (EN)</Label>
             <Input
-              id="companyNameEn"
-              value={company.name_en || ''}
-              onChange={(e) => onFieldChange('name_en', e.target.value)}
-              placeholder="Enter company name in English"
-            />
-          </div>
-          
-          <div className="col-span-1 md:col-span-2 space-y-2">
-            <Label htmlFor="companyAddressEn">{t.companyInfo.address} (English)</Label>
-            <Input
-              id="companyAddressEn"
-              value={company.address_en || ''}
-              onChange={(e) => onFieldChange('address_en', e.target.value)}
-              placeholder="Enter company address in English"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="companyCityEn">{t.companyInfo.city} (English)</Label>
-            <Input
-              id="companyCityEn"
+              id="city_en"
+              placeholder="Enter city in English"
               value={company.city_en || ''}
               onChange={(e) => onFieldChange('city_en', e.target.value)}
-              placeholder="Enter city in English"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="companyCountryEn">{t.companyInfo.country} (English)</Label>
+            <Label htmlFor="country_en">{t.companyInfo?.country || 'Country'} (EN)</Label>
             <Input
-              id="companyCountryEn"
+              id="country_en"
+              placeholder="Enter country in English"
               value={company.country_en || ''}
               onChange={(e) => onFieldChange('country_en', e.target.value)}
-              placeholder="Enter country in English"
             />
           </div>
         </div>

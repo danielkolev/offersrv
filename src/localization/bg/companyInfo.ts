@@ -3,9 +3,10 @@ import { CompanyInfoTranslations } from '@/types/language/companyInfo';
 
 export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
   title: 'Информация за фирма',
-  description: 'Въведете информация за вашата фирма', // Added description
+  description: 'Въведете информация за вашата фирма',
   name: 'Име на фирма',
   vatNumber: 'ДДС номер',
+  eikNumber: 'ЕИК номер', // Added EIK field
   address: 'Адрес',
   city: 'Град',
   country: 'Държава',

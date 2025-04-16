@@ -1,9 +1,10 @@
 
 export interface CompanyInfoTranslations {
   title: string;
-  description: string; // Added description property
+  description: string;
   name: string;
   vatNumber: string;
+  eikNumber: string; // Added EIK field
   address: string;
   city: string;
   country: string;

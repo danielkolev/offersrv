@@ -21,6 +21,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     id: '',
     name: '',
     vat_number: '',
+    eik_number: '', // Added EIK field
     address: '',
     city: '',
     country: '',
@@ -32,7 +33,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     address_en: '',
     city_en: '',
     country_en: '',
-    slogan: '' // Added slogan field
+    slogan: ''
   });
 
   // Load company data when component mounts
@@ -58,6 +59,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           id: data.id,
           name: data.name || '',
           vat_number: data.vat_number || '',
+          eik_number: data.eik_number || '', // Added EIK field
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',
@@ -69,7 +71,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           address_en: data.address_en || '',
           city_en: data.city_en || '',
           country_en: data.country_en || '',
-          slogan: data.slogan || '' // Added slogan field
+          slogan: data.slogan || ''
         });
       }
     } catch (error: any) {
@@ -94,6 +96,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
         .update({
           name: company.name,
           vat_number: company.vat_number,
+          eik_number: company.eik_number, // Added EIK field
           address: company.address,
           city: company.city,
           country: company.country,
@@ -105,7 +108,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           address_en: company.address_en,
           city_en: company.city_en,
           country_en: company.country_en,
-          slogan: company.slogan // Added slogan field
+          slogan: company.slogan
         })
         .eq('id', companyId);
         

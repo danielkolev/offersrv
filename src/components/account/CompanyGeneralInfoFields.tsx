@@ -2,7 +2,6 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Company } from '@/types/company';
 import { Translations } from '@/types/language';
 
@@ -12,96 +11,71 @@ interface CompanyGeneralInfoFieldsProps {
   t: Translations;
 }
 
-const CompanyGeneralInfoFields = ({ 
-  company, 
-  onFieldChange, 
-  t 
-}: CompanyGeneralInfoFieldsProps) => {
+const CompanyGeneralInfoFields = ({ company, onFieldChange, t }: CompanyGeneralInfoFieldsProps) => {
   return (
-    <div className="space-y-4 py-4">
+    <div className="space-y-4 mt-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="vat_number">{t.companyInfo.vatNumber}</Label>
+          <Label htmlFor="vat_number">{t.companyInfo?.vatNumber || 'VAT Number'}</Label>
           <Input
             id="vat_number"
+            placeholder={t.company?.vatPlaceholder || 'Enter VAT number'}
             value={company.vat_number || ''}
             onChange={(e) => onFieldChange('vat_number', e.target.value)}
-            placeholder={t.company.vatPlaceholder}
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="phone">{t.companyInfo.phone}</Label>
+          <Label htmlFor="eik_number">{t.companyInfo?.eikNumber || 'EIK Number'}</Label>
+          <Input
+            id="eik_number"
+            placeholder={t.company?.eikPlaceholder || 'Enter EIK number'}
+            value={company.eik_number || ''}
+            onChange={(e) => onFieldChange('eik_number', e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="phone">{t.companyInfo?.phone || 'Phone'}</Label>
           <Input
             id="phone"
+            placeholder={t.company?.phonePlaceholder || 'Enter phone number'}
             value={company.phone || ''}
             onChange={(e) => onFieldChange('phone', e.target.value)}
-            placeholder={t.company.phonePlaceholder}
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="email">{t.companyInfo.email}</Label>
+          <Label htmlFor="email">{t.companyInfo?.email || 'Email'}</Label>
           <Input
             id="email"
-            type="email"
+            placeholder={t.company?.emailPlaceholder || 'Enter email address'}
             value={company.email || ''}
             onChange={(e) => onFieldChange('email', e.target.value)}
-            placeholder={t.company.emailPlaceholder}
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="website">{t.companyInfo.website}</Label>
-          <Input
-            id="website"
-            value={company.website || ''}
-            onChange={(e) => onFieldChange('website', e.target.value)}
-            placeholder={t.company.websitePlaceholder}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="address">{t.companyInfo.address}</Label>
-          <Input
-            id="address"
-            value={company.address || ''}
-            onChange={(e) => onFieldChange('address', e.target.value)}
-            placeholder={t.company.addressPlaceholder}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="city">{t.companyInfo.city}</Label>
-          <Input
-            id="city"
-            value={company.city || ''}
-            onChange={(e) => onFieldChange('city', e.target.value)}
-            placeholder={t.company.cityPlaceholder}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="country">{t.companyInfo.country}</Label>
-          <Input
-            id="country"
-            value={company.country || ''}
-            onChange={(e) => onFieldChange('country', e.target.value)}
-            placeholder={t.company.countryPlaceholder}
-          />
-        </div>
-        
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="slogan">{t.companyInfo.slogan}</Label>
-          <Textarea
-            id="slogan"
-            value={company.slogan || ''}
-            onChange={(e) => onFieldChange('slogan', e.target.value)}
-            placeholder={t.companyInfo.sloganPlaceholder}
-            className="resize-none"
-            rows={2}
-          />
-        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="website">{t.companyInfo?.website || 'Website'}</Label>
+        <Input
+          id="website"
+          placeholder={t.company?.websitePlaceholder || 'Enter website URL'}
+          value={company.website || ''}
+          onChange={(e) => onFieldChange('website', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="slogan">{t.companyInfo?.slogan || 'Company Slogan'}</Label>
+        <Input
+          id="slogan"
+          placeholder={t.companyInfo?.sloganPlaceholder || 'Enter company slogan'}
+          value={company.slogan || ''}
+          onChange={(e) => onFieldChange('slogan', e.target.value)}
+        />
       </div>
     </div>
   );

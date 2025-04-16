@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { getLatestDraftFromDatabase } from '@/components/management/offers/draftOffersService';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useOfferInitialization = (
   shouldLoadDraft: boolean = false,
@@ -13,10 +14,52 @@ export const useOfferInitialization = (
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { resetOffer, setOffer } = useOffer();
+  const { resetOffer, setOffer, updateCompanyInfo } = useOffer();
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
+
+  // Initialize company data for the offer
+  const loadCompanyData = useCallback(async () => {
+    if (!user) return null;
+    
+    try {
+      // Get the selected company ID from localStorage
+      const companyId = localStorage.getItem('selectedCompanyId');
+      
+      if (!companyId) return null;
+      
+      const { data, error } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('id', companyId)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data) {
+        return {
+          id: data.id,
+          name: data.name,
+          vatNumber: data.vat_number || '',
+          eikNumber: data.eik_number || '',
+          address: data.address || '',
+          city: data.city || '',
+          country: data.country || '',
+          phone: data.phone || '',
+          email: data.email || '',
+          website: data.website || '',
+          logo: data.logo_url || null,
+          slogan: data.slogan || ''
+        };
+      }
+      
+      return null;
+    } catch (err) {
+      console.error('Error loading company data:', err);
+      return null;
+    }
+  }, [user]);
 
   // Инициализация состояния оферты - загрузка черновика или сброс
   const initializeOfferState = useCallback(async () => {
@@ -52,15 +95,33 @@ export const useOfferInitialization = (
           } else {
             console.error('useOfferInitialization: Draft has invalid data', draftOffer);
             await resetOffer();
+            
+            // Try to load company data for a new offer
+            const companyData = await loadCompanyData();
+            if (companyData) {
+              updateCompanyInfo(companyData);
+            }
           }
         } else {
           console.log('useOfferInitialization: No draft found, using default state');
           await resetOffer();
+          
+          // Try to load company data for a new offer
+          const companyData = await loadCompanyData();
+          if (companyData) {
+            updateCompanyInfo(companyData);
+          }
         }
       } else {
         // Обычная инициализация - сброс к начальному состоянию
         console.log('useOfferInitialization: Normal initialization, resetting offer state');
         await resetOffer();
+        
+        // Try to load company data for a new offer
+        const companyData = await loadCompanyData();
+        if (companyData) {
+          updateCompanyInfo(companyData);
+        }
       }
       
       setHasInitialized(true);
@@ -71,7 +132,7 @@ export const useOfferInitialization = (
     } finally {
       setIsInitializing(false);
     }
-  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, draftId, toast, t.offer.draftLoaded, t.offer.draftRestoredDescription, isInitializing]);
+  }, [user, resetOffer, setOffer, hasInitialized, shouldLoadDraft, draftId, toast, t.offer.draftLoaded, t.offer.draftRestoredDescription, isInitializing, loadCompanyData, updateCompanyInfo]);
 
   // Запускаем инициализацию при монтировании компонента
   useEffect(() => {

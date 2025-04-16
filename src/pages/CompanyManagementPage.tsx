@@ -4,24 +4,82 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CompanySelector from '@/components/company/CompanySelector';
 import CompanyInfoSettings from '@/components/account/CompanyInfoSettings';
 import CompanyManager from '@/components/company/CompanyManager';
 import CompanyBankSettings from '@/components/settings/CompanyBankSettings';
 import BackButton from '@/components/navigation/BackButton';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const CompanyManagementPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load selected company from localStorage on initial load
+  // Load or create a company when the user visits this page
   useEffect(() => {
-    const storedCompanyId = localStorage.getItem('selectedCompanyId');
-    if (storedCompanyId) {
-      setSelectedCompanyId(storedCompanyId);
-    }
-  }, []);
+    const loadOrCreateCompany = async () => {
+      if (!user) return;
+      
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // First try to get the user's existing company
+        const { data, error } = await supabase
+          .from('organizations')
+          .select('id')
+          .eq('owner_id', user.id)
+          .limit(1)
+          .single();
+          
+        if (error) {
+          // If no company found, create one
+          if (error.code === 'PGRST116') {
+            const { data: newCompany, error: createError } = await supabase
+              .from('organizations')
+              .insert({
+                name: user.email?.split('@')[0] || 'My Company',
+                owner_id: user.id
+              })
+              .select('id')
+              .single();
+              
+            if (createError) throw createError;
+            if (newCompany) {
+              setSelectedCompanyId(newCompany.id);
+              localStorage.setItem('selectedCompanyId', newCompany.id);
+            }
+          } else {
+            throw error;
+          }
+        } else if (data) {
+          setSelectedCompanyId(data.id);
+          localStorage.setItem('selectedCompanyId', data.id);
+        }
+      } catch (err: any) {
+        console.error('Error loading/creating company:', err);
+        setError(err.message);
+        toast({
+          title: t.common.error,
+          description: err.message,
+          variant: 'destructive'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadOrCreateCompany();
+  }, [user, toast, t.common.error]);
+
+  const handleSelectCompany = (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    localStorage.setItem('selectedCompanyId', companyId);
+  };
 
   if (!user) {
     return (
@@ -33,11 +91,6 @@ const CompanyManagementPage = () => {
       </div>
     );
   }
-
-  const handleSelectCompany = (companyId: string) => {
-    setSelectedCompanyId(companyId);
-    localStorage.setItem('selectedCompanyId', companyId);
-  };
 
   return (
     <div className="flex-1 space-y-6 p-6">
@@ -85,7 +138,13 @@ const CompanyManagementPage = () => {
       ) : (
         <Card>
           <CardContent className="p-8 text-center">
-            <p>{t.company.selectFirst}</p>
+            {isLoading ? (
+              <p>{t.common.loading}...</p>
+            ) : error ? (
+              <p className="text-destructive">{error}</p>
+            ) : (
+              <p>{t.company.selectFirst}</p>
+            )}
           </CardContent>
         </Card>
       )}

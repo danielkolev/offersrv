@@ -41,6 +41,7 @@ export interface CompanyTranslations {
   // Placeholder texts
   namePlaceholder: string;
   vatPlaceholder: string;
+  eikPlaceholder: string; // Added EIK placeholder
   addressPlaceholder: string;
   cityPlaceholder: string;
   countryPlaceholder: string;
