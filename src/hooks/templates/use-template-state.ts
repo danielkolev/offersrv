@@ -26,7 +26,7 @@ export function useTemplateState(): TemplateState {
     setDefaultFailed,
     defaultTemplateId,
     
-    // Also expose the setter functions
+    // Include setter functions
     setUserTemplates,
     setSampleTemplates,
     setIsLoading,

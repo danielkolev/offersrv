@@ -15,6 +15,18 @@ export interface TemplateState {
   defaultTemplateSet: boolean;
   setDefaultFailed: boolean;
   defaultTemplateId: string | null;
+  
+  // Setter functions
+  setUserTemplates: (templates: TemplateType[] | ((prev: TemplateType[]) => TemplateType[])) => void;
+  setSampleTemplates: (templates: TemplateType[] | ((prev: TemplateType[]) => TemplateType[])) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  setTemplateCreated: (created: boolean) => void;
+  setTemplateUpdated: (updated: boolean) => void;
+  setTemplateDeleted: (deleted: boolean) => void;
+  setSaveTemplateFailed: (failed: boolean) => void;
+  setDefaultTemplateSet: (set: boolean) => void;
+  setSetDefaultFailed: (failed: boolean) => void;
+  setDefaultTemplateId: (id: string | null) => void;
 }
 
 export interface TemplateOperations {
