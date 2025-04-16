@@ -34,7 +34,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   };
   
   return (
-    <div className="p-4 flex justify-end gap-2 no-print">
+    <div className="p-4 flex justify-end gap-2 no-print action-buttons">
       <Button variant="outline" onClick={onCopy} className="gap-2">
         <Copy size={16} /> {t.common.copy}
       </Button>

@@ -59,15 +59,14 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
                 {offer.company.country}
               </p>
             )}
-            {(offer.company.phone || offer.company.email) && (
+            {(offer.company.phone || offer.company.email || offer.company.website) && (
               <p>
-                {offer.company.phone} 
-                {offer.company.phone && offer.company.email && ' | '}
-                {offer.company.email}
+                {offer.company.phone && <span>{offer.company.phone}</span>}
+                {offer.company.phone && (offer.company.email || offer.company.website) && <span> | </span>}
+                {offer.company.email && <span>{offer.company.email}</span>}
+                {offer.company.email && offer.company.website && <span> | </span>}
+                {offer.company.website && <span>{offer.company.website}</span>}
               </p>
-            )}
-            {offer.company.website && (
-              <p>{offer.company.website}</p>
             )}
           </div>
         </div>

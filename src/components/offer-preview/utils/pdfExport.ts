@@ -20,17 +20,37 @@ export const generatePdf = (
   // Add temporary class for PDF export
   element.classList.add('pdf-export');
   
+  // Hide action buttons during PDF generation
+  const actionButtons = document.querySelector('.action-buttons');
+  let actionButtonsDisplayStyle = '';
+  if (actionButtons) {
+    actionButtonsDisplayStyle = actionButtons.getAttribute('style') || '';
+    actionButtons.setAttribute('style', 'display: none !important');
+  }
+  
   if (onStart) onStart();
 
   html2pdf().set(options).from(element).save()
     .then(() => {
       // Remove temporary class
       element.classList.remove('pdf-export');
+      
+      // Restore action buttons visibility
+      if (actionButtons) {
+        actionButtons.setAttribute('style', actionButtonsDisplayStyle);
+      }
+      
       if (onSuccess) onSuccess();
     })
     .catch((error) => {
       console.error("PDF generation error:", error);
       element.classList.remove('pdf-export');
+      
+      // Restore action buttons visibility
+      if (actionButtons) {
+        actionButtons.setAttribute('style', actionButtonsDisplayStyle);
+      }
+      
       if (onError) onError(error);
     });
 };
