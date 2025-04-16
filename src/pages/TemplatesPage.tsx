@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useTemplateManagement } from '@/hooks/use-template-management';
+import { useTemplateManagement } from '@/hooks/templates';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';

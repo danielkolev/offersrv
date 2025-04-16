@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Plus, Check, Trash, Pencil } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import { useTemplateManagement } from '@/hooks/use-template-management';
+import { useTemplateManagement } from '@/hooks/templates';
 import { TemplateType } from '@/types/template';
 import TemplateCard from '@/components/settings/offer-templates/TemplateCard';
 import { useToast } from '@/hooks/use-toast';

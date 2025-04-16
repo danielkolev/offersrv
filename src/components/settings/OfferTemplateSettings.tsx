@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { BookOpen, PlusCircle } from 'lucide-react';
-import { useTemplateManagement } from '@/hooks/use-template-management';
+import { useTemplateManagement } from '@/hooks/templates';
 import CreateTemplateDialog from './offer-templates/CreateTemplateDialog';
 import TemplatesList from './offer-templates/TemplatesList';
 import { TemplateType } from '@/types/template';
