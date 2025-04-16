@@ -41,6 +41,9 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
   const subtotal = calculateSubtotal();
   const vat = calculateVat();
   const total = calculateTotal();
+  
+  // Get attention text based on language
+  const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
 
   return (
     <>
@@ -63,18 +66,23 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
           <div className="relative z-10 flex justify-between items-center">
             <div className="flex items-center gap-4">
               {settings?.layout?.showLogo && (
-                <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center text-white">
-                  {offer.company.logo ? (
-                    <img src={offer.company.logo} alt={offer.company.name} className="w-14 h-14 object-contain" />
-                  ) : (
-                    <span className="text-xl font-bold">{offer.company.name.substring(0, 2).toUpperCase()}</span>
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center text-white">
+                    {offer.company.logo ? (
+                      <img src={offer.company.logo} alt={offer.company.name} className="w-14 h-14 object-contain" />
+                    ) : (
+                      <span className="text-xl font-bold">{offer.company.name.substring(0, 2).toUpperCase()}</span>
+                    )}
+                  </div>
+                  {offer.company.slogan && (
+                    <div className="text-xs text-center mt-1 max-w-24 text-white/80">{offer.company.slogan}</div>
                   )}
                 </div>
               )}
               
               <div>
                 <h1 className="text-2xl font-bold text-white">{offer.company.name}</h1>
-                {settings?.header?.showCompanySlogan && offer.company.slogan && (
+                {settings?.header?.showCompanySlogan && offer.company.slogan && !settings?.layout?.showLogo && (
                   <p className="text-white/80 text-sm">{offer.company.slogan}</p>
                 )}
               </div>
@@ -113,7 +121,7 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
                 <div className="space-y-2">
                   <p className="font-bold text-lg">{offer.client.name}</p>
                   {offer.client.contactPerson && (
-                    <p className="text-white/80">{displayLanguage === 'bg' ? 'Лице за контакт' : 'Contact'}: {offer.client.contactPerson}</p>
+                    <p className="text-white/80">{attentionText}: {offer.client.contactPerson}</p>
                   )}
                   {offer.client.address && (
                     <p className="text-white/80">{offer.client.address}</p>
@@ -194,7 +202,14 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
                         )}
                       </div>
                     </td>
-                    <td className="p-3 text-right text-white">{product.quantity}{product.unit ? ` ${product.unit}` : ''}</td>
+                    <td className="p-3 text-right text-white">
+                      <div className="flex flex-col items-end">
+                        <span>{product.quantity}</span>
+                        {product.unit && product.unit !== 'none' && (
+                          <span className="text-xs text-white/60">{product.unit}</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="p-3 text-right text-white">{product.unitPrice.toFixed(2)}</td>
                     <td className="p-3 text-right text-white font-semibold">{(product.quantity * product.unitPrice).toFixed(2)}</td>
                   </tr>

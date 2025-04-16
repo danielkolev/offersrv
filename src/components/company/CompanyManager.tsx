@@ -11,9 +11,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react';
-import CompanySettingsForm from '@/components/company/CompanySettingsForm';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
 
 interface CompanyManagerProps {
@@ -98,7 +95,6 @@ const CompanyManager = ({
     fetchUserCompany();
   }, [user, toast, t.company.error, onSelectCompany, setCompanyId]);
   
-  const handleOpenSettings = () => setOpenSettings(true);
   const handleCloseSettings = () => {
     setOpenSettings(false);
     // Refresh company data after settings changes
@@ -165,15 +161,6 @@ const CompanyManager = ({
         </div>
       </div>
       
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={handleOpenSettings}
-        disabled={isLoading}
-      >
-        <Settings className="h-4 w-4" />
-      </Button>
-      
       <Sheet open={openSettings} onOpenChange={setOpenSettings}>
         <SheetContent>
           <SheetHeader>
@@ -182,7 +169,7 @@ const CompanyManager = ({
               {t.company.manageCompanies || "Manage your company settings here."}
             </SheetDescription>
           </SheetHeader>
-          <CompanySettingsForm onClose={handleCloseSettings} refreshCompanySelection={refreshCompanySelection} />
+          <CompanyForm onClose={handleCloseSettings} refreshCompanySelection={refreshCompanySelection} />
         </SheetContent>
       </Sheet>
     </div>

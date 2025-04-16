@@ -42,6 +42,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       ? 'Благодарим Ви за доверието!' 
       : 'Thank you for your business!'
   );
+  
+  // Get the attention text based on language
+  const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
 
   return (
     <>
@@ -60,6 +63,8 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           <ClientInfoSection 
             client={offer.client} 
             settings={settings}
+            displayLanguage={displayLanguage}
+            attentionText={attentionText}
           />
           
           {/* Right column: Offer details */}
