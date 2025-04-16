@@ -27,6 +27,28 @@ export const offerBase = {
   bgn: "ЛВ",
   eur: "EUR",
   usd: "USD",
+  cancel: "Отказ",
+  
+  // Additional properties to match interface
+  previewTitle: "Преглед",
+  previewDescription: "Преглед на вашата оферта преди запазване",
+  saveOffer: "Запази оферта",
+  confirmSave: "Потвърди запазване",
+  saveDescription: "Запазете офертата, за да имате достъп до нея по-късно",
+  saveAsTemplate: "Запази като шаблон",
+  saveAsDraft: "Запази като чернова",
+  saveAsFinalized: "Запази като финализирана",
+  savedSuccessfully: "Запазено успешно",
+  saveFailed: "Грешка при запазване",
+  generatePdf: "Генерирай PDF",
+  clearConfirm: "Потвърждение за изчистване",
+  fromTemplate: "От шаблон",
+  item: "Позиция",
+  qty: "Бр.",
+  total: "Общо",
+  subtotal: "Междинна сума",
+  vat: "ДДС",
+  totalAmount: "Обща сума",
   
   // Language options
   languageOptions: {

@@ -27,6 +27,28 @@ export const offerBase = {
   bgn: "BGN",
   eur: "EUR",
   usd: "USD",
+  cancel: "Cancel",
+  
+  // Additional properties to match interface
+  previewTitle: "Preview",
+  previewDescription: "Preview your offer before saving",
+  saveOffer: "Save Offer",
+  confirmSave: "Confirm Save",
+  saveDescription: "Save your offer to access it later",
+  saveAsTemplate: "Save as Template",
+  saveAsDraft: "Save as Draft",
+  saveAsFinalized: "Save as Finalized",
+  savedSuccessfully: "Saved Successfully",
+  saveFailed: "Save Failed",
+  generatePdf: "Generate PDF",
+  clearConfirm: "Clear Confirmation",
+  fromTemplate: "From Template",
+  item: "Item",
+  qty: "Qty",
+  total: "Total",
+  subtotal: "Subtotal",
+  vat: "VAT",
+  totalAmount: "Total Amount",
   
   // Language options
   languageOptions: {

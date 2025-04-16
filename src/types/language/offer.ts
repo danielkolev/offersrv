@@ -76,30 +76,6 @@ export interface OfferTranslations {
   draftRestoredDescription: string;
   returnToDraft: string;
   
-  // Additional required fields
-  saveOffer: string;
-  confirmSave: string;
-  saveDescription: string;
-  saveAsTemplate: string;
-  saveAsDraft: string;
-  saveAsFinalized: string;
-  savedSuccessfully: string;
-  saveFailed: string;
-  clearConfirm: string;
-  fromTemplate: string;
-  header: string;
-  fromCompany: string;
-  toCompany: string;
-  reference: string;
-  item: string;
-  qty: string;
-  total: string;
-  subtotal: string;
-  vat: string;
-  totalAmount: string;
-  previewTitle: string;
-  previewDescription: string;
-  
   // Status related translations
   status: string;
   draftStatus: string;
@@ -198,6 +174,31 @@ export interface OfferTranslations {
     pdfError: string;
     contentCopied: string;
   };
+  
+  // These properties need to be added to match the expected structure in the OfferTranslations interface
+  saveOffer: string;
+  confirmSave: string;
+  saveDescription: string;
+  saveAsTemplate: string;
+  saveAsDraft: string;
+  saveAsFinalized: string;
+  savedSuccessfully: string;
+  saveFailed: string;
+  generatePdf: string;
+  clearConfirm: string;
+  previewTitle: string;
+  previewDescription: string;
+  fromTemplate: string;
+  header: string;
+  fromCompany: string;
+  toCompany: string;
+  reference: string;
+  item: string;
+  qty: string;
+  total: string;
+  subtotal: string;
+  vat: string;
+  totalAmount: string;
   
   // Workflow related translations
   workflow: {
