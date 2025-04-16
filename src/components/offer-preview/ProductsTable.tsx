@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { formatCurrency } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
 import { cn } from '@/lib/utils';
+import { useProductUnits } from '@/hooks/use-product-units';
 
 export interface ProductsTableProps {
   products: Product[];
@@ -20,6 +21,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   settings 
 }) => {
   const { t } = useLanguage();
+  const { getLocalizedUnitName } = useProductUnits();
   
   const isCompactMode = settings?.layout?.compactMode === true;
   const isBoldPrices = settings?.content?.boldPrices !== false;
@@ -69,7 +71,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
                 <div className="flex flex-col items-end">
                   <span>{product.quantity}</span>
                   {product.unit && product.unit !== 'none' && (
-                    <span className="text-xs text-gray-500">{product.unit}</span>
+                    <span className="text-xs text-gray-500">{getLocalizedUnitName(product.unit)}</span>
                   )}
                 </div>
               </td>

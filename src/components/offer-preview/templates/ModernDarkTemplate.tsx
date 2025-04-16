@@ -44,6 +44,13 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
   
   // Get attention text based on language
   const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
+  
+  // Bank details
+  const bankDetails = settings?.footer?.bankDetails || {
+    name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
+    iban: 'BG12EXAMPLE12345678',
+    swift: 'EXAMPLESWIFT'
+  };
 
   return (
     <>
@@ -146,6 +153,13 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
                   {displayLanguage === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
+                  {!isDraft && offer.details.offerNumber && (
+                    <div className="col-span-2">
+                      <p className="text-white/60 text-sm">{displayLanguage === 'bg' ? 'Номер' : 'Number'}</p>
+                      <p className="text-white font-bold">{offer.details.offerNumber}</p>
+                    </div>
+                  )}
+                  
                   {offer.details.date && (
                     <div>
                       <p className="text-white/60 text-sm">{displayLanguage === 'bg' ? 'Дата' : 'Date'}</p>
@@ -277,9 +291,11 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
               <p className="text-white/70">{settings?.content?.footerText || (displayLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!')}</p>
               
               {settings?.footer?.showBankDetails && (
-                <div className="mt-4 text-sm text-white/60">
-                  <p>{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>IBAN: BG12EXAMPLE12345678</p>
+                <div className="mt-4 text-xs text-white/60">
+                  <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
+                  <p>{bankDetails.name}: {bankDetails.name}</p>
+                  <p>IBAN: {bankDetails.iban}</p>
+                  {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
                 </div>
               )}
               

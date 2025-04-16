@@ -43,6 +43,13 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
   const vat = calculateVat();
   const total = calculateTotal();
 
+  // Bank details
+  const bankDetails = settings?.footer?.bankDetails || {
+    name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
+    iban: 'BG12EXAMPLE12345678',
+    swift: 'EXAMPLESWIFT'
+  };
+
   return (
     <>
       <OfferActions 
@@ -122,7 +129,7 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
                 <div className="space-y-2">
                   <p className="font-bold text-lg text-gray-800">{offer.client.name}</p>
                   {offer.client.contactPerson && (
-                    <p className="text-gray-600">{displayLanguage === 'bg' ? 'Лице за контакт' : 'Contact'}: {offer.client.contactPerson}</p>
+                    <p className="text-gray-600">{displayLanguage === 'bg' ? 'на вниманието на' : 'attention to'}: {offer.client.contactPerson}</p>
                   )}
                   {offer.client.address && (
                     <p className="text-gray-600">{offer.client.address}</p>
@@ -147,6 +154,13 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
                   {displayLanguage === 'bg' ? 'Детайли на офертата' : 'Offer Details'}
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
+                  {!isDraft && offer.details.offerNumber && (
+                    <div className="col-span-2">
+                      <p className="text-gray-500 text-sm">{displayLanguage === 'bg' ? 'Номер' : 'Number'}</p>
+                      <p className="text-gray-700 font-bold">{offer.details.offerNumber}</p>
+                    </div>
+                  )}
+                  
                   {offer.details.date && (
                     <div>
                       <p className="text-gray-500 text-sm">{displayLanguage === 'bg' ? 'Дата' : 'Date'}</p>
@@ -198,7 +212,14 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
                           )}
                         </div>
                       </td>
-                      <td className="p-3 text-right text-gray-700">{product.quantity}{product.unit ? ` ${product.unit}` : ''}</td>
+                      <td className="p-3 text-right text-gray-700">
+                        <div className="flex flex-col items-end">
+                          <span>{product.quantity}</span>
+                          {product.unit && product.unit !== 'none' && (
+                            <span className="text-xs text-gray-500">{product.unit}</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="p-3 text-right text-gray-700">{product.unitPrice.toFixed(2)}</td>
                       <td className="p-3 text-right font-medium text-gray-800">{(product.quantity * product.unitPrice).toFixed(2)}</td>
                     </tr>
@@ -284,9 +305,11 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
               <p className="text-gray-500">{settings?.content?.footerText || (displayLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!')}</p>
               
               {settings?.footer?.showBankDetails && (
-                <div className="mt-4 text-sm text-gray-500">
-                  <p>{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>IBAN: BG12EXAMPLE12345678</p>
+                <div className="mt-4 text-xs text-gray-500">
+                  <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
+                  <p>{bankDetails.name}: {bankDetails.name}</p>
+                  <p>IBAN: {bankDetails.iban}</p>
+                  {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
                 </div>
               )}
               
