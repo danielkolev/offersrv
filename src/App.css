@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,6 +93,8 @@
   object-fit: contain;
   max-width: 100%;
   max-height: 100%;
+  width: auto !important;
+  height: auto !important;
 }
 
 /* Ensure content is visible when printed */
@@ -115,18 +118,77 @@
   z-index: 9999;
 }
 
+/* Print styles */
 @media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Fix for multiple pages issue */
+  .print-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    background-color: white !important;
+  }
+  
+  .print-full-content {
+    display: block !important;
+    position: relative !important;
+    overflow: visible !important;
+    max-height: none !important;
+    page-break-inside: avoid;
+  }
+  
   .offer-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 72px;
+    opacity: 0.2;
+    color: gray;
+    z-index: 1000;
+    pointer-events: none;
     display: block;
   }
   
-  /* Hide elements with no-print class */
-  .no-print {
+  /* Hide elements that shouldn't be printed */
+  button, 
+  .no-print,
+  .print-hidden {
     display: none !important;
   }
   
-  /* Show elements with print-visible class */
+  /* Ensure all content is visible */
   .print-visible {
     display: block !important;
+  }
+  
+  /* Preserve logo ratio */
+  img.pdf-preserve-ratio {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  
+  /* Show signature area if enabled */
+  .signature-area-print {
+    display: block !important;
+    margin-top: 2cm !important;
+    page-break-inside: avoid;
   }
 }

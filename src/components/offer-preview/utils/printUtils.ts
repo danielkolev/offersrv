@@ -1,5 +1,7 @@
 
-export const printContent = () => {
+import { useToast } from "@/hooks/use-toast";
+
+export const printContent = (includeDateAndSignature = false) => {
   // Save original body state
   const originalOverflow = document.body.style.overflow;
   
@@ -19,6 +21,31 @@ export const printContent = () => {
     offerPreviewContent.classList.add('print-full-content');
   }
   
+  // Add date and signature if requested
+  let signatureArea = document.querySelector('.signature-area-print');
+  if (includeDateAndSignature) {
+    if (!signatureArea) {
+      signatureArea = document.createElement('div');
+      signatureArea.className = 'signature-area-print no-print';
+      signatureArea.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ccc;">
+          <div>
+            <p style="margin-bottom: 0.5rem; font-weight: bold;">Дата:</p>
+            <p style="margin-bottom: 0; min-width: 150px; border-bottom: 1px solid #999;">&nbsp;</p>
+          </div>
+          <div>
+            <p style="margin-bottom: 0.5rem; font-weight: bold;">Подпис:</p>
+            <p style="margin-bottom: 0; min-width: 150px; border-bottom: 1px solid #999;">&nbsp;</p>
+          </div>
+        </div>
+      `;
+      offerPreviewContent?.appendChild(signatureArea);
+    }
+    signatureArea.style.display = 'block';
+  } else if (signatureArea) {
+    signatureArea.style.display = 'none';
+  }
+  
   // Prepare for printing
   document.body.classList.add('print-mode');
   document.body.style.overflow = 'visible';
@@ -34,6 +61,11 @@ export const printContent = () => {
     // Remove watermark after printing
     if (watermark && watermark.parentNode) {
       watermark.parentNode.removeChild(watermark);
+    }
+    
+    // Remove date and signature area if it was added
+    if (includeDateAndSignature && signatureArea && signatureArea.parentNode) {
+      signatureArea.parentNode.removeChild(signatureArea);
     }
     
     // Restore original visibility

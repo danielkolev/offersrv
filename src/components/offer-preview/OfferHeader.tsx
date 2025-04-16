@@ -34,6 +34,7 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
               src={offer.company.logo} 
               alt={companyName} 
               className="w-16 h-16 object-contain pdf-preserve-ratio" 
+              style={{ maxWidth: '64px', maxHeight: '64px' }}
             />
             {offer.company.slogan && (
               <div className="text-xs text-center mt-1 max-w-32 text-gray-600">{offer.company.slogan}</div>

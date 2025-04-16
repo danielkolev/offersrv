@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/context/LanguageContext';
@@ -7,6 +7,17 @@ import ActionButtons from './ActionButtons';
 import { generatePdf, getOfferFileName } from './utils/pdfExport';
 import { printContent } from './utils/printUtils';
 import { copyToClipboard } from './utils/copyUtils';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface OfferActionsProps {
   offerContentRef: React.RefObject<HTMLDivElement>;
@@ -22,6 +33,8 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   const { t } = useLanguage();
   const { toast } = useToast();
   const { offer } = useOffer();
+  const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
+  const [includeDateAndSignature, setIncludeDateAndSignature] = useState(false);
 
   const handlePrint = () => {
     // Only allow printing in view mode
@@ -32,7 +45,14 @@ const OfferActions: React.FC<OfferActionsProps> = ({
       });
       return;
     }
-    printContent();
+    
+    // Open print dialog to ask about date and signature
+    setIsPrintDialogOpen(true);
+  };
+
+  const handleConfirmPrint = () => {
+    setIsPrintDialogOpen(false);
+    printContent(includeDateAndSignature);
   };
 
   const handleExportPDF = () => {
@@ -85,13 +105,49 @@ const OfferActions: React.FC<OfferActionsProps> = ({
   };
 
   return (
-    <ActionButtons 
-      onSave={() => setIsSaveDialogOpen(true)}
-      onPrint={handlePrint}
-      onExportPDF={handleExportPDF}
-      onCopy={handleCopy}
-      mode={mode}
-    />
+    <>
+      <ActionButtons 
+        onSave={() => setIsSaveDialogOpen(true)}
+        onPrint={handlePrint}
+        onExportPDF={handleExportPDF}
+        onCopy={handleCopy}
+        mode={mode}
+      />
+      
+      <Dialog open={isPrintDialogOpen} onOpenChange={setIsPrintDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t.common.print || "Принтиране"}</DialogTitle>
+            <DialogDescription>
+              {t.offer.offerPreview.printOptionsDescription || "Изберете опции за принтиране"}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex items-start space-x-2 my-4">
+            <Checkbox 
+              id="include-date-signature" 
+              checked={includeDateAndSignature} 
+              onCheckedChange={(checked) => setIncludeDateAndSignature(checked as boolean)}
+            />
+            <Label 
+              htmlFor="include-date-signature" 
+              className="leading-tight cursor-pointer"
+            >
+              {t.offer.offerPreview.includeDateAndSignature || "Добави полета за дата и подпис"}
+            </Label>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPrintDialogOpen(false)}>
+              {t.common.cancel || "Отказ"}
+            </Button>
+            <Button onClick={handleConfirmPrint}>
+              {t.common.print || "Принтирай"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
