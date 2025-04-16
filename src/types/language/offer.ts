@@ -224,6 +224,7 @@ export interface OfferBaseTranslations {
 
 export interface OfferTranslations {
   offerPreview: OfferPreviewTranslations;
+  templates: OfferTemplatesTranslations;
   [key: string]: any; // This allows for additional properties
   createOffer: string;
   offerDetails: string;
@@ -253,25 +254,15 @@ export interface OfferTranslations {
   eur: string;
   usd: string;
   cancel: string;
-  templates: string;
-  defaultTemplate: string;
   currentTemplate: string;
   chooseTemplate: string;
-  templateName: string;
   noTemplates: string;
-  createTemplate: string;
-  saveAsTemplate: string;
   overwriteTemplate: string;
-  deleteTemplate: string;
-  deleteTemplateConfirm: string;
   templateSaved: string;
   templateDeleted: string;
-  defaultTemplateSet: string;
   chooseDefaultTemplate: string;
   templateNameRequired: string;
   useTemplate: string;
-  previewTemplate: string;
-  editTemplate: string;
   status: string;
   draftStatus: string;
   draftStatusInfo: string;

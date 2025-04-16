@@ -10,8 +10,8 @@ import { offerPreview } from './offerPreview';
 export const offer = {
   ...offerBase,
   ...offerProducts,
-  ...offerTemplates,
   ...offerStatus,
   ...offerDraft,
-  offerPreview // Keep as a nested property
+  offerPreview, // Keep as a nested property
+  templates: offerTemplates.templates // Add templates as a nested property
 };
