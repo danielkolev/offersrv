@@ -3,18 +3,26 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
-  Sidebar, 
-  SidebarContent, 
-  SidebarHeader, 
-  SidebarMenu, 
-  SidebarMenuItem, 
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { BookmarkIcon, UsersIcon, PackageIcon, Settings, Home, Building, LayoutTemplate, FileEdit } from 'lucide-react';
+import { 
+  Home, 
+  FileEdit, 
+  Files, 
+  Users, 
+  Package, 
+  LayoutTemplate, 
+  Building, 
+  Settings 
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
 
@@ -30,93 +38,35 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
   
   const isActive = (path: string) => location.pathname === path;
   
-  const handleSelectCompany = (companyId: string) => {
-    setSelectedCompanyId(companyId);
-    localStorage.setItem('selectedCompanyId', companyId);
-  };
-  
-  // Load selected company from localStorage on initial load
-  useEffect(() => {
-    const storedCompanyId = localStorage.getItem('selectedCompanyId');
-    if (storedCompanyId) {
-      setSelectedCompanyId(storedCompanyId);
-    }
-  }, []);
-  
-  // Navigation items
+  // Navigation items with icons
   const navItems = [
     {
-      name: t.common?.home || "Home",
-      path: '/',
+      name: t.navigation.home,
+      path: '/dashboard',
       icon: Home
     },
     {
-      name: t.navigation?.newOffer || "New Offer",
+      name: t.navigation.newOffer,
       path: '/new-offer',
       icon: FileEdit
     },
     {
-      name: t.savedOffers?.title || "Saved Offers",
+      name: t.navigation.savedOffers,
       path: '/saved-offers',
-      icon: BookmarkIcon
+      icon: Files
     },
     {
-      name: t.savedClients?.title || "Saved Clients",
-      path: '/saved-clients',
-      icon: UsersIcon
-    },
-    {
-      name: t.savedProducts?.title || "Saved Products",
-      path: '/saved-products',
-      icon: PackageIcon
-    },
-    {
-      name: t.common?.templates || "Templates",
-      path: '/templates',
-      icon: LayoutTemplate
-    },
-    {
-      name: t.navigation?.companies || "Companies", 
+      name: t.navigation.companies,
       path: '/company-management',
       icon: Building
     },
     {
-      name: t.settings?.title || "Settings",
+      name: t.navigation.settings,
       path: '/settings',
       icon: Settings
     }
   ];
-  
-  // For non-authenticated users or mobile view
-  if (!user) {
-    return (
-      <Sidebar variant={isMobile ? "floating" : "sidebar"}>
-        <SidebarHeader className="px-4">
-          <div className="flex items-center space-x-2 py-4">
-            <img src="/logo.svg" alt="Offersrv Logo" className="h-6" />
-            <span className="font-bold text-xl">Offersrv</span>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/')}>
-                    <Link to="/">
-                      <Home className="mr-2 h-4 w-4" />
-                      <span>{t.common?.home || "Home"}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    );
-  }
-  
+
   return (
     <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
       <SidebarHeader className="px-4">
@@ -125,19 +75,21 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
           <span className="font-bold text-xl">Offersrv</span>
         </div>
         
-        {/* Company selector below the logo */}
-        <div className="mt-4 mb-2 max-w-full">
-          <div className="truncate">
-            <CompanyManager 
-              onSelectCompany={handleSelectCompany} 
-              selectedCompanyId={selectedCompanyId}
-            />
+        {user && (
+          <div className="mt-4 mb-2 max-w-full">
+            <div className="truncate">
+              <CompanyManager 
+                onSelectCompany={setSelectedCompanyId} 
+                selectedCompanyId={selectedCompanyId}
+                disableCreate={true} // Disable company creation for MVP
+              />
+            </div>
           </div>
-        </div>
+        )}
       </SidebarHeader>
+      
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t.common?.navigation || "Navigation"}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
@@ -148,7 +100,7 @@ const OfferSidebar = ({ isMobile = false }: OfferSidebarProps) => {
                     tooltip={item.name}
                   >
                     <Link to={item.path}>
-                      <item.icon className="mr-2 h-4 w-4" />
+                      <item.icon className="h-4 w-4" />
                       <span className="truncate">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>

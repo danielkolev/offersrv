@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -12,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useOffer } from '@/context/offer';
 import { formatDistanceToNow } from 'date-fns';
 import { bg, enUS } from 'date-fns/locale';
+import OfferPreviewModal from '@/components/management/offers/saved-offer-item/OfferPreviewModal';
 
 const HomeContent = () => {
   const { t, language, currency } = useLanguage();
@@ -20,7 +20,8 @@ const HomeContent = () => {
   const { setOffer, resetOffer } = useOffer();
   const [recentOffers, setRecentOffers] = useState<SavedOffer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [selectedOffer, setSelectedOffer] = useState<SavedOffer | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -87,39 +88,13 @@ const HomeContent = () => {
     }
   };
 
-  const handleOfferClick = async (offer: SavedOffer) => {
-    if (isNavigating) return; // Prevent multiple clicks
-    setIsNavigating(true);
-    
-    try {
-      console.log("HomeContent: Loading offer with data:", offer.offer_data);
-      
-      if (offer?.offer_data) {
-        // Navigate to the new offer page with state that indicates we should load this offer
-        navigate('/new-offer', {
-          state: { 
-            loadSavedOffer: true,
-            savedOfferId: offer.id,
-            offerData: offer.offer_data
-          }
-        });
-      } else {
-        console.error("HomeContent: Invalid offer data:", offer);
-        await resetOffer();
-        navigate('/new-offer');
-      }
-    } catch (error) {
-      console.error("HomeContent: Error loading offer:", error);
-      await resetOffer();
-      navigate('/new-offer');
-    } finally {
-      setIsNavigating(false);
-    }
+  const handleOfferClick = (offer: SavedOffer) => {
+    setSelectedOffer(offer);
+    setIsPreviewOpen(true);
   };
 
-  const handleCreateNewOffer = async () => {
-    // Reset offer state before creating a new one
-    await resetOffer();
+  const handleCreateNewOffer = () => {
+    resetOffer();
     navigate('/new-offer');
   };
 
@@ -127,7 +102,6 @@ const HomeContent = () => {
     <div className="space-y-8">
       <section className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">{t.home.quickActions}</h2>
-        {/* Removed draft indicator from here */}
       </section>
       
       <section>
@@ -200,6 +174,18 @@ const HomeContent = () => {
           )}
         </div>
       </section>
+
+      {/* Preview Modal */}
+      {selectedOffer && (
+        <OfferPreviewModal
+          savedOffer={selectedOffer}
+          isOpen={isPreviewOpen}
+          onClose={() => {
+            setIsPreviewOpen(false);
+            setSelectedOffer(null);
+          }}
+        />
+      )}
     </div>
   );
 };

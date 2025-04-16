@@ -1,48 +1,167 @@
-
-import React, { useState, useCallback, useEffect } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import CompanyForm from './CompanyForm';
-import CompanySelector from './CompanySelector';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Button } from '@/components/ui/button';
+import { Settings } from 'lucide-react';
+import CompanySettingsForm from './CompanySettingsForm';
+import { useCompanySelection } from '@/hooks/useCompanySelection';
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
-  selectedCompanyId?: string | null;
+  selectedCompanyId: string | null;
+  disableCreate?: boolean; // Add this prop
 }
 
-export const CompanyManager = ({ onSelectCompany, selectedCompanyId }: CompanyManagerProps) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+const CompanyManager = ({ 
+  onSelectCompany, 
+  selectedCompanyId,
+  disableCreate = false // Default to false to maintain backward compatibility
+}: CompanyManagerProps) => {
+  const { t } = useLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [openSettings, setOpenSettings] = useState(false);
+  const { 
+    selectedCompanyId: currentCompanyId,
+    isLoading,
+    error,
+    setCompanyId,
+    resetCompanySelection,
+    refreshCompanySelection
+  } = useCompanySelection();
   
-  // Inform parent about selected company when it changes
-  useEffect(() => {
-    if (selectedCompanyId) {
-      console.log("CompanyManager: Using selected company ID:", selectedCompanyId);
-    }
-  }, [selectedCompanyId]);
+  const handleOpenSettings = () => setOpenSettings(true);
+  const handleCloseSettings = () => setOpenSettings(false);
+
+  const CompanySelector = () => {
+    const [companies, setCompanies] = useState<{ id: string; name: string; }[]>([]);
+    const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
+    const [errorCompanies, setErrorCompanies] = useState<string | null>(null);
   
-  const handleCreateCompany = useCallback(() => {
-    setDialogOpen(true);
-  }, []);
+    const fetchCompanies = useCallback(async () => {
+      if (!user) return;
   
-  const handleCompanyCreated = useCallback((companyId: string) => {
-    setDialogOpen(false);
-    onSelectCompany(companyId);
-  }, [onSelectCompany]);
+      setIsLoadingCompanies(true);
+      setErrorCompanies(null);
   
+      try {
+        const { data, error } = await supabase
+          .from('organizations')
+          .select('id, name')
+          .contains('members', [user.id]);
+  
+        if (error) {
+          setErrorCompanies(error.message);
+          toast({
+            title: t.company.error,
+            description: t.company.error + ': ' + error.message,
+            variant: "destructive",
+          })
+          console.error("CompanySelector: Error fetching companies:", error);
+        } else {
+          if (data && data.length > 0) {
+            const formattedCompanies = data.map(company => ({
+              id: company.id,
+              name: company.name,
+            }));
+            setCompanies(formattedCompanies);
+          } else {
+            console.log("CompanySelector: No companies found for user");
+            setCompanies([]);
+          }
+        }
+      } catch (err: any) {
+        setErrorCompanies(err.message);
+        toast({
+          title: t.company.error,
+          description: t.company.error + ': ' + err.message,
+          variant: "destructive",
+        })
+        console.error("CompanySelector: Unexpected error fetching companies:", err);
+      } finally {
+        setIsLoadingCompanies(false);
+      }
+    }, [user, t, toast]);
+  
+    useEffect(() => {
+      fetchCompanies();
+    }, [fetchCompanies]);
+  
+    const handleSelect = (value: string) => {
+      setCompanyId(value);
+      onSelectCompany(value);
+    };
+  
+    return (
+      <Select onValueChange={handleSelect} defaultValue={selectedCompanyId || ""}>
+        <SelectTrigger className="w-[280px]">
+          <SelectValue placeholder={t.company.selectPlaceholder || "Select company"} />
+        </SelectTrigger>
+        <SelectContent>
+          {isLoadingCompanies ? (
+            <SelectItem value="loading" disabled>{t.common?.loading || "Loading..."}</SelectItem>
+          ) : errorCompanies ? (
+            <SelectItem value="error" disabled>{t.company.error || "Error"}: {errorCompanies}</SelectItem>
+          ) : companies.length > 0 ? (
+            companies.map((company) => (
+              <SelectItem key={company.id} value={company.id}>
+                {company.name}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="no-companies" disabled>
+              {t.company.noCompanies || "No companies"}
+            </SelectItem>
+          )}
+        </SelectContent>
+      </Select>
+    );
+  };
+
   return (
-    <>
-      <CompanySelector 
-        onSelectCompany={onSelectCompany}
-        onCreateCompany={handleCreateCompany}
+    <div className="flex items-center space-x-2">
+      <CompanySelector
         selectedCompanyId={selectedCompanyId}
+        onSelectCompany={onSelectCompany}
       />
-      
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <CompanyForm onSuccess={handleCompanyCreated} />
-        </DialogContent>
-      </Dialog>
-    </>
+      {!disableCreate && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleOpenSettings}
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+      )}
+      <Sheet open={openSettings} onOpenChange={setOpenSettings}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{t.company.companySettings || "Company Settings"}</SheetTitle>
+            <SheetDescription>
+              {t.company.manageCompanies || "Manage your company settings here."}
+            </SheetDescription>
+          </SheetHeader>
+          <CompanySettingsForm onClose={handleCloseSettings} refreshCompanySelection={refreshCompanySelection} />
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 };
 
-export default React.memo(CompanyManager);
+export default CompanyManager;
