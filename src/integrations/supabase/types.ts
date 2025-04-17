@@ -292,6 +292,7 @@ export type Database = {
           address_en: string | null
           city: string | null
           city_en: string | null
+          conclusion_text: string | null
           country: string | null
           country_en: string | null
           created_at: string
@@ -313,6 +314,7 @@ export type Database = {
           address_en?: string | null
           city?: string | null
           city_en?: string | null
+          conclusion_text?: string | null
           country?: string | null
           country_en?: string | null
           created_at?: string
@@ -334,6 +336,7 @@ export type Database = {
           address_en?: string | null
           city?: string | null
           city_en?: string | null
+          conclusion_text?: string | null
           country?: string | null
           country_en?: string | null
           created_at?: string

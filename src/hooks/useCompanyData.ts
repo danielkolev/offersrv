@@ -65,7 +65,7 @@ export const useCompanyData = (companyId: string | null) => {
           website: data.website || '',
           logo: data.logo_url || null,
           slogan: data.slogan || '',
-          conclusionText: data.conclusion_text || '' // Add the conclusion text
+          conclusionText: data.conclusion_text || '' // Access the conclusion_text field
         });
         
         // Отмечаем, что данные были загружены

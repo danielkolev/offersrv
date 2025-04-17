@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,7 +33,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     city_en: '',
     country_en: '',
     slogan: '',
-    conclusion_text: '' // Initialize the new field
+    conclusion_text: '' // Include the conclusion_text field
   });
 
   // Load company data when component mounts
@@ -73,7 +72,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           city_en: data.city_en || '',
           country_en: data.country_en || '',
           slogan: data.slogan || '',
-          conclusion_text: data.conclusion_text || '' // Load the conclusion text
+          conclusion_text: data.conclusion_text || '' // Load the conclusion_text
         });
       }
     } catch (error: any) {
@@ -109,7 +108,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
         city_en: company.city_en,
         country_en: company.country_en,
         slogan: company.slogan,
-        conclusion_text: company.conclusion_text // Include conclusion text in the update
+        conclusion_text: company.conclusion_text // Include conclusion_text in the update
       };
       
       // Update organization record
