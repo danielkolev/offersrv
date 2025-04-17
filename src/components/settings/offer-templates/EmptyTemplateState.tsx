@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Info } from 'lucide-react';
+import { Plus, FileTemplate } from 'lucide-react';
 
 interface EmptyTemplateStateProps {
   onCreateNew: () => void;
@@ -10,17 +10,17 @@ interface EmptyTemplateStateProps {
 
 const EmptyTemplateState: React.FC<EmptyTemplateStateProps> = ({ onCreateNew }) => {
   const { t } = useLanguage();
-  
+
   return (
-    <div className="text-center py-8 text-muted-foreground">
-      <Info className="h-12 w-12 mx-auto mb-2 text-muted-foreground/50" />
-      <p>{t.offer.templates.noTemplates}</p>
-      <Button 
-        variant="link" 
-        className="mt-2"
-        onClick={onCreateNew}
-      >
-        {t.offer.templates.createFromCurrent}
+    <div className="flex flex-col items-center justify-center p-8 border border-dashed rounded-lg">
+      <FileTemplate className="h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-lg font-medium mb-2">{t.offer.templates.emptyState?.title || t.offer.templates.noTemplates}</h3>
+      <p className="text-muted-foreground mb-4 text-center">
+        {t.offer.templates.emptyState?.description || t.offer.templates.templates.empty}
+      </p>
+      <Button onClick={onCreateNew} className="flex items-center gap-2">
+        <Plus className="h-4 w-4" />
+        {t.offer.templates.emptyState?.createFirst || t.offer.templates.create}
       </Button>
     </div>
   );

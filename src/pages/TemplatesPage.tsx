@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
 import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Trash } from 'lucide-react';
+import { ArrowLeft, Trash, Eye } from 'lucide-react';
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -20,6 +20,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from '@/components/ui/alert-dialog';
+import { Card } from '@/components/ui/card';
 
 const TemplatesPage = () => {
   const { templateId } = useParams();
@@ -104,6 +105,14 @@ const TemplatesPage = () => {
         
         {templateId !== 'new' && (
           <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab('preview')}
+              className="flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              {t.settings.preview}
+            </Button>
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
@@ -140,49 +149,25 @@ const TemplatesPage = () => {
         </TabsList>
         
         <TabsContent value="settings">
-          {templateId === 'new' ? (
-            <div className="flex flex-col h-full space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                <div className="flex flex-col">
-                  <TemplateSettings 
-                    selectedTemplateId={templateId}
-                    onSettingsChange={handleSettingsChange}
-                    onSave={handleUpdateTemplate}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <TemplatePreview settings={selectedSettings} />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col h-full space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                <div className="flex flex-col">
-                  <TemplateSettings 
-                    selectedTemplateId={templateId || ''}
-                    onSettingsChange={handleSettingsChange}
-                    onSave={handleUpdateTemplate}
-                    initialSettings={selectedTemplate?.settings}
-                    initialName={selectedTemplate?.name}
-                    initialDescription={selectedTemplate?.description}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <TemplatePreview settings={selectedSettings} />
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="flex flex-col h-full">
+            <TemplateSettings 
+              selectedTemplateId={templateId || 'new'}
+              onSettingsChange={handleSettingsChange}
+              onSave={handleUpdateTemplate}
+              initialSettings={selectedTemplate?.settings}
+              initialName={selectedTemplate?.name}
+              initialDescription={selectedTemplate?.description}
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="preview">
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <Card className="bg-white rounded-lg shadow-md p-6 min-h-[600px]">
             <TemplatePreview 
               settings={selectedSettings} 
               fullScreen={true} 
             />
-          </div>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
