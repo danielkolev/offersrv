@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { ClassicTemplate } from '@/components/offer-preview/templates/ClassicTemplate';
-import { ModernDarkTemplate } from '@/components/offer-preview/templates/ModernDarkTemplate';
+import ClassicTemplate from '@/components/offer-preview/templates/ClassicTemplate';
+import ModernDarkTemplate from '@/components/offer-preview/templates/ModernDarkTemplate';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export interface TemplatePreviewProps {
@@ -75,7 +75,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
         <Skeleton className="h-4 w-1/2 mb-2" />
         <Skeleton className="h-4 w-2/3 mb-2" />
         <Skeleton className="h-4 w-3/5" />
-        <p className="text-center mt-6 text-muted-foreground">{t.settings.noTemplateSelected}</p>
+        <p className="text-center mt-6 text-muted-foreground">{t.settings.noTemplates}</p>
       </div>
     );
   }

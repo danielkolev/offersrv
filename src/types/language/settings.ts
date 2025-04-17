@@ -1,6 +1,7 @@
 
 export interface SettingsTranslations {
   title: string;
+  subtitle: string;
   general: string;
   appearance: string;
   layout: string;
@@ -77,7 +78,6 @@ export interface SettingsTranslations {
   right: string;
   
   // Additional properties needed based on error messages
-  subtitle: string;
   bankDetails: string;
   bankName: string;
   bankNamePlaceholder: string;
@@ -137,4 +137,28 @@ export interface SettingsTranslations {
   sampleTemplates: string;
   showUserTemplatesOnly: string;
   settingsSaved: string;
+  noTemplateSelected: string;
+  
+  // New properties for template settings
+  basicInformation: string;
+  description: string;
+  header: string;
+  footer: string;
+  appearanceSettings: string;
+  pickColor: string;
+  headerSettings: string;
+  showCompanyLogo: string;
+  showCompanyName: string;
+  useGradient: string;
+  contentSettings: string;
+  showProductDescription: string;
+  showPartNumbers: string;
+  footerTextPlaceholder: string;
+  footerTextDescription: string;
+  footerSettings: string;
+  signatureTextPlaceholder: string;
+  includeSocialMedia: string;
+  
+  // Navigation and editing properties
+  edit: string;
 }

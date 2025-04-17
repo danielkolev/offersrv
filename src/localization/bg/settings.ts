@@ -140,5 +140,29 @@ export const settings: SettingsTranslations = {
   validationError: "Грешка при валидация",
   unitNameRequired: "Името на единицата е задължително",
   settingsSaved: "Настройките са запазени успешно",
-  offerSettings: "Настройки на офертата"
+  offerSettings: "Настройки на офертата",
+  noTemplateSelected: "Няма избран шаблон",
+  
+  // New properties for template settings
+  basicInformation: "Основна информация",
+  description: "Описание",
+  header: "Хедър",
+  footer: "Футър",
+  appearanceSettings: "Настройки на външния вид",
+  pickColor: "Избери цвят",
+  headerSettings: "Настройки на хедъра",
+  showCompanyLogo: "Покажи логото на компанията",
+  showCompanyName: "Покажи името на компанията",
+  useGradient: "Използвай градиент за фона",
+  contentSettings: "Настройки на съдържанието",
+  showProductDescription: "Покажи описание на продуктите",
+  showPartNumbers: "Покажи номера на частите",
+  footerTextPlaceholder: "Въведете текст за футъра",
+  footerTextDescription: "Текст за показване във футъра",
+  footerSettings: "Настройки на футъра",
+  signatureTextPlaceholder: "Въведете текст за подпис",
+  includeSocialMedia: "Включи линкове към социални медии",
+  
+  // Navigation and editing properties
+  edit: "Редактирай"
 };

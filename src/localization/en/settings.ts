@@ -3,6 +3,7 @@ import { SettingsTranslations } from '@/types/language/settings';
 
 export const settings: SettingsTranslations = {
   title: "Settings",
+  subtitle: "Configure your application settings",
   general: "General",
   appearance: "Appearance",
   layout: "Layout",
@@ -79,7 +80,6 @@ export const settings: SettingsTranslations = {
   right: "Right",
   
   // Additional properties
-  subtitle: "Configure your application settings",
   bankDetails: "Bank Details",
   bankName: "Bank Name",
   bankNamePlaceholder: "Enter bank name",
@@ -138,5 +138,29 @@ export const settings: SettingsTranslations = {
   userTemplates: "User Templates",
   sampleTemplates: "Sample Templates",
   showUserTemplatesOnly: "Show User Templates Only",
-  settingsSaved: "Settings saved successfully"
+  settingsSaved: "Settings saved successfully",
+  noTemplateSelected: "No template selected",
+  
+  // New properties for template settings
+  basicInformation: "Basic Information",
+  description: "Description",
+  header: "Header",
+  footer: "Footer",
+  appearanceSettings: "Appearance Settings",
+  pickColor: "Pick a color",
+  headerSettings: "Header Settings",
+  showCompanyLogo: "Show Company Logo",
+  showCompanyName: "Show Company Name",
+  useGradient: "Use Gradient Background",
+  contentSettings: "Content Settings",
+  showProductDescription: "Show Product Description",
+  showPartNumbers: "Show Part Numbers",
+  footerTextPlaceholder: "Enter footer text",
+  footerTextDescription: "Text to display in the footer",
+  footerSettings: "Footer Settings",
+  signatureTextPlaceholder: "Enter signature text",
+  includeSocialMedia: "Include Social Media Links",
+  
+  // Navigation and editing properties
+  edit: "Edit"
 };

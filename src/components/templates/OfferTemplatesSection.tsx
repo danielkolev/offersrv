@@ -124,7 +124,7 @@ const OfferTemplatesSection = () => {
                     }}
                   >
                     <Pencil className="h-4 w-4 mr-2" />
-                    {t.settings.edit}
+                    {t.settings.editTemplate}
                   </Button>
                 </div>
               </CardContent>
