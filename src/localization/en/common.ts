@@ -68,6 +68,7 @@ export const common: CommonTranslations = {
   manageAccount: "Manage Account",
   back: "Back",
   confirmation: "Confirmation",
+  confirmationQuestion: "Are you sure you want to do this?", // Added missing translation
   all: "All",
   reset: "Reset",
   noName: "No Name",
@@ -83,6 +84,6 @@ export const common: CommonTranslations = {
   unauthorized: "Unauthorized",
   expandAll: "Expand All",
   collapseAll: "Collapse All",
-  language: "Language", // Added missing property
-  copied: "Copied to clipboard" // Added the missing copied property
+  language: "Language", 
+  copied: "Copied to clipboard" 
 };

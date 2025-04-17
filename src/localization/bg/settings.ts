@@ -1,4 +1,3 @@
-
 import { SettingsTranslations } from '@/types/language/settings';
 
 export const settings: SettingsTranslations = {
@@ -164,5 +163,6 @@ export const settings: SettingsTranslations = {
   includeSocialMedia: "Включи линкове към социални медии",
   
   // Navigation and editing properties
-  edit: "Редактирай"
+  edit: "Редактирай",
+  resetToDefault: "Възстанови настройките по подразбиране"
 };

@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { TemplateStateReturnType } from './use-template-state';
-import { generateUniqueId } from '@/lib/utils';
+import { generateUUID } from '@/lib/utils';
 
 interface TemplateSettings {
   name?: string;
@@ -37,7 +36,7 @@ export function useTemplateOperations(
     
     try {
       // Create new template
-      const templateId = generateUniqueId();
+      const templateId = generateUUID();
       const { error: insertError } = await supabase
         .from('offer_templates')
         .insert({
@@ -241,4 +240,3 @@ export function useTemplateOperations(
     refreshTemplates
   };
 }
-

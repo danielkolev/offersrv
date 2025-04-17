@@ -16,4 +16,5 @@ export interface TemplateType {
   user_id?: string;
   is_default?: boolean;
   language: string; // Changed from strict literal type to string to match DB
+  templateType?: string; // Added templateType property
 }

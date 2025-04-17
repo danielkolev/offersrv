@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { TemplateState, TemplateType } from './types';
 
+// Add this new type export
+export type TemplateStateReturnType = ReturnType<typeof useTemplateState>;
+
 export function useTemplateState(): TemplateState {
   const [userTemplates, setUserTemplates] = useState<TemplateType[]>([]);
   const [sampleTemplates, setSampleTemplates] = useState<TemplateType[]>([]);

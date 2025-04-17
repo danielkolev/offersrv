@@ -66,6 +66,7 @@ export interface CommonTranslations {
   manageAccount: string;
   back: string;
   confirmation: string;
+  confirmationQuestion: string; // Add the missing property
   all: string;
   reset: string;
   noName: string;
@@ -81,6 +82,6 @@ export interface CommonTranslations {
   unauthorized: string;
   expandAll: string;
   collapseAll: string;
-  language: string; // Added missing property
-  copied: string;  // Added the missing copied property
+  language: string;
+  copied: string;
 }

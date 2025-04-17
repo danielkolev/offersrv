@@ -138,6 +138,7 @@ export interface SettingsTranslations {
   showUserTemplatesOnly: string;
   settingsSaved: string;
   noTemplateSelected: string;
+  resetToDefault: string; // Add the missing property
   
   // New properties for template settings
   basicInformation: string;

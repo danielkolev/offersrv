@@ -68,6 +68,7 @@ export const common: CommonTranslations = {
   manageAccount: "Управление на акаунта",
   back: "Назад",
   confirmation: "Потвърждение",
+  confirmationQuestion: "Сигурни ли сте че искате да направите това?", // Added missing translation
   all: "Всички",
   reset: "Нулиране",
   noName: "Без име",
@@ -83,6 +84,6 @@ export const common: CommonTranslations = {
   unauthorized: "Неоторизиран достъп",
   expandAll: "Разгъни всички",
   collapseAll: "Свий всички",
-  language: "Език", // Added missing property
-  copied: "Копирано в клипборда" // Added the missing copied property
+  language: "Език",
+  copied: "Копирано в клипборда"
 };

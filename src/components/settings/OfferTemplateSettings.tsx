@@ -48,7 +48,7 @@ const OfferTemplateSettings = () => {
           <div className="flex items-center">
             <div className="flex-1">
               <p className="font-medium text-lg">
-                {defaultTemplate?.templateType === 'modernDark' 
+                {defaultTemplate?.settings?.templateType === 'modernDark' 
                   ? t.offer.templates.designTemplates.modernDark 
                   : t.offer.templates.designTemplates.classic}
               </p>
