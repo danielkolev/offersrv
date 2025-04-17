@@ -46,12 +46,15 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
   // Get the attention text based on language
   const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
   
-  // Bank details
+  // Bank details from settings or default values
   const bankDetails = settings?.footer?.bankDetails || {
     name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
     iban: 'BG12EXAMPLE12345678',
     swift: 'EXAMPLESWIFT'
   };
+
+  // Show bank details if enabled in settings
+  const showBankDetails = settings?.footer?.showBankDetails === true;
 
   return (
     <>
@@ -146,7 +149,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           }}>
             <p>{footerText}</p>
             
-            {settings?.footer?.showBankDetails && (
+            {showBankDetails && (
               <div className="mt-2 text-xs text-muted-foreground">
                 <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
                 <p>{bankDetails.name}</p>

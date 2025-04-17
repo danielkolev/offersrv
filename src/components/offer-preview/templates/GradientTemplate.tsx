@@ -43,12 +43,22 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
   const vat = calculateVat();
   const total = calculateTotal();
 
+  // Use conclusion text from company data or default
+  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
+    displayLanguage === 'bg' 
+      ? 'Благодарим Ви за доверието!' 
+      : 'Thank you for your business!'
+  );
+
   // Bank details
   const bankDetails = settings?.footer?.bankDetails || {
     name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
     iban: 'BG12EXAMPLE12345678',
     swift: 'EXAMPLESWIFT'
   };
+
+  // Show bank details if enabled in settings
+  const showBankDetails = settings?.footer?.showBankDetails === true;
 
   return (
     <>
@@ -302,12 +312,12 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
           {/* Footer */}
           {settings?.content?.showFooter && (
             <div className="pt-6 mt-8 border-t text-center" style={{ borderColor: `${primaryColor}20` }}>
-              <p className="text-gray-500">{settings?.content?.footerText || (displayLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!')}</p>
+              <p className="text-gray-500">{footerText}</p>
               
-              {settings?.footer?.showBankDetails && (
+              {showBankDetails && (
                 <div className="mt-4 text-xs text-gray-500">
                   <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>{bankDetails.name}: {bankDetails.name}</p>
+                  <p>{bankDetails.name}</p>
                   <p>IBAN: {bankDetails.iban}</p>
                   {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
                 </div>

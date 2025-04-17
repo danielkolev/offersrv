@@ -40,6 +40,23 @@ const BusinessProTemplate: React.FC<BusinessProTemplateProps> = ({
   const vat = calculateVat();
   const total = calculateTotal();
 
+  // Use conclusion text from company data or default
+  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
+    displayLanguage === 'bg' 
+      ? 'Благодарим Ви за доверието!' 
+      : 'Thank you for your business!'
+  );
+  
+  // Bank details
+  const bankDetails = settings?.footer?.bankDetails || {
+    name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
+    iban: 'BG12EXAMPLE12345678',
+    swift: 'EXAMPLESWIFT'
+  };
+  
+  // Show bank details if enabled in settings
+  const showBankDetails = settings?.footer?.showBankDetails === true;
+
   return (
     <>
       <OfferActions 
@@ -326,12 +343,13 @@ const BusinessProTemplate: React.FC<BusinessProTemplateProps> = ({
             >
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="text-center md:text-left mb-4 md:mb-0">
-                  <p className="text-gray-600">{settings?.content?.footerText || (displayLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!')}</p>
+                  <p className="text-gray-600">{footerText}</p>
                   
-                  {settings?.footer?.showBankDetails && (
+                  {showBankDetails && (
                     <div className="mt-2 text-sm text-gray-500">
                       <p>{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                      <p>IBAN: BG12EXAMPLE12345678</p>
+                      <p>IBAN: {bankDetails.iban}</p>
+                      {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
                     </div>
                   )}
                 </div>

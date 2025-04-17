@@ -45,12 +45,22 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
   // Get attention text based on language
   const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
   
+  // Use conclusion text from company data or default
+  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
+    displayLanguage === 'bg' 
+      ? 'Благодарим Ви за доверието!' 
+      : 'Thank you for your business!'
+  );
+  
   // Bank details
   const bankDetails = settings?.footer?.bankDetails || {
     name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
     iban: 'BG12EXAMPLE12345678',
     swift: 'EXAMPLESWIFT'
   };
+  
+  // Show bank details if enabled in settings
+  const showBankDetails = settings?.footer?.showBankDetails === true;
 
   return (
     <>
@@ -288,12 +298,12 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
           {/* Footer */}
           {settings?.content?.showFooter && (
             <div className="pt-8 mt-8 border-t border-white/20 text-center">
-              <p className="text-white/70">{settings?.content?.footerText || (displayLanguage === 'bg' ? 'Благодарим Ви за доверието!' : 'Thank you for your business!')}</p>
+              <p className="text-white/70">{footerText}</p>
               
-              {settings?.footer?.showBankDetails && (
+              {showBankDetails && (
                 <div className="mt-4 text-xs text-white/60">
                   <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>{bankDetails.name}: {bankDetails.name}</p>
+                  <p>{bankDetails.name}</p>
                   <p>IBAN: {bankDetails.iban}</p>
                   {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
                 </div>
