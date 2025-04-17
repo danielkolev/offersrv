@@ -129,6 +129,18 @@ const CompanyInfoForm = () => {
             />
           </div>
           
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="companyConclusion">{t.companyInfo.conclusionText}</Label>
+            <Textarea
+              id="companyConclusion"
+              value={offer.company.conclusionText || ''}
+              placeholder={t.companyInfo.conclusionTextPlaceholder}
+              onChange={(e) => updateCompanyInfo({ conclusionText: e.target.value })}
+              className="resize-none"
+              rows={2}
+            />
+          </div>
+          
           <div className="md:col-span-2 space-y-2">
             <Label>{t.companyInfo.logo}</Label>
             <div className="flex items-center gap-4">

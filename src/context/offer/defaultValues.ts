@@ -11,7 +11,9 @@ export const defaultCompany = {
   phone: '',
   email: '',
   website: '',
-  logo: null
+  logo: null,
+  slogan: '',
+  conclusionText: '' // Add the conclusion text field with empty default value
 };
 
 export const defaultClient = {

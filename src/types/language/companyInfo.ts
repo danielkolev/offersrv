@@ -4,7 +4,7 @@ export interface CompanyInfoTranslations {
   description: string;
   name: string;
   vatNumber: string;
-  eikNumber: string; // Added EIK field
+  eikNumber: string;
   address: string;
   city: string;
   country: string;
@@ -16,4 +16,6 @@ export interface CompanyInfoTranslations {
   removeLogo: string;
   slogan: string;
   sloganPlaceholder: string;
+  conclusionText: string; // New translation for conclusion text
+  conclusionTextPlaceholder: string; // New translation for placeholder
 }

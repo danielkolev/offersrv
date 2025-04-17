@@ -6,7 +6,7 @@ export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
   description: 'Въведете информация за вашата фирма',
   name: 'Име на фирма',
   vatNumber: 'ДДС номер',
-  eikNumber: 'ЕИК номер', // Added EIK field
+  eikNumber: 'ЕИК номер',
   address: 'Адрес',
   city: 'Град',
   country: 'Държава',
@@ -17,7 +17,9 @@ export const bgCompanyInfoTranslations: CompanyInfoTranslations = {
   uploadLogo: 'Качи лого',
   removeLogo: 'Премахни лого',
   slogan: 'Слоган на фирма',
-  sloganPlaceholder: 'Въведете слоган или мото на вашата фирма'
+  sloganPlaceholder: 'Въведете слоган или мото на вашата фирма',
+  conclusionText: 'Заключителен текст',
+  conclusionTextPlaceholder: 'Въведете заключителен текст, който ще се показва в края на всяка оферта'
 };
 
 // Export for use in the main language file

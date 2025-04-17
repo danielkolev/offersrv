@@ -36,8 +36,8 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
   // Check if it's a draft (no offer number)
   const isDraft = !offer.details.offerNumber;
 
-  // Get footer text based on offer language
-  const footerText = settings?.content?.footerText || (
+  // Get footer text based on offer language or use custom conclusion text if available
+  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
     displayLanguage === 'bg' 
       ? 'Благодарим Ви за доверието!' 
       : 'Thank you for your business!'

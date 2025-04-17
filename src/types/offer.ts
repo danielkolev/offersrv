@@ -1,16 +1,17 @@
 export interface CompanyInfo {
-  id?: string; // Add optional id property
+  id?: string;
   name: string;
   address: string;
   city: string;
   country: string;
   vatNumber: string;
-  eikNumber?: string; // Added EIK field
+  eikNumber?: string;
   phone: string;
   email: string;
   website: string;
   logo: string | null;
-  slogan?: string; // Added company slogan field
+  slogan?: string;
+  conclusionText?: string; // Added conclusion text field
 }
 
 export interface ClientInfo {
@@ -20,7 +21,7 @@ export interface ClientInfo {
   city: string;
   country: string;
   vatNumber: string;
-  eikNumber?: string; // Added EIK field
+  eikNumber?: string;
   email: string;
   phone: string;
 }

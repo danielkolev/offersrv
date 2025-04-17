@@ -64,7 +64,8 @@ export const useCompanyData = (companyId: string | null) => {
           email: data.email || '',
           website: data.website || '',
           logo: data.logo_url || null,
-          slogan: data.slogan || ''
+          slogan: data.slogan || '',
+          conclusionText: data.conclusion_text || '' // Add the conclusion text
         });
         
         // Отмечаем, что данные были загружены

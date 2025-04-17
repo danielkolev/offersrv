@@ -21,7 +21,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     id: '',
     name: '',
     vat_number: '',
-    eik_number: '', // Added EIK field
+    eik_number: '',
     address: '',
     city: '',
     country: '',
@@ -33,7 +33,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     address_en: '',
     city_en: '',
     country_en: '',
-    slogan: ''
+    slogan: '',
+    conclusion_text: '' // Initialize the new field
   });
 
   // Load company data when component mounts
@@ -59,7 +60,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           id: data.id,
           name: data.name || '',
           vat_number: data.vat_number || '',
-          eik_number: data.eik_number || '', // Now that column exists, we can safely access it
+          eik_number: data.eik_number || '',
           address: data.address || '',
           city: data.city || '',
           country: data.country || '',
@@ -71,7 +72,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
           address_en: data.address_en || '',
           city_en: data.city_en || '',
           country_en: data.country_en || '',
-          slogan: data.slogan || ''
+          slogan: data.slogan || '',
+          conclusion_text: data.conclusion_text || '' // Load the conclusion text
         });
       }
     } catch (error: any) {
@@ -94,7 +96,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
       const updateData: any = {
         name: company.name,
         vat_number: company.vat_number,
-        eik_number: company.eik_number, // Include eik_number in the update
+        eik_number: company.eik_number,
         address: company.address,
         city: company.city,
         country: company.country,
@@ -106,7 +108,8 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
         address_en: company.address_en,
         city_en: company.city_en,
         country_en: company.country_en,
-        slogan: company.slogan
+        slogan: company.slogan,
+        conclusion_text: company.conclusion_text // Include conclusion text in the update
       };
       
       // Update organization record
