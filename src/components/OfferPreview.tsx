@@ -3,8 +3,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/context/LanguageContext';
-import { formatDate } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
+import { useTemplateManagement } from '@/hooks/templates';
 
 // Import refactored components
 import SaveButton from './offer-preview/SaveButton';
@@ -14,8 +14,6 @@ import { cn } from '@/lib/utils';
 // Import template-specific components
 import ClassicTemplate from './offer-preview/templates/ClassicTemplate';
 import ModernDarkTemplate from './offer-preview/templates/ModernDarkTemplate';
-import GradientTemplate from './offer-preview/templates/GradientTemplate';
-import BusinessProTemplate from './offer-preview/templates/BusinessProTemplate';
 
 interface OfferPreviewProps {
   isSaveDialogOpen?: boolean;
@@ -33,6 +31,7 @@ const OfferPreview = ({
   const { offer } = useOffer();
   const { language } = useLanguage();
   const offerContentRef = useRef<HTMLDivElement>(null);
+  const { userTemplates, defaultTemplateId } = useTemplateManagement();
   
   // IMPORTANT: Prevent excessive rerenders by memoizing the display language
   const [displayLanguage, setDisplayLanguage] = useState<SupportedLanguage>(
@@ -53,20 +52,21 @@ const OfferPreview = ({
     
   const setIsSaveDialogOpen = externalSetIsSaveDialogOpen || setInternalIsSaveDialogOpen;
 
-  // Get template settings either from props or from offer
-  const settings = templateSettings || offer.templateSettings || {};
+  // Get default template settings
+  const defaultTemplate = userTemplates.find(template => template.id === defaultTemplateId);
+  
+  // Get template settings either from props, offer, or default template
+  const settings = templateSettings || offer.templateSettings || defaultTemplate?.settings || {
+    templateType: 'classic'
+  };
   
   // Determine which template to use based on settings
   const getTemplateComponent = () => {
-    const designTemplate = settings?.designTemplate || 'classic';
+    const designTemplate = settings?.templateType || 'classic';
     
-    switch(designTemplate) {
-      case 'modern-dark':
+    switch(designTemplate.toLowerCase()) {
+      case 'moderndark':
         return ModernDarkTemplate;
-      case 'gradient':
-        return GradientTemplate;
-      case 'business-pro':
-        return BusinessProTemplate;
       case 'classic':
       default:
         return ClassicTemplate;

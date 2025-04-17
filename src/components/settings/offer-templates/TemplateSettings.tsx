@@ -10,8 +10,6 @@ import {
   FormLabel, 
   FormMessage 
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm } from 'react-hook-form';
@@ -23,14 +21,16 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { HexColorPicker } from 'react-colorful';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { AlertCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface TemplateSettingsProps {
   selectedTemplateId: string;
   onSettingsChange: (settings: any) => void;
-  onSave: (name: string, description: string, settings: any) => void;
+  onSave: (settings: any) => void;
   initialSettings?: any;
-  initialName?: string;
-  initialDescription?: string;
+  resetToDefault?: () => void;
 }
 
 const defaultSettings = {
@@ -77,17 +77,15 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
   onSettingsChange,
   onSave,
   initialSettings,
-  initialName,
-  initialDescription
+  resetToDefault
 }) => {
-  const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('basic');
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('appearance');
   const [settingsState, setSettingsState] = useState(initialSettings || defaultSettings);
   
   // Define form schema
   const formSchema = z.object({
-    name: z.string().min(1, t.offer.templates.templateNameRequired),
-    description: z.string().optional(),
     templateType: z.string(),
     // We'll handle the nested settings separately
   });
@@ -96,8 +94,6 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: initialName || '',
-      description: initialDescription || '',
       templateType: (initialSettings?.templateType || 'classic') as string,
     }
   });
@@ -114,10 +110,8 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
   
   // Update form values when initialSettings change
   useEffect(() => {
-    form.setValue('name', initialName || '');
-    form.setValue('description', initialDescription || '');
     form.setValue('templateType', (initialSettings?.templateType || 'classic') as string);
-  }, [initialName, initialDescription, initialSettings]);
+  }, [initialSettings, form]);
   
   // Handle settings changes
   const handleSettingChange = (category: string, setting: string, value: any) => {
@@ -169,49 +163,33 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
       templateType: data.templateType
     };
     
-    onSave(data.name, data.description || '', completeSettings);
+    onSave(completeSettings);
+    
+    toast({
+      title: t.common.success,
+      description: t.settings.settingsSaved,
+    });
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle>{t.settings.basicInformation}</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>{t.settings.template}</CardTitle>
+            {resetToDefault && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm"
+                onClick={resetToDefault}
+              >
+                <AlertCircle className="h-4 w-4 mr-2" />
+                {t.settings.resetToDefault}
+              </Button>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t.offer.templates.name}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t.offer.templates.namePlaceholder} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t.settings.description}</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder={t.offer.templates.descriptionPlaceholder} 
-                      {...field} 
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
             <FormField
               control={form.control}
               name="templateType"
@@ -231,8 +209,6 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                     <SelectContent>
                       <SelectItem value="classic">{t.offer.templates.designTemplates.classic}</SelectItem>
                       <SelectItem value="modernDark">{t.offer.templates.designTemplates.modernDark}</SelectItem>
-                      <SelectItem value="gradient">{t.offer.templates.designTemplates.gradient}</SelectItem>
-                      <SelectItem value="businessPro">{t.offer.templates.designTemplates.businessPro}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -491,7 +467,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                   <FormItem>
                     <FormLabel>{t.settings.footerText}</FormLabel>
                     <FormControl>
-                      <Textarea 
+                      <Input 
                         placeholder={t.settings.footerTextPlaceholder}
                         value={settingsState.content?.footerText || ''}
                         onChange={(e) => handleSettingChange('content', 'footerText', e.target.value)}

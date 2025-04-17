@@ -1,53 +1,75 @@
 
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
-import { TemplateOperations, TemplateType } from './types';
+import { useToast } from '@/hooks/use-toast';
+import { TemplateStateReturnType } from './use-template-state';
+import { generateUniqueId } from '@/lib/utils';
+
+interface TemplateSettings {
+  name?: string;
+  description?: string;
+  settings?: any;
+}
 
 export function useTemplateOperations(
   userId: string | undefined,
-  state: any,
-  fetchTemplates: () => Promise<void>
-): TemplateOperations {
+  state: TemplateStateReturnType,
+  refreshTemplates: () => Promise<void>
+) {
   const { t } = useLanguage();
   const { toast } = useToast();
   
   // Create a new template
-  const createTemplate = async (name: string, description: string, settings?: any, isDefault?: boolean) => {
-    if (!userId) return;
+  const createTemplate = async (name: string, description: string = '', settings: any = {}) => {
+    if (!userId) {
+      toast({
+        title: t.common.error,
+        description: t.common.unauthorized,
+        variant: 'destructive',
+      });
+      return;
+    }
     
     state.setIsLoading(true);
     state.setSaveTemplateFailed(false);
-    state.setTemplateCreated(false);
     
     try {
-      // Create the template
-      const { data, error } = await supabase
+      // Create new template
+      const templateId = generateUniqueId();
+      const { error: insertError } = await supabase
         .from('offer_templates')
-        .insert([
-          {
-            name,
-            description,
-            settings,
-            user_id: userId,
-            is_default: isDefault || false,
-            language: settings?.template?.language || 'all'
-          }
-        ])
-        .select();
+        .insert({
+          id: templateId,
+          name,
+          description,
+          settings,
+          user_id: userId,
+          language: 'all'
+        });
       
-      if (error) throw error;
+      if (insertError) throw insertError;
       
+      // Refresh templates
+      await refreshTemplates();
+      
+      // Set success flags
       state.setTemplateCreated(true);
-      await fetchTemplates(); // Refresh the templates list
       
-      return data?.[0];
+      toast({
+        title: t.common.success,
+        description: t.settings.templateCreated,
+      });
+      
+      return templateId;
     } catch (error) {
       console.error('Error creating template:', error);
       state.setSaveTemplateFailed(true);
+      
       toast({
         title: t.common.error,
-        description: 'Failed to create template',
+        description: t.settings.saveTemplateFailed,
         variant: 'destructive',
       });
     } finally {
@@ -56,35 +78,46 @@ export function useTemplateOperations(
   };
   
   // Edit an existing template
-  const editTemplate = async (templateId: string, updates: Partial<TemplateType>) => {
-    if (!userId) return;
+  const editTemplate = async (templateId: string, templateData: TemplateSettings) => {
+    if (!userId) {
+      toast({
+        title: t.common.error,
+        description: t.common.unauthorized,
+        variant: 'destructive',
+      });
+      return;
+    }
     
     state.setIsLoading(true);
     state.setSaveTemplateFailed(false);
-    state.setTemplateUpdated(false);
     
     try {
-      const { error } = await supabase
+      // Update template
+      const { error: updateError } = await supabase
         .from('offer_templates')
         .update({
-          name: updates.name,
-          description: updates.description,
-          settings: updates.settings,
-          language: updates.settings?.template?.language || 'all'
+          ...templateData,
+          updated_at: new Date().toISOString()
         })
         .eq('id', templateId)
         .eq('user_id', userId);
       
-      if (error) throw error;
+      if (updateError) throw updateError;
       
+      // Refresh templates
+      await refreshTemplates();
+      
+      // Set success flags
       state.setTemplateUpdated(true);
-      await fetchTemplates(); // Refresh the templates list
+      
+      return templateId;
     } catch (error) {
       console.error('Error updating template:', error);
       state.setSaveTemplateFailed(true);
+      
       toast({
         title: t.common.error,
-        description: 'Failed to update template',
+        description: t.settings.saveTemplateFailed,
         variant: 'destructive',
       });
     } finally {
@@ -94,29 +127,52 @@ export function useTemplateOperations(
   
   // Delete a template
   const deleteTemplate = async (templateId: string) => {
-    if (!userId) return;
+    if (!userId) {
+      toast({
+        title: t.common.error,
+        description: t.common.unauthorized,
+        variant: 'destructive',
+      });
+      return;
+    }
     
     state.setIsLoading(true);
-    state.setTemplateDeleted(false);
     
     try {
-      const { error } = await supabase
+      // Check if template is default
+      const isDefault = state.userTemplates.find(template => template.id === templateId)?.is_default;
+      
+      // Delete template
+      const { error: deleteError } = await supabase
         .from('offer_templates')
         .delete()
         .eq('id', templateId)
         .eq('user_id', userId);
       
-      if (error) throw error;
+      if (deleteError) throw deleteError;
       
+      // Refresh templates
+      await refreshTemplates();
+      
+      // Set success flags
       state.setTemplateDeleted(true);
-      state.setUserTemplates(prev => prev.filter(template => template.id !== templateId));
+      
+      // If deleted template was default, find a new default
+      if (isDefault && state.userTemplates.length > 0) {
+        const newDefaultId = state.userTemplates[0].id;
+        await setDefaultTemplate(newDefaultId);
+      }
+      
+      return true;
     } catch (error) {
       console.error('Error deleting template:', error);
+      
       toast({
         title: t.common.error,
-        description: 'Failed to delete template',
+        description: t.settings.deleteTemplateFailed,
         variant: 'destructive',
       });
+      return false;
     } finally {
       state.setIsLoading(false);
     }
@@ -124,57 +180,65 @@ export function useTemplateOperations(
   
   // Set a template as default
   const setDefaultTemplate = async (templateId: string) => {
-    if (!userId) return;
+    if (!userId) {
+      toast({
+        title: t.common.error,
+        description: t.common.unauthorized,
+        variant: 'destructive',
+      });
+      return;
+    }
     
     state.setIsLoading(true);
-    state.setDefaultTemplateSet(false);
     state.setSetDefaultFailed(false);
     
     try {
-      // First, clear any existing default templates
-      const { error: clearError } = await supabase
+      // First, reset all templates to non-default
+      const { error: resetError } = await supabase
         .from('offer_templates')
         .update({ is_default: false })
-        .eq('user_id', userId)
-        .eq('is_default', true);
+        .eq('user_id', userId);
       
-      if (clearError) throw clearError;
+      if (resetError) throw resetError;
       
-      // Then set the new default template
-      const { error: setError } = await supabase
+      // Then, set the selected template as default
+      const { error: updateError } = await supabase
         .from('offer_templates')
         .update({ is_default: true })
         .eq('id', templateId)
         .eq('user_id', userId);
       
-      if (setError) throw setError;
+      if (updateError) throw updateError;
       
-      state.setDefaultTemplateSet(true);
+      // Refresh templates
+      await refreshTemplates();
+      
+      // Set success flags
       state.setDefaultTemplateId(templateId);
-      await fetchTemplates(); // Refresh the templates list
+      state.setDefaultTemplateSet(true);
+      
+      return true;
     } catch (error) {
       console.error('Error setting default template:', error);
       state.setSetDefaultFailed(true);
+      
       toast({
         title: t.common.error,
-        description: 'Failed to set default template',
+        description: t.settings.setDefaultFailed,
         variant: 'destructive',
       });
+      return false;
     } finally {
       state.setIsLoading(false);
     }
   };
   
-  // Refresh templates helper
-  const refreshTemplates = async () => {
-    await fetchTemplates();
-  };
-
   return {
     createTemplate,
     editTemplate,
     deleteTemplate,
     setDefaultTemplate,
-    refreshTemplates,
+    refreshTemplates
   };
 }
+
