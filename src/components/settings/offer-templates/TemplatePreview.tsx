@@ -1,16 +1,15 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import ClassicTemplate from '@/components/offer-preview/templates/ClassicTemplate';
-import ModernDarkTemplate from '@/components/offer-preview/templates/ModernDarkTemplate';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Offer } from '@/types/offer';
 
 export interface TemplatePreviewProps {
   settings: any;
   fullScreen?: boolean;
 }
 
-const SAMPLE_OFFER = {
+const SAMPLE_OFFER: Offer = {
   company: {
     name: 'Acme Corporation',
     logo: '',
@@ -20,7 +19,10 @@ const SAMPLE_OFFER = {
     vatNumber: 'BG123456789',
     eikNumber: '123456789',
     slogan: 'Building the future',
-    conclusionText: 'Thank you for your business!'
+    conclusionText: 'Thank you for your business!',
+    phone: '+359 2 123 4567', // Added required field
+    email: 'info@acmecorp.com', // Added required field
+    website: 'www.acmecorp.com' // Added required field
   },
   client: {
     name: 'Client Company Ltd.',
@@ -28,7 +30,9 @@ const SAMPLE_OFFER = {
     address: '456 Client Avenue',
     city: 'Sofia',
     country: 'Bulgaria',
-    vatNumber: 'BG987654321'
+    vatNumber: 'BG987654321',
+    email: 'john@clientcompany.com', // Added required field
+    phone: '+359 2 987 6543', // Added required field
   },
   details: {
     offerNumber: 'OF-2023-001',
@@ -40,7 +44,8 @@ const SAMPLE_OFFER = {
     showPartNumber: true,
     transportCost: 10,
     otherCosts: 5,
-    notes: 'This is a sample offer for preview purposes.'
+    notes: 'This is a sample offer for preview purposes.',
+    offerLanguage: 'bg' as 'bg' | 'en' // Added required field
   },
   products: [
     {
@@ -88,29 +93,36 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
   const templateType = settings.templateType || 'classic';
   
   const renderTemplate = () => {
+    // Dynamically import the templates
     switch(templateType.toLowerCase()) {
       case 'moderndark':
+        const ModernDarkTemplate = React.lazy(() => import('@/components/offer-preview/templates/ModernDarkTemplate'));
         return (
-          <ModernDarkTemplate 
-            offer={SAMPLE_OFFER}
-            displayLanguage={displayLanguage}
-            settings={settings}
-            mode="view"
-            offerContentRef={previewRef}
-            setIsSaveDialogOpen={setIsSaveDialogOpen}
-          />
+          <React.Suspense fallback={<div>Loading template...</div>}>
+            <ModernDarkTemplate 
+              offer={SAMPLE_OFFER}
+              displayLanguage={displayLanguage}
+              settings={settings}
+              mode="view"
+              offerContentRef={previewRef}
+              setIsSaveDialogOpen={setIsSaveDialogOpen}
+            />
+          </React.Suspense>
         );
       case 'classic':
       default:
+        const ClassicTemplate = React.lazy(() => import('@/components/offer-preview/templates/ClassicTemplate'));
         return (
-          <ClassicTemplate 
-            offer={SAMPLE_OFFER}
-            displayLanguage={displayLanguage}
-            settings={settings}
-            mode="view"
-            offerContentRef={previewRef}
-            setIsSaveDialogOpen={setIsSaveDialogOpen}
-          />
+          <React.Suspense fallback={<div>Loading template...</div>}>
+            <ClassicTemplate 
+              offer={SAMPLE_OFFER}
+              displayLanguage={displayLanguage}
+              settings={settings}
+              mode="view"
+              offerContentRef={previewRef}
+              setIsSaveDialogOpen={setIsSaveDialogOpen}
+            />
+          </React.Suspense>
         );
     }
   };
