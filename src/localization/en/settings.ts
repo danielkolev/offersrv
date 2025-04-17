@@ -162,5 +162,6 @@ export const settings: SettingsTranslations = {
   includeSocialMedia: "Include Social Media Links",
   
   // Navigation and editing properties
-  edit: "Edit"
+  edit: "Edit",
+  resetToDefault: "Reset to Default" // Add the missing property
 };
