@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -109,6 +110,11 @@ export function useTemplateOperations(
       // Set success flags
       state.setTemplateUpdated(true);
       
+      toast({
+        title: t.common.success,
+        description: t.settings.templateUpdated,
+      });
+      
       return templateId;
     } catch (error) {
       console.error('Error updating template:', error);
@@ -161,6 +167,11 @@ export function useTemplateOperations(
         const newDefaultId = state.userTemplates[0].id;
         await setDefaultTemplate(newDefaultId);
       }
+      
+      toast({
+        title: t.common.success,
+        description: t.settings.templateDeleted,
+      });
       
       return true;
     } catch (error) {
@@ -215,6 +226,11 @@ export function useTemplateOperations(
       // Set success flags
       state.setDefaultTemplateId(templateId);
       state.setDefaultTemplateSet(true);
+      
+      toast({
+        title: t.common.success,
+        description: t.settings.defaultTemplateSet,
+      });
       
       return true;
     } catch (error) {

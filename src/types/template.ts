@@ -10,11 +10,57 @@ export interface TemplateType {
     products?: any[];
     [key: string]: any;
   };
-  settings?: any;
+  settings?: {
+    templateType?: string;
+    appearance?: {
+      primaryColor?: string;
+      secondaryColor?: string;
+      textColor?: string;
+      borderColor?: string;
+      backgroundColor?: string;
+      tableHeaderColor?: string;
+      tableRowAlternateColor?: string;
+      buttonColor?: string;
+      fontFamily?: string;
+      fontSize?: string;
+    };
+    header?: {
+      showCompanyLogo?: boolean;
+      showCompanyName?: boolean;
+      showCompanySlogan?: boolean;
+      showOfferLabel?: boolean;
+      useGradient?: boolean;
+      headerBackgroundColor?: string;
+      headerTextColor?: string;
+    };
+    content?: {
+      showLineNumbers?: boolean;
+      showProductDescription?: boolean;
+      showPartNumbers?: boolean;
+      showFooter?: boolean;
+      footerText?: string;
+      tableBorderStyle?: string; // none, solid, dashed, dotted
+      tableBorderWidth?: string;
+      tableBorderColor?: string;
+    };
+    footer?: {
+      showBankDetails?: boolean;
+      showSignatureArea?: boolean;
+      signatureText?: string;
+      footerBackgroundColor?: string;
+      footerTextColor?: string;
+    };
+    layout?: {
+      compactMode?: boolean;
+      fullWidth?: boolean;
+      padding?: string;
+      borderRadius?: string;
+    };
+  };
   created_at?: string;
   updated_at?: string;
   user_id?: string;
   is_default?: boolean;
-  language: string; // Changed from strict literal type to string to match DB
-  templateType?: string; // Added templateType property
+  language: string;
+  templateType?: string;
 }

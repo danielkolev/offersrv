@@ -22,8 +22,10 @@ import { HexColorPicker } from 'react-colorful';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
 
 interface TemplateSettingsProps {
   selectedTemplateId: string;
@@ -39,7 +41,13 @@ const defaultSettings = {
     primaryColor: '#3B82F6',
     secondaryColor: '#F3F4F6',
     textColor: '#111827',
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    tableHeaderColor: '#F9FAFB',
+    tableRowAlternateColor: '#F3F4F6',
+    buttonColor: '#3B82F6',
     fontFamily: 'Inter, sans-serif',
+    fontSize: 'medium',
   },
   header: {
     showCompanyLogo: true,
@@ -47,6 +55,8 @@ const defaultSettings = {
     showCompanySlogan: true,
     showOfferLabel: true,
     useGradient: false,
+    headerBackgroundColor: '#FFFFFF',
+    headerTextColor: '#111827',
   },
   content: {
     showLineNumbers: true,
@@ -54,21 +64,22 @@ const defaultSettings = {
     showPartNumbers: true,
     showFooter: true,
     footerText: '',
+    tableBorderStyle: 'solid',
+    tableBorderWidth: '1px',
+    tableBorderColor: '#E5E7EB',
   },
   footer: {
     showBankDetails: false,
     showSignatureArea: true,
     signatureText: '',
-    bankDetails: {
-      name: '',
-      iban: '',
-      swift: '',
-    },
-    includeSocialMedia: false,
+    footerBackgroundColor: '#FFFFFF',
+    footerTextColor: '#111827',
   },
   layout: {
     compactMode: false,
-    showLogo: true,
+    fullWidth: false,
+    padding: '16px',
+    borderRadius: '8px',
   }
 };
 
@@ -171,23 +182,63 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
     });
   };
 
+  // Color picker component for reuse
+  const ColorPickerField = ({ label, category, property, color }) => (
+    <div>
+      <Label>{label}</Label>
+      <div className="mt-2 flex items-center gap-2">
+        <div 
+          className="h-10 w-10 rounded border"
+          style={{ backgroundColor: color }}
+        ></div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">
+              {t.settings.pickColor}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <HexColorPicker 
+              color={color}
+              onChange={(color) => handleSettingChange(category, property, color)}
+            />
+          </PopoverContent>
+        </Popover>
+        <Input 
+          value={color}
+          onChange={(e) => handleSettingChange(category, property, e.target.value)}
+          className="w-28"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>{t.settings.template}</CardTitle>
-            {resetToDefault && (
+            <div className="flex gap-2">
+              {resetToDefault && (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={resetToDefault}
+                >
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  {t.settings.resetToDefault}
+                </Button>
+              )}
               <Button 
-                type="button" 
-                variant="outline" 
+                type="submit" 
                 size="sm"
-                onClick={resetToDefault}
               >
-                <AlertCircle className="h-4 w-4 mr-2" />
-                {t.settings.resetToDefault}
+                <Save className="h-4 w-4 mr-2" />
+                {t.settings.saveTemplate}
               </Button>
-            )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -209,6 +260,8 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                     <SelectContent>
                       <SelectItem value="classic">{t.offer.templates.designTemplates.classic}</SelectItem>
                       <SelectItem value="modernDark">{t.offer.templates.designTemplates.modernDark}</SelectItem>
+                      <SelectItem value="gradient">{t.offer.templates.designTemplates.gradient}</SelectItem>
+                      <SelectItem value="businessPro">{t.offer.templates.designTemplates.businessPro}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -232,6 +285,9 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
             <TabsTrigger value="footer" className="flex-1">
               {t.settings.footer}
             </TabsTrigger>
+            <TabsTrigger value="layout" className="flex-1">
+              {t.settings.layout}
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="appearance" className="mt-4">
@@ -241,62 +297,114 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label>{t.offer.templates.textColor}</Label>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div 
-                        className="h-10 w-10 rounded border"
-                        style={{ backgroundColor: settingsState.appearance?.primaryColor || '#3B82F6' }}
-                      ></div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline">
-                            {t.settings.pickColor}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <HexColorPicker 
-                            color={settingsState.appearance?.primaryColor || '#3B82F6'}
-                            onChange={(color) => handleSettingChange('appearance', 'primaryColor', color)}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <Input 
-                        value={settingsState.appearance?.primaryColor || '#3B82F6'}
-                        onChange={(e) => handleSettingChange('appearance', 'primaryColor', e.target.value)}
-                        className="w-28"
-                      />
-                    </div>
-                  </div>
+                  {/* Primary Color */}
+                  <ColorPickerField 
+                    label={t.settings.primaryColor}
+                    category="appearance"
+                    property="primaryColor"
+                    color={settingsState.appearance?.primaryColor || '#3B82F6'}
+                  />
                   
-                  <div>
-                    <Label>{t.offer.templates.backgroundColor}</Label>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div 
-                        className="h-10 w-10 rounded border"
-                        style={{ backgroundColor: settingsState.appearance?.secondaryColor || '#F3F4F6' }}
-                      ></div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline">
-                            {t.settings.pickColor}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <HexColorPicker 
-                            color={settingsState.appearance?.secondaryColor || '#F3F4F6'}
-                            onChange={(color) => handleSettingChange('appearance', 'secondaryColor', color)}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <Input 
-                        value={settingsState.appearance?.secondaryColor || '#F3F4F6'}
-                        onChange={(e) => handleSettingChange('appearance', 'secondaryColor', e.target.value)}
-                        className="w-28"
-                      />
-                    </div>
-                  </div>
+                  {/* Secondary Color */}
+                  <ColorPickerField 
+                    label={t.settings.secondaryColor}
+                    category="appearance"
+                    property="secondaryColor"
+                    color={settingsState.appearance?.secondaryColor || '#F3F4F6'}
+                  />
+                  
+                  {/* Text Color */}
+                  <ColorPickerField 
+                    label={t.settings.textColor}
+                    category="appearance"
+                    property="textColor"
+                    color={settingsState.appearance?.textColor || '#111827'}
+                  />
+                  
+                  {/* Border Color */}
+                  <ColorPickerField 
+                    label="Цвят на рамки"
+                    category="appearance"
+                    property="borderColor"
+                    color={settingsState.appearance?.borderColor || '#E5E7EB'}
+                  />
+                  
+                  {/* Background Color */}
+                  <ColorPickerField 
+                    label={t.settings.backgroundColor}
+                    category="appearance"
+                    property="backgroundColor"
+                    color={settingsState.appearance?.backgroundColor || '#FFFFFF'}
+                  />
+                  
+                  {/* Table Header Color */}
+                  <ColorPickerField 
+                    label="Цвят на хедър на таблица"
+                    category="appearance"
+                    property="tableHeaderColor"
+                    color={settingsState.appearance?.tableHeaderColor || '#F9FAFB'}
+                  />
+                  
+                  {/* Table Row Alternate Color */}
+                  <ColorPickerField 
+                    label="Цвят на редуващи се редове"
+                    category="appearance"
+                    property="tableRowAlternateColor"
+                    color={settingsState.appearance?.tableRowAlternateColor || '#F3F4F6'}
+                  />
+                  
+                  {/* Button Color */}
+                  <ColorPickerField 
+                    label="Цвят на бутони"
+                    category="appearance"
+                    property="buttonColor"
+                    color={settingsState.appearance?.buttonColor || '#3B82F6'}
+                  />
                 </div>
+                
+                {/* Font Family */}
+                <FormItem>
+                  <FormLabel>Шрифт</FormLabel>
+                  <Select 
+                    onValueChange={(value) => handleSettingChange('appearance', 'fontFamily', value)}
+                    defaultValue={settingsState.appearance?.fontFamily || 'Inter, sans-serif'}
+                    value={settingsState.appearance?.fontFamily || 'Inter, sans-serif'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Inter, sans-serif">Inter</SelectItem>
+                      <SelectItem value="Arial, sans-serif">Arial</SelectItem>
+                      <SelectItem value="'Times New Roman', serif">Times New Roman</SelectItem>
+                      <SelectItem value="'Roboto', sans-serif">Roboto</SelectItem>
+                      <SelectItem value="'Open Sans', sans-serif">Open Sans</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+                
+                {/* Font Size */}
+                <FormItem>
+                  <FormLabel>Размер на шрифта</FormLabel>
+                  <Select 
+                    onValueChange={(value) => handleSettingChange('appearance', 'fontSize', value)}
+                    defaultValue={settingsState.appearance?.fontSize || 'medium'}
+                    value={settingsState.appearance?.fontSize || 'medium'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="small">Малък</SelectItem>
+                      <SelectItem value="medium">Среден</SelectItem>
+                      <SelectItem value="large">Голям</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
                 
                 <div>
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -382,6 +490,23 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                   </FormControl>
                 </FormItem>
                 
+                {/* Header Colors */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <ColorPickerField 
+                    label="Цвят на фона на хедъра"
+                    category="header"
+                    property="headerBackgroundColor"
+                    color={settingsState.header?.headerBackgroundColor || '#FFFFFF'}
+                  />
+                  
+                  <ColorPickerField 
+                    label="Цвят на текста в хедъра"
+                    category="header"
+                    property="headerTextColor"
+                    color={settingsState.header?.headerTextColor || '#111827'}
+                  />
+                </div>
+                
                 {settingsState.templateType === 'modernDark' && (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
@@ -449,35 +574,72 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                   </FormControl>
                 </FormItem>
                 
+                {/* Table Border Style */}
+                <FormItem>
+                  <FormLabel>Стил на рамките на таблицата</FormLabel>
+                  <Select 
+                    onValueChange={(value) => handleSettingChange('content', 'tableBorderStyle', value)}
+                    defaultValue={settingsState.content?.tableBorderStyle || 'solid'}
+                    value={settingsState.content?.tableBorderStyle || 'solid'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">Без рамки</SelectItem>
+                      <SelectItem value="solid">Солидни</SelectItem>
+                      <SelectItem value="dashed">Прекъснати</SelectItem>
+                      <SelectItem value="dotted">Точкови</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+                
+                {/* Table Border Width */}
+                {settingsState.content?.tableBorderStyle !== 'none' && (
+                  <FormItem>
+                    <FormLabel>Дебелина на рамките</FormLabel>
+                    <div className="flex items-center gap-2">
+                      <Slider
+                        defaultValue={[parseInt(settingsState.content?.tableBorderWidth || '1')]}
+                        min={0}
+                        max={5}
+                        step={1}
+                        onValueChange={(value) => handleSettingChange('content', 'tableBorderWidth', `${value[0]}px`)}
+                        className="flex-1"
+                      />
+                      <span className="w-10 text-center">{parseInt(settingsState.content?.tableBorderWidth || '1')}px</span>
+                    </div>
+                  </FormItem>
+                )}
+                
+                {/* Table Border Color */}
+                {settingsState.content?.tableBorderStyle !== 'none' && (
+                  <ColorPickerField 
+                    label="Цвят на рамките на таблицата"
+                    category="content"
+                    property="tableBorderColor"
+                    color={settingsState.content?.tableBorderColor || '#E5E7EB'}
+                  />
+                )}
+                
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
-                      {t.settings.showFooter}
+                      {t.settings.alternateRowColors}
                     </FormLabel>
+                    <FormDescription>
+                      {t.settings.alternateRowColorsDescription}
+                    </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
-                      checked={settingsState.content?.showFooter !== false}
-                      onCheckedChange={(value) => handleSettingChange('content', 'showFooter', value)}
+                      checked={settingsState.content?.alternateRowColors || false}
+                      onCheckedChange={(value) => handleSettingChange('content', 'alternateRowColors', value)}
                     />
                   </FormControl>
                 </FormItem>
-                
-                {settingsState.content?.showFooter !== false && (
-                  <FormItem>
-                    <FormLabel>{t.settings.footerText}</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder={t.settings.footerTextPlaceholder}
-                        value={settingsState.content?.footerText || ''}
-                        onChange={(e) => handleSettingChange('content', 'footerText', e.target.value)}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      {t.settings.footerTextDescription}
-                    </FormDescription>
-                  </FormItem>
-                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -491,8 +653,44 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
+                      {t.settings.showFooter}
+                    </FormLabel>
+                    <FormDescription>
+                      {t.settings.showFooterDescription}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={settingsState.content?.showFooter !== false}
+                      onCheckedChange={(value) => handleSettingChange('content', 'showFooter', value)}
+                    />
+                  </FormControl>
+                </FormItem>
+                
+                {settingsState.content?.showFooter !== false && (
+                  <FormItem>
+                    <FormLabel>{t.settings.footerText}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t.settings.footerTextPlaceholder}
+                        value={settingsState.content?.footerText || ''}
+                        onChange={(e) => handleSettingChange('content', 'footerText', e.target.value)}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t.settings.footerTextDescription}
+                    </FormDescription>
+                  </FormItem>
+                )}
+                
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
                       {t.settings.showBankDetails}
                     </FormLabel>
+                    <FormDescription>
+                      {t.settings.showBankDetailsDescription}
+                    </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
@@ -502,62 +700,28 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                   </FormControl>
                 </FormItem>
                 
-                {settingsState.footer?.showBankDetails && (
-                  <div className="space-y-4 border rounded-lg p-4">
-                    <FormItem>
-                      <FormLabel>{t.settings.bankName}</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder={t.settings.bankNamePlaceholder}
-                          value={settingsState.footer?.bankDetails?.name || ''}
-                          onChange={(e) => handleNestedSettingChange('footer', 'bankDetails', 'name', e.target.value)}
-                        />
-                      </FormControl>
-                    </FormItem>
-                    
-                    <FormItem>
-                      <FormLabel>IBAN</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="IBAN"
-                          value={settingsState.footer?.bankDetails?.iban || ''}
-                          onChange={(e) => handleNestedSettingChange('footer', 'bankDetails', 'iban', e.target.value)}
-                        />
-                      </FormControl>
-                    </FormItem>
-                    
-                    <FormItem>
-                      <FormLabel>SWIFT/BIC</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="SWIFT/BIC"
-                          value={settingsState.footer?.bankDetails?.swift || ''}
-                          onChange={(e) => handleNestedSettingChange('footer', 'bankDetails', 'swift', e.target.value)}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  </div>
-                )}
-                
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
                       {t.settings.showSignatureArea}
                     </FormLabel>
+                    <FormDescription>
+                      {t.settings.showSignatureAreaDescription}
+                    </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
-                      checked={settingsState.footer?.showSignatureArea || false}
+                      checked={settingsState.footer?.showSignatureArea !== false}
                       onCheckedChange={(value) => handleSettingChange('footer', 'showSignatureArea', value)}
                     />
                   </FormControl>
                 </FormItem>
                 
-                {settingsState.footer?.showSignatureArea && (
+                {settingsState.footer?.showSignatureArea !== false && (
                   <FormItem>
                     <FormLabel>{t.settings.signatureText}</FormLabel>
                     <FormControl>
-                      <Input 
+                      <Input
                         placeholder={t.settings.signatureTextPlaceholder}
                         value={settingsState.footer?.signatureText || ''}
                         onChange={(e) => handleSettingChange('footer', 'signatureText', e.target.value)}
@@ -566,28 +730,88 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                   </FormItem>
                 )}
                 
-                {settingsState.templateType === 'modernDark' && (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        {t.settings.includeSocialMedia}
-                      </FormLabel>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={settingsState.footer?.includeSocialMedia || false}
-                        onCheckedChange={(value) => handleSettingChange('footer', 'includeSocialMedia', value)}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                {/* Footer Colors */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <ColorPickerField 
+                    label="Цвят на фона на футъра"
+                    category="footer"
+                    property="footerBackgroundColor"
+                    color={settingsState.footer?.footerBackgroundColor || '#FFFFFF'}
+                  />
+                  
+                  <ColorPickerField 
+                    label="Цвят на текста във футъра"
+                    category="footer"
+                    property="footerTextColor"
+                    color={settingsState.footer?.footerTextColor || '#111827'}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="layout" className="mt-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t.settings.layout}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      {t.settings.fullWidth}
+                    </FormLabel>
+                    <FormDescription>
+                      {t.settings.fullWidthDescription}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={settingsState.layout?.fullWidth || false}
+                      onCheckedChange={(value) => handleSettingChange('layout', 'fullWidth', value)}
+                    />
+                  </FormControl>
+                </FormItem>
+                
+                <FormItem>
+                  <FormLabel>Радиус на ъглите</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <Slider
+                      defaultValue={[parseInt(settingsState.layout?.borderRadius || '8')]}
+                      min={0}
+                      max={16}
+                      step={1}
+                      onValueChange={(value) => handleSettingChange('layout', 'borderRadius', `${value[0]}px`)}
+                      className="flex-1"
+                    />
+                    <span className="w-10 text-center">{parseInt(settingsState.layout?.borderRadius || '8')}px</span>
+                  </div>
+                </FormItem>
+                
+                <FormItem>
+                  <FormLabel>Вътрешно отстояние</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <Slider
+                      defaultValue={[parseInt(settingsState.layout?.padding || '16')]}
+                      min={0}
+                      max={32}
+                      step={2}
+                      onValueChange={(value) => handleSettingChange('layout', 'padding', `${value[0]}px`)}
+                      className="flex-1"
+                    />
+                    <span className="w-10 text-center">{parseInt(settingsState.layout?.padding || '16')}px</span>
+                  </div>
+                </FormItem>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
         
-        <div className="flex justify-end mt-6">
-          <Button type="submit">{t.common.save}</Button>
+        <div className="flex justify-end">
+          <Button type="submit">
+            <Save className="h-4 w-4 mr-2" />
+            {t.settings.saveTemplate}
+          </Button>
         </div>
       </form>
     </Form>

@@ -164,5 +164,25 @@ export const settings: SettingsTranslations = {
   
   // Navigation and editing properties
   edit: "Редактирай",
-  resetToDefault: "Възстанови настройките по подразбиране"
+  resetToDefault: "Възстанови настройките по подразбиране",
+  primaryColorLabel: "Основен цвят",
+  secondaryColorLabel: "Вторичен цвят",
+  textColorLabel: "Цвят на текста",
+  borderColorLabel: "Цвят на рамките",
+  backgroundColorLabel: "Цвят на фона",
+  tableHeaderColorLabel: "Цвят на хедъра на таблицата",
+  tableRowAlternateColorLabel: "Цвят на редуващите се редове",
+  buttonColorLabel: "Цвят на бутоните",
+  fontFamilyLabel: "Шрифт",
+  fontSizeLabel: "Размер на шрифта",
+  headerBackgroundColorLabel: "Цвят на фона на хедъра",
+  headerTextColorLabel: "Цвят на текста в хедъра",
+  tableBorderStyleLabel: "Стил на рамките на таблицата",
+  tableBorderWidthLabel: "Дебелина на рамките",
+  tableBorderColorLabel: "Цвят на рамките на таблицата",
+  footerBackgroundColorLabel: "Цвят на фона на футъра",
+  footerTextColorLabel: "Цвят на текста във футъра",
+  fullWidthLabel: "Пълна ширина",
+  borderRadiusLabel: "Радиус на ъглите",
+  paddingLabel: "Вътрешно отстояние",
 };
