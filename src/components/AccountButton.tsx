@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -27,6 +26,7 @@ const AccountButton = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      navigate('/', { replace: true }); // Redirect to landing page after sign out
       toast({
         title: t.common.success,
         description: t.auth.signOutSuccess,

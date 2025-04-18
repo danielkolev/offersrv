@@ -1,4 +1,3 @@
-
 import { CompanyTranslations } from '@/types/language/company';
 
 export const enCompanyTranslations: CompanyTranslations = {
@@ -54,7 +53,11 @@ export const enCompanyTranslations: CompanyTranslations = {
   createNew: 'Create New Company',
   
   // Adding title translation
-  title: 'Company'
+  title: 'Company',
+  
+  welcome: "Welcome to Offersrv",
+  createFirst: "Let's start by creating your company profile to begin managing offers",
+  createButton: "Create Company Profile",
 };
 
 // Export for use in the main language file
