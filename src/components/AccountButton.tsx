@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, Building } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -76,10 +76,17 @@ const AccountButton = () => {
           </DropdownMenuItem>
           
           <DropdownMenuItem asChild>
-            <a href="/settings" className="flex cursor-pointer items-center">
+            <Link to="/company-management" className="flex cursor-pointer items-center">
+              <Building className="mr-2 h-4 w-4" />
+              <span>{t.navigation.companies}</span>
+            </Link>
+          </DropdownMenuItem>
+          
+          <DropdownMenuItem asChild>
+            <Link to="/settings" className="flex cursor-pointer items-center">
               <Settings className="mr-2 h-4 w-4" />
               <span>{t.navigation.settings}</span>
-            </a>
+            </Link>
           </DropdownMenuItem>
           
           <DropdownMenuSeparator />

@@ -6,7 +6,6 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import DraftIndicator from '@/components/offer-draft/DraftIndicator';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import CurrencySwitcher from '@/components/CurrencySwitcher';
 import AccountButton from '@/components/AccountButton';
 import MobileNavToggle from './MobileNavToggle';
 
@@ -25,10 +24,9 @@ const NavbarUtilities = ({ isMobileMenuOpen, setIsMobileMenuOpen, showInMobile =
       {/* Draft indicator */}
       {user && <DraftIndicator />}
 
-      {/* Language and Currency Switchers */}
+      {/* Language Switcher */}
       <div className={`${showInMobile ? 'flex flex-col' : 'flex items-center'} gap-3`}>
         <LanguageSwitcher />
-        <CurrencySwitcher />
       </div>
       
       {/* Account Management */}

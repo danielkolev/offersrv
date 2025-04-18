@@ -1,4 +1,3 @@
-
 import { NavigationTranslations } from '@/types/language/navigation';
 
 export const navigation: NavigationTranslations = {
@@ -8,7 +7,7 @@ export const navigation: NavigationTranslations = {
   clients: "Clients",
   products: "Products",
   templates: "Templates",
-  companies: "Companies",
+  companies: "Company",
   analytics: "Analytics",
   profile: "Profile",
   settings: "Settings"
