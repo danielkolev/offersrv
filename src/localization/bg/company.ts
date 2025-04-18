@@ -1,3 +1,4 @@
+
 import { CompanyTranslations } from '@/types/language/company';
 
 export const bgCompanyTranslations: CompanyTranslations = {
@@ -29,7 +30,7 @@ export const bgCompanyTranslations: CompanyTranslations = {
   
   // Adding new properties
   create: 'Създай компания',
-  createButton: 'Създай компания',
+  createButton: 'Създайте Фирмен Профил',
   updateButton: 'Актуализирай компания',
   manage: 'Управление на компании',
   info: 'Управлявайте информацията за вашата компания',
@@ -56,9 +57,8 @@ export const bgCompanyTranslations: CompanyTranslations = {
   title: 'Компания',
   
   welcome: "Добре дошли в Offersrv",
-  createFirst: "Нека започнем със създаването на профил на вашата компания, за да управлявате оферти",
-  createButton: "Създайте Фирмен Профил",
 };
 
 // Export for use in the main language file
 export const company = bgCompanyTranslations;
+
