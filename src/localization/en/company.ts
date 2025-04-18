@@ -1,4 +1,3 @@
-
 import { CompanyTranslations } from '@/types/language/company';
 
 export const enCompanyTranslations: CompanyTranslations = {
@@ -57,8 +56,8 @@ export const enCompanyTranslations: CompanyTranslations = {
   title: 'Company',
   
   welcome: "Welcome to Offersrv",
+  noCompanyFound: "No company found. Please create a company first.",
 };
 
 // Export for use in the main language file
 export const company = enCompanyTranslations;
-

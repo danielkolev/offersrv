@@ -32,7 +32,7 @@ const LanguageSwitcher = () => {
         </SelectItem>
         <SelectItem value="en">
           <div className="flex items-center gap-2">
-            <span>🇬🇧</span> English (EN)
+            <span>🇬🇧</span> English
           </div>
         </SelectItem>
       </SelectContent>

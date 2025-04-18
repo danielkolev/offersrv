@@ -1,4 +1,3 @@
-
 export interface CompanyTranslations {
   createCompany: string;
   editCompany: string;
@@ -30,6 +29,7 @@ export interface CompanyTranslations {
   create: string;
   createButton: string;
   updateButton: string;
+  updateButton: string;
   manage: string;
   info: string;
   error: string;
@@ -55,5 +55,5 @@ export interface CompanyTranslations {
   title: string;
 
   welcome: string;
+  noCompanyFound: string;
 }
-
