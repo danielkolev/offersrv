@@ -71,7 +71,7 @@ const LandingPage = () => {
             </div>
 
             <div className="hidden lg:block">
-              <Button className="text-lg px-8 py-6 h-auto gap-2" size="lg">
+              <Button className="text-lg px-8 py-6 h-auto gap-2" size="lg" onClick={() => {}}>
                 {t.auth.getStarted || 'Get Started Free'}
                 <ArrowRight className="ml-2" />
               </Button>
