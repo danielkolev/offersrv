@@ -138,7 +138,7 @@ export interface SettingsTranslations {
   showUserTemplatesOnly: string;
   settingsSaved: string;
   noTemplateSelected: string;
-  resetToDefault: string; // Add the missing property
+  resetToDefault: string;
   
   // New properties for template settings
   basicInformation: string;
@@ -162,4 +162,27 @@ export interface SettingsTranslations {
   
   // Navigation and editing properties
   edit: string;
+  
+  // Color-related labels
+  primaryColorLabel: string;
+  secondaryColorLabel: string;
+  textColorLabel: string;
+  borderColorLabel: string;
+  backgroundColor: string;
+  backgroundColorLabel: string;
+  tableHeaderColorLabel: string;
+  tableRowAlternateColorLabel: string;
+  buttonColorLabel: string;
+  fontFamilyLabel: string;
+  fontSizeLabel: string;
+  headerBackgroundColorLabel: string;
+  headerTextColorLabel: string;
+  tableBorderStyleLabel: string;
+  tableBorderWidthLabel: string;
+  tableBorderColorLabel: string;
+  footerBackgroundColorLabel: string;
+  footerTextColorLabel: string;
+  fullWidthLabel: string;
+  borderRadiusLabel: string;
+  paddingLabel: string;
 }

@@ -163,5 +163,28 @@ export const settings: SettingsTranslations = {
   
   // Navigation and editing properties
   edit: "Edit",
-  resetToDefault: "Reset to Default" // Add the missing property
+  resetToDefault: "Reset to Default",
+  
+  // Color label properties
+  primaryColorLabel: "Primary Color",
+  secondaryColorLabel: "Secondary Color",
+  textColorLabel: "Text Color",
+  borderColorLabel: "Border Color",
+  backgroundColor: "Background Color",
+  backgroundColorLabel: "Background Color",
+  tableHeaderColorLabel: "Table Header Color",
+  tableRowAlternateColorLabel: "Alternate Row Color",
+  buttonColorLabel: "Button Color",
+  fontFamilyLabel: "Font Family",
+  fontSizeLabel: "Font Size",
+  headerBackgroundColorLabel: "Header Background Color",
+  headerTextColorLabel: "Header Text Color",
+  tableBorderStyleLabel: "Table Border Style",
+  tableBorderWidthLabel: "Border Width",
+  tableBorderColorLabel: "Table Border Color",
+  footerBackgroundColorLabel: "Footer Background Color",
+  footerTextColorLabel: "Footer Text Color",
+  fullWidthLabel: "Full Width",
+  borderRadiusLabel: "Border Radius",
+  paddingLabel: "Padding",
 };

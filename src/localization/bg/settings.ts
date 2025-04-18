@@ -1,3 +1,4 @@
+
 import { SettingsTranslations } from '@/types/language/settings';
 
 export const settings: SettingsTranslations = {
@@ -165,10 +166,13 @@ export const settings: SettingsTranslations = {
   // Navigation and editing properties
   edit: "Редактирай",
   resetToDefault: "Възстанови настройките по подразбиране",
+  
+  // Color label properties
   primaryColorLabel: "Основен цвят",
   secondaryColorLabel: "Вторичен цвят",
   textColorLabel: "Цвят на текста",
   borderColorLabel: "Цвят на рамките",
+  backgroundColor: "Цвят на фона",
   backgroundColorLabel: "Цвят на фона",
   tableHeaderColorLabel: "Цвят на хедъра на таблицата",
   tableRowAlternateColorLabel: "Цвят на редуващите се редове",
