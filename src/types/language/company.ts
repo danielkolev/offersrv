@@ -1,3 +1,4 @@
+
 export interface CompanyTranslations {
   createCompany: string;
   editCompany: string;
@@ -25,11 +26,10 @@ export interface CompanyTranslations {
   companyDeleted: string;
   manageCompanies: string;
   
-  // Adding missing properties
+  // Adding new properties
   create: string;
   createButton: string;
-  updateButton: string;
-  updateButton: string;
+  updateButton: string; // Remove duplicate
   manage: string;
   info: string;
   error: string;
@@ -41,7 +41,7 @@ export interface CompanyTranslations {
   // Placeholder texts
   namePlaceholder: string;
   vatPlaceholder: string;
-  eikPlaceholder: string; // Added EIK placeholder
+  eikPlaceholder: string;
   addressPlaceholder: string;
   cityPlaceholder: string;
   countryPlaceholder: string;
