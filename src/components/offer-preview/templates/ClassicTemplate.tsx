@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -39,6 +40,29 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
   const footerText = displayLanguage === 'en' 
     ? (offer.company.conclusion_text_en || settings?.content?.footerText || 'Thank you for your business!')
     : (offer.company.conclusion_text || settings?.content?.footerText || 'Благодарим Ви за доверието!');
+
+  // Calculate total with discounts applied
+  const calculateDiscountedTotal = () => {
+    let total = calculateTotal();
+    
+    // Apply special discounts if any exist
+    if (offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0) {
+      offer.details.specialDiscounts.forEach(discount => {
+        if (discount.type === 'percentage') {
+          // Apply percentage discount
+          total -= total * (discount.amount / 100);
+        } else {
+          // Apply fixed discount
+          total -= discount.amount;
+        }
+      });
+    }
+    
+    return total;
+  };
+  
+  const discountedTotal = calculateDiscountedTotal();
+  const hasDiscounts = offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0;
 
   return (
     <>
@@ -120,36 +144,99 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           settings={settings}
         />
         
-        <NotesSection notes={offer.details.notes} settings={settings} />
-        
-        {settings?.content?.showFooter && (
-          <div className={cn(
-            "text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible",
-            settings?.layout?.compactMode ? "text-xs" : ""
-          )}
-          style={{ 
-            borderColor: settings?.appearance?.primaryColor || ""
-          }}>
-            <p>{footerText}</p>
-            
-            {settings?.footer?.showBankDetails && (
-              <div className="mt-2 text-xs text-muted-foreground">
-                <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                <p>{settings?.footer?.bankDetails?.name || (displayLanguage === 'bg' ? 'Банка' : 'Bank')}</p>
-                <p>IBAN: {settings?.footer?.bankDetails?.iban || 'BG12EXAMPLE12345678'}</p>
-                {settings?.footer?.bankDetails?.swift && <p>SWIFT: {settings?.footer?.bankDetails?.swift}</p>}
-              </div>
+        {/* Special Discounts Section */}
+        {hasDiscounts && (
+          <div className="mb-6 print-visible">
+            <h3 className={cn(
+              "font-medium mb-2",
+              settings?.appearance?.primaryColor ? "" : ""
             )}
-            
-            {settings?.footer?.showSignatureArea && (
-              <div className="mt-4 flex justify-end">
-                <div className="border-t pt-2 w-48 text-right">
-                  <p>{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
+            style={{ 
+              color: settings?.appearance?.primaryColor || ""
+            }}>
+              {displayLanguage === 'bg' ? 'Специални отстъпки' : 'Special Discounts'}
+            </h3>
+            <div className={cn(
+              "border rounded-md p-4 text-sm",
+              settings?.appearance?.secondaryColor ? "" : "bg-offer-lightgray"
+            )}
+            style={{ 
+              backgroundColor: settings?.appearance?.secondaryColor || ""
+            }}>
+              <div className="space-y-2">
+                {offer.details.specialDiscounts?.map((discount, index) => (
+                  <div key={index} className="flex justify-between">
+                    <span>
+                      {discount.description}: {discount.amount} {discount.type === 'percentage' ? '%' : offer.details.currency}
+                    </span>
+                    <span className="font-medium">
+                      -{discount.type === 'percentage' 
+                        ? (calculateTotal() * (discount.amount / 100)).toFixed(2)
+                        : discount.amount.toFixed(2)
+                      } {offer.details.currency}
+                    </span>
+                  </div>
+                ))}
+                <div className="border-t pt-2 mt-2 flex justify-between font-bold">
+                  <span>{displayLanguage === 'bg' ? 'Крайна сума след отстъпки' : 'Final amount after discounts'}:</span>
+                  <span>{discountedTotal.toFixed(2)} {offer.details.currency}</span>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         )}
+        
+        <NotesSection notes={offer.details.notes} settings={settings} />
+        
+        {/* Custom Footer Text */}
+        {offer.details.customFooterText && (
+          <div className="mb-6 print-visible border-t pt-4 mt-4">
+            <div className="whitespace-pre-line text-sm text-gray-700">
+              {offer.details.customFooterText}
+            </div>
+          </div>
+        )}
+        
+        <div className={cn(
+          "text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible",
+          settings?.layout?.compactMode ? "text-xs" : ""
+        )}
+        style={{ 
+          borderColor: settings?.appearance?.primaryColor || ""
+        }}>
+          <p>{footerText}</p>
+          
+          {settings?.footer?.showBankDetails && (
+            <div className="mt-2 text-xs text-muted-foreground">
+              <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
+              <p>{settings?.footer?.bankDetails?.name || (displayLanguage === 'bg' ? 'Банка' : 'Bank')}</p>
+              <p>IBAN: {settings?.footer?.bankDetails?.iban || 'BG12EXAMPLE12345678'}</p>
+              {settings?.footer?.bankDetails?.swift && <p>SWIFT: {settings?.footer?.bankDetails?.swift}</p>}
+            </div>
+          )}
+          
+          {/* Digital Signature Area */}
+          {offer.details.showDigitalSignature && (
+            <div className="mt-6 grid grid-cols-2 gap-4">
+              <div className="border-t pt-2 text-right">
+                <p>{displayLanguage === 'bg' ? 'Дата:' : 'Date:'}</p>
+                <div className="h-8"></div>
+              </div>
+              <div className="border-t pt-2 text-right">
+                <p>{displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:'}</p>
+                <div className="h-8"></div>
+              </div>
+            </div>
+          )}
+          
+          {settings?.footer?.showSignatureArea && !offer.details.showDigitalSignature && (
+            <div className="mt-4 flex justify-end">
+              <div className="border-t pt-2 w-48 text-right">
+                <p>{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

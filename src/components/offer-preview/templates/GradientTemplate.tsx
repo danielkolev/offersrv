@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -41,6 +42,29 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
   const subtotal = calculateSubtotal();
   const vat = calculateVat();
   const total = calculateTotal();
+  
+  // Calculate total with discounts applied
+  const calculateDiscountedTotal = () => {
+    let discountedTotal = total;
+    
+    // Apply special discounts if any exist
+    if (offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0) {
+      offer.details.specialDiscounts.forEach(discount => {
+        if (discount.type === 'percentage') {
+          // Apply percentage discount
+          discountedTotal -= discountedTotal * (discount.amount / 100);
+        } else {
+          // Apply fixed discount
+          discountedTotal -= discount.amount;
+        }
+      });
+    }
+    
+    return discountedTotal;
+  };
+  
+  const discountedTotal = calculateDiscountedTotal();
+  const hasDiscounts = offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0;
 
   // Use conclusion text from company data or default
   const footerText = displayLanguage === 'en' && offer.company.conclusion_text_en 
@@ -240,11 +264,47 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
             </div>
           </Card>
           
+          {/* Special Discounts Section */}
+          {hasDiscounts && (
+            <Card className="overflow-hidden shadow-md border-0">
+              <div 
+                className="h-2"
+                style={{ background: gradient }}
+              ></div>
+              <div className="p-4">
+                <h3 className="font-semibold mb-3 text-gray-700">
+                  {displayLanguage === 'bg' ? 'Специални отстъпки' : 'Special Discounts'}
+                </h3>
+                <div className="divide-y">
+                  {offer.details.specialDiscounts?.map((discount, index) => (
+                    <div key={index} className="flex justify-between py-2">
+                      <span className="text-gray-600">
+                        {discount.description}: {discount.amount} {discount.type === 'percentage' ? '%' : offer.details.currency}
+                      </span>
+                      <span className="text-gray-800 font-medium">
+                        -{discount.type === 'percentage' 
+                          ? (total * (discount.amount / 100)).toFixed(2)
+                          : discount.amount.toFixed(2)
+                        } {offer.details.currency}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between py-2 font-bold">
+                    <span>{displayLanguage === 'bg' ? 'Обща отстъпка' : 'Total Discount'}:</span>
+                    <span className="text-transparent bg-clip-text" style={{ backgroundImage: gradient }}>
+                      -{(total - discountedTotal).toFixed(2)} {offer.details.currency}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+          
           {/* Totals and Notes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {offer.details.notes && (
-              <div className="md:col-span-2">
-                <Card className="overflow-hidden shadow-md h-full border-0">
+            <div className="md:col-span-2 space-y-6">
+              {offer.details.notes && (
+                <Card className="overflow-hidden shadow-md border-0">
                   <div 
                     className="h-2"
                     style={{ background: gradient }}
@@ -256,10 +316,26 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
                     <div className="text-gray-600 whitespace-pre-wrap">{offer.details.notes}</div>
                   </div>
                 </Card>
-              </div>
-            )}
+              )}
+              
+              {/* Custom Footer Text */}
+              {offer.details.customFooterText && (
+                <Card className="overflow-hidden shadow-md border-0">
+                  <div 
+                    className="h-2"
+                    style={{ background: gradient }}
+                  ></div>
+                  <div className="p-4">
+                    <h3 className="font-semibold mb-2 text-gray-700">
+                      {displayLanguage === 'bg' ? 'Допълнителни условия' : 'Additional Terms'}
+                    </h3>
+                    <div className="text-gray-600 whitespace-pre-wrap">{offer.details.customFooterText}</div>
+                  </div>
+                </Card>
+              )}
+            </div>
             
-            <div className={!offer.details.notes ? "md:col-span-3 md:w-1/3 md:ml-auto" : ""}>
+            <div className={!offer.details.notes && !offer.details.customFooterText ? "md:col-span-3 md:w-1/3 md:ml-auto" : ""}>
               <Card className="overflow-hidden shadow-md border-0">
                 <div 
                   className="h-2"
@@ -300,53 +376,84 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
                     style={{ borderColor: primaryColor }}
                   >
                     <span className="text-gray-800">{displayLanguage === 'bg' ? 'Обща сума' : 'Total'}:</span>
-                    <span 
-                      className="text-transparent bg-clip-text"
-                      style={{ backgroundImage: gradient }}
-                    >{total.toFixed(2)} {offer.details.currency}</span>
+                    <span className="text-gray-800">{total.toFixed(2)} {offer.details.currency}</span>
                   </div>
+                  
+                  {hasDiscounts && (
+                    <>
+                      <div className="flex justify-between text-gray-600 pt-2">
+                        <span>{displayLanguage === 'bg' ? 'Отстъпки' : 'Discounts'}:</span>
+                        <span>-{(total - discountedTotal).toFixed(2)} {offer.details.currency}</span>
+                      </div>
+                      <div 
+                        className={cn(
+                          "flex justify-between pt-2 border-t font-bold",
+                          settings?.content?.highlightTotals ? "bg-gradient-to-r from-transparent to-gray-100 p-2 -mx-2 rounded" : ""
+                        )}
+                        style={{ borderColor: primaryColor }}
+                      >
+                        <span className="text-gray-800">{displayLanguage === 'bg' ? 'Крайна сума' : 'Final Total'}:</span>
+                        <span 
+                          className="text-transparent bg-clip-text"
+                          style={{ backgroundImage: gradient }}
+                        >{discountedTotal.toFixed(2)} {offer.details.currency}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Card>
             </div>
           </div>
           
           {/* Footer */}
-          {settings?.content?.showFooter && (
-            <div className="pt-6 mt-8 border-t text-center" style={{ borderColor: `${primaryColor}20` }}>
-              <p className="text-gray-500">{footerText}</p>
-              
-              {showBankDetails && (
-                <div className="mt-4 text-xs text-gray-500">
-                  <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>{bankDetails.name}</p>
-                  <p>IBAN: {bankDetails.iban}</p>
-                  {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
+          <div className="pt-6 mt-8 border-t text-center" style={{ borderColor: `${primaryColor}20` }}>
+            <p className="text-gray-500">{footerText}</p>
+            
+            {showBankDetails && (
+              <div className="mt-4 text-xs text-gray-500">
+                <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
+                <p>{bankDetails.name}</p>
+                <p>IBAN: {bankDetails.iban}</p>
+                {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
+              </div>
+            )}
+            
+            {/* Digital Signature Area */}
+            {offer.details.showDigitalSignature && (
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="border-t pt-2 text-right" style={{ borderColor: `${primaryColor}40` }}>
+                  <p className="text-gray-500">{displayLanguage === 'bg' ? 'Дата:' : 'Date:'}</p>
+                  <div className="h-8"></div>
                 </div>
-              )}
-              
-              {settings?.footer?.showSignatureArea && (
-                <div className="mt-6 flex justify-end">
-                  <div className="border-t pt-2 w-48 text-right" style={{ borderColor: `${primaryColor}40` }}>
-                    <p className="text-gray-500">{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
-                  </div>
+                <div className="border-t pt-2 text-right" style={{ borderColor: `${primaryColor}40` }}>
+                  <p className="text-gray-500">{displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:'}</p>
+                  <div className="h-8"></div>
                 </div>
-              )}
-              
-              {settings?.footer?.includeSocialMedia && (
-                <div className="flex justify-center gap-4 mt-6">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
-                    <span className="text-xs" style={{ color: primaryColor }}>FB</span>
-                  </div>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
-                    <span className="text-xs" style={{ color: primaryColor }}>TW</span>
-                  </div>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
-                    <span className="text-xs" style={{ color: primaryColor }}>IN</span>
-                  </div>
+              </div>
+            )}
+            
+            {settings?.footer?.showSignatureArea && !offer.details.showDigitalSignature && (
+              <div className="mt-6 flex justify-end">
+                <div className="border-t pt-2 w-48 text-right" style={{ borderColor: `${primaryColor}40` }}>
+                  <p className="text-gray-500">{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+            
+            {settings?.footer?.includeSocialMedia && (
+              <div className="flex justify-center gap-4 mt-6">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
+                  <span className="text-xs" style={{ color: primaryColor }}>FB</span>
+                </div>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
+                  <span className="text-xs" style={{ color: primaryColor }}>TW</span>
+                </div>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${primaryColor}20` }}>
+                  <span className="text-xs" style={{ color: primaryColor }}>IN</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

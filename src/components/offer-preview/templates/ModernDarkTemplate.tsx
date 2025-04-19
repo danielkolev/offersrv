@@ -42,6 +42,29 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
   const vat = calculateVat();
   const total = calculateTotal();
   
+  // Calculate total with discounts applied
+  const calculateDiscountedTotal = () => {
+    let discountedTotal = total;
+    
+    // Apply special discounts if any exist
+    if (offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0) {
+      offer.details.specialDiscounts.forEach(discount => {
+        if (discount.type === 'percentage') {
+          // Apply percentage discount
+          discountedTotal -= discountedTotal * (discount.amount / 100);
+        } else {
+          // Apply fixed discount
+          discountedTotal -= discount.amount;
+        }
+      });
+    }
+    
+    return discountedTotal;
+  };
+  
+  const discountedTotal = calculateDiscountedTotal();
+  const hasDiscounts = offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0;
+  
   // Get attention text based on language
   const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
   
@@ -244,6 +267,32 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
             </table>
           </Card>
           
+          {/* Special Discounts Section */}
+          {hasDiscounts && (
+            <Card className="bg-white/10 border-0 overflow-hidden">
+              <div className="p-4">
+                <h3 className="font-semibold mb-3 text-white">
+                  {displayLanguage === 'bg' ? 'Специални отстъпки' : 'Special Discounts'}
+                </h3>
+                <div className="space-y-2">
+                  {offer.details.specialDiscounts?.map((discount, index) => (
+                    <div key={index} className="flex justify-between border-b border-white/10 pb-2">
+                      <span className="text-white/80">
+                        {discount.description}: {discount.amount} {discount.type === 'percentage' ? '%' : offer.details.currency}
+                      </span>
+                      <span className="text-white">
+                        -{discount.type === 'percentage' 
+                          ? (total * (discount.amount / 100)).toFixed(2)
+                          : discount.amount.toFixed(2)
+                        } {offer.details.currency}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          )}
+          
           {/* Totals and Notes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2">
@@ -254,6 +303,18 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
                       {displayLanguage === 'bg' ? 'Бележки' : 'Notes'}
                     </h3>
                     <div className="text-white/80 whitespace-pre-wrap">{offer.details.notes}</div>
+                  </div>
+                </Card>
+              )}
+              
+              {/* Custom Footer Text */}
+              {offer.details.customFooterText && (
+                <Card className="bg-white/10 border-0 mt-6">
+                  <div className="p-4">
+                    <h3 className="font-semibold mb-2 text-white">
+                      {displayLanguage === 'bg' ? 'Допълнителни условия' : 'Additional Terms'}
+                    </h3>
+                    <div className="text-white/80 whitespace-pre-wrap">{offer.details.customFooterText}</div>
                   </div>
                 </Card>
               )}
@@ -292,48 +353,73 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
                     <span className="text-white">{displayLanguage === 'bg' ? 'Обща сума' : 'Total'}:</span>
                     <span className="text-white">{total.toFixed(2)} {offer.details.currency}</span>
                   </div>
+                  
+                  {hasDiscounts && (
+                    <>
+                      <div className="flex justify-between pt-2 text-white/80">
+                        <span>{displayLanguage === 'bg' ? 'Отстъпки' : 'Discounts'}:</span>
+                        <span>-{(total - discountedTotal).toFixed(2)} {offer.details.currency}</span>
+                      </div>
+                      <div className="flex justify-between pt-2 border-t border-white/20 font-bold">
+                        <span className="text-white">{displayLanguage === 'bg' ? 'Крайна сума' : 'Final Total'}:</span>
+                        <span className="text-white">{discountedTotal.toFixed(2)} {offer.details.currency}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Card>
             </div>
           </div>
           
           {/* Footer */}
-          {settings?.content?.showFooter && (
-            <div className="pt-8 mt-8 border-t border-white/20 text-center">
-              <p className="text-white/70">{footerText}</p>
-              
-              {showBankDetails && (
-                <div className="mt-4 text-xs text-white/60">
-                  <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                  <p>{bankDetails.name}</p>
-                  <p>IBAN: {bankDetails.iban}</p>
-                  {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
+          <div className="pt-8 mt-8 border-t border-white/20 text-center">
+            <p className="text-white/70">{footerText}</p>
+            
+            {showBankDetails && (
+              <div className="mt-4 text-xs text-white/60">
+                <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
+                <p>{bankDetails.name}</p>
+                <p>IBAN: {bankDetails.iban}</p>
+                {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
+              </div>
+            )}
+            
+            {/* Digital Signature Area */}
+            {offer.details.showDigitalSignature && (
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="border-t border-white/20 pt-2 text-right">
+                  <p className="text-white/60">{displayLanguage === 'bg' ? 'Дата:' : 'Date:'}</p>
+                  <div className="h-8"></div>
                 </div>
-              )}
-              
-              {settings?.footer?.showSignatureArea && (
-                <div className="mt-6 flex justify-end">
-                  <div className="border-t border-white/20 pt-2 w-48 text-right">
-                    <p className="text-white/60">{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
-                  </div>
+                <div className="border-t border-white/20 pt-2 text-right">
+                  <p className="text-white/60">{displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:'}</p>
+                  <div className="h-8"></div>
                 </div>
-              )}
-              
-              {settings?.footer?.includeSocialMedia && (
-                <div className="flex justify-center gap-4 mt-6">
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                    <span className="text-xs">FB</span>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                    <span className="text-xs">TW</span>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                    <span className="text-xs">IN</span>
-                  </div>
+              </div>
+            )}
+            
+            {settings?.footer?.showSignatureArea && !offer.details.showDigitalSignature && (
+              <div className="mt-6 flex justify-end">
+                <div className="border-t border-white/20 pt-2 w-48 text-right">
+                  <p className="text-white/60">{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+            
+            {settings?.footer?.includeSocialMedia && (
+              <div className="flex justify-center gap-4 mt-6">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <span className="text-xs">FB</span>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <span className="text-xs">TW</span>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <span className="text-xs">IN</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
