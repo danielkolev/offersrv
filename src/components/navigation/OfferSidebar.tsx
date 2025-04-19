@@ -58,10 +58,7 @@ const OfferSidebar = ({
   }];
   return <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
       <SidebarHeader className="px-4">
-        <div className="flex items-center space-x-2 py-4">
-          
-          <span className="font-bold text-xl">Offersrv</span>
-        </div>
+        
         
         {user && <div className="mt-4 mb-2 max-w-full">
             <div className="truncate">
