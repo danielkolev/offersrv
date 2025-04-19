@@ -17,6 +17,8 @@ interface CompanyManagerProps {
 const CompanyManager: React.FC<CompanyManagerProps> = ({
   onSelectCompany,
   selectedCompanyId,
+  disableCreate = false,
+  prominentDisplay = false,
   currentLanguage = 'bg'
 }) => {
   const { user } = useAuth();
@@ -28,7 +30,7 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
     if (user) {
       fetchUserCompany();
     }
-  }, [user]);
+  }, [user, selectedCompanyId]);
 
   const fetchUserCompany = async () => {
     setLoading(true);
@@ -61,10 +63,10 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
   };
 
   const getCompanyName = (company: any) => {
-    if (currentLanguage === 'en' && company.name_en) {
+    if (currentLanguage === 'en' && company?.name_en) {
       return company.name_en;
     }
-    return company.name;
+    return company?.name;
   };
 
   if (loading) {
@@ -78,17 +80,17 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-2 px-4 py-3 w-full">
-      {company.logo ? (
+    <div className={`flex items-center gap-2 px-4 py-3 ${prominentDisplay ? 'bg-muted rounded-md' : ''} w-full`}>
+      {company.logo_url ? (
         <img 
-          src={company.logo} 
+          src={company.logo_url} 
           alt={getCompanyName(company)} 
           className="w-6 h-6 rounded-sm object-contain"
         />
       ) : (
         <Building className="w-5 h-5 text-muted-foreground" />
       )}
-      <span className="font-medium text-sm truncate">
+      <span className={`font-medium text-sm truncate ${prominentDisplay ? 'text-foreground' : ''}`}>
         {getCompanyName(company)}
       </span>
     </div>

@@ -41,20 +41,20 @@ const LandingPage = () => {
               {t.auth.appDescription}
             </h2>
             
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl">
+            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0">
               {language === 'en' 
-                ? "Optimize your business with professional offers. Save time, impress clients, and earn more for your business."
+                ? "Optimize your business with professional offers. Save time, impress clients, and boost your revenue."
                 : "Оптимизирайте бизнеса си с професионални оферти. Спестете време, впечатлете клиентите и спечелете пари за вашия бизнес."}
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4 mt-6">
               <div className="flex items-start space-x-3">
                 <div className="flex-shrink-0 p-1.5 bg-green-100 rounded-full">
                   <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="text-lg text-gray-700">{t.auth.feature1}</p>
+                <p className="text-gray-700 text-left">{t.auth.feature1}</p>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="flex-shrink-0 p-1.5 bg-green-100 rounded-full">
@@ -62,7 +62,7 @@ const LandingPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="text-lg text-gray-700">{t.auth.feature2}</p>
+                <p className="text-gray-700 text-left">{t.auth.feature2}</p>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="flex-shrink-0 p-1.5 bg-green-100 rounded-full">
@@ -70,13 +70,13 @@ const LandingPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="text-lg text-gray-700">{t.auth.feature3}</p>
+                <p className="text-gray-700 text-left">{t.auth.feature3}</p>
               </div>
             </div>
 
-            <div className="hidden lg:block">
+            <div className="hidden lg:block pt-4">
               <Button 
-                className="bg-blue-600 hover:bg-blue-700 text-base px-6 py-2 h-auto gap-2" 
+                className="bg-blue-600 hover:bg-blue-700 text-base px-5 py-2 h-10 gap-2" 
                 size="default"
               >
                 {t.auth.getStarted}
@@ -106,7 +106,7 @@ const LandingPage = () => {
           {/* Mobile CTA */}
           <div className="lg:hidden text-center mt-8">
             <Button 
-              className="bg-blue-600 hover:bg-blue-700 text-base px-6 py-2 h-auto gap-2" 
+              className="bg-blue-600 hover:bg-blue-700 text-base px-5 py-2 h-10 gap-2" 
               size="default"
             >
               {t.auth.getStarted}
@@ -115,6 +115,16 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Mobile optimization improvements */}
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          .container {
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

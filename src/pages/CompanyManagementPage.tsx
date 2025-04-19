@@ -33,32 +33,37 @@ const CompanyManagementPage = () => {
           .from('organizations')
           .select('id')
           .eq('owner_id', user.id)
-          .limit(1)
-          .single();
+          .limit(1);
           
         if (error) {
-          // If no company found, create one
-          if (error.code === 'PGRST116') {
-            const { data: newCompany, error: createError } = await supabase
-              .from('organizations')
-              .insert({
-                name: user.email?.split('@')[0] || 'My Company',
-                owner_id: user.id
-              })
-              .select('id')
-              .single();
-              
-            if (createError) throw createError;
-            if (newCompany) {
-              setSelectedCompanyId(newCompany.id);
-              localStorage.setItem('selectedCompanyId', newCompany.id);
-            }
-          } else {
-            throw error;
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          // User has a company, use it
+          setSelectedCompanyId(data[0].id);
+          localStorage.setItem('selectedCompanyId', data[0].id);
+        } else {
+          // User has no company, create one
+          const { data: newCompany, error: createError } = await supabase
+            .from('organizations')
+            .insert({
+              name: user.email?.split('@')[0] || 'My Company',
+              owner_id: user.id
+            })
+            .select('id');
+            
+          if (createError) throw createError;
+          
+          if (newCompany && newCompany.length > 0) {
+            setSelectedCompanyId(newCompany[0].id);
+            localStorage.setItem('selectedCompanyId', newCompany[0].id);
+            
+            toast({
+              title: t.common.success,
+              description: t.company.createdSuccessfully || 'Company created successfully',
+            });
           }
-        } else if (data) {
-          setSelectedCompanyId(data.id);
-          localStorage.setItem('selectedCompanyId', data.id);
         }
       } catch (err: any) {
         console.error('Error loading/creating company:', err);
@@ -74,7 +79,7 @@ const CompanyManagementPage = () => {
     };
     
     loadOrCreateCompany();
-  }, [user, toast, t.common.error]);
+  }, [user, toast, t.common.error, t.common.success, t.company.createdSuccessfully]);
 
   const handleSelectCompany = (companyId: string) => {
     setSelectedCompanyId(companyId);
@@ -107,6 +112,7 @@ const CompanyManagementPage = () => {
         <CompanyManager 
           onSelectCompany={handleSelectCompany} 
           selectedCompanyId={selectedCompanyId}
+          prominentDisplay={true}
         />
       </div>
       
