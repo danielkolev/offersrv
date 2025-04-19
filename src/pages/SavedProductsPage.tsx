@@ -41,7 +41,7 @@ const SavedProductsPage = () => {
       <ProductSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchType={searchType} setSearchType={setSearchType} />
       
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">{t.savedProducts.title}</h2>
+        
         <SavedProductsList products={products} filteredProducts={filteredProducts} isLoading={isLoading} onSelectProduct={handleSelectProduct} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct} />
       </div>
       
