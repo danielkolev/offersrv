@@ -3,7 +3,7 @@ export interface Company {
   id: string;
   name: string;
   vat_number?: string;
-  eik_number?: string; 
+  company_id?: string; // Changed from eik_number
   address?: string;
   city?: string;
   country?: string;
@@ -11,11 +11,14 @@ export interface Company {
   email?: string;
   website?: string;
   logo_url?: string | null;
+  logo_url_en?: string | null; // Added English logo
   created_at?: string;
   updated_at?: string;
   owner_id?: string;
   slogan?: string;
-  conclusion_text?: string; // New field for conclusion text
+  slogan_en?: string; // Added English slogan
+  conclusion_text?: string;
+  conclusion_text_en?: string; // Added English conclusion text
   
   // English translations
   name_en?: string;

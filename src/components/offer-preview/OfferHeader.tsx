@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { cn } from '@/lib/utils';
@@ -15,6 +14,16 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
   const companyName = displayLanguage === 'en' && offer.company.nameEn 
     ? offer.company.nameEn 
     : offer.company.name;
+  
+  // Get company slogan based on language
+  const companySlogan = displayLanguage === 'en' && offer.company.sloganEn
+    ? offer.company.sloganEn
+    : offer.company.slogan;
+  
+  // Get appropriate logo based on language
+  const companyLogo = displayLanguage === 'en' && offer.company.logo_url_en
+    ? offer.company.logo_url_en
+    : offer.company.logo_url;
   
   // Whether to show the logo or not (default to true)
   const showLogo = settings?.header?.showLogo !== false;
@@ -52,22 +61,21 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
   
   return (
     <div className="mb-6 flex justify-between items-start">
-      {/* Company info and logo on the left */}
       <div className="flex items-start gap-4">
-        {showLogo && offer.company.logo && (
+        {showLogo && companyLogo && (
           <div className="flex flex-col items-center">
             <img 
-              src={offer.company.logo} 
+              src={companyLogo} 
               alt={companyName} 
               className="w-16 h-16 object-contain pdf-preserve-ratio" 
               style={{ maxWidth: '64px', maxHeight: '64px' }}
             />
-            {offer.company.slogan && (
+            {companySlogan && (
               <div 
                 className="text-xs text-center mt-1 max-w-32" 
                 style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
               >
-                {offer.company.slogan}
+                {companySlogan}
               </div>
             )}
           </div>

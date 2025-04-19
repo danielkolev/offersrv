@@ -292,19 +292,22 @@ export type Database = {
           address_en: string | null
           city: string | null
           city_en: string | null
+          company_id: string | null
           conclusion_text: string | null
+          conclusion_text_en: string | null
           country: string | null
           country_en: string | null
           created_at: string
-          eik_number: string | null
           email: string | null
           id: string
           logo_url: string | null
+          logo_url_en: string | null
           name: string
           name_en: string | null
           owner_id: string
           phone: string | null
           slogan: string | null
+          slogan_en: string | null
           updated_at: string
           vat_number: string | null
           website: string | null
@@ -314,19 +317,22 @@ export type Database = {
           address_en?: string | null
           city?: string | null
           city_en?: string | null
+          company_id?: string | null
           conclusion_text?: string | null
+          conclusion_text_en?: string | null
           country?: string | null
           country_en?: string | null
           created_at?: string
-          eik_number?: string | null
           email?: string | null
           id?: string
           logo_url?: string | null
+          logo_url_en?: string | null
           name: string
           name_en?: string | null
           owner_id: string
           phone?: string | null
           slogan?: string | null
+          slogan_en?: string | null
           updated_at?: string
           vat_number?: string | null
           website?: string | null
@@ -336,19 +342,22 @@ export type Database = {
           address_en?: string | null
           city?: string | null
           city_en?: string | null
+          company_id?: string | null
           conclusion_text?: string | null
+          conclusion_text_en?: string | null
           country?: string | null
           country_en?: string | null
           created_at?: string
-          eik_number?: string | null
           email?: string | null
           id?: string
           logo_url?: string | null
+          logo_url_en?: string | null
           name?: string
           name_en?: string | null
           owner_id?: string
           phone?: string | null
           slogan?: string | null
+          slogan_en?: string | null
           updated_at?: string
           vat_number?: string | null
           website?: string | null
