@@ -13,8 +13,8 @@ import { Translations } from '@/types/language';
 interface ClientSearchProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  searchType: 'name' | 'vat' | 'eik';
-  setSearchType: (value: 'name' | 'vat' | 'eik') => void;
+  searchType: 'name' | 'vat' | 'eik' | 'email';
+  setSearchType: (value: 'name' | 'vat' | 'eik' | 'email') => void;
   t: Translations;
 }
 
@@ -29,12 +29,13 @@ const ClientSearch = ({
     <Tabs 
       defaultValue="name" 
       value={searchType} 
-      onValueChange={(value) => setSearchType(value as 'name' | 'vat' | 'eik')}
+      onValueChange={(value) => setSearchType(value as 'name' | 'vat' | 'eik' | 'email')}
     >
       <TabsList className="mb-4">
         <TabsTrigger value="name">{t.savedClients.searchByName}</TabsTrigger>
         <TabsTrigger value="vat">{t.savedClients.searchByVat}</TabsTrigger>
         <TabsTrigger value="eik">{t.savedClients.searchByEik || "Search by EIK"}</TabsTrigger>
+        <TabsTrigger value="email">{t.savedClients.searchByEmail || "Search by Email"}</TabsTrigger>
       </TabsList>
       
       <div className="relative mb-4">

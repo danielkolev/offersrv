@@ -22,6 +22,7 @@ export const savedClients = {
   searchByName: "Търсене по име",
   searchByVat: "Търсене по ДДС номер",
   searchByEik: "Търсене по ЕИК",
+  searchByEmail: "Търсене по имейл",
   selectClient: "Избери клиент",
   cancel: "Отказ",
   importFromOffer: "Импортиране от оферта",

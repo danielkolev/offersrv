@@ -22,6 +22,7 @@ export const savedClients = {
   searchByName: "Search by name",
   searchByVat: "Search by VAT",
   searchByEik: "Search by EIK",
+  searchByEmail: "Search by email",
   selectClient: "Select Client",
   cancel: "Cancel",
   importFromOffer: "Import from Offer",

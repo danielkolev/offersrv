@@ -21,6 +21,7 @@ export interface SavedClientsTranslations {
   searchByName: string;
   searchByVat: string;
   searchByEik: string;
+  searchByEmail: string;
   clientUpdatedSuccess: string;
   clientAddedSuccess: string;
   clientDeletedSuccess: string;
