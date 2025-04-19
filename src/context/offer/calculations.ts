@@ -20,14 +20,15 @@ export const calculateVat = (offer: Offer): number => {
   }
   
   const subtotal = calculateSubtotal(offer);
+  const vatRate = offer.details.vatRate || 0;
   
   if (offer.details.includeVat) {
-    // If prices include VAT, we calculate the VAT component that's already included
+    // If prices include VAT, calculate the VAT component that's already included
     // Formula: VAT = Total × VAT_Rate ÷ (100 + VAT_Rate)
-    return subtotal * (offer.details.vatRate / (100 + offer.details.vatRate));
+    return subtotal * (vatRate / (100 + vatRate));
   } else {
     // If prices don't include VAT, calculate additional VAT
-    return subtotal * (offer.details.vatRate / 100);
+    return subtotal * (vatRate / 100);
   }
 };
 
@@ -38,13 +39,15 @@ export const calculateTotal = (offer: Offer): number => {
   }
   
   const subtotal = calculateSubtotal(offer);
+  const transportCost = offer.details.transportCost || 0;
+  const otherCosts = offer.details.otherCosts || 0;
   
   if (offer.details.includeVat) {
-    // If prices already include VAT, don't add VAT again
-    return subtotal + (offer.details.transportCost || 0) + (offer.details.otherCosts || 0);
+    // If prices already include VAT, just add other costs
+    return subtotal + transportCost + otherCosts;
   } else {
-    // If prices don't include VAT, add VAT
+    // If prices don't include VAT, add VAT amount and other costs
     const vat = calculateVat(offer);
-    return subtotal + vat + (offer.details.transportCost || 0) + (offer.details.otherCosts || 0);
+    return subtotal + vat + transportCost + otherCosts;
   }
 };

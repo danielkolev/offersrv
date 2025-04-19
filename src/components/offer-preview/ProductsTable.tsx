@@ -20,7 +20,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   displayLanguage = 'bg',
   settings 
 }) => {
-  const { t } = useLanguage();
+  const { t, currency } = useLanguage();
   const { getLocalizedUnitName } = useProductUnits();
   
   const isCompactMode = settings?.layout?.compactMode === true;
@@ -77,12 +77,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
               </td>
               <td className="p-2 text-right">
                 <span className={cn(isBoldPrices ? 'font-medium' : '')}>
-                  {formatCurrency(product.unitPrice, displayLanguage)}
+                  {formatCurrency(product.unitPrice, displayLanguage, currency)}
                 </span>
               </td>
               <td className="p-2 text-right">
                 <span className={cn(isBoldPrices ? 'font-medium' : '')}>
-                  {formatCurrency(product.quantity * product.unitPrice, displayLanguage)}
+                  {formatCurrency(product.quantity * product.unitPrice, displayLanguage, currency)}
                 </span>
               </td>
             </tr>

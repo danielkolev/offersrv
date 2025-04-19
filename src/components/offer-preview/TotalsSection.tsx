@@ -79,7 +79,7 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
           </div>
         )}
         
-        {includeVat && (
+        {!includeVat && vat > 0 && (
           <div className="flex justify-between py-1">
             <span className="text-sm text-gray-600">
               {`${t.totals.vat} (${vatRate}%)`}:
