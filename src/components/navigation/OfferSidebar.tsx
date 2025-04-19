@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -6,19 +7,17 @@ import { cn } from '@/lib/utils';
 import { Home, FileEdit, Files, Users, Package, Building, Settings, FileText, LayoutTemplate } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
+
 interface OfferSidebarProps {
   isMobile?: boolean;
 }
+
 const OfferSidebar = ({
   isMobile = false
 }: OfferSidebarProps) => {
-  const {
-    t
-  } = useLanguage();
+  const { t } = useLanguage();
   const location = useLocation();
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const isActive = (path: string) => location.pathname === path;
 
@@ -56,34 +55,42 @@ const OfferSidebar = ({
     path: '/settings',
     icon: Settings
   }];
-  return <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
-      <SidebarHeader className="px-4">
-        
-        
-        {user && <div className="mt-4 mb-2 max-w-full">
-            <div className="truncate">
-              <CompanyManager onSelectCompany={setSelectedCompanyId} selectedCompanyId={selectedCompanyId} disableCreate={true} // Disable company creation for MVP
-          />
-            </div>
-          </div>}
+
+  return (
+    <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
+      <SidebarHeader className="px-4 py-2">
+        {user && (
+          <div className="mb-2 max-w-full border-b pb-3">
+            <CompanyManager 
+              onSelectCompany={setSelectedCompanyId} 
+              selectedCompanyId={selectedCompanyId} 
+              disableCreate={true} 
+              prominentDisplay={true} // Add a new prop to display name prominently
+            />
+          </div>
+        )}
       </SidebarHeader>
       
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map(item => <SidebarMenuItem key={item.path}>
+              {navItems.map(item => (
+                <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton asChild isActive={isActive(item.path)} tooltip={item.name}>
                     <Link to={item.path}>
                       <item.icon className="h-4 w-4" />
                       <span className="truncate">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
-                </SidebarMenuItem>)}
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-    </Sidebar>;
+    </Sidebar>
+  );
 };
+
 export default OfferSidebar;

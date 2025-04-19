@@ -13,7 +13,7 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
   const companyName = offer.company.name || 'Company Name';
   
   // Whether to show the logo or not (default to true)
-  const showLogo = settings?.layout?.showLogo !== false;
+  const showLogo = settings?.header?.showLogo !== false;
   
   // Whether to show the offer title or not (default to true)
   const showTitle = settings?.header?.showTitle !== false;
@@ -23,6 +23,12 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
   
   // Primary color for styling
   const primaryColor = settings?.appearance?.primaryColor || '';
+  
+  // Header text color (if specified)
+  const headerTextColor = settings?.header?.headerTextColor || '';
+  
+  // Use primary color as the default color if no specific header text color
+  const titleColor = headerTextColor || primaryColor || '';
   
   return (
     <div className="mb-6 flex justify-between items-start">
@@ -37,21 +43,28 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
               style={{ maxWidth: '64px', maxHeight: '64px' }}
             />
             {offer.company.slogan && (
-              <div className="text-xs text-center mt-1 max-w-32 text-gray-600">{offer.company.slogan}</div>
+              <div 
+                className="text-xs text-center mt-1 max-w-32" 
+                style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
+              >
+                {offer.company.slogan}
+              </div>
             )}
           </div>
         )}
         
         <div>
-          <h1 className={cn(
-            "text-xl font-bold",
-            primaryColor ? "" : "text-gray-900"
-          )}
-          style={{ color: primaryColor }}>
+          <h1 
+            className="text-xl font-bold"
+            style={{ color: titleColor || 'rgb(17, 24, 39)' }}
+          >
             {companyName}
           </h1>
           
-          <div className="text-sm text-gray-600 mt-1">
+          <div 
+            className="text-sm mt-1"
+            style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
+          >
             {offer.company.address && <p>{offer.company.address}</p>}
             {(offer.company.city || offer.company.country) && (
               <p>
@@ -75,11 +88,10 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
       
       {/* Offer title on the right */}
       {showTitle && (
-        <div className={cn(
-          "text-right font-bold text-2xl",
-          primaryColor ? "" : "text-blue-600"
-        )}
-        style={{ color: primaryColor }}>
+        <div 
+          className="text-right font-bold text-2xl"
+          style={{ color: titleColor || 'rgb(37, 99, 235)' }}
+        >
           {offerTitle}
         </div>
       )}

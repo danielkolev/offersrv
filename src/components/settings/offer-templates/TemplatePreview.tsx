@@ -20,9 +20,9 @@ const SAMPLE_OFFER: Offer = {
     eikNumber: '123456789',
     slogan: 'Building the future',
     conclusionText: 'Thank you for your business!',
-    phone: '+359 2 123 4567', // Added required field
-    email: 'info@acmecorp.com', // Added required field
-    website: 'www.acmecorp.com' // Added required field
+    phone: '+359 2 123 4567',
+    email: 'info@acmecorp.com',
+    website: 'www.acmecorp.com'
   },
   client: {
     name: 'Client Company Ltd.',
@@ -31,8 +31,8 @@ const SAMPLE_OFFER: Offer = {
     city: 'Sofia',
     country: 'Bulgaria',
     vatNumber: 'BG987654321',
-    email: 'john@clientcompany.com', // Added required field
-    phone: '+359 2 987 6543', // Added required field
+    email: 'john@clientcompany.com',
+    phone: '+359 2 987 6543',
   },
   details: {
     offerNumber: 'OF-2023-001',
@@ -45,7 +45,7 @@ const SAMPLE_OFFER: Offer = {
     transportCost: 10,
     otherCosts: 5,
     notes: 'This is a sample offer for preview purposes.',
-    offerLanguage: 'bg' as 'bg' | 'en' // Added required field
+    offerLanguage: 'bg' as 'bg' | 'en'
   },
   products: [
     {
@@ -66,7 +66,8 @@ const SAMPLE_OFFER: Offer = {
       unitPrice: 200,
       unit: 'pcs'
     }
-  ]
+  ],
+  templateSettings: {} // Ensure this property exists for compatibility
 };
 
 const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen = false }) => {
@@ -85,6 +86,12 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
     );
   }
   
+  // Create a sample offer with the current template settings
+  const sampleOfferWithTemplate = {
+    ...SAMPLE_OFFER,
+    templateSettings: settings
+  };
+  
   // Mock ref and functions for preview
   const previewRef = React.useRef<HTMLDivElement>(null);
   const setIsSaveDialogOpen = () => {};
@@ -100,7 +107,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
         return (
           <React.Suspense fallback={<div>Loading template...</div>}>
             <ModernDarkTemplate 
-              offer={SAMPLE_OFFER}
+              offer={sampleOfferWithTemplate}
               displayLanguage={displayLanguage}
               settings={settings}
               mode="view"
@@ -115,7 +122,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
         return (
           <React.Suspense fallback={<div>Loading template...</div>}>
             <ClassicTemplate 
-              offer={SAMPLE_OFFER}
+              offer={sampleOfferWithTemplate}
               displayLanguage={displayLanguage}
               settings={settings}
               mode="view"
@@ -132,7 +139,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ settings, fullScreen 
       className={`preview-container ${fullScreen ? 'w-full min-h-[600px]' : 'h-64'} border rounded-md overflow-hidden bg-white`}
       ref={previewRef}
     >
-      <div className="transform scale-[0.5] origin-top-left h-[200%] w-[200%]">
+      <div className="transform scale-[0.5] origin-top-left h-[200%] w-[200%] p-4">
         {renderTemplate()}
       </div>
     </div>

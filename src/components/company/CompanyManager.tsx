@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -11,21 +12,23 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { useCompanySelection } from '@/hooks/useCompanySelection';
-import CompanyForm from '@/components/company/CompanyForm'; // Add this import
+import CompanyForm from '@/components/company/CompanyForm';
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
   selectedCompanyId: string | null;
   disableCreate?: boolean;
+  prominentDisplay?: boolean; // New prop for prominent display
 }
 
 const CompanyManager = ({ 
   onSelectCompany, 
   selectedCompanyId,
-  disableCreate = false
+  disableCreate = false,
+  prominentDisplay = false
 }: CompanyManagerProps) => {
   
-  const { t, language } = useLanguage(); // Add language from useLanguage
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
   const [openSettings, setOpenSettings] = useState(false);
@@ -57,7 +60,7 @@ const CompanyManager = ({
       try {
         const { data, error } = await supabase
           .from('organizations')
-          .select('id, name, name_en, logo_url') // Add name_en to select
+          .select('id, name, name_en, logo_url')
           .eq('owner_id', user.id)
           .limit(1)
           .single();
@@ -79,7 +82,7 @@ const CompanyManager = ({
           setCompany({
             id: data.id,
             name: data.name,
-            name_en: data.name_en, // Add name_en to company state
+            name_en: data.name_en,
             logo_url: data.logo_url
           });
           
@@ -121,7 +124,7 @@ const CompanyManager = ({
     try {
       const { data, error } = await supabase
         .from('organizations')
-        .select('id, name, logo_url')
+        .select('id, name, name_en, logo_url')
         .eq('owner_id', user.id)
         .limit(1)
         .single();
@@ -132,6 +135,7 @@ const CompanyManager = ({
         setCompany({
           id: data.id,
           name: data.name,
+          name_en: data.name_en,
           logo_url: data.logo_url
         });
         
@@ -149,6 +153,52 @@ const CompanyManager = ({
     }
   };
 
+  // If prominent display, use a different layout
+  if (prominentDisplay) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {company.logo_url && (
+              <img 
+                src={company.logo_url} 
+                alt={getCompanyDisplayName(company)} 
+                className="h-8 w-8 object-contain rounded-sm"
+              />
+            )}
+            <h2 className="font-bold text-lg">
+              {isLoading ? (
+                <span className="text-sm text-muted-foreground">{t.common?.loading || "Loading..."}</span>
+              ) : error ? (
+                <span className="text-sm text-destructive">{error}</span>
+              ) : company.name ? (
+                <span>{getCompanyDisplayName(company)}</span>
+              ) : (
+                <span className="text-sm text-muted-foreground">{t.company.noCompanies}</span>
+              )}
+            </h2>
+          </div>
+        </div>
+        
+        <Sheet open={openSettings} onOpenChange={setOpenSettings}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>{t.company.companySettings || "Company Settings"}</SheetTitle>
+              <SheetDescription>
+                {t.company.manageCompanies || "Manage your company settings here."}
+              </SheetDescription>
+            </SheetHeader>
+            <CompanyForm 
+              onClose={handleCloseSettings} 
+              refreshCompanySelection={refreshCompanySelection} 
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+    );
+  }
+
+  // Original layout
   return (
     <div className="flex items-center space-x-2">
       <div className="flex items-center gap-2">
