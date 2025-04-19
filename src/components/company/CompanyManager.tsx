@@ -33,21 +33,25 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
   const fetchUserCompany = async () => {
     setLoading(true);
     try {
+      // Instead of using .single(), we'll get all companies and use the first one
       const { data, error } = await supabase
         .from('organizations')
         .select('*')
-        .eq('owner_id', user?.id)
-        .single();
+        .eq('owner_id', user?.id);
 
       if (error) {
-        console.error('Error fetching company:', error);
+        console.error('Error fetching companies:', error);
         return;
       }
 
-      setCompany(data);
-      if (data && !selectedCompanyId) {
-        onSelectCompany(data.id);
-        localStorage.setItem('selectedCompanyId', data.id);
+      if (data && data.length > 0) {
+        // Use the first company
+        setCompany(data[0]);
+        
+        if (!selectedCompanyId) {
+          onSelectCompany(data[0].id);
+          localStorage.setItem('selectedCompanyId', data[0].id);
+        }
       }
     } catch (error) {
       console.error('Error in fetchUserCompany:', error);
@@ -64,17 +68,17 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
   };
 
   if (loading) {
-    return <div className="text-sm text-muted-foreground">{t.common.loading}...</div>;
+    return <div className="text-sm text-muted-foreground px-4 py-3">{t.common.loading}...</div>;
   }
 
   if (!company) {
-    return <div className="text-sm text-muted-foreground">
+    return <div className="text-sm text-muted-foreground px-4 py-3">
       <p>{t.company.noCompanies}</p>
     </div>;
   }
 
   return (
-    <div className="flex items-center gap-2 px-2 py-3 w-full border-b border-sidebar-border">
+    <div className="flex items-center gap-2 px-4 py-3 w-full">
       {company.logo ? (
         <img 
           src={company.logo} 

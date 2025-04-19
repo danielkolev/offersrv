@@ -12,8 +12,8 @@ interface OfferHeaderProps {
 
 const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLanguage = 'bg' }) => {
   // Use company name based on language if available
-  const companyName = displayLanguage === 'en' && offer.company.nameEn 
-    ? offer.company.nameEn 
+  const companyName = displayLanguage === 'en' && offer.company.name_en 
+    ? offer.company.name_en 
     : offer.company.name;
   
   // Whether to show the logo or not (default to true)
@@ -71,19 +71,19 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
             style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
           >
             {/* Use address based on language */}
-            {displayLanguage === 'en' && offer.company.addressEn 
-              ? <p>{offer.company.addressEn}</p>
+            {displayLanguage === 'en' && offer.company.address_en 
+              ? <p>{offer.company.address_en}</p>
               : (offer.company.address && <p>{offer.company.address}</p>)
             }
             
             {/* Use city and country based on language */}
-            {((displayLanguage === 'en' ? offer.company.cityEn : offer.company.city) || 
-              (displayLanguage === 'en' ? offer.company.countryEn : offer.company.country)) && (
+            {((displayLanguage === 'en' ? offer.company.city_en : offer.company.city) || 
+              (displayLanguage === 'en' ? offer.company.country_en : offer.company.country)) && (
               <p>
-                {displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city}
-                {(displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city) && 
-                 (displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country) && ', '}
-                {displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country}
+                {displayLanguage === 'en' ? offer.company.city_en || offer.company.city : offer.company.city}
+                {(displayLanguage === 'en' ? offer.company.city_en || offer.company.city : offer.company.city) && 
+                 (displayLanguage === 'en' ? offer.company.country_en || offer.company.country : offer.company.country) && ', '}
+                {displayLanguage === 'en' ? offer.company.country_en || offer.company.country : offer.company.country}
               </p>
             )}
             
