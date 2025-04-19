@@ -9,6 +9,7 @@ import TimestampsSection from './offer-details/TimestampsSection';
 import OptionsSection from './offer-details/OptionsSection';
 import CostsSection from './offer-details/CostsSection';
 import NotesSection from './offer-details/NotesSection';
+import PaymentDeliverySection from './offer-details/PaymentDeliverySection';
 import { SupportedCurrency } from '@/types/language/base';
 
 const OfferDetailsForm = () => {
@@ -41,6 +42,12 @@ const OfferDetailsForm = () => {
         />
         
         <DateSection
+          offerDetails={offer.details}
+          updateOfferDetails={updateOfferDetails}
+          t={t}
+        />
+        
+        <PaymentDeliverySection
           offerDetails={offer.details}
           updateOfferDetails={updateOfferDetails}
           t={t}

@@ -5,6 +5,7 @@ import { Company } from '@/types/company';
 import { Translations } from '@/types/language';
 import BulgarianTabContent from './BulgarianTabContent';
 import EnglishTabContent from './EnglishTabContent';
+import RussianTabContent from './RussianTabContent';
 import { useLanguage } from '@/context/LanguageContext';
 import LoadingErrorFeedback from '@/components/common/LoadingErrorFeedback';
 
@@ -34,11 +35,21 @@ const CompanyLanguageTabs = ({
     />;
   }
   
+  // Determine default tab based on user's language
+  const getDefaultTab = () => {
+    switch (language) {
+      case 'bg': return 'bulgarian';
+      case 'ru': return 'russian';
+      default: return 'english';
+    }
+  };
+  
   return (
-    <Tabs defaultValue={language === 'en' ? 'english' : 'bulgarian'} className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
+    <Tabs defaultValue={getDefaultTab()} className="w-full">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="bulgarian">Български</TabsTrigger>
         <TabsTrigger value="english">English</TabsTrigger>
+        <TabsTrigger value="russian">Русский</TabsTrigger>
       </TabsList>
       
       <TabsContent value="bulgarian" className="space-y-4 mt-4">
@@ -51,6 +62,14 @@ const CompanyLanguageTabs = ({
 
       <TabsContent value="english" className="space-y-4 mt-4">
         <EnglishTabContent 
+          company={company}
+          onFieldChange={onFieldChange}
+          t={t}
+        />
+      </TabsContent>
+      
+      <TabsContent value="russian" className="space-y-4 mt-4">
+        <RussianTabContent 
           company={company}
           onFieldChange={onFieldChange}
           t={t}

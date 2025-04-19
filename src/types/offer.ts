@@ -1,3 +1,4 @@
+
 export interface CompanyInfo {
   id?: string;
   name: string;
@@ -22,6 +23,14 @@ export interface CompanyInfo {
   // Adding aliases for backward compatibility
   logo?: string | null; // Alias for logo_url
   conclusionText?: string; // Alias for conclusion_text
+  // Russian language fields
+  name_ru?: string;
+  address_ru?: string;
+  city_ru?: string;
+  country_ru?: string;
+  logo_url_ru?: string | null;
+  slogan_ru?: string;
+  conclusion_text_ru?: string;
 }
 
 export interface ClientInfo {
@@ -69,8 +78,15 @@ export interface OfferDetails {
   transportCost: number;
   otherCosts: number;
   notes: string;
-  offerLanguage: 'bg' | 'en';
-  currency?: 'BGN' | 'EUR' | 'USD'; // Added currency field
+  offerLanguage: 'bg' | 'en' | 'ru'; // Added Russian
+  currency?: 'BGN' | 'EUR' | 'USD'; // Currency field
+  // New fields for payment and delivery terms
+  paymentTerms?: string;
+  customPaymentTerms?: string;
+  deliveryTerms?: string;
+  customDeliveryTerms?: string;
+  discount?: number; // Discount percentage
+  version?: number; // Version tracking
 }
 
 export interface Offer {
@@ -83,4 +99,6 @@ export interface Offer {
   lastEdited?: string; // Added last edited timestamp
   templateId?: string; // Added template ID
   templateSettings?: any; // Added template settings
+  version?: number; // Version number of the offer
+  previousVersions?: string[]; // IDs of previous versions
 }
