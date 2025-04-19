@@ -14,8 +14,22 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
   // Use company name based on language if available
   const companyName = displayLanguage === 'en' && offer.company.nameEn 
     ? offer.company.nameEn 
-    : offer.company.name || 'Company Name';
+    : offer.company.name;
   
+  // Use company address based on language if available
+  const companyAddress = displayLanguage === 'en' && offer.company.addressEn 
+    ? offer.company.addressEn 
+    : offer.company.address;
+    
+  // Use city and country based on language if available
+  const companyCity = displayLanguage === 'en' && offer.company.cityEn 
+    ? offer.company.cityEn 
+    : offer.company.city;
+    
+  const companyCountry = displayLanguage === 'en' && offer.company.countryEn 
+    ? offer.company.countryEn 
+    : offer.company.country;
+
   // Whether to show the logo or not (default to true)
   const showLogo = settings?.header?.showLogo !== false;
   
@@ -26,18 +40,8 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
   const defaultOfferTitle = displayLanguage === 'en' ? 'OFFER' : 'ОФЕРТА';
   const offerTitle = settings?.header?.customTitle || defaultOfferTitle;
   
-  // Primary color for styling
-  const primaryColor = settings?.appearance?.primaryColor || '';
-  
-  // Header text color (if specified)
-  const headerTextColor = settings?.header?.headerTextColor || '';
-  
-  // Use primary color as the default color if no specific header text color
-  const titleColor = headerTextColor || primaryColor || '';
-  
   return (
     <div className="mb-6 flex justify-between items-start">
-      {/* Company info and logo on the left */}
       <div className="flex items-start gap-4">
         {showLogo && offer.company.logo && (
           <div className="flex flex-col items-center">
@@ -48,10 +52,7 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
               style={{ maxWidth: '64px', maxHeight: '64px' }}
             />
             {offer.company.slogan && (
-              <div 
-                className="text-xs text-center mt-1 max-w-32" 
-                style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
-              >
+              <div className="text-xs text-center mt-1 max-w-32 text-muted-foreground">
                 {offer.company.slogan}
               </div>
             )}
@@ -59,31 +60,16 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
         )}
         
         <div>
-          <h1 
-            className="text-xl font-bold"
-            style={{ color: titleColor || 'rgb(17, 24, 39)' }}
-          >
-            {companyName}
-          </h1>
+          <h1 className="text-xl font-bold text-foreground">{companyName}</h1>
           
-          <div 
-            className="text-sm mt-1"
-            style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
-          >
-            {/* Use address based on language */}
-            {displayLanguage === 'en' && offer.company.addressEn 
-              ? <p>{offer.company.addressEn}</p>
-              : (offer.company.address && <p>{offer.company.address}</p>)
-            }
+          <div className="text-sm mt-1 text-muted-foreground">
+            {companyAddress && <p>{companyAddress}</p>}
             
-            {/* Use city and country based on language */}
-            {((displayLanguage === 'en' ? offer.company.cityEn : offer.company.city) || 
-              (displayLanguage === 'en' ? offer.company.countryEn : offer.company.country)) && (
+            {(companyCity || companyCountry) && (
               <p>
-                {displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city}
-                {(displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city) && 
-                 (displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country) && ', '}
-                {displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country}
+                {companyCity}
+                {companyCity && companyCountry && ', '}
+                {companyCountry}
               </p>
             )}
             
@@ -100,12 +86,8 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
         </div>
       </div>
       
-      {/* Offer title on the right */}
       {showTitle && (
-        <div 
-          className="text-right font-bold text-2xl"
-          style={{ color: titleColor || 'rgb(37, 99, 235)' }}
-        >
+        <div className="text-right font-bold text-2xl text-primary">
           {offerTitle}
         </div>
       )}

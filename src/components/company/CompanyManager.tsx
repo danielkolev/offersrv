@@ -98,9 +98,9 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
   return (
     <div className={prominentDisplay ? "space-y-1" : ""}>
       {prominentDisplay && selectedCompany && (
-        <div className="font-semibold text-primary text-lg flex items-center gap-2">
-          <Building className="h-5 w-5" />
-          <span className="truncate max-w-[220px]">
+        <div className="font-semibold text-primary text-base flex items-center gap-2">
+          <Building className="h-4 w-4" />
+          <span className="truncate max-w-[180px]">
             {getCompanyName(selectedCompany)}
           </span>
         </div>
@@ -111,7 +111,10 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
         onValueChange={handleCompanyChange}
       >
         <SelectTrigger 
-          className={prominentDisplay ? "text-xs" : "w-full"}
+          className={cn(
+            prominentDisplay ? "text-xs h-8" : "w-full",
+            "text-sm"
+          )}
         >
           <SelectValue 
             placeholder={t.company.selectPlaceholder} 
@@ -119,7 +122,7 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
         </SelectTrigger>
         <SelectContent>
           {companies.map((company) => (
-            <SelectItem key={company.id} value={company.id}>
+            <SelectItem key={company.id} value={company.id} className="text-sm">
               {getCompanyName(company)}
             </SelectItem>
           ))}
