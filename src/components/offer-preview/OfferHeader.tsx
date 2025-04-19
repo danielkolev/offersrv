@@ -125,4 +125,3 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
 };
 
 export default OfferHeader;
-
