@@ -4,8 +4,7 @@ import { Company } from '@/types/company';
 import { Translations } from '@/types/language';
 import CompanyBasicInfo from './sections/CompanyBasicInfo';
 import CompanyLocationInfo from './sections/CompanyLocationInfo';
-import CompanyIdentificationInfo from './sections/CompanyIdentificationInfo';
-import CompanyContactInfo from './sections/CompanyContactInfo';
+import CompanySharedFields from './sections/CompanySharedFields';
 import CompanyAdditionalInfo from './sections/CompanyAdditionalInfo';
 
 interface BulgarianTabContentProps {
@@ -21,6 +20,7 @@ const BulgarianTabContent = ({
 }: BulgarianTabContentProps) => {
   return (
     <div className="space-y-6">
+      {/* Basic Info - Name and Address */}
       <CompanyBasicInfo 
         company={company} 
         onFieldChange={onFieldChange}
@@ -29,6 +29,7 @@ const BulgarianTabContent = ({
         isEnglish={false}
       />
 
+      {/* Location Info - City and Country */}
       <CompanyLocationInfo 
         company={company} 
         onFieldChange={onFieldChange}
@@ -37,21 +38,14 @@ const BulgarianTabContent = ({
         isEnglish={false}
       />
 
-      <CompanyIdentificationInfo 
-        company={company} 
+      {/* Shared Fields - VAT, EIK, Contact Info */}
+      <CompanySharedFields 
+        company={company}
         onFieldChange={onFieldChange}
-        vatLabel={t.companyInfo.vatNumber}
-        companyIdLabel={t.companyInfo.eikNumber}
+        t={t}
       />
 
-      <CompanyContactInfo 
-        company={company} 
-        onFieldChange={onFieldChange}
-        phoneLabel={t.companyInfo.phone}
-        emailLabel={t.companyInfo.email}
-        websiteLabel={t.companyInfo.website}
-      />
-
+      {/* Additional Info - Slogan and Conclusion */}
       <CompanyAdditionalInfo 
         company={company} 
         onFieldChange={onFieldChange}
