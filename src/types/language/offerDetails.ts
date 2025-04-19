@@ -19,4 +19,15 @@ export interface OfferDetailsTranslations {
   otherCostsPlaceholder: string;
   notes: string;
   notesPlaceholder: string;
+  // New translations
+  specialDiscounts: string;
+  addDiscount: string;
+  discountType: string;
+  discountAmount: string;
+  discountDescription: string;
+  percentageDiscount: string;
+  fixedDiscount: string;
+  showDigitalSignature: string;
+  customFooterText: string;
+  customFooterTextPlaceholder: string;
 }

@@ -1,4 +1,3 @@
-
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
@@ -46,7 +45,11 @@ export const defaultOfferDetails = {
   otherCosts: 0,
   notes: '',
   offerLanguage: 'bg' as 'bg' | 'en',
-  currency: 'BGN' as 'BGN' | 'EUR' | 'USD'
+  currency: 'BGN' as 'BGN' | 'EUR' | 'USD',
+  // New default values
+  specialDiscounts: [],
+  showDigitalSignature: false,
+  customFooterText: ''
 };
 
 export const defaultOffer: Offer = {

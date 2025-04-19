@@ -71,6 +71,14 @@ export interface OfferDetails {
   notes: string;
   offerLanguage: 'bg' | 'en';
   currency?: 'BGN' | 'EUR' | 'USD'; // Added currency field
+  // New fields
+  specialDiscounts?: {
+    amount: number;
+    type: 'percentage' | 'fixed';
+    description: string;
+  }[];
+  showDigitalSignature: boolean;
+  customFooterText?: string;
 }
 
 export interface Offer {
