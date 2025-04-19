@@ -30,6 +30,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   // Get the header text color from settings or use default
   const headerTextColor = settings?.appearance?.headerTextColor || settings?.appearance?.textColor || 'white';
   
+  // Get currency from settings if available, otherwise use from context
+  const displayCurrency = settings?.currency || currency;
+  
   return (
     <div className="w-full overflow-hidden rounded-md border print-visible">
       <table className="w-full">
@@ -80,12 +83,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
               </td>
               <td className="p-2 text-right">
                 <span className={cn(isBoldPrices ? 'font-medium' : '')}>
-                  {formatCurrency(product.unitPrice, displayLanguage, currency)}
+                  {formatCurrency(product.unitPrice, displayLanguage, displayCurrency)}
                 </span>
               </td>
               <td className="p-2 text-right">
                 <span className={cn(isBoldPrices ? 'font-medium' : '')}>
-                  {formatCurrency(product.quantity * product.unitPrice, displayLanguage, currency)}
+                  {formatCurrency(product.quantity * product.unitPrice, displayLanguage, displayCurrency)}
                 </span>
               </td>
             </tr>

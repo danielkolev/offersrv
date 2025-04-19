@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useOffer } from '@/context/offer/OfferContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -28,9 +28,20 @@ const OfferDetailsForm = () => {
     
   // Handle currency change
   const handleCurrencyChange = (value: string) => {
-    setCurrency(value as SupportedCurrency);
-    updateOfferDetails({ currency: value as SupportedCurrency });
+    const currencyValue = value as SupportedCurrency;
+    setCurrency(currencyValue);
+    updateOfferDetails({ currency: currencyValue });
   };
+  
+  // Sync currency from offer details to context when component mounts
+  useEffect(() => {
+    if (offer.details.currency) {
+      setCurrency(offer.details.currency);
+    } else if (currency) {
+      // If there's no currency in offer details but we have one in context, set it
+      updateOfferDetails({ currency });
+    }
+  }, []);
 
   return (
     <Card className="mb-6 bg-gray-50">
