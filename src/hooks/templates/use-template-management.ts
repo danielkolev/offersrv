@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTemplateState } from './use-template-state';
 import { useTemplateQueries } from './use-template-queries';
 import { useTemplateOperations } from './use-template-operations';
-import { TemplateType } from './types';
+import { TemplateType } from '@/types/template';
 
 export function useTemplateManagement() {
   const { user } = useAuth();

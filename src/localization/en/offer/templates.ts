@@ -1,3 +1,4 @@
+
 export const offerTemplates = {
   createTemplate: "Create Template",
   saveAsTemplate: "Save as Template",
@@ -40,6 +41,7 @@ export const offerTemplates = {
   offerTemplateName: "Offer template name",
   offerTemplateDescription: "Offer template description",
   fromTemplate: "From Template",
+  deleteTemplate: "Delete Template",
   deleteTemplateConfirm: "Are you sure you want to delete this template?",
   
   templates: {
@@ -54,6 +56,17 @@ export const offerTemplates = {
     templateSaved: "Changes saved",
     defaultTemplate: "Default Template",
     customizeAppearance: "Customize Appearance",
-    chooseColor: "Choose color"
+    chooseColor: "Choose color",
+    
+    // Add missing properties
+    currentTemplate: "Current Template",
+    chooseTemplate: "Choose Template",
+    noTemplates: "No templates found",
+    overwriteTemplate: "Overwrite Template",
+    templateDeleted: "Template deleted",
+    chooseDefaultTemplate: "Choose Default Template",
+    templateNameRequired: "Template name is required",
+    useTemplate: "Use Template",
+    createFromCurrent: "Create from current"
   }
 };

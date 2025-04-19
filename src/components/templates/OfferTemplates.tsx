@@ -8,29 +8,25 @@ import { Save } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Offer } from '@/types/offer';
+import { TemplateType } from '@/types/template';
 
 // Import new components
 import SaveTemplateDialog from './template-components/SaveTemplateDialog';
 import TemplatesTabs from './template-components/TemplatesTabs';
 
-// Define the basic template type
-interface TemplateType {
-  id: string;
-  name: string;
-  description: string;
-  template: Partial<Offer>;
-  language: 'bg' | 'en' | 'all';
-  isDefault?: boolean;
-}
-
 // Basic templates to get started with
-const DEFAULT_TEMPLATES: TemplateType[] = [
+const DEFAULT_TEMPLATES: any[] = [
   {
     id: 'basic',
     name: 'Basic Offer / Основна оферта',
     description: 'A simple offer with standard terms / Проста оферта със стандартни условия',
     language: 'all',
     isDefault: true,
+    settings: {
+      primaryColor: '#0891B2',
+      tableHeaderColor: '#F3F4F6',
+      orientation: 'portrait'
+    },
     template: {
       details: {
         offerNumber: '',
@@ -52,6 +48,11 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
     description: 'Проста оферта със стандартни условия на български',
     language: 'bg',
     isDefault: true,
+    settings: {
+      primaryColor: '#0891B2',
+      tableHeaderColor: '#F3F4F6',
+      orientation: 'portrait'
+    },
     template: {
       details: {
         offerNumber: '',
@@ -66,135 +67,6 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         offerLanguage: 'bg'
       }
     }
-  },
-  {
-    id: 'service',
-    name: 'Service Contract / Договор за услуга',
-    description: 'Template for service-based offers / Шаблон за оферти базирани на услуги',
-    language: 'all',
-    isDefault: true,
-    template: {
-      details: {
-        offerNumber: '',
-        date: new Date().toISOString().split('T')[0],
-        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        includeVat: true,
-        vatRate: 20,
-        showPartNumber: false,
-        transportCost: 0,
-        otherCosts: 0,
-        notes: 'Service terms: This offer is valid for the specified services only.\nPayment terms: 50% advance, 50% upon completion.\nValidity: This offer is valid for 30 days from the date issued.',
-        offerLanguage: 'en'
-      },
-      products: [
-        {
-          id: crypto.randomUUID(),
-          name: 'Consultation Services',
-          description: 'Initial consultation and requirements gathering',
-          quantity: 1,
-          unitPrice: 150,
-          unit: 'hour'
-        },
-        {
-          id: crypto.randomUUID(),
-          name: 'Implementation',
-          description: 'Implementation of the discussed solution',
-          quantity: 1,
-          unitPrice: 500,
-          unit: 'day'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service_bg',
-    name: 'Договор за услуга',
-    description: 'Шаблон за оферти базирани на услуги',
-    language: 'bg',
-    isDefault: true,
-    template: {
-      details: {
-        offerNumber: '',
-        date: new Date().toISOString().split('T')[0],
-        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        includeVat: true,
-        vatRate: 20,
-        showPartNumber: false,
-        transportCost: 0,
-        otherCosts: 0,
-        notes: 'Условия за услугата: Тази оферта е валидна само за посочените услуги.\nУсловия за плащане: 50% авансово, 50% при завършване.\nВалидност: Тази оферта е валидна за 30 дни от датата на издаване.',
-        offerLanguage: 'bg'
-      },
-      products: [
-        {
-          id: crypto.randomUUID(),
-          name: 'Консултантски услуги',
-          description: 'Първоначална консултация и събиране на изисквания',
-          quantity: 1,
-          unitPrice: 150,
-          unit: 'час'
-        },
-        {
-          id: crypto.randomUUID(),
-          name: 'Имплементация',
-          description: 'Имплементация на обсъжданото решение',
-          quantity: 1,
-          unitPrice: 500,
-          unit: 'ден'
-        }
-      ]
-    }
-  },
-  {
-    id: 'product',
-    name: 'Product Bundle / Продуктов пакет',
-    description: 'Template for product bundles with discount / Шаблон за продуктови пакети с отстъпка',
-    language: 'all',
-    isDefault: true,
-    template: {
-      details: {
-        offerNumber: '',
-        date: new Date().toISOString().split('T')[0],
-        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        includeVat: true,
-        vatRate: 20,
-        showPartNumber: true,
-        transportCost: 0,
-        otherCosts: 0,
-        notes: 'Bundle discount applied.\nDelivery time: 5-7 working days after order confirmation.\nPayment terms: 100% advance payment.',
-        offerLanguage: 'en'
-      },
-      products: [
-        {
-          id: crypto.randomUUID(),
-          name: 'Product Bundle',
-          description: 'Discounted product bundle',
-          partNumber: 'BUNDLE-001',
-          quantity: 1,
-          unitPrice: 258,
-          isBundle: true,
-          showBundledPrices: true,
-          bundledProducts: [
-            {
-              id: crypto.randomUUID(),
-              name: 'Product A',
-              description: 'Main product',
-              partNumber: 'PA-001',
-              quantity: 1,
-              unitPrice: 199
-            },
-            {
-              id: crypto.randomUUID(),
-              name: 'Product B',
-              description: 'Complementary product',
-              partNumber: 'PB-002',
-              quantity: 1,
-              unitPrice: 59
-            }
-          ]
-        }
-      ]
-    }
   }
 ];
 
@@ -204,7 +76,7 @@ const OfferTemplates = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('default');
-  const [userTemplates, setUserTemplates] = useState<TemplateType[]>([]);
+  const [userTemplates, setUserTemplates] = useState<any[]>([]);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -235,12 +107,17 @@ const OfferTemplates = () => {
       }
       
       if (data) {
-        const templates: TemplateType[] = data.map(item => ({
+        const templates: any[] = data.map(item => ({
           id: item.id,
           name: item.name || 'Unnamed Template',
           description: item.description || '',
-          template: item.offer_data as unknown as Partial<Offer>,
-          language: ((item.offer_data as any)?.details?.offerLanguage || 'all') as 'bg' | 'en' | 'all'
+          settings: {
+            primaryColor: '#0891B2',
+            tableHeaderColor: '#F3F4F6',
+            orientation: 'portrait'
+          },
+          language: ((item.offer_data as any)?.details?.offerLanguage || 'all'),
+          template: item.offer_data as unknown as Partial<Offer>
         }));
         
         setUserTemplates(templates);
@@ -370,7 +247,7 @@ const OfferTemplates = () => {
           onClick={() => setSaveDialogOpen(true)}
         >
           <Save className="h-4 w-4" />
-          {t.offer.templates.createFromCurrent}
+          {t.offer.createTemplate}
         </Button>
       </CardHeader>
       

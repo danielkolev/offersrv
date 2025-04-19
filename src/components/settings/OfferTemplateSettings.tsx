@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Settings2, Eye } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTemplateManagement } from '@/hooks/templates';
 
@@ -36,7 +36,7 @@ const OfferTemplateSettings = () => {
       <Card className="border rounded-lg shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>{t.offer.templates.currentTemplate}</span>
+            <span>{t.offer.templates.title}</span>
             {defaultTemplate?.is_default && (
               <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">
                 {t.offer.templates.defaultTemplate}
@@ -48,18 +48,16 @@ const OfferTemplateSettings = () => {
           <div className="flex items-center">
             <div className="flex-1">
               <p className="font-medium text-lg">
-                {defaultTemplate?.settings?.templateType === 'modernDark' 
-                  ? t.offer.templates.designTemplates.modernDark 
-                  : t.offer.templates.designTemplates.classic}
+                {t.offer.templates.defaultTemplate}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                {defaultTemplate?.settings?.appearance?.primaryColor && (
+                {defaultTemplate?.settings?.primaryColor && (
                   <span className="inline-flex items-center">
                     <span 
                       className="h-3 w-3 rounded-full mr-1 inline-block"
-                      style={{ backgroundColor: defaultTemplate.settings.appearance.primaryColor }}
+                      style={{ backgroundColor: defaultTemplate.settings.primaryColor }}
                     ></span>
-                    {defaultTemplate.settings.appearance.primaryColor}
+                    {defaultTemplate.settings.primaryColor}
                   </span>
                 )}
               </p>

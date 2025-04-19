@@ -23,7 +23,7 @@ const TemplatesPage = () => {
   const [selectedSettings, setSelectedSettings] = useState({
     primaryColor: '#0891B2',
     tableHeaderColor: '#F3F4F6',
-    orientation: 'portrait'
+    orientation: 'portrait' as 'portrait' | 'landscape'
   });
   
   const {

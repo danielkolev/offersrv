@@ -1,3 +1,4 @@
+
 export const offerTemplates = {
   createTemplate: "Създай темплейт",
   saveAsTemplate: "Запази като шаблон",
@@ -55,6 +56,17 @@ export const offerTemplates = {
     templateSaved: "Промените са запазени",
     defaultTemplate: "Основен шаблон",
     customizeAppearance: "Персонализиране на изгледа",
-    chooseColor: "Изберете цвят"
+    chooseColor: "Изберете цвят",
+    
+    // Add missing properties
+    currentTemplate: "Текущ шаблон",
+    chooseTemplate: "Избери шаблон",
+    noTemplates: "Няма намерени шаблони",
+    overwriteTemplate: "Презапиши шаблон",
+    templateDeleted: "Шаблонът е изтрит",
+    chooseDefaultTemplate: "Избери шаблон по подразбиране",
+    templateNameRequired: "Името на шаблона е задължително",
+    useTemplate: "Използвай шаблон",
+    createFromCurrent: "Създай от текущия"
   }
 };
