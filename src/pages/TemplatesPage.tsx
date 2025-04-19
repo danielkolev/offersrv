@@ -13,32 +13,31 @@ import {
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
-import { 
-  ColorPicker, 
-  FormSection, 
-  Button, 
-  RadioGroup, 
-  RadioItem, 
-  Label 
-} from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { RadioGroup, RadioItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/LanguageContext';
-import { useUser } from '@/hooks/useUser';
+import { useAuth } from '@/context/AuthContext';
 import { useTemplateManagement } from '@/hooks/templates';
 import TemplatesList from '@/components/settings/offer-templates/TemplatesList';
 import CreateTemplateDialog from '@/components/settings/offer-templates/CreateTemplateDialog';
 import BackButton from '@/components/navigation/BackButton';
 import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
 
+// Import or define necessary component/function
+import ColorPicker from '@/components/ui/ColorPicker';
+import FormSection from '@/components/ui/form-section';
+
 const TemplatesPage = () => {
   const { t } = useLanguage();
-  const { user } = useUser();
+  const { user } = useAuth();
   const { 
     userTemplates, 
     defaultTemplateId, 
     isLoading, 
     setDefaultTemplate, 
-    addTemplate, 
-    updateTemplate,
+    createTemplate, 
+    updateTemplateSettings,
     deleteTemplate
   } = useTemplateManagement();
   
@@ -102,7 +101,7 @@ const TemplatesPage = () => {
         }
       };
       
-      updateTemplate(updatedTemplate);
+      updateTemplateSettings(selectedTemplate.id, updatedTemplate.settings);
       setEditMode(false);
       setSelectedTemplate(null);
     }
@@ -134,7 +133,7 @@ const TemplatesPage = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <FormSection title={t.offer.templates.customizeAppearance}>
+                <FormSection title={t.offer.templates.title}>
                   <div className="grid gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="primaryColor">{t.offer.templates.primaryColor}</Label>
@@ -186,7 +185,15 @@ const TemplatesPage = () => {
                 primaryColor={primaryColor}
                 tableHeaderColor={tableHeaderColor}
                 orientation={orientation}
-                settings={selectedTemplate.settings}
+                settings={{
+                  appearance: {
+                    primaryColor,
+                    tableHeaderColor
+                  },
+                  layout: {
+                    orientation
+                  }
+                }}
               />
             </div>
           </CardContent>
@@ -229,7 +236,7 @@ const TemplatesPage = () => {
       <CreateTemplateDialog 
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        onCreateTemplate={addTemplate}
+        onCreateTemplate={createTemplate}
       />
     </div>
   );

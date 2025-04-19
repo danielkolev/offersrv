@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus, Search } from 'lucide-react';
 import SavedOffersList from './SavedOffersList';
-import { getOffers, deleteOffer } from './savedOffersService';
+import { supabase } from '@/integrations/supabase/client';
 import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { useOffer } from '@/context/offer/OfferContext';
@@ -28,13 +28,18 @@ const SavedOffersContent: React.FC = () => {
   const fetchOffers = async () => {
     setIsLoading(true);
     try {
-      const offers = await getOffers();
-      setSavedOffers(offers);
+      const { data, error } = await supabase
+        .from('saved_offers')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+      setSavedOffers(data || []);
     } catch (error) {
       console.error('Error fetching offers:', error);
       toast({
         title: t.common.error,
-        description: t.common.errorOccurred,
+        description: t.common.error,
         variant: 'destructive',
       });
     } finally {
@@ -65,7 +70,13 @@ const SavedOffersContent: React.FC = () => {
   
   const handleDeleteOffer = async (id: string) => {
     try {
-      await deleteOffer(id);
+      const { error } = await supabase
+        .from('saved_offers')
+        .delete()
+        .eq('id', id);
+        
+      if (error) throw error;
+      
       setSavedOffers(savedOffers.filter(offer => offer.id !== id));
       toast({
         title: t.common.success,

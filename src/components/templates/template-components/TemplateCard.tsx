@@ -9,7 +9,7 @@ import { TemplateType } from '@/types/template';
 interface TemplateCardProps {
   template: TemplateType;
   isUserTemplate?: boolean;
-  onSelectTemplate: (template: Partial<any>) => void;
+  onSelectTemplate: (template: any) => void;
   onDeleteTemplate?: (templateId: string) => void;
 }
 
@@ -20,6 +20,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   onDeleteTemplate
 }) => {
   const { t } = useLanguage();
+
+  // Check if language property exists directly on the template or in the settings
+  const templateLanguage = template.language || 
+                          (template.settings?.details?.offerLanguage) || 
+                          'en';
 
   return (
     <Card 
@@ -33,10 +38,10 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
               <FileText className="h-4 w-4" />
               {template.name}
             </h4>
-            {template.template?.details?.offerLanguage && (
+            {templateLanguage && templateLanguage !== 'all' && (
               <div className="text-xs inline-flex items-center gap-1 text-muted-foreground mb-2">
                 <Languages className="h-3 w-3" /> 
-                {template.template.details.offerLanguage === 'bg' ? 'Български' : 'English'}
+                {templateLanguage === 'bg' ? 'Български' : 'English'}
               </div>
             )}
             <p className="text-sm text-muted-foreground mb-4 flex-grow">{template.description}</p>
@@ -56,20 +61,13 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           )}
         </div>
         
-        {template.template?.products && template.template.products.length > 0 && (
-          <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-            <FileText className="h-3 w-3" /> 
-            {template.template.products.length} {template.template.products.length === 1 ? 'product' : 'products'}
-          </div>
-        )}
-        
         <Button 
           variant="outline" 
           size="sm" 
           className="w-full justify-center mt-auto"
           onClick={(e) => {
             e.stopPropagation();
-            onSelectTemplate(template.template);
+            onSelectTemplate(template);
           }}
         >
           {t.offer.templates.useTemplate}

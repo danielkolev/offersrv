@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import CompanyInfoSettings from './CompanyInfoSettings';
 import CompanySelector from '../company/CompanySelector';
+import { Company } from '@/types/company';
 
 interface CompanySettingsModalProps {
   open: boolean;
@@ -23,15 +24,35 @@ const CompanySettingsModal = ({ open, onOpenChange }: CompanySettingsModalProps)
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Reset selected company when dialog closes
+  // Fetch companies when dialog opens
   useEffect(() => {
-    if (!open) {
-      // Don't reset the selected company when closing to maintain state
+    if (open && user) {
+      fetchCompanies();
     }
-  }, [open]);
+  }, [open, user]);
+
+  const fetchCompanies = async () => {
+    if (!user) return;
+    
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      setCompanies(data || []);
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSelectCompany = (companyId: string) => {
     setSelectedCompanyId(companyId);
@@ -67,6 +88,8 @@ const CompanySettingsModal = ({ open, onOpenChange }: CompanySettingsModalProps)
 
         <div className="py-4">
           <CompanySelector 
+            companies={companies}
+            selectedCompanyId={selectedCompanyId}
             onSelectCompany={handleSelectCompany}
             onCreateCompany={() => {}} // We'll keep this empty for now
           />

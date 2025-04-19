@@ -6,6 +6,21 @@ import { offerStatus } from './offerStatus';
 import { offerDraft } from './offerDraft';
 import { offerPreview } from './offerPreview';
 
+// Make sure all the required properties exist in offerTemplates.templates
+const templates = {
+  ...offerTemplates.templates,
+  // Add any missing properties if they weren't present in the original file
+  currentTemplate: offerTemplates.templates.currentTemplate || "Текущ шаблон",
+  chooseTemplate: offerTemplates.templates.chooseTemplate || "Избери шаблон",
+  noTemplates: offerTemplates.templates.noTemplates || "Няма намерени шаблони",
+  overwriteTemplate: offerTemplates.templates.overwriteTemplate || "Презаписване на шаблон",
+  templateDeleted: offerTemplates.templates.templateDeleted || "Шаблонът е изтрит",
+  chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate || "Избери стандартен шаблон",
+  templateNameRequired: offerTemplates.templates.templateNameRequired || "Името на шаблона е задължително",
+  useTemplate: offerTemplates.templates.useTemplate || "Използвай",
+  createFromCurrent: offerTemplates.templates.createFromCurrent || "Създай от текущата оферта"
+};
+
 // Combine all offer translation sections
 export const offer = {
   ...offerBase,
@@ -13,22 +28,22 @@ export const offer = {
   ...offerStatus,
   ...offerDraft,
   offerPreview, // Keep as a nested property
-  templates: offerTemplates.templates, // Add templates as a nested property
+  templates, // Add templates as a nested property
   
   // Add additional properties that are referenced directly from offer.templates in components
   // but need to be kept at the root level for backward compatibility
-  currentTemplate: offerTemplates.templates.currentTemplate,
-  chooseTemplate: offerTemplates.templates.chooseTemplate,
-  noTemplates: offerTemplates.templates.noTemplates,
-  overwriteTemplate: offerTemplates.templates.overwriteTemplate,
-  templateSaved: offerTemplates.templates.templateSaved,
-  templateDeleted: offerTemplates.templates.templateDeleted,
-  chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate,
-  templateNameRequired: offerTemplates.templates.templateNameRequired,
-  useTemplate: offerTemplates.templates.useTemplate,
+  currentTemplate: templates.currentTemplate,
+  chooseTemplate: templates.chooseTemplate,
+  noTemplates: templates.noTemplates,
+  overwriteTemplate: templates.overwriteTemplate,
+  templateSaved: templates.templateSaved,
+  templateDeleted: templates.templateDeleted,
+  chooseDefaultTemplate: templates.chooseDefaultTemplate,
+  templateNameRequired: templates.templateNameRequired,
+  useTemplate: templates.useTemplate,
   saveAsTemplate: offerTemplates.saveAsTemplate,
   createTemplate: offerTemplates.createTemplate,
   deleteTemplate: offerTemplates.deleteTemplate,
   deleteTemplateConfirm: offerTemplates.deleteTemplateConfirm,
-  createFromCurrent: offerTemplates.templates.createFromCurrent
+  createFromCurrent: templates.createFromCurrent
 };

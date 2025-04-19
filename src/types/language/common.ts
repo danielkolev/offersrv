@@ -66,12 +66,13 @@ export interface CommonTranslations {
   manageAccount: string;
   back: string;
   confirmation: string;
-  confirmationQuestion: string; // Add the missing property
+  confirmationQuestion: string;
   all: string;
   reset: string;
   noName: string;
   update: string;
   description: string;
+  noDescription: string;
   saving: string;
   home: string;
   templates: string;
@@ -84,4 +85,15 @@ export interface CommonTranslations {
   collapseAll: string;
   language: string;
   copied: string;
+  errorOccurred: string;
+  open: string;
+  more: string;
+  import: string;
+  help: string;
+  logout: string;
+  login: string;
+  register: string;
+  submit: string;
+  select: string;
+  download: string;
 }
