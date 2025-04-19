@@ -52,7 +52,10 @@ const SAMPLE_OFFER: Offer = {
     transportCost: 10,
     otherCosts: 5,
     notes: 'This is a sample offer for preview purposes.',
-    offerLanguage: 'bg' as 'bg' | 'en'
+    offerLanguage: 'bg' as 'bg' | 'en',
+    showDigitalSignature: false,
+    specialDiscounts: [],
+    customFooterText: ''
   },
   products: [
     {

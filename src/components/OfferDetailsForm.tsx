@@ -9,6 +9,8 @@ import TimestampsSection from './offer-details/TimestampsSection';
 import OptionsSection from './offer-details/OptionsSection';
 import CostsSection from './offer-details/CostsSection';
 import NotesSection from './offer-details/NotesSection';
+import SpecialDiscountsSection from './offer-details/SpecialDiscountsSection';
+import FooterOptionsSection from './offer-details/FooterOptionsSection';
 import { SupportedCurrency } from '@/types/language/base';
 
 const OfferDetailsForm = () => {
@@ -64,7 +66,19 @@ const OfferDetailsForm = () => {
           t={t}
         />
         
+        <SpecialDiscountsSection
+          offerDetails={offer.details}
+          updateOfferDetails={updateOfferDetails}
+          t={t}
+        />
+        
         <NotesSection
+          offerDetails={offer.details}
+          updateOfferDetails={updateOfferDetails}
+          t={t}
+        />
+        
+        <FooterOptionsSection
           offerDetails={offer.details}
           updateOfferDetails={updateOfferDetails}
           t={t}
