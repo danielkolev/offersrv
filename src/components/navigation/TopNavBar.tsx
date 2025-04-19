@@ -4,13 +4,14 @@ import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Logo from './Logo';
 import NavbarUtilities from './NavbarUtilities';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import MobileNavToggle from './MobileNavToggle';
 
 const TopNavBar = () => {
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
+  // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -20,6 +21,11 @@ const TopNavBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu when location changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   return (
     <header
       className={cn(
@@ -27,16 +33,21 @@ const TopNavBar = () => {
         scrolled ? "shadow-sm" : ""
       )}
     >
-      <div className="container flex h-14 items-center gap-4">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger />
+      <div className="container flex h-16 items-center">
+        <div className="flex items-center gap-4 w-full justify-between md:justify-start">
+          <div className="md:hidden">
+            <MobileNavToggle 
+              isMobileMenuOpen={isMobileMenuOpen} 
+              setIsMobileMenuOpen={setIsMobileMenuOpen} 
+            />
+          </div>
           <Logo />
-        </div>
-        <div className="flex-1 flex justify-end">
-          <NavbarUtilities 
-            isMobileMenuOpen={isMobileMenuOpen} 
-            setIsMobileMenuOpen={setIsMobileMenuOpen} 
-          />
+          <div className="hidden md:flex md:flex-1 md:justify-end">
+            <NavbarUtilities 
+              isMobileMenuOpen={isMobileMenuOpen}
+              setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
+          </div>
         </div>
       </div>
     </header>
