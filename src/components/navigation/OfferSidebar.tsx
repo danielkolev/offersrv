@@ -15,7 +15,7 @@ interface OfferSidebarProps {
 const OfferSidebar = ({
   isMobile = false
 }: OfferSidebarProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const { user } = useAuth();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -65,7 +65,8 @@ const OfferSidebar = ({
               onSelectCompany={setSelectedCompanyId} 
               selectedCompanyId={selectedCompanyId} 
               disableCreate={true} 
-              prominentDisplay={true} // Add a new prop to display name prominently
+              prominentDisplay={true}
+              currentLanguage={language}
             />
           </div>
         )}

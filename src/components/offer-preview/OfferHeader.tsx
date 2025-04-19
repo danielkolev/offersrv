@@ -2,15 +2,19 @@
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { cn } from '@/lib/utils';
+import { SupportedLanguage } from '@/types/language/base';
 
 interface OfferHeaderProps {
   offer: Offer;
   settings?: any;
+  displayLanguage?: SupportedLanguage;
 }
 
-const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
-  // Use company name if passed, otherwise use default from offer
-  const companyName = offer.company.name || 'Company Name';
+const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLanguage = 'bg' }) => {
+  // Use company name based on language if available
+  const companyName = displayLanguage === 'en' && offer.company.nameEn 
+    ? offer.company.nameEn 
+    : offer.company.name || 'Company Name';
   
   // Whether to show the logo or not (default to true)
   const showLogo = settings?.header?.showLogo !== false;
@@ -18,8 +22,9 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
   // Whether to show the offer title or not (default to true)
   const showTitle = settings?.header?.showTitle !== false;
   
-  // Get the custom offer title or use a default
-  const offerTitle = settings?.header?.customTitle || 'ОФЕРТА';
+  // Get the custom offer title or use a default based on language
+  const defaultOfferTitle = displayLanguage === 'en' ? 'OFFER' : 'ОФЕРТА';
+  const offerTitle = settings?.header?.customTitle || defaultOfferTitle;
   
   // Primary color for styling
   const primaryColor = settings?.appearance?.primaryColor || '';
@@ -65,14 +70,23 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings }) => {
             className="text-sm mt-1"
             style={{ color: headerTextColor || settings?.appearance?.textColor || 'rgb(75, 85, 99)' }}
           >
-            {offer.company.address && <p>{offer.company.address}</p>}
-            {(offer.company.city || offer.company.country) && (
+            {/* Use address based on language */}
+            {displayLanguage === 'en' && offer.company.addressEn 
+              ? <p>{offer.company.addressEn}</p>
+              : (offer.company.address && <p>{offer.company.address}</p>)
+            }
+            
+            {/* Use city and country based on language */}
+            {((displayLanguage === 'en' ? offer.company.cityEn : offer.company.city) || 
+              (displayLanguage === 'en' ? offer.company.countryEn : offer.company.country)) && (
               <p>
-                {offer.company.city}
-                {offer.company.city && offer.company.country && ', '}
-                {offer.company.country}
+                {displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city}
+                {(displayLanguage === 'en' ? offer.company.cityEn || offer.company.city : offer.company.city) && 
+                 (displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country) && ', '}
+                {displayLanguage === 'en' ? offer.company.countryEn || offer.company.country : offer.company.country}
               </p>
             )}
+            
             {(offer.company.phone || offer.company.email || offer.company.website) && (
               <p>
                 {offer.company.phone && <span>{offer.company.phone}</span>}

@@ -27,6 +27,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   const isBoldPrices = settings?.content?.boldPrices !== false;
   const alternateRowColors = settings?.content?.alternateRowColors === true;
   
+  // Get the header text color from settings or use default
+  const headerTextColor = settings?.appearance?.headerTextColor || settings?.appearance?.textColor || 'white';
+  
   return (
     <div className="w-full overflow-hidden rounded-md border print-visible">
       <table className="w-full">
@@ -38,7 +41,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
             )}
             style={{ 
               backgroundColor: settings?.appearance?.primaryColor || "",
-              color: settings?.appearance?.textColor || ""
+              color: headerTextColor
             }}
           >
             <th className="p-2 text-left">{t.offer.item}</th>

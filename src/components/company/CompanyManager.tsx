@@ -1,241 +1,130 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
-import { useCompanySelection } from '@/hooks/useCompanySelection';
-import CompanyForm from '@/components/company/CompanyForm';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLanguage } from '@/context/LanguageContext';
+import { Building } from 'lucide-react';
+import { SupportedLanguage } from '@/types/language/base';
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
   selectedCompanyId: string | null;
   disableCreate?: boolean;
-  prominentDisplay?: boolean; // New prop for prominent display
+  prominentDisplay?: boolean;
+  currentLanguage?: SupportedLanguage;
 }
 
-const CompanyManager = ({ 
+const CompanyManager: React.FC<CompanyManagerProps> = ({ 
   onSelectCompany, 
   selectedCompanyId,
   disableCreate = false,
-  prominentDisplay = false
-}: CompanyManagerProps) => {
-  
-  const { t, language } = useLanguage();
+  prominentDisplay = false,
+  currentLanguage = 'bg'
+}) => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [openSettings, setOpenSettings] = useState(false);
-  const [company, setCompany] = useState<{ id: string; name: string; name_en?: string | null; logo_url?: string | null }>({ id: '', name: '' });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  const { 
-    selectedCompanyId: currentCompanyId,
-    setCompanyId,
-    refreshCompanySelection
-  } = useCompanySelection();
-
-  // Helper function to get company name based on language
-  const getCompanyDisplayName = (companyData: { name: string; name_en?: string | null }) => {
-    if (language === 'en' && companyData.name_en) {
-      return companyData.name_en;
-    }
-    return companyData.name;
-  };
+  const { t } = useLanguage();
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserCompany = async () => {
-      if (!user) return;
-      
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const { data, error } = await supabase
-          .from('organizations')
-          .select('id, name, name_en, logo_url')
-          .eq('owner_id', user.id)
-          .limit(1)
-          .single();
-          
-        if (error) {
-          // If no company found, this will error with "No rows returned"
-          if (error.code === 'PGRST116') {
-            setCompany({ id: '', name: '' });
-            setError('No company found. Please create a company first.');
-          } else {
-            setError(error.message);
-            toast({
-              title: t.company.error,
-              description: error.message,
-              variant: "destructive",
-            });
-          }
-        } else if (data) {
-          setCompany({
-            id: data.id,
-            name: data.name,
-            name_en: data.name_en,
-            logo_url: data.logo_url
-          });
-          
-          // Select this company automatically
-          setCompanyId(data.id);
-          onSelectCompany(data.id);
-          
-          // Store in localStorage for persistence
-          localStorage.setItem('selectedCompanyId', data.id);
-        }
-      } catch (err: any) {
-        setError(err.message);
-        toast({
-          title: t.company.error,
-          description: err.message,
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchUserCompany();
-  }, [user, toast, t.company.error, onSelectCompany, setCompanyId, language]);
+    if (user) {
+      fetchUserCompanies();
+    }
+  }, [user]);
 
-  
-  const handleCloseSettings = () => {
-    setOpenSettings(false);
-    // Refresh company data after settings changes
-    fetchUserCompany();
-  };
+  useEffect(() => {
+    // Check localStorage for saved selection
+    const savedCompanyId = localStorage.getItem('selectedCompanyId');
+    if (savedCompanyId && !selectedCompanyId) {
+      onSelectCompany(savedCompanyId);
+    }
+  }, [companies, selectedCompanyId, onSelectCompany]);
 
-  const fetchUserCompany = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    setError(null);
-    
+  const fetchUserCompanies = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('organizations')
-        .select('id, name, name_en, logo_url')
-        .eq('owner_id', user.id)
-        .limit(1)
-        .single();
-        
+        .select('*')
+        .eq('owner_id', user?.id);
+
       if (error) {
-        setError(error.message);
-      } else if (data) {
-        setCompany({
-          id: data.id,
-          name: data.name,
-          name_en: data.name_en,
-          logo_url: data.logo_url
-        });
-        
-        // Select this company
-        setCompanyId(data.id);
-        onSelectCompany(data.id);
-        
-        // Store in localStorage
-        localStorage.setItem('selectedCompanyId', data.id);
+        console.error('Error fetching companies:', error);
+        return;
       }
-    } catch (err: any) {
-      setError(err.message);
+
+      setCompanies(data || []);
+      
+      // Auto-select first company if none selected
+      if (data && data.length > 0 && !selectedCompanyId) {
+        onSelectCompany(data[0].id);
+        localStorage.setItem('selectedCompanyId', data[0].id);
+      }
+    } catch (error) {
+      console.error('Error in fetchUserCompanies:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  // If prominent display, use a different layout
-  if (prominentDisplay) {
+  const handleCompanyChange = (value: string) => {
+    onSelectCompany(value);
+    localStorage.setItem('selectedCompanyId', value);
+  };
+
+  // Function to get company name based on current language
+  const getCompanyName = (company: any) => {
+    if (currentLanguage === 'en' && company.name_en) {
+      return company.name_en;
+    }
+    return company.name;
+  };
+
+  if (loading) {
+    return <div className="text-sm text-muted-foreground">{t.common.loading}...</div>;
+  }
+
+  if (companies.length === 0) {
     return (
-      <div className="w-full">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {company.logo_url && (
-              <img 
-                src={company.logo_url} 
-                alt={getCompanyDisplayName(company)} 
-                className="h-8 w-8 object-contain rounded-sm"
-              />
-            )}
-            <h2 className="font-bold text-lg">
-              {isLoading ? (
-                <span className="text-sm text-muted-foreground">{t.common?.loading || "Loading..."}</span>
-              ) : error ? (
-                <span className="text-sm text-destructive">{error}</span>
-              ) : company.name ? (
-                <span>{getCompanyDisplayName(company)}</span>
-              ) : (
-                <span className="text-sm text-muted-foreground">{t.company.noCompanies}</span>
-              )}
-            </h2>
-          </div>
-        </div>
-        
-        <Sheet open={openSettings} onOpenChange={setOpenSettings}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>{t.company.companySettings || "Company Settings"}</SheetTitle>
-              <SheetDescription>
-                {t.company.manageCompanies || "Manage your company settings here."}
-              </SheetDescription>
-            </SheetHeader>
-            <CompanyForm 
-              onClose={handleCloseSettings} 
-              refreshCompanySelection={refreshCompanySelection} 
-            />
-          </SheetContent>
-        </Sheet>
+      <div className="text-sm text-muted-foreground">
+        <p>{t.company.noCompanies}</p>
       </div>
     );
   }
 
-  // Original layout
+  const selectedCompany = companies.find(c => c.id === selectedCompanyId);
+  
   return (
-    <div className="flex items-center space-x-2">
-      <div className="flex items-center gap-2">
-        {company.logo_url && (
-          <img 
-            src={company.logo_url} 
-            alt={getCompanyDisplayName(company)} 
-            className="h-8 w-8 object-contain rounded-sm"
-          />
-        )}
-        <div className="font-medium">
-          {isLoading ? (
-            <span className="text-sm text-muted-foreground">{t.common?.loading || "Loading..."}</span>
-          ) : error ? (
-            <span className="text-sm text-destructive">{error}</span>
-          ) : company.name ? (
-            <span>{getCompanyDisplayName(company)}</span>
-          ) : (
-            <span className="text-sm text-muted-foreground">{t.company.noCompanies}</span>
-          )}
+    <div className={prominentDisplay ? "space-y-1" : ""}>
+      {prominentDisplay && selectedCompany && (
+        <div className="font-semibold text-primary text-lg flex items-center gap-2">
+          <Building className="h-5 w-5" />
+          <span className="truncate max-w-[220px]">
+            {getCompanyName(selectedCompany)}
+          </span>
         </div>
-      </div>
+      )}
       
-      <Sheet open={openSettings} onOpenChange={setOpenSettings}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>{t.company.companySettings || "Company Settings"}</SheetTitle>
-            <SheetDescription>
-              {t.company.manageCompanies || "Manage your company settings here."}
-            </SheetDescription>
-          </SheetHeader>
-          <CompanyForm 
-            onClose={handleCloseSettings} 
-            refreshCompanySelection={refreshCompanySelection} 
+      <Select
+        value={selectedCompanyId || undefined}
+        onValueChange={handleCompanyChange}
+      >
+        <SelectTrigger 
+          className={prominentDisplay ? "text-xs" : "w-full"}
+        >
+          <SelectValue 
+            placeholder={t.company.selectPlaceholder} 
           />
-        </SheetContent>
-      </Sheet>
+        </SelectTrigger>
+        <SelectContent>
+          {companies.map((company) => (
+            <SelectItem key={company.id} value={company.id}>
+              {getCompanyName(company)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

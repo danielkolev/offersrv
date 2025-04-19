@@ -48,8 +48,7 @@ const SavedProductsList = ({
       <Table className="min-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-1/4">{t?.products?.name || "Name"}</TableHead>
-            <TableHead className="w-1/4 hidden md:table-cell">{t?.products?.description || "Description"}</TableHead>
+            <TableHead className="w-1/3">{t?.products?.name || "Name"}</TableHead>
             <TableHead className="w-1/6 hidden sm:table-cell">{t?.products?.partNumber || "Part Number"}</TableHead>
             <TableHead className="w-1/6 text-right">{t?.products?.unitPrice || "Unit Price"}</TableHead>
             <TableHead className="w-1/6 text-right">{t?.common?.actions || "Actions"}</TableHead>
@@ -58,9 +57,15 @@ const SavedProductsList = ({
         <TableBody>
           {filteredProducts.map((product) => (
             <TableRow key={product.id}>
-              <TableCell className="font-medium truncate max-w-[150px]">{product.name}</TableCell>
-              <TableCell className="hidden md:table-cell truncate max-w-[200px]">
-                {product.description || "-"}
+              <TableCell>
+                <div className="space-y-1">
+                  <div className="font-medium truncate max-w-[250px]">{product.name}</div>
+                  {product.description && (
+                    <div className="text-xs text-muted-foreground line-clamp-2 max-w-[300px]">
+                      {product.description}
+                    </div>
+                  )}
+                </div>
               </TableCell>
               <TableCell className="hidden sm:table-cell truncate">
                 {product.part_number || "-"}
