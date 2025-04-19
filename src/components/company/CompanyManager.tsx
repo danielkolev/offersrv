@@ -25,11 +25,11 @@ const CompanyManager = ({
   disableCreate = false
 }: CompanyManagerProps) => {
   
-  const { t } = useLanguage();
+  const { t, language } = useLanguage(); // Add language from useLanguage
   const { user } = useAuth();
   const { toast } = useToast();
   const [openSettings, setOpenSettings] = useState(false);
-  const [company, setCompany] = useState<{ id: string; name: string; logo_url?: string | null }>({ id: '', name: '' });
+  const [company, setCompany] = useState<{ id: string; name: string; name_en?: string | null; logo_url?: string | null }>({ id: '', name: '' });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -38,6 +38,14 @@ const CompanyManager = ({
     setCompanyId,
     refreshCompanySelection
   } = useCompanySelection();
+
+  // Helper function to get company name based on language
+  const getCompanyDisplayName = (companyData: { name: string; name_en?: string | null }) => {
+    if (language === 'en' && companyData.name_en) {
+      return companyData.name_en;
+    }
+    return companyData.name;
+  };
 
   useEffect(() => {
     const fetchUserCompany = async () => {
@@ -49,7 +57,7 @@ const CompanyManager = ({
       try {
         const { data, error } = await supabase
           .from('organizations')
-          .select('id, name, logo_url')
+          .select('id, name, name_en, logo_url') // Add name_en to select
           .eq('owner_id', user.id)
           .limit(1)
           .single();
@@ -71,6 +79,7 @@ const CompanyManager = ({
           setCompany({
             id: data.id,
             name: data.name,
+            name_en: data.name_en, // Add name_en to company state
             logo_url: data.logo_url
           });
           
@@ -94,7 +103,8 @@ const CompanyManager = ({
     };
     
     fetchUserCompany();
-  }, [user, toast, t.company.error, onSelectCompany, setCompanyId]);
+  }, [user, toast, t.company.error, onSelectCompany, setCompanyId, language]);
+
   
   const handleCloseSettings = () => {
     setOpenSettings(false);
@@ -145,7 +155,7 @@ const CompanyManager = ({
         {company.logo_url && (
           <img 
             src={company.logo_url} 
-            alt={company.name} 
+            alt={getCompanyDisplayName(company)} 
             className="h-8 w-8 object-contain rounded-sm"
           />
         )}
@@ -155,7 +165,7 @@ const CompanyManager = ({
           ) : error ? (
             <span className="text-sm text-destructive">{error}</span>
           ) : company.name ? (
-            <span>{company.name}</span>
+            <span>{getCompanyDisplayName(company)}</span>
           ) : (
             <span className="text-sm text-muted-foreground">{t.company.noCompanies}</span>
           )}
