@@ -136,26 +136,32 @@ const SavedOffersContent: React.FC = () => {
   };
 
   const handleLoadOffer = async (savedOffer: SavedOffer) => {
-    if (isNavigating) return; // Prevent multiple clicks
+    if (isNavigating) return;
     setIsNavigating(true);
     
     try {
-      console.log("SavedOffersContent: Loading offer with data:", savedOffer.offer_data);
+      console.log("SavedOffersContent: Loading offer as draft:", savedOffer.offer_data);
       
       if (savedOffer.offer_data) {
-        // Navigate with state that indicates we're loading a saved offer
+        // Navigate with state that indicates we're loading a saved offer as draft
         navigate('/new-offer', {
           state: { 
             loadSavedOffer: true,
-            savedOfferId: savedOffer.id,
-            offerData: savedOffer.offer_data
+            savedOfferId: null, // Set to null to create new offer
+            offerData: {
+              ...savedOffer.offer_data,
+              details: {
+                ...savedOffer.offer_data.details,
+                offerNumber: '00000' // Reset offer number for new draft
+              }
+            }
           }
         });
       } else {
         console.error("SavedOffersContent: Invalid offer data:", savedOffer);
         toast({
           title: t.common.error,
-          description: "Невалидни данни за оферта",
+          description: "Invalid offer data",
           variant: 'destructive',
         });
         
@@ -236,25 +242,14 @@ const SavedOffersContent: React.FC = () => {
           <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
         </div>
         
-        <div className="flex gap-2">
-          <Button 
-            variant="outline"
-            className="gap-2"
-            onClick={handleCreateNewOffer}
-          >
-            <PlusCircle className="h-4 w-4" />
-            {t.savedOffers.createNew}
-          </Button>
-          
-          <Button 
-            onClick={handleSaveOffer} 
-            className="gap-2"
-            disabled={isSaving}
-          >
-            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            {t.savedOffers.saveOffer}
-          </Button>
-        </div>
+        <Button 
+          variant="outline"
+          className="gap-2"
+          onClick={handleCreateNewOffer}
+        >
+          <PlusCircle className="h-4 w-4" />
+          {t.savedOffers.createNew}
+        </Button>
       </div>
       
       <div className="flex gap-2 mb-4">

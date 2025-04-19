@@ -8,7 +8,7 @@ interface UseClientSearchProps {
 
 export const useClientSearch = ({ clients }: UseClientSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState<'name' | 'vat' | 'eik'>('name');
+  const [searchType, setSearchType] = useState<'name' | 'vat' | 'eik' | 'email'>('name');
 
   const filteredClients = useMemo(() => {
     return clients.filter(client => {
@@ -21,6 +21,8 @@ export const useClientSearch = ({ clients }: UseClientSearchProps) => {
           return client.vat_number?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
         case 'eik':
           return client.eik_number?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+        case 'email':
+          return client.email?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
         default:
           return true;
       }

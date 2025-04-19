@@ -2,26 +2,20 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Save } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import BackButton from '@/components/navigation/BackButton';
 import { Translations } from '@/types/language';
 
 interface ProductPageHeaderProps {
   t: Translations;
   onAddProduct: () => void;
-  onSaveFromOffer?: () => void; // Made optional with the ? operator
+  onSaveFromOffer?: () => void;
 }
 
 const ProductPageHeader = ({ t, onAddProduct, onSaveFromOffer }: ProductPageHeaderProps) => {
-  const navigate = useNavigate();
-  const lastOfferPath = localStorage.getItem('lastOfferPath') || '/new-offer';
-  
-  const handleBackToOffer = () => {
-    navigate(lastOfferPath);
-  };
-  
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-2">
+        <BackButton label={t.common.back} />
         <h1 className="text-2xl font-bold">{t.savedProducts.title}</h1>
       </div>
       
