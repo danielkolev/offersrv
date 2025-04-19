@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Tabs, 
@@ -104,8 +105,8 @@ const TemplatesPage = () => {
       };
       
       try {
-        // Update template with new settings
-        editTemplate(updatedTemplate);
+        // Update template with new settings - pass both template ID and the updated template data
+        editTemplate(updatedTemplate.id, updatedTemplate);
         
         // After successful update
         setEditMode(false);
