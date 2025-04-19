@@ -152,7 +152,7 @@ export const useCompanyData = (companyId: string | null) => {
       } else if (retryCountRef.current >= MAX_RETRIES) {
         toast({
           title: t.common.error,
-          description: `${t.common.loadingError}: ${err.message}`,
+          description: `${t.common.error}: ${err.message}`,
           variant: 'destructive'
         });
       }
@@ -161,7 +161,7 @@ export const useCompanyData = (companyId: string | null) => {
         setIsLoading(false);
       }
     }
-  }, [updateCompanyInfo, toast, t.common.error, t.common.loadingError, isValidCache]);
+  }, [updateCompanyInfo, toast, t.common.error, isValidCache]);
 
   useEffect(() => {
     if (companyId !== previousCompanyId.current) {

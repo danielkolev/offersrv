@@ -29,8 +29,8 @@ const CompanyLanguageTabs = ({
     return <LoadingErrorFeedback 
       isLoading={isLoading} 
       error={error} 
-      loadingMessage={t.company.loading}
-      errorTitle={t.company.error}
+      loadingMessage={t.common.loading}
+      errorTitle={t.common.error}
     />;
   }
   
