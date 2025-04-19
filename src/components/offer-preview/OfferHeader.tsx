@@ -16,8 +16,8 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
     : offer.company.name;
   
   // Get company slogan based on language
-  const companySlogan = displayLanguage === 'en' && offer.company.sloganEn
-    ? offer.company.sloganEn
+  const companySlogan = displayLanguage === 'en' && offer.company.slogan_en
+    ? offer.company.slogan_en
     : offer.company.slogan;
   
   // Get appropriate logo based on language

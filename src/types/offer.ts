@@ -13,9 +13,12 @@ export interface CompanyInfo {
   phone: string;
   email: string;
   website: string;
-  logo: string | null;
+  logo_url?: string | null;
+  logo_url_en?: string | null;
   slogan?: string;
-  conclusionText?: string;
+  slogan_en?: string;
+  conclusion_text?: string;
+  conclusion_text_en?: string;
 }
 
 export interface ClientInfo {

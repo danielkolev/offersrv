@@ -56,16 +56,24 @@ export const useCompanyData = (companyId: string | null) => {
         updateCompanyInfo({
           id: data.id,
           name: data.name || '',
+          nameEn: data.name_en || '',
           vatNumber: data.vat_number || '',
+          eikNumber: data.company_id || '', // Updated to use company_id
           address: data.address || '',
+          addressEn: data.address_en || '',
           city: data.city || '',
+          cityEn: data.city_en || '',
           country: data.country || '',
+          countryEn: data.country_en || '',
           phone: data.phone || '',
           email: data.email || '',
           website: data.website || '',
-          logo: data.logo_url || null,
+          logo_url: data.logo_url || null,
+          logo_url_en: data.logo_url_en || null,
           slogan: data.slogan || '',
-          conclusionText: data.conclusion_text || '' // Access the conclusion_text field
+          slogan_en: data.slogan_en || '',
+          conclusion_text: data.conclusion_text || '',
+          conclusion_text_en: data.conclusion_text_en || ''
         });
         
         // Отмечаем, что данные были загружены

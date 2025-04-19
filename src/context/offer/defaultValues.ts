@@ -1,4 +1,3 @@
-
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
@@ -11,9 +10,12 @@ export const defaultCompany = {
   phone: '',
   email: '',
   website: '',
-  logo: null,
+  logo_url: null,
+  logo_url_en: null,
   slogan: '',
-  conclusionText: '' // Add the conclusion text field with empty default value
+  slogan_en: '',
+  conclusion_text: '',
+  conclusion_text_en: ''
 };
 
 export const defaultClient = {

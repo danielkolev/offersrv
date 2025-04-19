@@ -41,16 +41,24 @@ export const useOfferInitialization = (
         return {
           id: data.id,
           name: data.name,
+          nameEn: data.name_en || '',
           vatNumber: data.vat_number || '',
-          eikNumber: data.eik_number || '', // Now that column exists, we can safely access it
+          eikNumber: data.company_id || '', // Now using company_id
           address: data.address || '',
+          addressEn: data.address_en || '',
           city: data.city || '',
+          cityEn: data.city_en || '',
           country: data.country || '',
+          countryEn: data.country_en || '',
           phone: data.phone || '',
           email: data.email || '',
           website: data.website || '',
-          logo: data.logo_url || null,
-          slogan: data.slogan || ''
+          logo_url: data.logo_url || null,
+          logo_url_en: data.logo_url_en || null,
+          slogan: data.slogan || '',
+          slogan_en: data.slogan_en || '',
+          conclusion_text: data.conclusion_text || '',
+          conclusion_text_en: data.conclusion_text_en || ''
         };
       }
       
