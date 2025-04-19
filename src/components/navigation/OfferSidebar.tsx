@@ -6,6 +6,8 @@ import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, S
 import { Home, FileEdit, Files, Users, Package, Building, Settings, LayoutTemplate } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
+import Logo from './Logo';
+import { cn } from '@/lib/utils';
 
 interface OfferSidebarProps {
   isMobile?: boolean;
@@ -57,20 +59,26 @@ const OfferSidebar = ({
 
   return (
     <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
+      <SidebarHeader className="px-4 py-3">
+        <div className="flex flex-col space-y-3">
+          <Logo />
+          {user && (
+            <div className="border-b pb-3 pt-1">
+              <CompanyManager 
+                onSelectCompany={setSelectedCompanyId} 
+                selectedCompanyId={selectedCompanyId} 
+                disableCreate={true} 
+                prominentDisplay={true}
+                currentLanguage={language}
+              />
+            </div>
+          )}
+        </div>
+      </SidebarHeader>
+      
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            {user && (
-              <div className="px-2 py-3 mb-2 border-b">
-                <CompanyManager 
-                  onSelectCompany={setSelectedCompanyId} 
-                  selectedCompanyId={selectedCompanyId} 
-                  disableCreate={true} 
-                  prominentDisplay={true}
-                  currentLanguage={language}
-                />
-              </div>
-            )}
             <SidebarMenu>
               {navItems.map(item => (
                 <SidebarMenuItem key={item.path}>
