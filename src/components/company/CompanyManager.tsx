@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,8 +5,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useLanguage } from '@/context/LanguageContext';
 import { Building } from 'lucide-react';
 import { SupportedLanguage } from '@/types/language/base';
-import { cn } from '@/lib/utils';
-
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
   selectedCompanyId: string | null;
@@ -15,25 +12,26 @@ interface CompanyManagerProps {
   prominentDisplay?: boolean;
   currentLanguage?: SupportedLanguage;
 }
-
-const CompanyManager: React.FC<CompanyManagerProps> = ({ 
-  onSelectCompany, 
+const CompanyManager: React.FC<CompanyManagerProps> = ({
+  onSelectCompany,
   selectedCompanyId,
   disableCreate = false,
   prominentDisplay = false,
   currentLanguage = 'bg'
 }) => {
-  const { user } = useAuth();
-  const { t } = useLanguage();
+  const {
+    user
+  } = useAuth();
+  const {
+    t
+  } = useLanguage();
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     if (user) {
       fetchUserCompanies();
     }
   }, [user]);
-
   useEffect(() => {
     // Check localStorage for saved selection
     const savedCompanyId = localStorage.getItem('selectedCompanyId');
@@ -41,22 +39,19 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
       onSelectCompany(savedCompanyId);
     }
   }, [companies, selectedCompanyId, onSelectCompany]);
-
   const fetchUserCompanies = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('organizations')
-        .select('*')
-        .eq('owner_id', user?.id);
-
+      const {
+        data,
+        error
+      } = await supabase.from('organizations').select('*').eq('owner_id', user?.id);
       if (error) {
         console.error('Error fetching companies:', error);
         return;
       }
-
       setCompanies(data || []);
-      
+
       // Auto-select first company if none selected
       if (data && data.length > 0 && !selectedCompanyId) {
         onSelectCompany(data[0].id);
@@ -68,7 +63,6 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
       setLoading(false);
     }
   };
-
   const handleCompanyChange = (value: string) => {
     onSelectCompany(value);
     localStorage.setItem('selectedCompanyId', value);
@@ -81,53 +75,33 @@ const CompanyManager: React.FC<CompanyManagerProps> = ({
     }
     return company.name;
   };
-
   if (loading) {
     return <div className="text-sm text-muted-foreground">{t.common.loading}...</div>;
   }
-
   if (companies.length === 0) {
-    return (
-      <div className="text-sm text-muted-foreground">
+    return <div className="text-sm text-muted-foreground">
         <p>{t.company.noCompanies}</p>
-      </div>
-    );
+      </div>;
   }
-
   const selectedCompany = companies.find(c => c.id === selectedCompanyId);
-  
-  return (
-    <div className={prominentDisplay ? "space-y-1" : ""}>
-      {prominentDisplay && selectedCompany && (
-        <div className="font-semibold text-primary text-lg flex items-center gap-2">
-          <Building className="h-5 w-5" />
+  return <div className={prominentDisplay ? "space-y-1" : ""}>
+      {prominentDisplay && selectedCompany && <div className="font-semibold text-primary text-lg flex items-center gap-2">
+          
           <span className="truncate max-w-[220px]">
             {getCompanyName(selectedCompany)}
           </span>
-        </div>
-      )}
+        </div>}
       
-      <Select
-        value={selectedCompanyId || undefined}
-        onValueChange={handleCompanyChange}
-      >
-        <SelectTrigger 
-          className={prominentDisplay ? "text-xs" : "w-full"}
-        >
-          <SelectValue 
-            placeholder={t.company.selectPlaceholder} 
-          />
+      <Select value={selectedCompanyId || undefined} onValueChange={handleCompanyChange}>
+        <SelectTrigger className={prominentDisplay ? "text-xs" : "w-full"}>
+          <SelectValue placeholder={t.company.selectPlaceholder} />
         </SelectTrigger>
         <SelectContent>
-          {companies.map((company) => (
-            <SelectItem key={company.id} value={company.id}>
+          {companies.map(company => <SelectItem key={company.id} value={company.id}>
               {getCompanyName(company)}
-            </SelectItem>
-          ))}
+            </SelectItem>)}
         </SelectContent>
       </Select>
-    </div>
-  );
+    </div>;
 };
-
 export default CompanyManager;
