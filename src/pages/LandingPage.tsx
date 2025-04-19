@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthForm } from '@/components/auth/AuthForm';
@@ -8,20 +7,22 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { FileText, ArrowRight } from 'lucide-react';
-
 const LandingPage = () => {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-  const { t } = useLanguage();
-  
+  const {
+    t
+  } = useLanguage();
   useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true });
+      navigate('/dashboard', {
+        replace: true
+      });
     }
   }, [user, navigate]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+  return <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
@@ -39,9 +40,7 @@ const LandingPage = () => {
               {t.auth.appDescription || 'Create professional business offers quickly and easily'}
             </h2>
             
-            <p className="text-xl text-gray-600 max-w-2xl">
-              Streamline your business with professional offers. Save time, impress clients, and grow your business.
-            </p>
+            <p className="text-xl text-gray-600 max-w-2xl">Оптимизирайте бизнеса си с професионални оферти. Спестете време, впечатлете клиентите и спечелете пари за вашия бизнес.</p>
             
             <div className="space-y-6">
               <div className="flex items-start space-x-3">
@@ -97,8 +96,6 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default LandingPage;
