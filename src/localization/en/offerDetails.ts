@@ -19,5 +19,16 @@ export const offerDetails = {
   notes: "Notes",
   notesPlaceholder: "Additional information or terms",
   language: "Offer Language",
-  currency: "Currency"
+  currency: "Currency",
+  // New translations
+  specialDiscounts: "Special Discounts",
+  addDiscount: "Add Discount",
+  discountType: "Discount Type",
+  discountAmount: "Discount Amount",
+  discountDescription: "Discount Description",
+  percentageDiscount: "Percentage Discount",
+  fixedDiscount: "Fixed Amount",
+  showDigitalSignature: "Show Digital Signature",
+  customFooterText: "Additional Footer Text",
+  customFooterTextPlaceholder: "Enter terms and conditions or additional text"
 };

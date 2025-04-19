@@ -19,5 +19,16 @@ export const offerDetails = {
   notes: "Бележки",
   notesPlaceholder: "Допълнителна информация или условия",
   language: "Език на офертата",
-  currency: "Валута"
+  currency: "Валута",
+  // New translations
+  specialDiscounts: "Специални отстъпки",
+  addDiscount: "Добави отстъпка",
+  discountType: "Тип отстъпка",
+  discountAmount: "Размер на отстъпката",
+  discountDescription: "Описание на отстъпката",
+  percentageDiscount: "Процентна отстъпка",
+  fixedDiscount: "Фиксирана сума",
+  showDigitalSignature: "Покажи дигитален подпис",
+  customFooterText: "Допълнителен текст в края",
+  customFooterTextPlaceholder: "Въведете условия или допълнителен текст"
 };

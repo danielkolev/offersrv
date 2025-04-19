@@ -1,19 +1,25 @@
-
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
   name: '',
+  nameEn: '',
   address: '',
+  addressEn: '',
   city: '',
+  cityEn: '',
   country: '',
+  countryEn: '',
   vatNumber: '',
   eikNumber: '',
   phone: '',
   email: '',
   website: '',
-  logo: null,
+  logo_url: null,
+  logo_url_en: null,
   slogan: '',
-  conclusionText: '' // Add the conclusion text field with empty default value
+  slogan_en: '',
+  conclusion_text: '',
+  conclusion_text_en: ''
 };
 
 export const defaultClient = {
@@ -39,7 +45,11 @@ export const defaultOfferDetails = {
   otherCosts: 0,
   notes: '',
   offerLanguage: 'bg' as 'bg' | 'en',
-  currency: 'BGN' as 'BGN' | 'EUR' | 'USD'
+  currency: 'BGN' as 'BGN' | 'EUR' | 'USD',
+  // New default values
+  specialDiscounts: [],
+  showDigitalSignature: false,
+  customFooterText: ''
 };
 
 export const defaultOffer: Offer = {

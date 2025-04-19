@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -43,7 +42,7 @@ const defaultSettings = {
     textColor: '#111827',
     borderColor: '#E5E7EB',
     backgroundColor: '#FFFFFF',
-    tableHeaderColor: '#F9FAFB',
+    tableHeaderColor: '#3B82F6',
     tableRowAlternateColor: '#F3F4F6',
     buttonColor: '#3B82F6',
     fontFamily: 'Inter, sans-serif',
@@ -337,12 +336,12 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
                     color={settingsState.appearance?.backgroundColor || '#FFFFFF'}
                   />
                   
-                  {/* Table Header Color */}
+                  {/* Table Header Text Color - changed from Table Header Background Color */}
                   <ColorPickerField 
-                    label="Цвят на хедър на таблица"
+                    label="Цвят на текста в заглавието на таблицата"
                     category="appearance"
                     property="tableHeaderColor"
-                    color={settingsState.appearance?.tableHeaderColor || '#F9FAFB'}
+                    color={settingsState.appearance?.tableHeaderColor || '#111827'}
                   />
                   
                   {/* Table Row Alternate Color */}
@@ -427,6 +426,7 @@ const TemplateSettings: React.FC<TemplateSettingsProps> = ({
               </CardContent>
             </Card>
           </TabsContent>
+          
           
           <TabsContent value="header" className="mt-4">
             <Card>

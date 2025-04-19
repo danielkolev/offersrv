@@ -14,7 +14,7 @@ import {
   CardTitle 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioItem } from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -37,14 +37,14 @@ const TemplatesPage = () => {
     isLoading, 
     setDefaultTemplate, 
     createTemplate, 
-    updateTemplateSettings,
-    deleteTemplate
+    deleteTemplate,
+    editTemplate
   } = useTemplateManagement();
   
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('user');
   const [editMode, setEditMode] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   
   // Template settings state
   const [primaryColor, setPrimaryColor] = useState('#4F46E5');
@@ -55,13 +55,13 @@ const TemplatesPage = () => {
     setIsCreateDialogOpen(true);
   };
   
-  const handleDeleteTemplate = (templateId) => {
+  const handleDeleteTemplate = (templateId: string) => {
     if (window.confirm(t.offer.templates.confirmDelete)) {
       deleteTemplate(templateId);
     }
   };
   
-  const handleEditTemplate = (templateId) => {
+  const handleEditTemplate = (templateId: string) => {
     const template = userTemplates.find(t => t.id === templateId);
     if (template) {
       setSelectedTemplate(template);
@@ -85,25 +85,35 @@ const TemplatesPage = () => {
   
   const handleSaveTemplate = () => {
     if (selectedTemplate) {
-      const updatedTemplate = {
-        ...selectedTemplate,
-        settings: {
-          ...selectedTemplate.settings,
-          appearance: {
-            ...selectedTemplate.settings?.appearance,
-            primaryColor,
-            tableHeaderColor
-          },
-          layout: {
-            ...selectedTemplate.settings?.layout,
-            orientation
-          }
+      const updatedSettings = {
+        ...selectedTemplate.settings,
+        appearance: {
+          ...selectedTemplate.settings?.appearance,
+          primaryColor,
+          tableHeaderColor
+        },
+        layout: {
+          ...selectedTemplate.settings?.layout,
+          orientation
         }
       };
       
-      updateTemplateSettings(selectedTemplate.id, updatedTemplate.settings);
-      setEditMode(false);
-      setSelectedTemplate(null);
+      // Use the updateTemplate function from the hook to update the template's settings
+      const updatedTemplate = {
+        ...selectedTemplate,
+        settings: updatedSettings
+      };
+      
+      try {
+        // Update template with new settings - pass both template ID and the updated template data
+        editTemplate(updatedTemplate.id, updatedTemplate);
+        
+        // After successful update
+        setEditMode(false);
+        setSelectedTemplate(null);
+      } catch (error) {
+        console.error('Error updating template:', error);
+      }
     }
   };
   
@@ -112,13 +122,17 @@ const TemplatesPage = () => {
     setSelectedTemplate(null);
   };
 
+  const handleCreateTemplate = async (name: string, description: string) => {
+    await createTemplate(name, description);
+  };
+
   return (
     <div className="container py-8">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <BackButton 
             label={t.common.back} 
-            to="/dashboard"
+            to="/settings"
           />
           <h1 className="text-2xl font-bold">{t.settings.offerTemplates}</h1>
         </div>
@@ -133,7 +147,7 @@ const TemplatesPage = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <FormSection title={t.offer.templates.title}>
+                <FormSection title={t.offer.templates.customizeAppearance}>
                   <div className="grid gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="primaryColor">{t.offer.templates.primaryColor}</Label>
@@ -159,11 +173,11 @@ const TemplatesPage = () => {
                         className="flex gap-4"
                       >
                         <div className="flex items-center space-x-2">
-                          <RadioItem value="portrait" id="portrait" />
+                          <RadioGroupItem value="portrait" id="portrait" />
                           <Label htmlFor="portrait">{t.offer.templates.portrait}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioItem value="landscape" id="landscape" />
+                          <RadioGroupItem value="landscape" id="landscape" />
                           <Label htmlFor="landscape">{t.offer.templates.landscape}</Label>
                         </div>
                       </RadioGroup>
@@ -182,9 +196,6 @@ const TemplatesPage = () => {
               </div>
               
               <TemplatePreview 
-                primaryColor={primaryColor}
-                tableHeaderColor={tableHeaderColor}
-                orientation={orientation}
                 settings={{
                   appearance: {
                     primaryColor,
@@ -202,7 +213,7 @@ const TemplatesPage = () => {
         <Tabs defaultValue="user" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="user">{t.settings.userTemplates}</TabsTrigger>
-            <TabsTrigger value="system">{t.settings.systemTemplates}</TabsTrigger>
+            <TabsTrigger value="system">{t.settings.sampleTemplates}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="user" className="space-y-4">
@@ -236,7 +247,8 @@ const TemplatesPage = () => {
       <CreateTemplateDialog 
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        onCreateTemplate={createTemplate}
+        onCreateTemplate={handleCreateTemplate}
+        isLoading={isLoading}
       />
     </div>
   );

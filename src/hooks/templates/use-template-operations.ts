@@ -6,6 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { TemplateStateReturnType } from './use-template-state';
 import { generateUUID } from '@/lib/utils';
+import { TemplateType } from './types';
 
 interface TemplateSettings {
   name?: string;
@@ -78,7 +79,7 @@ export function useTemplateOperations(
   };
   
   // Edit an existing template
-  const editTemplate = async (templateId: string, templateData: TemplateSettings) => {
+  const editTemplate = async (templateId: string, templateData: Partial<TemplateType>) => {
     if (!userId) {
       toast({
         title: t.common.error,

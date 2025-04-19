@@ -1,17 +1,27 @@
 export interface CompanyInfo {
   id?: string;
   name: string;
+  nameEn?: string;
   address: string;
+  addressEn?: string;
   city: string;
+  cityEn?: string;
   country: string;
+  countryEn?: string;
   vatNumber: string;
   eikNumber?: string;
   phone: string;
   email: string;
   website: string;
-  logo: string | null;
+  logo_url?: string | null;
+  logo_url_en?: string | null;
   slogan?: string;
-  conclusionText?: string; // Added conclusion text field
+  slogan_en?: string;
+  conclusion_text?: string;
+  conclusion_text_en?: string;
+  // Adding aliases for backward compatibility
+  logo?: string | null; // Alias for logo_url
+  conclusionText?: string; // Alias for conclusion_text
 }
 
 export interface ClientInfo {
@@ -61,6 +71,14 @@ export interface OfferDetails {
   notes: string;
   offerLanguage: 'bg' | 'en';
   currency?: 'BGN' | 'EUR' | 'USD'; // Added currency field
+  // New fields
+  specialDiscounts?: {
+    amount: number;
+    type: 'percentage' | 'fixed';
+    description: string;
+  }[];
+  showDigitalSignature: boolean;
+  customFooterText?: string;
 }
 
 export interface Offer {

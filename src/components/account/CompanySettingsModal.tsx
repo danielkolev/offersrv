@@ -41,12 +41,14 @@ const CompanySettingsModal = ({ open, onOpenChange }: CompanySettingsModalProps)
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from('companies')
+        .from('organizations')
         .select('*')
-        .eq('user_id', user.id);
+        .eq('owner_id', user.id);
         
       if (error) throw error;
-      setCompanies(data || []);
+      // Ensure we're getting the right type
+      const typedData = (data || []) as Company[];
+      setCompanies(typedData);
     } catch (error) {
       console.error('Error fetching companies:', error);
     } finally {
@@ -65,10 +67,10 @@ const CompanySettingsModal = ({ open, onOpenChange }: CompanySettingsModalProps)
     });
   };
 
-  // Обработка на затварянето на модалния прозорец
+  // Handle dialog closing
   const handleOpenChange = (newOpenState: boolean) => {
     onOpenChange(newOpenState);
-    // Малко забавяне преди да се възстанови фокуса
+    // Small delay before restoring focus
     if (!newOpenState) {
       setTimeout(() => {
         document.body.style.pointerEvents = 'auto';

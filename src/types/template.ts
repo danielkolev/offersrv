@@ -55,6 +55,7 @@ export interface TemplateType {
       fullWidth?: boolean;
       padding?: string;
       borderRadius?: string;
+      orientation?: string; // The orientation property
     };
   };
   created_at?: string;

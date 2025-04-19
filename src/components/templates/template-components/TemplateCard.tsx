@@ -23,7 +23,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
   // Check if language property exists directly on the template or in the settings
   const templateLanguage = template.language || 
-                          (template.settings?.details?.offerLanguage) || 
+                          (template.settings?.templateType) || 
                           'en';
 
   return (

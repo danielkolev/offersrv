@@ -41,11 +41,21 @@ export const offerTemplates = {
   offerTemplateName: "Offer template name",
   offerTemplateDescription: "Offer template description",
   fromTemplate: "From Template",
+  deleteTemplate: "Delete Template",
+  deleteTemplateConfirm: "Are you sure you want to delete this template?",
   
   // Templates related translations
   templates: {
     title: "Templates",
     description: "Manage your templates",
+    primaryColor: "Primary Color",
+    tableHeaderColor: "Table Header Color",
+    orientation: "Orientation",
+    portrait: "Portrait",
+    landscape: "Landscape",
+    applyChanges: "Apply Changes",
+    customizeAppearance: "Customize Appearance",
+    chooseColor: "Choose Color",
     empty: "No templates found",
     create: "Create Template",
     delete: "Delete Template",

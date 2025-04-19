@@ -1,27 +1,33 @@
-
 export interface Company {
   id: string;
+  // Basic Info - Bulgarian
   name: string;
-  vat_number?: string;
-  eik_number?: string; 
   address?: string;
   city?: string;
   country?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  logo_url?: string | null;
-  created_at?: string;
-  updated_at?: string;
-  owner_id?: string;
   slogan?: string;
-  conclusion_text?: string; // New field for conclusion text
+  conclusion_text?: string;
   
-  // English translations
+  // Basic Info - English
   name_en?: string;
   address_en?: string;
   city_en?: string;
   country_en?: string;
+  slogan_en?: string;
+  conclusion_text_en?: string;
+  
+  // Common fields (language independent)
+  vat_number?: string;
+  company_id?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  logo_url?: string | null;
+  logo_url_en?: string | null;
+  
+  created_at?: string;
+  updated_at?: string;
+  owner_id?: string;
 }
 
 export interface CompanyMember {
@@ -32,3 +38,4 @@ export interface CompanyMember {
   created_at?: string;
   updated_at?: string;
 }
+

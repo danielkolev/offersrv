@@ -18,7 +18,11 @@ const templates = {
   chooseDefaultTemplate: offerTemplates.templates.chooseDefaultTemplate || "Избери стандартен шаблон",
   templateNameRequired: offerTemplates.templates.templateNameRequired || "Името на шаблона е задължително",
   useTemplate: offerTemplates.templates.useTemplate || "Използвай",
-  createFromCurrent: offerTemplates.templates.createFromCurrent || "Създай от текущата оферта"
+  createFromCurrent: offerTemplates.templates.createFromCurrent || "Създай от текущата оферта",
+  saveAsTemplate: offerTemplates.templates.saveAsTemplate || "Запази като шаблон",
+  createTemplate: offerTemplates.templates.createTemplate || "Създай шаблон",
+  deleteTemplate: offerTemplates.templates.deleteTemplate || "Изтрий шаблон",
+  deleteTemplateConfirm: offerTemplates.templates.deleteTemplateConfirm || "Сигурни ли сте, че искате да изтриете този шаблон?"
 };
 
 // Combine all offer translation sections
@@ -36,14 +40,14 @@ export const offer = {
   chooseTemplate: templates.chooseTemplate,
   noTemplates: templates.noTemplates,
   overwriteTemplate: templates.overwriteTemplate,
-  templateSaved: templates.templateSaved,
+  templateSaved: templates.templateSaved || "Шаблонът е запазен",
   templateDeleted: templates.templateDeleted,
   chooseDefaultTemplate: templates.chooseDefaultTemplate,
   templateNameRequired: templates.templateNameRequired,
   useTemplate: templates.useTemplate,
-  saveAsTemplate: offerTemplates.saveAsTemplate,
-  createTemplate: offerTemplates.createTemplate,
-  deleteTemplate: offerTemplates.deleteTemplate,
-  deleteTemplateConfirm: offerTemplates.deleteTemplateConfirm,
+  saveAsTemplate: templates.saveAsTemplate,
+  createTemplate: templates.createTemplate,
+  deleteTemplate: templates.deleteTemplate,
+  deleteTemplateConfirm: templates.deleteTemplateConfirm,
   createFromCurrent: templates.createFromCurrent
 };

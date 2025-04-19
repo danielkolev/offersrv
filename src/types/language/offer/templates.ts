@@ -49,6 +49,16 @@ export interface OfferTemplatesTranslations {
   chooseDefaultTemplate: string;
   templateNameRequired: string;
   
+  // Properties needed for templates page
+  primaryColor: string;
+  tableHeaderColor: string;
+  orientation: string;
+  portrait: string;
+  landscape: string;
+  applyChanges: string;
+  customizeAppearance: string;
+  chooseColor: string;
+  
   // We'll add optional properties for emptyState since it exists in some components
   emptyState?: {
     title: string;

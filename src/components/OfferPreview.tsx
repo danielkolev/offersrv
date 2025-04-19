@@ -55,10 +55,15 @@ const OfferPreview = ({
   // Get default template settings
   const defaultTemplate = userTemplates.find(template => template.id === defaultTemplateId);
   
-  // Get template settings either from props, offer, or default template
-  const settings = templateSettings || offer.templateSettings || defaultTemplate?.settings || {
-    templateType: 'classic'
-  };
+  // Get template settings with a priority order:
+  // 1. Explicitly provided templateSettings prop
+  // 2. Offer's own templateSettings 
+  // 3. Default template's settings
+  // 4. Fallback to classic template
+  const settings = templateSettings || 
+                  offer.templateSettings || 
+                  defaultTemplate?.settings || 
+                  { templateType: 'classic' };
   
   // Determine which template to use based on settings
   const getTemplateComponent = () => {

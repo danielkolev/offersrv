@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,7 +43,10 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         transportCost: 0,
         otherCosts: 0,
         notes: 'Payment terms: 100% advance payment.\nDelivery time: 7-14 working days after order confirmation.',
-        offerLanguage: 'en'
+        offerLanguage: 'en',
+        showDigitalSignature: false,
+        specialDiscounts: [],
+        customFooterText: ''
       }
     }
   },
@@ -63,7 +67,10 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         transportCost: 0,
         otherCosts: 0,
         notes: 'Условия на плащане: 100% авансово плащане.\nСрок на доставка: 7-14 работни дни след потвърждение на поръчката.',
-        offerLanguage: 'bg'
+        offerLanguage: 'bg',
+        showDigitalSignature: false,
+        specialDiscounts: [],
+        customFooterText: ''
       }
     }
   },
@@ -84,7 +91,10 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         transportCost: 0,
         otherCosts: 0,
         notes: 'Service terms: This offer is valid for the specified services only.\nPayment terms: 50% advance, 50% upon completion.\nValidity: This offer is valid for 30 days from the date issued.',
-        offerLanguage: 'en'
+        offerLanguage: 'en',
+        showDigitalSignature: false,
+        specialDiscounts: [],
+        customFooterText: ''
       },
       products: [
         {
@@ -123,7 +133,10 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         transportCost: 0,
         otherCosts: 0,
         notes: 'Условия за услугата: Тази оферта е валидна само за посочените услуги.\nУсловия за плащане: 50% авансово, 50% при завършване.\nВалидност: Тази оферта е валидна за 30 дни от датата на издаване.',
-        offerLanguage: 'bg'
+        offerLanguage: 'bg',
+        showDigitalSignature: false,
+        specialDiscounts: [],
+        customFooterText: ''
       },
       products: [
         {
@@ -162,7 +175,10 @@ const DEFAULT_TEMPLATES: TemplateType[] = [
         transportCost: 0,
         otherCosts: 0,
         notes: 'Bundle discount applied.\nDelivery time: 5-7 working days after order confirmation.\nPayment terms: 100% advance payment.',
-        offerLanguage: 'en'
+        offerLanguage: 'en',
+        showDigitalSignature: false,
+        specialDiscounts: [],
+        customFooterText: ''
       },
       products: [
         {

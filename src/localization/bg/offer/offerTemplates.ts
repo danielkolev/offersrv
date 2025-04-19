@@ -41,6 +41,7 @@ export const offerTemplates = {
   offerTemplateName: "Име на шаблон за оферта",
   offerTemplateDescription: "Описание на шаблон за оферта",
   fromTemplate: "От шаблон",
+  deleteTemplateConfirm: "Наистина ли искате да изтриете този шаблон?",
   
   // Templates related translations
   templates: {
@@ -85,10 +86,21 @@ export const offerTemplates = {
       gradient: "Градиент",
       businessPro: "Бизнес Про",
     },
+    primaryColor: "Основен цвят",
+    tableHeaderColor: "Цвят на заглавието на таблицата",
+    orientation: "Ориентация",
+    portrait: "Портрет",
+    landscape: "Пейзаж",
+    applyChanges: "Приложи промените",
+    customizeAppearance: "Персонализирай визията",
+    chooseColor: "Избери цвят",
     currentTemplate: "Текущ шаблон",
     chooseTemplate: "Избери шаблон",
     overwriteTemplate: "Презапиши шаблон",
     chooseDefaultTemplate: "Избери шаблон по подразбиране",
-    templateNameRequired: "Името на шаблона е задължително"
+    templateNameRequired: "Името на шаблона е задължително",
+    createTemplate: "Създай шаблон",
+    deleteTemplate: "Изтрий шаблон",
+    deleteTemplateConfirm: "Сигурни ли сте, че искате да изтриете този шаблон?"
   }
 };
