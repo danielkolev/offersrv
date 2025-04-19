@@ -48,7 +48,7 @@ const OfferDetailsForm = () => {
         
         <TimestampsSection
           creationDate={creationDate}
-          lastSaved={lastSaved}
+          lastSaved={lastSaved ? lastSaved.toLocaleString() : null}
           t={t}
         />
         
