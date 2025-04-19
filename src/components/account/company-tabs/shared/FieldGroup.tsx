@@ -12,9 +12,21 @@ interface FieldGroupProps {
   placeholder?: string;
   field: keyof Company;
   disabled?: boolean;
+  isReadOnly?: boolean;  // Добавяме поддръжка за readOnly пропърти
+  helperText?: string;   // Добавяме поддръжка за помощен текст
 }
 
-const FieldGroup = ({ label, id, value, onChange, placeholder, field, disabled }: FieldGroupProps) => {
+const FieldGroup = ({ 
+  label, 
+  id, 
+  value, 
+  onChange, 
+  placeholder, 
+  field, 
+  disabled,
+  isReadOnly,
+  helperText
+}: FieldGroupProps) => {
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
@@ -24,7 +36,11 @@ const FieldGroup = ({ label, id, value, onChange, placeholder, field, disabled }
         onChange={(e) => onChange(field, e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
+        readOnly={isReadOnly}
       />
+      {helperText && (
+        <p className="text-sm text-muted-foreground">{helperText}</p>
+      )}
     </div>
   );
 };

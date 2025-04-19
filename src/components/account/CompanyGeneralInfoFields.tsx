@@ -28,7 +28,7 @@ const CompanyGeneralInfoFields = ({
           placeholder=""
           field="logo_url"
           isReadOnly={true}
-          helperText={t.company.logoHelperText || 'Logo can be changed in the section below'}
+          helperText="Logo can be changed in the section below"
         />
       </div>
     </div>
