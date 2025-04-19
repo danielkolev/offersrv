@@ -116,15 +116,17 @@ const LandingPage = () => {
         </div>
       </div>
       
-      {/* Mobile optimization improvements */}
-      <style jsx global>{`
-        @media (max-width: 768px) {
-          .container {
-            padding-left: 16px;
-            padding-right: 16px;
+      {/* Mobile optimization - replace jsx styling with inline CSS */}
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .container {
+              padding-left: 16px;
+              padding-right: 16px;
+            }
           }
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
