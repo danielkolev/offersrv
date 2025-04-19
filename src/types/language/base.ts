@@ -1,4 +1,3 @@
-
 import { AuthTranslations } from './auth';
 import { CommonTranslations } from './common';
 import { CompanyTranslations } from './company';

@@ -1,4 +1,3 @@
-
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
@@ -20,15 +19,7 @@ export const defaultCompany = {
   slogan: '',
   slogan_en: '',
   conclusion_text: '',
-  conclusion_text_en: '',
-  // Russian language fields
-  name_ru: '',
-  address_ru: '',
-  city_ru: '',
-  country_ru: '',
-  logo_url_ru: null,
-  slogan_ru: '',
-  conclusion_text_ru: ''
+  conclusion_text_en: ''
 };
 
 export const defaultClient = {
@@ -53,7 +44,7 @@ export const defaultOfferDetails = {
   transportCost: 0,
   otherCosts: 0,
   notes: '',
-  offerLanguage: 'bg' as 'bg' | 'en' | 'ru',
+  offerLanguage: 'bg' as 'bg' | 'en',
   currency: 'BGN' as 'BGN' | 'EUR' | 'USD',
   // New payment and delivery terms fields
   paymentTerms: 'advance',
