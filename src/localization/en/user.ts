@@ -1,4 +1,3 @@
-
 import { UserTranslations } from '@/types/language/user';
 
 export const enUserTranslations: UserTranslations = {

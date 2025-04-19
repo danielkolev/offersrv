@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -15,6 +14,8 @@ import CompanySettingsModal from './CompanySettingsModal';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import UserProfileForm from './UserProfileForm';
+import PasswordChangeForm from './PasswordChangeForm';
 import { useToast } from '@/hooks/use-toast';
 import { Company } from '@/types/company';
 
@@ -85,21 +86,16 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
     setCompanyModalOpen(true);
   };
 
-  // Get user initials for avatar
   const getUserInitials = () => {
     if (!user?.email) return "?";
     return user.email.substring(0, 2).toUpperCase();
   };
 
-  // Обработка на затварянето на модалния прозорец
   const handleOpenChange = (newOpenState: boolean) => {
     onOpenChange(newOpenState);
-    // Малко забавяне преди да се възстанови фокуса
-    if (!newOpenState) {
-      setTimeout(() => {
-        document.body.style.pointerEvents = 'auto';
-      }, 100);
-    }
+    setTimeout(() => {
+      document.body.style.pointerEvents = 'auto';
+    }, 100);
   };
 
   return (
@@ -114,8 +110,9 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
           </DialogHeader>
 
           <Tabs defaultValue="account" className="mt-4">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="account">{t.user.profile}</TabsTrigger>
+              <TabsTrigger value="security">{t.user.settings}</TabsTrigger>
               <TabsTrigger value="companies">{t.company.manage}</TabsTrigger>
             </TabsList>
             
@@ -135,36 +132,24 @@ const UserProfileModal = ({ open, onOpenChange }: UserProfileModalProps) => {
                 
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t.company.title}</CardTitle>
+                    <CardTitle>{t.user.editProfile}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {isLoading ? (
-                      <div className="text-center py-2">{t.common.loading}</div>
-                    ) : userCompanies.length > 0 ? (
-                      <div className="space-y-2">
-                        {userCompanies.map((company) => (
-                          <div key={company.id} className="p-3 border rounded-md">
-                            <h4 className="font-medium">{company.name}</h4>
-                            {company.vat_number && (
-                              <p className="text-sm text-muted-foreground">
-                                {t.companyInfo.vatNumber}: {company.vat_number}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-2">
-                        {t.company.noCompanies}
-                      </div>
-                    )}
-                    
-                    <Button onClick={openCompanySettings} variant="outline" className="w-full mt-3">
-                      {t.company.manage}
-                    </Button>
+                    <UserProfileForm />
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            <TabsContent value="security" className="py-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t.user.changePassword}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <PasswordChangeForm />
+                </CardContent>
+              </Card>
             </TabsContent>
             
             <TabsContent value="companies" className="py-4">

@@ -1,4 +1,3 @@
-
 export interface UserTranslations {
   profile: string;
   settings: string;
