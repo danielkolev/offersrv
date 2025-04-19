@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTemplateState } from './use-template-state';
 import { useTemplateQueries } from './use-template-queries';
 import { useTemplateOperations } from './use-template-operations';
-import { TemplateType } from '@/types/template';
+import { TemplateType } from './types';
 
 export function useTemplateManagement() {
   const { user } = useAuth();
@@ -23,6 +23,7 @@ export function useTemplateManagement() {
     
     state.setIsLoading(true);
     try {
+      // Fetch user templates
       const { data: userTemplatesData, error: userTemplatesError } = await supabase
         .from('offer_templates')
         .select('*')
@@ -31,15 +32,12 @@ export function useTemplateManagement() {
       
       if (userTemplatesError) throw userTemplatesError;
       
-      const formattedUserTemplates = (userTemplatesData || []).map((template: any) => ({
+      // Convert database rows to TemplateType
+      const formattedUserTemplates: TemplateType[] = (userTemplatesData || []).map((template: any) => ({
         id: template.id,
         name: template.name,
         description: template.description || '',
-        settings: {
-          primaryColor: template.settings?.primaryColor || '#0891B2',
-          tableHeaderColor: template.settings?.tableHeaderColor || '#F3F4F6',
-          orientation: template.settings?.orientation || 'portrait'
-        },
+        settings: template.settings,
         created_at: template.created_at,
         updated_at: template.updated_at,
         user_id: template.user_id,
@@ -49,10 +47,15 @@ export function useTemplateManagement() {
       
       state.setUserTemplates(formattedUserTemplates);
       
+      // Get default template ID
       const defaultTemplate = formattedUserTemplates.find(template => template.is_default);
       if (defaultTemplate) {
         state.setDefaultTemplateId(defaultTemplate.id);
       }
+      
+      // Fetch sample templates (if any)
+      // Note: You might want to implement a way to store sample templates in the future
+      state.setSampleTemplates([]);
       
     } catch (error) {
       console.error('Error fetching templates:', error);
