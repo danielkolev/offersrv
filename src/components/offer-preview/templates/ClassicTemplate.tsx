@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -12,6 +13,8 @@ import TotalsSection from '../TotalsSection';
 import NotesSection from '../NotesSection';
 import OfferActions from '../OfferActions';
 import { useOffer } from '@/context/offer/OfferContext';
+import CustomFooterText from './components/CustomFooterText';
+import OfferFooter from './components/OfferFooter';
 
 interface ClassicTemplateProps {
   offer: Offer;
@@ -41,27 +44,12 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
     : (offer.company.conclusion_text || settings?.content?.footerText || 'Благодарим Ви за доверието!');
 
   // Calculate total with discounts applied
-  const calculateDiscountedTotal = () => {
-    let total = calculateTotal();
-    
-    // Apply special discounts if any exist
-    if (offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0) {
-      offer.details.specialDiscounts.forEach(discount => {
-        if (discount.type === 'percentage') {
-          // Apply percentage discount
-          total -= total * (discount.amount / 100);
-        } else {
-          // Apply fixed discount
-          total -= discount.amount;
-        }
-      });
+  const calculateDiscountAmount = (discount: { amount: number; type: 'percentage' | 'fixed' }) => {
+    if (discount.type === 'percentage') {
+      return calculateTotal() * (discount.amount / 100);
     }
-    
-    return total;
+    return discount.amount;
   };
-  
-  const discountedTotal = calculateDiscountedTotal();
-  const hasDiscounts = offer.details.specialDiscounts && offer.details.specialDiscounts.length > 0;
 
   return (
     <>
@@ -74,16 +62,15 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       <div className="p-6">
         <OfferHeader offer={offer} settings={settings} displayLanguage={displayLanguage} />
         
-        {/* Client and Offer Details in two columns on the same level */}
+        {/* Client and Offer Details in two columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {/* Left column: Client info */}
           <ClientInfoSection 
             client={offer.client} 
             settings={settings}
             displayLanguage={displayLanguage}
           />
           
-          {/* Right column: Offer details */}
+          {/* Offer details */}
           <div className={cn(
             "rounded-md p-3",
             settings?.appearance?.secondaryColor ? "" : "bg-gray-50"
@@ -102,7 +89,6 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
             </h3>
             
             <div className="text-sm space-y-1">
-              {/* Offer number moved here instead of being placed separately */}
               {!isDraft && offer.details.offerNumber && (
                 <p className="font-medium">
                   {displayLanguage === 'bg' ? 'Оферта №:' : 'Offer #:'} {offer.details.offerNumber}
@@ -142,12 +128,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           language={displayLanguage}
           settings={settings}
           specialDiscounts={offer.details.specialDiscounts}
-          calculateDiscountAmount={(discount) => {
-            if (discount.type === 'percentage') {
-              return calculateTotal() * (discount.amount / 100);
-            }
-            return discount.amount;
-          }}
+          calculateDiscountAmount={calculateDiscountAmount}
         />
         
         <NotesSection 
@@ -156,55 +137,16 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           displayLanguage={displayLanguage}
         />
         
-        {/* Custom Footer Text */}
-        {offer.details.customFooterText && (
-          <div className="mb-6 print-visible border-t pt-4 mt-4">
-            <div className="whitespace-pre-line text-sm text-gray-700">
-              {offer.details.customFooterText}
-            </div>
-          </div>
-        )}
+        <CustomFooterText text={offer.details.customFooterText} />
         
-        <div className={cn(
-          "text-center text-sm text-muted-foreground mt-12 pt-4 border-t print-visible",
-          settings?.layout?.compactMode ? "text-xs" : ""
-        )}
-        style={{ 
-          borderColor: settings?.appearance?.primaryColor || ""
-        }}>
-          <p>{footerText}</p>
-          
-          {settings?.footer?.showBankDetails && (
-            <div className="mt-2 text-xs text-muted-foreground">
-              <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-              <p>{settings?.footer?.bankDetails?.name || (displayLanguage === 'bg' ? 'Банка' : 'Bank')}</p>
-              <p>IBAN: {settings?.footer?.bankDetails?.iban || 'BG12EXAMPLE12345678'}</p>
-              {settings?.footer?.bankDetails?.swift && <p>SWIFT: {settings?.footer?.bankDetails?.swift}</p>}
-            </div>
-          )}
-          
-          {/* Digital Signature Area */}
-          {offer.details.showDigitalSignature && (
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="border-t pt-2 text-right">
-                <p>{displayLanguage === 'bg' ? 'Дата:' : 'Date:'}</p>
-                <div className="h-8"></div>
-              </div>
-              <div className="border-t pt-2 text-right">
-                <p>{displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:'}</p>
-                <div className="h-8"></div>
-              </div>
-            </div>
-          )}
-          
-          {settings?.footer?.showSignatureArea && !offer.details.showDigitalSignature && (
-            <div className="mt-4 flex justify-end">
-              <div className="border-t pt-2 w-48 text-right">
-                <p>{settings?.footer?.signatureText || (displayLanguage === 'bg' ? 'Подпис и печат:' : 'Signature and stamp:')}</p>
-              </div>
-            </div>
-          )}
-        </div>
+        <OfferFooter 
+          footerText={footerText}
+          settings={settings}
+          showBankDetails={settings?.footer?.showBankDetails}
+          showDigitalSignature={offer.details.showDigitalSignature}
+          showSignatureArea={settings?.footer?.showSignatureArea}
+          displayLanguage={displayLanguage}
+        />
       </div>
     </>
   );
