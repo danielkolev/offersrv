@@ -37,13 +37,14 @@ const TemplatesPage = () => {
     isLoading, 
     setDefaultTemplate, 
     createTemplate, 
-    deleteTemplate
+    deleteTemplate,
+    editTemplate
   } = useTemplateManagement();
   
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('user');
   const [editMode, setEditMode] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   
   // Template settings state
   const [primaryColor, setPrimaryColor] = useState('#4F46E5');
@@ -54,13 +55,13 @@ const TemplatesPage = () => {
     setIsCreateDialogOpen(true);
   };
   
-  const handleDeleteTemplate = (templateId) => {
+  const handleDeleteTemplate = (templateId: string) => {
     if (window.confirm(t.offer.templates.confirmDelete)) {
       deleteTemplate(templateId);
     }
   };
   
-  const handleEditTemplate = (templateId) => {
+  const handleEditTemplate = (templateId: string) => {
     const template = userTemplates.find(t => t.id === templateId);
     if (template) {
       setSelectedTemplate(template);
@@ -104,8 +105,8 @@ const TemplatesPage = () => {
       };
       
       try {
-        // Here we would normally call updateTemplateSettings, but we'll just log for now
-        console.log('Saving template with settings:', updatedSettings);
+        // Update template with new settings
+        editTemplate(updatedTemplate);
         
         // After successful update
         setEditMode(false);
@@ -119,6 +120,10 @@ const TemplatesPage = () => {
   const handleCancelEdit = () => {
     setEditMode(false);
     setSelectedTemplate(null);
+  };
+
+  const handleCreateTemplate = async (name: string, description: string) => {
+    await createTemplate(name, description);
   };
 
   return (
@@ -142,7 +147,7 @@ const TemplatesPage = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <FormSection title={t.offer.templates.title}>
+                <FormSection title={t.offer.templates.customizeAppearance}>
                   <div className="grid gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="primaryColor">{t.offer.templates.primaryColor}</Label>
@@ -242,7 +247,8 @@ const TemplatesPage = () => {
       <CreateTemplateDialog 
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        onCreateTemplate={createTemplate}
+        onCreateTemplate={handleCreateTemplate}
+        isLoading={isLoading}
       />
     </div>
   );

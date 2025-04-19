@@ -34,12 +34,14 @@ const SavedOffersContent: React.FC = () => {
         .order('created_at', { ascending: false });
         
       if (error) throw error;
-      setSavedOffers(data || []);
+      // Cast data to SavedOffer type
+      const typedData = (data || []) as unknown as SavedOffer[];
+      setSavedOffers(typedData);
     } catch (error) {
       console.error('Error fetching offers:', error);
       toast({
         title: t.common.error,
-        description: t.common.error,
+        description: t.common.error || "An error occurred",
         variant: 'destructive',
       });
     } finally {

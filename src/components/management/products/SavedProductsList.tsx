@@ -56,9 +56,9 @@ const SavedProductsList = ({
           <SavedProductItem
             key={product.id}
             product={product}
-            onSelect={onSelectProduct}
+            onSelect={() => onSelectProduct(product)}
             onDelete={onDeleteProduct}
-            onEdit={onEditProduct}
+            onEdit={() => onEditProduct(product)}
           />
         ))}
       </TableBody>

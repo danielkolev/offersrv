@@ -6,39 +6,41 @@ import {
   DialogContent, 
   DialogFooter, 
   DialogHeader, 
-  DialogTitle,
-  DialogTrigger 
+  DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlusCircle } from 'lucide-react';
 
 interface CreateTemplateDialogProps {
-  onSave: (name: string, description: string) => Promise<void>;
-  isLoading: boolean;
+  onCreateTemplate: (name: string, description: string) => Promise<void>;
+  isLoading?: boolean;
 }
 
-const CreateTemplateDialog: React.FC<CreateTemplateDialogProps> = ({ 
-  onSave, 
-  isLoading 
+const CreateTemplateDialog: React.FC<CreateTemplateDialogProps & { 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void;
+}> = ({ 
+  onCreateTemplate, 
+  isLoading = false,
+  open,
+  onOpenChange 
 }) => {
   const { t } = useLanguage();
-  const [open, setOpen] = useState(false);
   const [templateName, setTemplateName] = useState('');
   const [templateDescription, setTemplateDescription] = useState('');
 
   const handleSave = async () => {
-    await onSave(templateName, templateDescription);
+    await onCreateTemplate(templateName, templateDescription);
     setTemplateName('');
     setTemplateDescription('');
-    setOpen(false);
+    onOpenChange(false);
   };
 
-  // Добавяме обработка на затварянето на модалния прозорец
+  // Handle dialog closing
   const handleOpenChange = (newOpenState: boolean) => {
-    setOpen(newOpenState);
-    // Малко забавяне преди да се възстанови фокуса
+    onOpenChange(newOpenState);
+    // Small delay before restoring focus
     if (!newOpenState) {
       setTimeout(() => {
         document.body.style.pointerEvents = 'auto';
@@ -48,15 +50,6 @@ const CreateTemplateDialog: React.FC<CreateTemplateDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="flex items-center gap-2"
-        >
-          <PlusCircle className="h-4 w-4" />
-          {t.settings.newTemplate}
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t.settings.createTemplate}</DialogTitle>
@@ -84,7 +77,7 @@ const CreateTemplateDialog: React.FC<CreateTemplateDialogProps> = ({
         <DialogFooter>
           <Button 
             variant="outline" 
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           >
             {t.common.cancel}
           </Button>
