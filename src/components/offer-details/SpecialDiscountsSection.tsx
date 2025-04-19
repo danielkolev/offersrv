@@ -10,6 +10,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { OfferDetails } from '@/types/offer';
 import { Translations } from '@/types/language';
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SpecialDiscountsSectionProps {
   offerDetails: OfferDetails;
@@ -22,6 +23,7 @@ const SpecialDiscountsSection = ({
   updateOfferDetails,
   t
 }: SpecialDiscountsSectionProps) => {
+  const { currency } = useLanguage();
   const [discountAmount, setDiscountAmount] = useState<string>('');
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [discountDescription, setDiscountDescription] = useState<string>('');
@@ -65,7 +67,7 @@ const SpecialDiscountsSection = ({
               <CardContent className="p-3 flex justify-between items-center">
                 <div>
                   <p className="font-medium text-sm">
-                    {discount.amount} {discount.type === 'percentage' ? '%' : t.common?.currency}
+                    {discount.amount} {discount.type === 'percentage' ? '%' : currency}
                     {' - '}
                     {discount.description}
                   </p>
@@ -158,3 +160,4 @@ const SpecialDiscountsSection = ({
 };
 
 export default SpecialDiscountsSection;
+
