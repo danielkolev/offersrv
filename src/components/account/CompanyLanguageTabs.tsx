@@ -24,76 +24,121 @@ const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsP
       {/* Bulgarian content */}
       <TabsContent value="bulgarian" className="space-y-4 mt-2">
         <div className="space-y-2">
-          <Label htmlFor="name">{t.companyInfo?.name || 'Company Name'}</Label>
+          <Label htmlFor="name">{t.companyInfo?.name || 'Име на фирма'}</Label>
           <Input
             id="name"
-            placeholder={t.company?.namePlaceholder || 'Enter company name'}
             value={company.name || ''}
             onChange={(e) => onFieldChange('name', e.target.value)}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="slogan">{t.companyInfo.slogan || 'Slogan'}</Label>
-          <Textarea
-            id="slogan"
-            value={company.slogan || ''}
-            onChange={(e) => onFieldChange('slogan', e.target.value)}
-            placeholder={t.companyInfo.sloganPlaceholder || 'Enter company slogan'}
-            className="resize-none"
-            rows={2}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="conclusion_text">{t.companyInfo.conclusionText || 'Conclusion Text'}</Label>
-          <Textarea
-            id="conclusion_text"
-            value={company.conclusion_text || ''}
-            onChange={(e) => onFieldChange('conclusion_text', e.target.value)}
-            placeholder={t.companyInfo.conclusionTextPlaceholder || 'Enter conclusion text'}
-            className="resize-none"
-            rows={2}
+            placeholder={t.company?.namePlaceholder || 'Въведете име на фирма'}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="address">{t.companyInfo.address || 'Address'}</Label>
+          <Label htmlFor="address">{t.companyInfo.address || 'Адрес'}</Label>
           <Input
             id="address"
             value={company.address || ''}
             onChange={(e) => onFieldChange('address', e.target.value)}
-            placeholder={t.company?.addressPlaceholder || 'Address'}
+            placeholder={t.company?.addressPlaceholder || 'Адрес'}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="city">{t.companyInfo.city || 'City'}</Label>
+            <Label htmlFor="city">{t.companyInfo.city || 'Град'}</Label>
             <Input
               id="city"
               value={company.city || ''}
               onChange={(e) => onFieldChange('city', e.target.value)}
-              placeholder={t.company?.cityPlaceholder || 'City'}
+              placeholder={t.company?.cityPlaceholder || 'Град'}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="country">{t.companyInfo.country || 'Country'}</Label>
+            <Label htmlFor="country">{t.companyInfo.country || 'Държава'}</Label>
             <Input
               id="country"
               value={company.country || ''}
               onChange={(e) => onFieldChange('country', e.target.value)}
-              placeholder={t.company?.countryPlaceholder || 'Country'}
+              placeholder={t.company?.countryPlaceholder || 'Държава'}
             />
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="vat_number">{t.companyInfo.vatNumber || 'ДДС номер'}</Label>
+            <Input
+              id="vat_number"
+              value={company.vat_number || ''}
+              onChange={(e) => onFieldChange('vat_number', e.target.value)}
+              placeholder={t.company?.vatPlaceholder || 'ДДС номер'}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="company_id">{t.companyInfo.eikNumber || 'ЕИК'}</Label>
+            <Input
+              id="company_id"
+              value={company.company_id || ''}
+              onChange={(e) => onFieldChange('company_id', e.target.value)}
+              placeholder={t.company?.eikPlaceholder || 'ЕИК номер'}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="phone">{t.companyInfo.phone || 'Телефон'}</Label>
+            <Input
+              id="phone"
+              value={company.phone || ''}
+              onChange={(e) => onFieldChange('phone', e.target.value)}
+              placeholder={t.company?.phonePlaceholder || 'Телефон'}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="email">{t.companyInfo.email || 'Имейл'}</Label>
+            <Input
+              id="email"
+              type="email"
+              value={company.email || ''}
+              onChange={(e) => onFieldChange('email', e.target.value)}
+              placeholder={t.company?.emailPlaceholder || 'Имейл'}
+            />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="slogan">{t.companyInfo.slogan || 'Слоган на фирма'}</Label>
+          <Textarea
+            id="slogan"
+            value={company.slogan || ''}
+            onChange={(e) => onFieldChange('slogan', e.target.value)}
+            placeholder={t.companyInfo.sloganPlaceholder}
+            className="resize-none"
+            rows={2}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="conclusion_text">{t.companyInfo.conclusionText || 'Заключителен текст'}</Label>
+          <Textarea
+            id="conclusion_text"
+            value={company.conclusion_text || ''}
+            onChange={(e) => onFieldChange('conclusion_text', e.target.value)}
+            placeholder={t.companyInfo.conclusionTextPlaceholder}
+            className="resize-none"
+            rows={2}
+          />
         </div>
       </TabsContent>
 
       {/* English Content */}
       <TabsContent value="english" className="space-y-4 mt-2">
         <div className="space-y-2">
-          <Label htmlFor="name_en">Company Name (EN)</Label>
+          <Label htmlFor="name_en">Company Name</Label>
           <Input
             id="name_en"
             value={company.name_en || ''}
@@ -101,9 +146,90 @@ const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsP
             placeholder="Company name in English"
           />
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="address_en">Address</Label>
+          <Input
+            id="address_en"
+            value={company.address_en || ''}
+            onChange={(e) => onFieldChange('address_en', e.target.value)}
+            placeholder="Address in English"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="city_en">City</Label>
+            <Input
+              id="city_en"
+              value={company.city_en || ''}
+              onChange={(e) => onFieldChange('city_en', e.target.value)}
+              placeholder="City in English"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="country_en">Country</Label>
+            <Input
+              id="country_en"
+              value={company.country_en || ''}
+              onChange={(e) => onFieldChange('country_en', e.target.value)}
+              placeholder="Country in English"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="vat_number">VAT Number</Label>
+            <Input
+              id="vat_number"
+              value={company.vat_number || ''}
+              onChange={(e) => onFieldChange('vat_number', e.target.value)}
+              placeholder="VAT number"
+              disabled
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="company_id">Company ID</Label>
+            <Input
+              id="company_id"
+              value={company.company_id || ''}
+              onChange={(e) => onFieldChange('company_id', e.target.value)}
+              placeholder="Company ID"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              id="phone"
+              value={company.phone || ''}
+              onChange={(e) => onFieldChange('phone', e.target.value)}
+              placeholder="Phone"
+              disabled
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={company.email || ''}
+              onChange={(e) => onFieldChange('email', e.target.value)}
+              placeholder="Email"
+              disabled
+            />
+          </div>
+        </div>
         
         <div className="space-y-2">
-          <Label htmlFor="slogan_en">Company Slogan (EN)</Label>
+          <Label htmlFor="slogan_en">Company Slogan</Label>
           <Textarea
             id="slogan_en"
             value={company.slogan_en || ''}
@@ -115,7 +241,7 @@ const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsP
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="conclusion_text_en">Conclusion Text (EN)</Label>
+          <Label htmlFor="conclusion_text_en">Conclusion Text</Label>
           <Textarea
             id="conclusion_text_en"
             value={company.conclusion_text_en || ''}
@@ -124,38 +250,6 @@ const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsP
             className="resize-none"
             rows={2}
           />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="address_en">Address (EN)</Label>
-          <Input
-            id="address_en"
-            value={company.address_en || ''}
-            onChange={(e) => onFieldChange('address_en', e.target.value)}
-            placeholder="Address in English"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="city_en">City (EN)</Label>
-            <Input
-              id="city_en"
-              value={company.city_en || ''}
-              onChange={(e) => onFieldChange('city_en', e.target.value)}
-              placeholder="City in English"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="country_en">Country (EN)</Label>
-            <Input
-              id="country_en"
-              value={company.country_en || ''}
-              onChange={(e) => onFieldChange('country_en', e.target.value)}
-              placeholder="Country in English"
-            />
-          </div>
         </div>
       </TabsContent>
     </Tabs>
