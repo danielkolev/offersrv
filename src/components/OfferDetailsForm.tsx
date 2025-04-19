@@ -9,11 +9,13 @@ import TimestampsSection from './offer-details/TimestampsSection';
 import OptionsSection from './offer-details/OptionsSection';
 import CostsSection from './offer-details/CostsSection';
 import NotesSection from './offer-details/NotesSection';
+import { SupportedCurrency } from '@/types/language/base';
 
 const OfferDetailsForm = () => {
   const { offer, updateOfferDetails, lastSaved } = useOffer();
   const { t, currency, setCurrency } = useLanguage();
 
+  // Convert Date object to string format
   const creationDate = offer.details.date 
     ? new Date(offer.details.date).toLocaleString() 
     : new Date().toLocaleString();
@@ -73,4 +75,3 @@ const OfferDetailsForm = () => {
 };
 
 export default OfferDetailsForm;
-
