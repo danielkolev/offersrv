@@ -8,19 +8,24 @@ interface ClientInfoSectionProps {
   client: ClientInfo;
   settings?: any;
   displayLanguage?: SupportedLanguage;
+  attentionText?: string; // Added this prop
 }
 
 const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ 
   client, 
   settings,
-  displayLanguage = 'bg'
+  displayLanguage = 'bg',
+  attentionText
 }) => {
   // Get correct language-specific texts
   const sectionTitle = displayLanguage === 'bg' ? 'Информация за клиента' : 'Client Information';
-  const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
+  const defaultAttentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
   const vatLabel = displayLanguage === 'bg' ? 'ДДС №' : 'VAT No';
   const companyIdLabel = displayLanguage === 'bg' ? 'ЕИК' : 'Company ID';
   const phoneLabel = displayLanguage === 'bg' ? 'Тел' : 'Phone';
+
+  // Use the provided attentionText or fall back to the default based on language
+  const displayAttentionText = attentionText || defaultAttentionText;
 
   return (
     <div className={cn(
@@ -45,7 +50,7 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
         
         {client.contactPerson && (
           <p>
-            <span className="text-gray-600">{attentionText}:</span> {client.contactPerson}
+            <span className="text-gray-600">{displayAttentionText}:</span> {client.contactPerson}
           </p>
         )}
         

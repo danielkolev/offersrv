@@ -1,9 +1,13 @@
 export interface CompanyInfo {
   id?: string;
   name: string;
+  nameEn?: string;
   address: string;
+  addressEn?: string;
   city: string;
+  cityEn?: string;
   country: string;
+  countryEn?: string;
   vatNumber: string;
   eikNumber?: string;
   phone: string;
@@ -11,7 +15,7 @@ export interface CompanyInfo {
   website: string;
   logo: string | null;
   slogan?: string;
-  conclusionText?: string; // Added conclusion text field
+  conclusionText?: string;
 }
 
 export interface ClientInfo {

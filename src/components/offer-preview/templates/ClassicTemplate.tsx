@@ -43,19 +43,6 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       : 'Thank you for your business!'
   );
   
-  // Get the attention text based on language
-  const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
-  
-  // Bank details from settings or default values
-  const bankDetails = settings?.footer?.bankDetails || {
-    name: displayLanguage === 'bg' ? 'Банка' : 'Bank',
-    iban: 'BG12EXAMPLE12345678',
-    swift: 'EXAMPLESWIFT'
-  };
-
-  // Show bank details if enabled in settings
-  const showBankDetails = settings?.footer?.showBankDetails === true;
-
   return (
     <>
       <OfferActions 
@@ -65,7 +52,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       />
       
       <div className="p-6">
-        <OfferHeader offer={offer} settings={settings} />
+        <OfferHeader offer={offer} settings={settings} displayLanguage={displayLanguage} />
         
         {/* Client and Offer Details in two columns on the same level */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -74,7 +61,6 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
             client={offer.client} 
             settings={settings}
             displayLanguage={displayLanguage}
-            attentionText={attentionText}
           />
           
           {/* Right column: Offer details */}
@@ -149,12 +135,12 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           }}>
             <p>{footerText}</p>
             
-            {showBankDetails && (
+            {settings?.footer?.showBankDetails && (
               <div className="mt-2 text-xs text-muted-foreground">
                 <p className="font-medium">{displayLanguage === 'bg' ? 'Банкова информация' : 'Bank Information'}</p>
-                <p>{bankDetails.name}</p>
-                <p>IBAN: {bankDetails.iban}</p>
-                {bankDetails.swift && <p>SWIFT: {bankDetails.swift}</p>}
+                <p>{settings?.footer?.bankDetails?.name || (displayLanguage === 'bg' ? 'Банка' : 'Bank')}</p>
+                <p>IBAN: {settings?.footer?.bankDetails?.iban || 'BG12EXAMPLE12345678'}</p>
+                {settings?.footer?.bankDetails?.swift && <p>SWIFT: {settings?.footer?.bankDetails?.swift}</p>}
               </div>
             )}
             
