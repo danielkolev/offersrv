@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,7 +22,6 @@ export function useTemplateManagement() {
     
     state.setIsLoading(true);
     try {
-      // Fetch user templates
       const { data: userTemplatesData, error: userTemplatesError } = await supabase
         .from('offer_templates')
         .select('*')
@@ -32,12 +30,15 @@ export function useTemplateManagement() {
       
       if (userTemplatesError) throw userTemplatesError;
       
-      // Convert database rows to TemplateType
-      const formattedUserTemplates: TemplateType[] = (userTemplatesData || []).map((template: any) => ({
+      const formattedUserTemplates = (userTemplatesData || []).map((template: any) => ({
         id: template.id,
         name: template.name,
         description: template.description || '',
-        settings: template.settings,
+        settings: {
+          primaryColor: template.settings?.primaryColor || '#0891B2',
+          tableHeaderColor: template.settings?.tableHeaderColor || '#F3F4F6',
+          orientation: template.settings?.orientation || 'portrait'
+        },
         created_at: template.created_at,
         updated_at: template.updated_at,
         user_id: template.user_id,
@@ -47,15 +48,10 @@ export function useTemplateManagement() {
       
       state.setUserTemplates(formattedUserTemplates);
       
-      // Get default template ID
       const defaultTemplate = formattedUserTemplates.find(template => template.is_default);
       if (defaultTemplate) {
         state.setDefaultTemplateId(defaultTemplate.id);
       }
-      
-      // Fetch sample templates (if any)
-      // Note: You might want to implement a way to store sample templates in the future
-      state.setSampleTemplates([]);
       
     } catch (error) {
       console.error('Error fetching templates:', error);
