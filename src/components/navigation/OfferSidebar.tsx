@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -60,10 +59,15 @@ const OfferSidebar = ({
   return (
     <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
       <SidebarHeader className="px-4 py-3">
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-1">
           <Logo />
-          {user && (
-            <div className="border-b pb-3 pt-1">
+        </div>
+      </SidebarHeader>
+      
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            {user && (
               <CompanyManager 
                 onSelectCompany={setSelectedCompanyId} 
                 selectedCompanyId={selectedCompanyId} 
@@ -71,14 +75,7 @@ const OfferSidebar = ({
                 prominentDisplay={true}
                 currentLanguage={language}
               />
-            </div>
-          )}
-        </div>
-      </SidebarHeader>
-      
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
+            )}
             <SidebarMenu>
               {navItems.map(item => (
                 <SidebarMenuItem key={item.path}>
