@@ -49,6 +49,9 @@ export const offerTemplates = {
     textColor: "Цвят на текста",
     backgroundColor: "Цвят на фона",
     designTemplateType: "Дизайн на шаблона",
+    createTemplate: "Създай шаблон",
+    deleteTemplate: "Изтрий шаблон",
+    deleteTemplateConfirm: "Сигурни ли сте, че искате да изтриете този шаблон?",
     designTemplates: {
       classic: "Класически",
       modernDark: "Модерен тъмен",

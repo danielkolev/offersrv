@@ -15,12 +15,11 @@ import { Label } from '@/components/ui/label';
 interface CreateTemplateDialogProps {
   onCreateTemplate: (name: string, description: string) => Promise<void>;
   isLoading?: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const CreateTemplateDialog: React.FC<CreateTemplateDialogProps & { 
-  open: boolean; 
-  onOpenChange: (open: boolean) => void;
-}> = ({ 
+const CreateTemplateDialog: React.FC<CreateTemplateDialogProps> = ({ 
   onCreateTemplate, 
   isLoading = false,
   open,
