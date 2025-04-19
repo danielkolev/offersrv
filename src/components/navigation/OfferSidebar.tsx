@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupContent } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-import { Home, FileEdit, Files, Users, Package, Building, Settings, FileText, LayoutTemplate } from 'lucide-react';
+import { Home, FileEdit, Files, Users, Package, Building, Settings, LayoutTemplate } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import CompanyManager from '@/components/company/CompanyManager';
 
@@ -58,23 +57,20 @@ const OfferSidebar = ({
 
   return (
     <Sidebar variant={isMobile ? "floating" : "sidebar"} collapsible={isMobile ? "none" : "offcanvas"}>
-      <SidebarHeader className="px-4 py-2">
-        {user && (
-          <div className="mb-2 max-w-full border-b pb-3">
-            <CompanyManager 
-              onSelectCompany={setSelectedCompanyId} 
-              selectedCompanyId={selectedCompanyId} 
-              disableCreate={true} 
-              prominentDisplay={true}
-              currentLanguage={language}
-            />
-          </div>
-        )}
-      </SidebarHeader>
-      
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
+            {user && (
+              <div className="px-2 py-3 mb-2 border-b">
+                <CompanyManager 
+                  onSelectCompany={setSelectedCompanyId} 
+                  selectedCompanyId={selectedCompanyId} 
+                  disableCreate={true} 
+                  prominentDisplay={true}
+                  currentLanguage={language}
+                />
+              </div>
+            )}
             <SidebarMenu>
               {navItems.map(item => (
                 <SidebarMenuItem key={item.path}>

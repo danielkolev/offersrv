@@ -14,7 +14,7 @@ const OfferHeader: React.FC<OfferHeaderProps> = ({ offer, settings, displayLangu
   // Use company name based on language if available
   const companyName = displayLanguage === 'en' && offer.company.nameEn 
     ? offer.company.nameEn 
-    : offer.company.name || 'Company Name';
+    : offer.company.name;
   
   // Whether to show the logo or not (default to true)
   const showLogo = settings?.header?.showLogo !== false;
