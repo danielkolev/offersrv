@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCompanyInfoSettings } from '@/hooks/useCompanyInfoSettings';
-import CompanyLanguageTabs from './CompanyLanguageTabs';
+import CompanyLanguageTabs from './company-tabs/CompanyLanguageTabs';
 import CompanyGeneralInfoFields from './CompanyGeneralInfoFields';
 import CompanyLogoSection from './CompanyLogoSection';
 
