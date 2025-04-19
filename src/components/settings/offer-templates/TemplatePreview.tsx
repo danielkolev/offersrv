@@ -12,14 +12,21 @@ export interface TemplatePreviewProps {
 const SAMPLE_OFFER: Offer = {
   company: {
     name: 'Acme Corporation',
+    nameEn: 'Acme Corporation',
     logo_url: '',
+    logo_url_en: '',
     address: '123 Business Street',
+    addressEn: '123 Business Street',
     city: 'Sofia',
+    cityEn: 'Sofia',
     country: 'Bulgaria',
+    countryEn: 'Bulgaria',
     vatNumber: 'BG123456789',
     eikNumber: '123456789',
     slogan: 'Building the future',
-    conclusion_text: 'Thank you for your business!',
+    slogan_en: 'Building the future',
+    conclusion_text: 'Благодарим Ви за доверието!',
+    conclusion_text_en: 'Thank you for your business!',
     phone: '+359 2 123 4567',
     email: 'info@acmecorp.com',
     website: 'www.acmecorp.com'

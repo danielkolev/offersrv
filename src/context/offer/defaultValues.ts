@@ -3,9 +3,13 @@ import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
   name: '',
+  nameEn: '',
   address: '',
+  addressEn: '',
   city: '',
+  cityEn: '',
   country: '',
+  countryEn: '',
   vatNumber: '',
   eikNumber: '',
   phone: '',
