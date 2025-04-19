@@ -14,18 +14,26 @@ interface CompanyLanguageTabsProps {
 
 const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsProps) => {
   return (
-    <Tabs defaultValue="bulgarian" className="mt-4">
+    <Tabs defaultValue="bulgarian" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="bulgarian">Български</TabsTrigger>
         <TabsTrigger value="english">English</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="bulgarian" className="space-y-4 mt-2">
-        <BulgarianTabContent company={company} onFieldChange={onFieldChange} t={t} />
+      <TabsContent value="bulgarian" className="space-y-4 mt-4">
+        <BulgarianTabContent 
+          company={company}
+          onFieldChange={onFieldChange}
+          t={t}
+        />
       </TabsContent>
 
-      <TabsContent value="english" className="space-y-4 mt-2">
-        <EnglishTabContent company={company} onFieldChange={onFieldChange} t={t} />
+      <TabsContent value="english" className="space-y-4 mt-4">
+        <EnglishTabContent 
+          company={company}
+          onFieldChange={onFieldChange}
+          t={t}
+        />
       </TabsContent>
     </Tabs>
   );
