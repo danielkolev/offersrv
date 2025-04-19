@@ -49,6 +49,7 @@ const EnglishTabContent = ({
         onFieldChange={onFieldChange}
         phoneLabel={t.companyInfo.phone}
         emailLabel={t.companyInfo.email}
+        websiteLabel={t.companyInfo.website}
       />
 
       <CompanyAdditionalInfo 

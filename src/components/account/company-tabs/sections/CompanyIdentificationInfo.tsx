@@ -20,7 +20,6 @@ const CompanyIdentificationInfo = ({ company, onFieldChange, vatLabel, companyId
         onChange={onFieldChange}
         placeholder={vatLabel}
         field="vat_number"
-        disabled
       />
       
       <FieldGroup
@@ -30,7 +29,6 @@ const CompanyIdentificationInfo = ({ company, onFieldChange, vatLabel, companyId
         onChange={onFieldChange}
         placeholder={companyIdLabel}
         field="company_id"
-        disabled
       />
     </div>
   );
