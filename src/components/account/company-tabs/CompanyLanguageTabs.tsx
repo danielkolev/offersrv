@@ -5,16 +5,37 @@ import { Company } from '@/types/company';
 import { Translations } from '@/types/language';
 import BulgarianTabContent from './BulgarianTabContent';
 import EnglishTabContent from './EnglishTabContent';
+import { useLanguage } from '@/context/LanguageContext';
+import LoadingErrorFeedback from '@/components/common/LoadingErrorFeedback';
 
 interface CompanyLanguageTabsProps {
   company: Company;
   onFieldChange: (field: keyof Company, value: string) => void;
   t: Translations;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
-const CompanyLanguageTabs = ({ company, onFieldChange, t }: CompanyLanguageTabsProps) => {
+const CompanyLanguageTabs = ({ 
+  company, 
+  onFieldChange, 
+  t,
+  isLoading = false,
+  error = null
+}: CompanyLanguageTabsProps) => {
+  const { language } = useLanguage();
+  
+  if (isLoading || error) {
+    return <LoadingErrorFeedback 
+      isLoading={isLoading} 
+      error={error} 
+      loadingMessage={t.company.loading}
+      errorTitle={t.company.error}
+    />;
+  }
+  
   return (
-    <Tabs defaultValue="bulgarian" className="w-full">
+    <Tabs defaultValue={language === 'en' ? 'english' : 'bulgarian'} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="bulgarian">Български</TabsTrigger>
         <TabsTrigger value="english">English</TabsTrigger>
