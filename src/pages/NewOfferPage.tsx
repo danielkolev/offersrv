@@ -6,10 +6,9 @@ import { useLocation } from 'react-router-dom';
 import SimpleOfferAccordion from '@/components/wizard/SimpleOfferAccordion';
 import { useCompanySelection } from '@/hooks/useCompanySelection';
 import { useOfferInitialization } from '@/hooks/useOfferInitialization';
-import { Loader2, FileText } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import Breadcrumbs from '@/components/common/Breadcrumbs';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
@@ -17,11 +16,11 @@ const NewOfferPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   
-  // Check if we need to load a draft from navigation state
+  // Проверяем, нужно ли загрузить черновик из состояния навигации
   const shouldLoadDraft = location.state?.loadDraft === true;
   const draftId = location.state?.draftId;
   
-  // Use optimized hooks for company selection and offer initialization
+  // Используем оптимизированные хуки для выбора компании и инициализации оферты
   const { 
     selectedCompanyId, 
     isLoading: isLoadingCompany, 
@@ -34,7 +33,7 @@ const NewOfferPage = () => {
     initError: offerInitError
   } = useOfferInitialization(shouldLoadDraft, draftId);
   
-  // Combined loading and error states
+  // Общее состояние загрузки и ошибок
   const isLoading = isLoadingCompany || isInitializingOffer;
   const hasError = !!companyError || !!offerInitError;
 
@@ -77,7 +76,7 @@ const NewOfferPage = () => {
     loadUserCompany();
   }, [user, setCompanyId, toast, t.common.error]);
 
-  // State for unauthenticated users
+  // Состояние для неавторизованных пользователей
   if (!user) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -89,23 +88,8 @@ const NewOfferPage = () => {
     );
   }
 
-  // Breadcrumb items for this page
-  const breadcrumbItems = [
-    { 
-      label: t.navigation?.offers || "Offers", 
-      href: "/offers"
-    },
-    { 
-      label: t.offer.createOffer || "Create Offer", 
-      icon: <FileText className="w-4 h-4" />,
-      current: true
-    }
-  ];
-
   return (
     <div className="container mx-auto py-8 px-4">
-      <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-      
       <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
           {t.offer.createOffer}

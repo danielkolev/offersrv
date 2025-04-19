@@ -1,3 +1,4 @@
+
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {
@@ -45,21 +46,12 @@ export const defaultOfferDetails = {
   otherCosts: 0,
   notes: '',
   offerLanguage: 'bg' as 'bg' | 'en',
-  currency: 'BGN' as 'BGN' | 'EUR' | 'USD',
-  // New payment and delivery terms fields
-  paymentTerms: 'advance',
-  customPaymentTerms: '',
-  deliveryTerms: 'immediate',
-  customDeliveryTerms: '',
-  discount: 0,
-  version: 1
+  currency: 'BGN' as 'BGN' | 'EUR' | 'USD'
 };
 
 export const defaultOffer: Offer = {
   company: defaultCompany,
   client: defaultClient,
   products: [],
-  details: defaultOfferDetails,
-  version: 1,
-  previousVersions: []
+  details: defaultOfferDetails
 };

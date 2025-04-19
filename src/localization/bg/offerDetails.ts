@@ -19,27 +19,5 @@ export const offerDetails = {
   notes: "Бележки",
   notesPlaceholder: "Допълнителна информация или условия",
   language: "Език на офертата",
-  currency: "Валута",
-  
-  // New payment and delivery terms translations
-  paymentDeliveryTitle: "Условия за плащане и доставка",
-  paymentTerms: "Условия за плащане",
-  selectPaymentTerms: "Избери условия за плащане",
-  paymentTermsAdvance: "Авансово плащане",
-  paymentTermsNet15: "Нет 15 дни",
-  paymentTermsNet30: "Нет 30 дни",
-  paymentTermsNet60: "Нет 60 дни",
-  paymentTermsCustom: "По избор",
-  customPaymentTermsPlaceholder: "Въведете персонализирани условия за плащане...",
-  
-  deliveryTerms: "Условия за доставка",
-  selectDeliveryTerms: "Избери условия за доставка",
-  deliveryImmediate: "Незабавна",
-  delivery1Week: "1 седмица",
-  delivery2Weeks: "2 седмици",
-  delivery1Month: "1 месец",
-  deliveryCustom: "По избор",
-  customDeliveryTermsPlaceholder: "Въведете персонализирани условия за доставка...",
-  
-  discount: "Отстъпка (%)"
+  currency: "Валута"
 };

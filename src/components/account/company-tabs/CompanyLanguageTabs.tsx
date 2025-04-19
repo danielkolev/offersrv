@@ -34,13 +34,8 @@ const CompanyLanguageTabs = ({
     />;
   }
   
-  // Determine default tab based on user's language
-  const getDefaultTab = () => {
-    return language === 'bg' ? 'bulgarian' : 'english';
-  };
-  
   return (
-    <Tabs defaultValue={getDefaultTab()} className="w-full">
+    <Tabs defaultValue={language === 'en' ? 'english' : 'bulgarian'} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="bulgarian">Български</TabsTrigger>
         <TabsTrigger value="english">English</TabsTrigger>

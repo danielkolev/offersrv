@@ -70,14 +70,7 @@ export interface OfferDetails {
   otherCosts: number;
   notes: string;
   offerLanguage: 'bg' | 'en';
-  currency?: 'BGN' | 'EUR' | 'USD';
-  // New fields for payment and delivery terms
-  paymentTerms?: string;
-  customPaymentTerms?: string;
-  deliveryTerms?: string;
-  customDeliveryTerms?: string;
-  discount?: number; // Discount percentage
-  version?: number; // Version tracking
+  currency?: 'BGN' | 'EUR' | 'USD'; // Added currency field
 }
 
 export interface Offer {
@@ -90,6 +83,4 @@ export interface Offer {
   lastEdited?: string; // Added last edited timestamp
   templateId?: string; // Added template ID
   templateSettings?: any; // Added template settings
-  version?: number; // Version number of the offer
-  previousVersions?: string[]; // IDs of previous versions
 }
