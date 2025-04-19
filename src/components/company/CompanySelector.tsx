@@ -1,187 +1,120 @@
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
+import React, { useState, useEffect } from 'react';
+import { Check, ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
 import { Company } from '@/types/company';
-import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/context/LanguageContext';
+import { cn } from '@/lib/utils';
 
 interface CompanySelectorProps {
+  companies: Company[];
+  selectedCompanyId: string | null;
   onSelectCompany: (companyId: string) => void;
   onCreateCompany: () => void;
-  selectedCompanyId?: string | null;
+  className?: string;
+  placement?: 'top' | 'bottom' | 'right' | 'left';
 }
 
-export const CompanySelector = ({ onSelectCompany, onCreateCompany, selectedCompanyId }: CompanySelectorProps) => {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [selected, setSelected] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(false);
-  const hasAttemptedFetch = useRef(false);
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { toast } = useToast();
-  
-  // Set initial selection based on provided selectedCompanyId
+const CompanySelector: React.FC<CompanySelectorProps> = ({
+  companies,
+  selectedCompanyId,
+  onSelectCompany,
+  onCreateCompany,
+  className,
+  placement = 'bottom',
+}) => {
+  const { t, language } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+
+  // Find the currently selected company
   useEffect(() => {
-    if (selectedCompanyId && !selected) {
-      setSelected(selectedCompanyId);
+    const company = companies.find((company) => company.id === selectedCompanyId);
+    setSelectedCompany(company || null);
+  }, [selectedCompanyId, companies]);
+
+  // Display company name based on selected language
+  const getCompanyDisplayName = (company: Company) => {
+    if (language === 'en' && company.name_en) {
+      return company.name_en;
     }
-  }, [selectedCompanyId, selected]);
-  
-  const fetchCompanies = useCallback(async () => {
-    if (!user || hasAttemptedFetch.current) return;
-    
-    setLoading(true);
-    hasAttemptedFetch.current = true;
-    
-    try {
-      console.log("Fetching companies for user:", user.id);
-      
-      // Get companies the user is a member of through the organization_members table
-      const { data: memberData, error: memberError } = await supabase
-        .from('organization_members')
-        .select('organization_id')
-        .eq('user_id', user.id);
-        
-      if (memberError) throw memberError;
-      
-      if (memberData && memberData.length > 0) {
-        const companyIds = memberData.map(member => member.organization_id);
-        
-        // Get company details
-        const { data: companiesData, error: companiesError } = await supabase
-          .from('organizations')
-          .select('id, name, logo_url')
-          .in('id', companyIds)
-          .order('name');
-          
-        if (companiesError) throw companiesError;
-        
-        if (companiesData) {
-          // Map the data to our Company interface
-          const formattedCompanies: Company[] = companiesData.map(org => ({
-            id: org.id,
-            name: org.name,
-            logo_url: org.logo_url
-          }));
-          
-          setCompanies(formattedCompanies);
-          
-          // Set selected company if not already set
-          if (formattedCompanies.length > 0) {
-            // Use either the provided selectedCompanyId, previously selected value, or the first company
-            const companyToSelect = selectedCompanyId && formattedCompanies.some(c => c.id === selectedCompanyId)
-              ? selectedCompanyId
-              : selected || formattedCompanies[0].id;
-              
-            setSelected(companyToSelect);
-            onSelectCompany(companyToSelect);
-            console.log("Selected company:", companyToSelect);
-          }
-        }
-      } else {
-        setCompanies([]);
-      }
-      
-      setFetchError(false);
-    } catch (error: any) {
-      console.error('Error fetching companies:', error);
-      setFetchError(true);
-      toast({
-        title: t.common.error,
-        description: error.message,
-        variant: 'destructive'
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [user, onSelectCompany, selectedCompanyId, selected, toast, t.common.error]);
-  
-  useEffect(() => {
-    fetchCompanies();
-  }, []);  // Intentionally empty dependency array
-  
-  const handleCompanyChange = (value: string) => {
-    console.log("Company selection changed to:", value);
-    setSelected(value);
-    onSelectCompany(value);
+    return company.name;
   };
-  
-  const handleRetry = () => {
-    hasAttemptedFetch.current = false;
-    fetchCompanies();
-  };
-  
-  if (loading) {
-    return <div className="text-center py-4">{t.common.loading}</div>;
-  }
-  
-  if (fetchError) {
-    return (
-      <div className="flex items-center gap-2">
-        <div className="text-red-500 mr-2">{t.common.error}</div>
-        <Button onClick={handleRetry} size="sm" variant="outline">
-          {t.common.retry}
-        </Button>
-      </div>
-    );
-  }
-  
+
   return (
-    <div className="flex items-center gap-2">
-      {companies.length > 0 ? (
-        <>
-          <Select value={selected} onValueChange={handleCompanyChange}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder={t.company.selectPlaceholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {companies.map((company) => (
-                <SelectItem key={company.id} value={company.id}>
-                  <div className="flex items-center gap-2">
-                    {company.logo_url && (
-                      <img 
-                        src={company.logo_url} 
-                        alt={company.name} 
-                        className="h-5 w-5 object-contain" 
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    )}
-                    {company.name}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Button 
-            variant="outline" 
-            size="icon"
-            onClick={onCreateCompany}
-            title={t.company.createNew}
-          >
-            <Plus size={16} />
-          </Button>
-        </>
-      ) : (
-        <Button onClick={onCreateCompany}>
-          <Plus size={16} className="mr-2" />
-          {t.company.createFirst}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className={cn("w-full justify-between", className)}
+        >
+          {selectedCompany ? (
+            <span className="truncate">{getCompanyDisplayName(selectedCompany)}</span>
+          ) : (
+            <span className="text-muted-foreground">{t.company.selectPlaceholder}</span>
+          )}
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
-      )}
-    </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[250px] p-0" align="start" side={placement}>
+        <Command>
+          <CommandInput placeholder={t.company.selectPlaceholder} />
+          <CommandList>
+            <CommandEmpty>{t.company.noCompanies}</CommandEmpty>
+            <CommandGroup heading={t.company.selectCompany}>
+              {companies.map((company) => (
+                <CommandItem
+                  key={company.id}
+                  value={company.id}
+                  onSelect={() => {
+                    onSelectCompany(company.id || '');
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      selectedCompanyId === company.id ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {getCompanyDisplayName(company)}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            
+            <Separator className="my-1" />
+            
+            <CommandGroup>
+              <CommandItem
+                onSelect={() => {
+                  onCreateCompany();
+                  setOpen(false);
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {t.company.createNew}
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
 

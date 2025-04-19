@@ -1,95 +1,110 @@
 
 import React from 'react';
-import { TableCell, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trash2, Edit, Plus } from 'lucide-react';
-import { SavedProduct } from '@/types/database';
+import { Trash2, Pencil, Package } from 'lucide-react';
+import { Product } from '@/types/offer';
 import { formatCurrency } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SavedProductItemProps {
-  product: SavedProduct;
-  onSelect: (product: SavedProduct) => void;
-  onDelete: (id: string) => void;
-  onEdit: (product: SavedProduct) => void;
+  product: Product;
+  onEdit: (product: Product) => void;
+  onDelete: (productId: string) => void;
+  onSelect?: (product: Product) => void;
+  selectable?: boolean;
 }
 
-const SavedProductItem = ({ product, onSelect, onDelete, onEdit }: SavedProductItemProps) => {
+const SavedProductItem: React.FC<SavedProductItemProps> = ({
+  product,
+  onEdit,
+  onDelete,
+  onSelect,
+  selectable = false
+}) => {
   const { t, language, currency } = useLanguage();
-
+  
   return (
-    <TableRow key={product.id}>
-      <TableCell>
-        <div className="font-medium">{product.name}</div>
-        {product.description && (
-          <div className="text-sm text-muted-foreground">{product.description}</div>
-        )}
-      </TableCell>
-      <TableCell>{product.part_number || '-'}</TableCell>
-      <TableCell className="text-right">{formatCurrency(product.unit_price, language, currency)}</TableCell>
-      <TableCell className="text-right">
-        <div className="flex justify-end gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => onSelect(product)}
-            className="gap-1"
-          >
-            <Plus className="h-3 w-3" />
-            {t?.products?.selectProduct || "Select"}
-          </Button>
+    <Card className="overflow-hidden">
+      <CardContent className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <h3 className="font-medium text-lg leading-tight">{product.name}</h3>
+            {product.partNumber && (
+              <div className="text-xs text-muted-foreground">
+                {t.offer.partNumber}: {product.partNumber}
+              </div>
+            )}
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {product.description || t.common.noDescription}
+            </p>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-8 w-8"
-            onClick={() => onEdit(product)}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button 
-                variant="destructive"
-                size="icon"
-                className="h-8 w-8"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t?.common?.confirmation || "Confirmation"}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t?.savedProducts?.confirmDelete || "Are you sure you want to delete this product?"}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t?.common?.cancel || "Cancel"}</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={() => onDelete(product.id)}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {t?.common?.delete || "Delete"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex flex-col md:items-end justify-between">
+            <div className="text-lg font-semibold">
+              {formatCurrency(product.unitPrice, language, currency as any)}
+            </div>
+            
+            <div className="flex flex-wrap gap-2 mt-2 md:justify-end">
+              {selectable && onSelect && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        onClick={() => onSelect(product)}
+                      >
+                        <Package className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t.savedProducts.selectProduct}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => onEdit(product)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t.savedProducts.editProduct}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={() => onDelete(product.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t.savedProducts.deleteProduct}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
         </div>
-      </TableCell>
-    </TableRow>
+      </CardContent>
+    </Card>
   );
 };
 

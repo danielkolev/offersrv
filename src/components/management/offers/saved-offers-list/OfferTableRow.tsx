@@ -6,7 +6,7 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency } from '@/lib/utils';
-import { SupportedLanguage } from '@/types/language/base';
+import { SupportedLanguage, SupportedCurrency } from '@/types/language/base';
 import { Translations } from '@/types/language';
 import { format } from 'date-fns';
 import { calculateTotal } from '@/context/offer/calculations';
@@ -66,6 +66,11 @@ const OfferTableRow: React.FC<OfferTableRowProps> = ({
   // Convert string to SupportedLanguage
   const typedLanguage = (language === 'bg' || language === 'en') ? language as SupportedLanguage : 'en';
 
+  // Get the currency from the offer data or use the global currency as fallback
+  const getOfferCurrency = () => {
+    return (offer.offer_data?.details?.currency || currency) as SupportedCurrency;
+  };
+
   // Safely get client name
   const getClientName = () => {
     return offer.offer_data?.client?.name || t.common.noName;
@@ -95,7 +100,7 @@ const OfferTableRow: React.FC<OfferTableRowProps> = ({
         <OfferStatusBadge offer={offer} t={t} />
       </TableCell>
       <TableCell className="text-right">
-        {formatCurrency(calculateOfferTotal(offer), typedLanguage, currency as any)}
+        {formatCurrency(calculateOfferTotal(offer), typedLanguage, getOfferCurrency())}
       </TableCell>
       <TableCell>
         <div className="text-sm">

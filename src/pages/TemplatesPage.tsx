@@ -1,218 +1,236 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useTemplateManagement } from '@/hooks/templates';
-import { useLanguage } from '@/context/LanguageContext';
-import { useToast } from '@/hooks/use-toast';
-import TemplateSettings from '@/components/settings/offer-templates/TemplateSettings';
-import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Eye, RotateCcw, Save } from 'lucide-react';
+import React, { useState } from 'react';
 import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle
-} from '@/components/ui/alert-dialog';
-import { Card } from '@/components/ui/card';
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from '@/components/ui/tabs';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from '@/components/ui/card';
+import { 
+  ColorPicker, 
+  FormSection, 
+  Button, 
+  RadioGroup, 
+  RadioItem, 
+  Label 
+} from '@/components/ui';
+import { useLanguage } from '@/context/LanguageContext';
+import { useUser } from '@/hooks/useUser';
+import { useTemplateManagement } from '@/hooks/templates';
+import TemplatesList from '@/components/settings/offer-templates/TemplatesList';
+import CreateTemplateDialog from '@/components/settings/offer-templates/CreateTemplateDialog';
+import BackButton from '@/components/navigation/BackButton';
+import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
 
 const TemplatesPage = () => {
   const { t } = useLanguage();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [selectedSettings, setSelectedSettings] = useState<any>({});
-  const [originalSettings, setOriginalSettings] = useState<any>({});
-  const [activeTab, setActiveTab] = useState('settings');
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
-  
-  // Get template management hooks
-  const {
-    userTemplates,
-    setDefaultTemplate,
-    defaultTemplateId,
-    editTemplate,
-    isLoading,
-    refreshTemplates
+  const { user } = useUser();
+  const { 
+    userTemplates, 
+    defaultTemplateId, 
+    isLoading, 
+    setDefaultTemplate, 
+    addTemplate, 
+    updateTemplate,
+    deleteTemplate
   } = useTemplateManagement();
   
-  // Get the default template
-  const defaultTemplate = userTemplates.find(template => template.id === defaultTemplateId);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('user');
+  const [editMode, setEditMode] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   
-  // Set initial settings from default template
-  useEffect(() => {
-    if (defaultTemplate?.settings) {
-      setSelectedSettings(defaultTemplate.settings);
-      setOriginalSettings(defaultTemplate.settings);
-    } else {
-      // Set default settings if no template is found
-      const defaultSettings = {
-        templateType: 'classic',
-        appearance: {
-          primaryColor: '#3B82F6',
-          secondaryColor: '#F3F4F6',
-          textColor: '#111827',
-        },
-        header: {
-          showCompanyLogo: true,
-          showCompanyName: true,
-          showCompanySlogan: true,
-          showOfferLabel: true,
-        },
-        content: {
-          showLineNumbers: true,
-          showProductDescription: true,
-          showPartNumbers: false,
-          showFooter: true,
-        },
-        footer: {
-          showBankDetails: false,
-          showSignatureArea: true,
-        },
-        layout: {
-          compactMode: false,
+  // Template settings state
+  const [primaryColor, setPrimaryColor] = useState('#4F46E5');
+  const [tableHeaderColor, setTableHeaderColor] = useState('#F9FAFB');
+  const [orientation, setOrientation] = useState('portrait');
+  
+  const handleCreateNew = () => {
+    setIsCreateDialogOpen(true);
+  };
+  
+  const handleDeleteTemplate = (templateId) => {
+    if (window.confirm(t.offer.templates.confirmDelete)) {
+      deleteTemplate(templateId);
+    }
+  };
+  
+  const handleEditTemplate = (templateId) => {
+    const template = userTemplates.find(t => t.id === templateId);
+    if (template) {
+      setSelectedTemplate(template);
+      
+      // Set initial values from template
+      if (template.settings?.appearance?.primaryColor) {
+        setPrimaryColor(template.settings.appearance.primaryColor);
+      }
+      
+      if (template.settings?.appearance?.tableHeaderColor) {
+        setTableHeaderColor(template.settings.appearance.tableHeaderColor);
+      }
+      
+      if (template.settings?.layout?.orientation) {
+        setOrientation(template.settings.layout.orientation);
+      }
+      
+      setEditMode(true);
+    }
+  };
+  
+  const handleSaveTemplate = () => {
+    if (selectedTemplate) {
+      const updatedTemplate = {
+        ...selectedTemplate,
+        settings: {
+          ...selectedTemplate.settings,
+          appearance: {
+            ...selectedTemplate.settings?.appearance,
+            primaryColor,
+            tableHeaderColor
+          },
+          layout: {
+            ...selectedTemplate.settings?.layout,
+            orientation
+          }
         }
       };
       
-      setSelectedSettings(defaultSettings);
-      setOriginalSettings(defaultSettings);
-    }
-  }, [defaultTemplate]);
-  
-  // Handle settings change
-  const handleSettingsChange = (newSettings: any) => {
-    setSelectedSettings(newSettings);
-  };
-  
-  // Handle save settings
-  const handleSaveSettings = async (settings: any) => {
-    if (defaultTemplateId) {
-      try {
-        await editTemplate(defaultTemplateId, {
-          settings
-        });
-        
-        toast({
-          title: t.common.success,
-          description: t.settings.templateUpdated,
-        });
-        
-        // Update original settings after save
-        setOriginalSettings(settings);
-        
-        // Refresh templates
-        refreshTemplates();
-      } catch (error) {
-        toast({
-          title: t.common.error,
-          description: t.settings.saveTemplateFailed,
-          variant: 'destructive',
-        });
-      }
-    } else {
-      toast({
-        title: t.common.warning,
-        description: t.settings.noTemplateSelected,
-        variant: 'destructive',
-      });
+      updateTemplate(updatedTemplate);
+      setEditMode(false);
+      setSelectedTemplate(null);
     }
   };
   
-  // Handle reset to default
-  const handleResetToDefault = () => {
-    setIsResetDialogOpen(true);
-  };
-  
-  // Confirm reset to default
-  const confirmResetToDefault = () => {
-    setSelectedSettings(originalSettings);
-    setIsResetDialogOpen(false);
-    toast({
-      title: t.common.success,
-      description: t.settings.settingsSaved,
-    });
-  };
-  
-  // Handle back button click
-  const handleBackClick = () => {
-    navigate('/settings');
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setSelectedTemplate(null);
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={handleBackClick}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-2xl font-bold">
-            {t.settings.offerTemplates}
-          </h1>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button 
-            variant={activeTab === 'preview' ? 'default' : 'outline'} 
-            onClick={() => setActiveTab('preview')}
-            className="flex items-center gap-2"
-          >
-            <Eye className="h-4 w-4" />
-            {t.settings.preview}
-          </Button>
-          <Button 
-            variant={activeTab === 'settings' ? 'default' : 'outline'} 
-            onClick={() => setActiveTab('settings')}
-            className="flex items-center gap-2"
-          >
-            <Save className="h-4 w-4" />
-            {t.settings.details}
-          </Button>
+    <div className="container py-8">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <BackButton 
+            label={t.common.back} 
+            to="/dashboard"
+          />
+          <h1 className="text-2xl font-bold">{t.settings.offerTemplates}</h1>
         </div>
       </div>
       
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsContent value="settings">
-          <div className="flex flex-col h-full">
-            <TemplateSettings 
-              selectedTemplateId={defaultTemplateId || ''}
-              onSettingsChange={handleSettingsChange}
-              onSave={handleSaveSettings}
-              initialSettings={selectedSettings}
-              resetToDefault={handleResetToDefault}
+      {editMode && selectedTemplate ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>{selectedTemplate.name}</CardTitle>
+            <CardDescription>{selectedTemplate.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <FormSection title={t.offer.templates.customizeAppearance}>
+                  <div className="grid gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="primaryColor">{t.offer.templates.primaryColor}</Label>
+                      <ColorPicker 
+                        color={primaryColor}
+                        onChange={setPrimaryColor}
+                      />
+                    </div>
+                    
+                    <div className="grid gap-2">
+                      <Label htmlFor="tableHeaderColor">{t.offer.templates.tableHeaderColor}</Label>
+                      <ColorPicker 
+                        color={tableHeaderColor}
+                        onChange={setTableHeaderColor}
+                      />
+                    </div>
+                    
+                    <div className="grid gap-2">
+                      <Label htmlFor="orientation">{t.offer.templates.orientation}</Label>
+                      <RadioGroup 
+                        value={orientation} 
+                        onValueChange={setOrientation}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioItem value="portrait" id="portrait" />
+                          <Label htmlFor="portrait">{t.offer.templates.portrait}</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioItem value="landscape" id="landscape" />
+                          <Label htmlFor="landscape">{t.offer.templates.landscape}</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                </FormSection>
+                
+                <div className="flex justify-end space-x-2">
+                  <Button variant="outline" onClick={handleCancelEdit}>
+                    {t.common.cancel}
+                  </Button>
+                  <Button onClick={handleSaveTemplate}>
+                    {t.offer.templates.applyChanges}
+                  </Button>
+                </div>
+              </div>
+              
+              <TemplatePreview 
+                primaryColor={primaryColor}
+                tableHeaderColor={tableHeaderColor}
+                orientation={orientation}
+                settings={selectedTemplate.settings}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Tabs defaultValue="user" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="user">{t.settings.userTemplates}</TabsTrigger>
+            <TabsTrigger value="system">{t.settings.systemTemplates}</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="user" className="space-y-4">
+            <div className="flex justify-end">
+              <Button onClick={handleCreateNew}>
+                {t.settings.createTemplate}
+              </Button>
+            </div>
+            
+            <TemplatesList 
+              templates={userTemplates}
+              isLoading={isLoading}
+              isUserTemplates={true}
+              onCreateNew={handleCreateNew}
+              onDeleteTemplate={handleDeleteTemplate}
+              onEditTemplate={handleEditTemplate}
             />
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="preview">
-          <Card className="bg-white rounded-lg shadow-md p-6 min-h-[600px]">
-            <TemplatePreview 
-              settings={selectedSettings} 
-              fullScreen={true} 
+          </TabsContent>
+          
+          <TabsContent value="system" className="space-y-4">
+            <TemplatesList 
+              templates={[]}
+              isLoading={isLoading}
+              isUserTemplates={false}
+              onCreateNew={handleCreateNew}
             />
-          </Card>
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+        </Tabs>
+      )}
       
-      <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t.common.confirmation}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t.settings.resetToDefault} {t.common.confirmationQuestion}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmResetToDefault}>
-              {t.common.confirm}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CreateTemplateDialog 
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onCreateTemplate={addTemplate}
+      />
     </div>
   );
 };
