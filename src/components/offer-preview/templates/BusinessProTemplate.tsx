@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -41,11 +40,13 @@ const BusinessProTemplate: React.FC<BusinessProTemplateProps> = ({
   const total = calculateTotal();
 
   // Use conclusion text from company data or default
-  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
-    displayLanguage === 'bg' 
-      ? 'Благодарим Ви за доверието!' 
-      : 'Thank you for your business!'
-  );
+  const footerText = displayLanguage === 'en' && offer.company.conclusion_text_en 
+    ? offer.company.conclusion_text_en 
+    : offer.company.conclusion_text || settings?.content?.footerText || (
+      displayLanguage === 'bg' 
+        ? 'Благодарим Ви за доверието!' 
+        : 'Thank you for your business!'
+    );
   
   // Bank details
   const bankDetails = settings?.footer?.bankDetails || {
@@ -85,8 +86,8 @@ const BusinessProTemplate: React.FC<BusinessProTemplateProps> = ({
                 className="flex items-center justify-center"
                 style={{ color: primaryColor }}
               >
-                {offer.company.logo ? (
-                  <img src={offer.company.logo} alt={offer.company.name} className="h-14 w-auto object-contain" />
+                {offer.company.logo_url ? (
+                  <img src={offer.company.logo_url} alt={offer.company.name} className="h-14 w-auto object-contain" />
                 ) : (
                   <div className="w-14 h-14 rounded-md border flex items-center justify-center" style={{ borderColor: primaryColor }}>
                     <span className="text-xl font-bold">{offer.company.name.substring(0, 2).toUpperCase()}</span>

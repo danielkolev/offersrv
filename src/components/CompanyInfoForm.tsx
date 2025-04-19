@@ -19,7 +19,7 @@ const CompanyInfoForm = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        updateCompanyInfo({ logo: reader.result as string });
+        updateCompanyInfo({ logo_url: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
@@ -133,9 +133,9 @@ const CompanyInfoForm = () => {
             <Label htmlFor="companyConclusion">{t.companyInfo.conclusionText}</Label>
             <Textarea
               id="companyConclusion"
-              value={offer.company.conclusionText || ''}
+              value={offer.company.conclusion_text || ''}
               placeholder={t.companyInfo.conclusionTextPlaceholder}
-              onChange={(e) => updateCompanyInfo({ conclusionText: e.target.value })}
+              onChange={(e) => updateCompanyInfo({ conclusion_text: e.target.value })}
               className="resize-none"
               rows={2}
             />
@@ -144,10 +144,10 @@ const CompanyInfoForm = () => {
           <div className="md:col-span-2 space-y-2">
             <Label>{t.companyInfo.logo}</Label>
             <div className="flex items-center gap-4">
-              {offer.company.logo ? (
+              {offer.company.logo_url ? (
                 <div className="relative h-20 w-auto">
                   <img
-                    src={offer.company.logo}
+                    src={offer.company.logo_url}
                     alt={t.companyInfo.logo}
                     className="h-full object-contain"
                   />
@@ -155,7 +155,7 @@ const CompanyInfoForm = () => {
                     variant="outline"
                     size="sm"
                     className="absolute -top-2 -right-2"
-                    onClick={() => updateCompanyInfo({ logo: null })}
+                    onClick={() => updateCompanyInfo({ logo_url: null })}
                   >
                     X
                   </Button>

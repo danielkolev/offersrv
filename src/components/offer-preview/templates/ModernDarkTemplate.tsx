@@ -46,11 +46,13 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
   const attentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
   
   // Use conclusion text from company data or default
-  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
-    displayLanguage === 'bg' 
-      ? 'Благодарим Ви за доверието!' 
-      : 'Thank you for your business!'
-  );
+  const footerText = displayLanguage === 'en' && offer.company.conclusion_text_en 
+    ? offer.company.conclusion_text_en 
+    : offer.company.conclusion_text || settings?.content?.footerText || (
+      displayLanguage === 'bg' 
+        ? 'Благодарим Ви за доверието!' 
+        : 'Thank you for your business!'
+    );
   
   // Bank details
   const bankDetails = settings?.footer?.bankDetails || {
@@ -85,8 +87,8 @@ const ModernDarkTemplate: React.FC<ModernDarkTemplateProps> = ({
               {settings?.layout?.showLogo && (
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center text-white">
-                    {offer.company.logo ? (
-                      <img src={offer.company.logo} alt={offer.company.name} className="w-14 h-14 object-contain" />
+                    {offer.company.logo_url ? (
+                      <img src={offer.company.logo_url} alt={offer.company.name} className="w-14 h-14 object-contain" />
                     ) : (
                       <span className="text-xl font-bold">{offer.company.name.substring(0, 2).toUpperCase()}</span>
                     )}

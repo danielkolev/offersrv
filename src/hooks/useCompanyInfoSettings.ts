@@ -21,7 +21,7 @@ export const useCompanyInfoSettings = ({ companyId, t, onUpdate }: UseCompanyInf
     id: '',
     name: '',
     vat_number: '',
-    company_id: '',
+    company_id: '', // Using company_id instead of eik_number
     address: '',
     city: '',
     country: '',

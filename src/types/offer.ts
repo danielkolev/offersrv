@@ -19,6 +19,9 @@ export interface CompanyInfo {
   slogan_en?: string;
   conclusion_text?: string;
   conclusion_text_en?: string;
+  // Adding aliases for backward compatibility
+  logo?: string | null; // Alias for logo_url
+  conclusionText?: string; // Alias for conclusion_text
 }
 
 export interface ClientInfo {

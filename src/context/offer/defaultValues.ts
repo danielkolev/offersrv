@@ -1,3 +1,4 @@
+
 import { Offer } from '../../types/offer';
 
 export const defaultCompany = {

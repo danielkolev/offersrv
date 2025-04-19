@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -44,11 +43,13 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
   const total = calculateTotal();
 
   // Use conclusion text from company data or default
-  const footerText = offer.company.conclusionText || settings?.content?.footerText || (
-    displayLanguage === 'bg' 
-      ? 'Благодарим Ви за доверието!' 
-      : 'Thank you for your business!'
-  );
+  const footerText = displayLanguage === 'en' && offer.company.conclusion_text_en 
+    ? offer.company.conclusion_text_en 
+    : offer.company.conclusion_text || settings?.content?.footerText || (
+      displayLanguage === 'bg' 
+        ? 'Благодарим Ви за доверието!' 
+        : 'Thank you for your business!'
+    );
 
   // Bank details
   const bankDetails = settings?.footer?.bankDetails || {
@@ -84,8 +85,8 @@ const GradientTemplate: React.FC<GradientTemplateProps> = ({
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               {settings?.layout?.showLogo && (
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                  {offer.company.logo ? (
-                    <img src={offer.company.logo} alt={offer.company.name} className="w-12 h-12 object-contain" />
+                  {offer.company.logo_url ? (
+                    <img src={offer.company.logo_url} alt={offer.company.name} className="w-12 h-12 object-contain" />
                   ) : (
                     <span className="text-xl font-bold">{offer.company.name.substring(0, 2).toUpperCase()}</span>
                   )}
