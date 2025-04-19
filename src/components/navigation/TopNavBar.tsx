@@ -9,6 +9,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 const TopNavBar = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +33,10 @@ const TopNavBar = () => {
           <Logo />
         </div>
         <div className="flex-1 flex justify-end">
-          <NavbarUtilities />
+          <NavbarUtilities 
+            isMobileMenuOpen={isMobileMenuOpen} 
+            setIsMobileMenuOpen={setIsMobileMenuOpen} 
+          />
         </div>
       </div>
     </header>

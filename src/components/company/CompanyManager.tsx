@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useLanguage } from '@/context/LanguageContext';
 import { Building } from 'lucide-react';
 import { SupportedLanguage } from '@/types/language/base';
+import { cn } from '@/lib/utils';
 
 interface CompanyManagerProps {
   onSelectCompany: (companyId: string) => void;
