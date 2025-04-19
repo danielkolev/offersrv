@@ -2,13 +2,15 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { cn } from '@/lib/utils';
+import { SupportedLanguage } from '@/types/language/base';
 
 interface NotesSectionProps {
   notes: string;
   settings?: any;
+  displayLanguage: SupportedLanguage;
 }
 
-const NotesSection: React.FC<NotesSectionProps> = ({ notes, settings }) => {
+const NotesSection: React.FC<NotesSectionProps> = ({ notes, settings, displayLanguage }) => {
   const { t } = useLanguage();
 
   if (!notes) return null;
@@ -22,7 +24,7 @@ const NotesSection: React.FC<NotesSectionProps> = ({ notes, settings }) => {
       style={{ 
         color: settings?.appearance?.primaryColor || ""
       }}>
-        {t.offer.notes}
+        {displayLanguage === 'bg' ? 'Информация към офертата' : 'Offer Information'}
       </h3>
       <div className={cn(
         "border rounded-md p-4 whitespace-pre-line text-sm",

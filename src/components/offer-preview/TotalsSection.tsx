@@ -15,6 +15,12 @@ interface TotalsSectionProps {
   total: number;
   language: SupportedLanguage;
   settings?: any;
+  specialDiscounts?: {
+    amount: number;
+    type: 'percentage' | 'fixed';
+    description: string;
+  }[];
+  calculateDiscountAmount?: (discount: { amount: number; type: 'percentage' | 'fixed' }) => number;
 }
 
 const TotalsSection: React.FC<TotalsSectionProps> = ({
@@ -26,7 +32,9 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
   otherCosts,
   total,
   language,
-  settings
+  settings,
+  specialDiscounts,
+  calculateDiscountAmount
 }) => {
   const { currency, t } = useLanguage();
   
@@ -77,6 +85,24 @@ const TotalsSection: React.FC<TotalsSectionProps> = ({
               {formatCurrency(otherCosts, language, currency)}
             </span>
           </div>
+        )}
+        
+        {specialDiscounts && specialDiscounts.length > 0 && calculateDiscountAmount && (
+          <>
+            {specialDiscounts.map((discount, index) => (
+              <div key={index} className="flex justify-between py-1">
+                <span className="text-sm text-gray-600">
+                  {discount.description}{discount.type === 'percentage' ? ` (${discount.amount}%)` : ''}:
+                </span>
+                <span className={cn(
+                  "text-gray-800",
+                  isBoldPrices ? "font-medium" : ""
+                )}>
+                  -{formatCurrency(calculateDiscountAmount(discount), language, currency)}
+                </span>
+              </div>
+            ))}
+          </>
         )}
         
         {!includeVat && vat > 0 && (

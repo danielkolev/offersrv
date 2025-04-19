@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Offer } from '@/types/offer';
 import { SupportedLanguage } from '@/types/language/base';
@@ -142,51 +141,20 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
           total={calculateTotal()}
           language={displayLanguage}
           settings={settings}
+          specialDiscounts={offer.details.specialDiscounts}
+          calculateDiscountAmount={(discount) => {
+            if (discount.type === 'percentage') {
+              return calculateTotal() * (discount.amount / 100);
+            }
+            return discount.amount;
+          }}
         />
         
-        {/* Special Discounts Section */}
-        {hasDiscounts && (
-          <div className="mb-6 print-visible">
-            <h3 className={cn(
-              "font-medium mb-2",
-              settings?.appearance?.primaryColor ? "" : ""
-            )}
-            style={{ 
-              color: settings?.appearance?.primaryColor || ""
-            }}>
-              {displayLanguage === 'bg' ? 'Специални отстъпки' : 'Special Discounts'}
-            </h3>
-            <div className={cn(
-              "border rounded-md p-4 text-sm",
-              settings?.appearance?.secondaryColor ? "" : "bg-offer-lightgray"
-            )}
-            style={{ 
-              backgroundColor: settings?.appearance?.secondaryColor || ""
-            }}>
-              <div className="space-y-2">
-                {offer.details.specialDiscounts?.map((discount, index) => (
-                  <div key={index} className="flex justify-between">
-                    <span>
-                      {discount.description}: {discount.amount} {discount.type === 'percentage' ? '%' : offer.details.currency}
-                    </span>
-                    <span className="font-medium">
-                      -{discount.type === 'percentage' 
-                        ? (calculateTotal() * (discount.amount / 100)).toFixed(2)
-                        : discount.amount.toFixed(2)
-                      } {offer.details.currency}
-                    </span>
-                  </div>
-                ))}
-                <div className="border-t pt-2 mt-2 flex justify-between font-bold">
-                  <span>{displayLanguage === 'bg' ? 'Крайна сума след отстъпки' : 'Final amount after discounts'}:</span>
-                  <span>{discountedTotal.toFixed(2)} {offer.details.currency}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <NotesSection notes={offer.details.notes} settings={settings} />
+        <NotesSection 
+          notes={offer.details.notes} 
+          settings={settings} 
+          displayLanguage={displayLanguage}
+        />
         
         {/* Custom Footer Text */}
         {offer.details.customFooterText && (
