@@ -31,7 +31,7 @@ interface ProductSelectorProps {
 }
 
 const ProductSelector = ({ onAddProduct }: ProductSelectorProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const isMobile = useIsMobile();
   const { products } = useProducts();
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -59,9 +59,9 @@ const ProductSelector = ({ onAddProduct }: ProductSelectorProps) => {
         <Button 
           variant="outline" 
           size={isMobile ? "sm" : "default"}
-          className={isMobile ? "text-xs px-2 py-1 h-auto" : ""}
+          className={isMobile ? "text-xs px-2 py-1 h-auto w-full" : ""}
         >
-          {t.products.selectExisting}
+          {language === 'bg' ? 'Избери продукт' : 'Select Product'}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%]">

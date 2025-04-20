@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,9 +8,11 @@ import { useProductForm } from '@/hooks/use-product-form';
 import ProductItem from './ProductItem';
 import BundleManagementDialog from './BundleManagementDialog';
 import { ProductsProvider } from '@/context/products/ProductsContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ProductsForm = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isMobile = useIsMobile();
   const {
     products,
     showPartNumber,
@@ -33,17 +34,31 @@ const ProductsForm = () => {
 
   return (
     <Card className="mb-6 bg-gray-50">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{t.products.title}</CardTitle>
-        <div className="flex gap-2">
+      <CardHeader className="flex flex-col space-y-4">
+        <div className="flex justify-between items-center">
+          <CardTitle>{t.products.title}</CardTitle>
+        </div>
+        <div className={`flex gap-2 ${isMobile ? 'flex-col w-full' : ''}`}>
           <ProductsProvider products={products}>
             <ProductSelector onAddProduct={addExistingProduct} />
           </ProductsProvider>
-          <Button onClick={() => handleAddProduct(true)} variant="outline" className="gap-2">
-            <PackageOpen size={16} /> Add Bundle
+          <Button 
+            onClick={() => handleAddProduct(true)} 
+            variant="outline" 
+            className="gap-2"
+            size={isMobile ? "sm" : "default"}
+          >
+            <PackageOpen size={16} />
+            {language === 'bg' ? 'Добави комплект' : 'Add Bundle'}
           </Button>
-          <Button onClick={() => handleAddProduct()} variant="outline" className="gap-2">
-            <Plus size={16} /> {t.products.addProduct}
+          <Button 
+            onClick={() => handleAddProduct()} 
+            variant="outline" 
+            className="gap-2"
+            size={isMobile ? "sm" : "default"}
+          >
+            <Plus size={16} />
+            {language === 'bg' ? 'Нов продукт' : 'New Product'}
           </Button>
         </div>
       </CardHeader>
