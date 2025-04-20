@@ -6,19 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/LanguageContext';
 import ClientSelector from './client-selector/ClientSelector';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ClientInfoForm = () => {
   const { offer, updateClientInfo } = useOffer();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   return (
     <Card className="mb-6 bg-gray-50">
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
         <CardTitle>{t.clientInfo.title}</CardTitle>
         <ClientSelector onSelectClient={updateClientInfo} />
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
             <Label htmlFor="clientName" className="after:content-['*'] after:text-red-500 after:ml-0.5">
               {t.clientInfo.name}
@@ -76,26 +78,24 @@ const ClientInfoForm = () => {
             />
           </div>
           
-          <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="clientVat">{t.clientInfo.vatNumber}</Label>
-              <Input
-                id="clientVat"
-                value={offer.client.vatNumber}
-                onChange={(e) => updateClientInfo({ vatNumber: e.target.value })}
-                placeholder={t.clientInfo.vatNumberPlaceholder}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="clientEik">{t.clientInfo.eikNumber}</Label>
-              <Input
-                id="clientEik"
-                value={offer.client.eikNumber || ''}
-                onChange={(e) => updateClientInfo({ eikNumber: e.target.value })}
-                placeholder={t.clientInfo.eikNumberPlaceholder}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="clientVat">{t.clientInfo.vatNumber}</Label>
+            <Input
+              id="clientVat"
+              value={offer.client.vatNumber}
+              onChange={(e) => updateClientInfo({ vatNumber: e.target.value })}
+              placeholder={t.clientInfo.vatNumberPlaceholder}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="clientEik">{t.clientInfo.eikNumber}</Label>
+            <Input
+              id="clientEik"
+              value={offer.client.eikNumber || ''}
+              onChange={(e) => updateClientInfo({ eikNumber: e.target.value })}
+              placeholder={t.clientInfo.eikNumberPlaceholder}
+            />
           </div>
           
           <div className="space-y-2">

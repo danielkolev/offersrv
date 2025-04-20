@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/button';
 import { UploadCloud } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Textarea } from '@/components/ui/textarea';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const CompanyInfoForm = () => {
   const { offer, updateCompanyInfo } = useOffer();
   const { t } = useLanguage();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,7 +37,7 @@ const CompanyInfoForm = () => {
         <CardTitle>{t.companyInfo.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
             <Label htmlFor="companyName">{t.companyInfo.name}</Label>
             <Input
@@ -117,7 +119,7 @@ const CompanyInfoForm = () => {
             />
           </div>
           
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2">
             <Label htmlFor="companySlogan">{t.companyInfo.slogan}</Label>
             <Textarea
               id="companySlogan"
@@ -129,7 +131,7 @@ const CompanyInfoForm = () => {
             />
           </div>
           
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2">
             <Label htmlFor="companyConclusion">{t.companyInfo.conclusionText}</Label>
             <Textarea
               id="companyConclusion"
@@ -141,9 +143,9 @@ const CompanyInfoForm = () => {
             />
           </div>
           
-          <div className="md:col-span-2 space-y-2">
+          <div className="space-y-2">
             <Label>{t.companyInfo.logo}</Label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
               {offer.company.logo_url ? (
                 <div className="relative h-20 w-auto">
                   <img
