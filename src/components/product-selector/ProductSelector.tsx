@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useProducts } from '@/context/products/ProductsContext';
-import { Product } from '@/types/product';
+import { Product } from '@/types/offer';
 import {
   Dialog,
   DialogClose,
@@ -13,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -22,16 +23,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Search } from 'lucide-react';
 
 interface ProductSelectorProps {
   onAddProduct: (product: Product) => void;
 }
 
-const ProductSelector = ({ onAddProduct }) => {
+const ProductSelector = ({ onAddProduct }: ProductSelectorProps) => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const { products } = useProducts();
@@ -40,9 +40,8 @@ const ProductSelector = ({ onAddProduct }) => {
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.partNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.notes?.toLowerCase().includes(searchTerm.toLowerCase())
+    product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.partNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSelectProduct = (product: Product) => {
@@ -55,7 +54,6 @@ const ProductSelector = ({ onAddProduct }) => {
     }
   };
   
-  // Use the Button component with appropriate sizing for mobile
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -69,16 +67,16 @@ const ProductSelector = ({ onAddProduct }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%]">
         <DialogHeader>
-          <DialogTitle>{t.products.selectExistingProduct}</DialogTitle>
+          <DialogTitle>{t.products.selectProduct}</DialogTitle>
           <DialogDescription>
-            {t.products.browseAndSelect}
+            {t.common.selectAnOption}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="relative">
             <Input
               id="search"
-              placeholder={t.products.searchProducts}
+              placeholder={t.common.search}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -87,7 +85,7 @@ const ProductSelector = ({ onAddProduct }) => {
           </div>
           <div className="overflow-auto max-h-[400px]">
             <Table>
-              <TableCaption>{t.products.availableProducts}</TableCaption>
+              <TableCaption>{t.products.title}</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">{t.products.name}</TableHead>
@@ -100,9 +98,16 @@ const ProductSelector = ({ onAddProduct }) => {
                   <TableRow key={product.id} onClick={() => handleSelectProduct(product)} className={`cursor-pointer ${selectedProduct?.id === product.id ? 'bg-accent' : ''}`}>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.description}</TableCell>
-                    <TableCell className="text-right">{product.price}</TableCell>
+                    <TableCell className="text-right">{product.unitPrice}</TableCell>
                   </TableRow>
                 ))}
+                {filteredProducts.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center py-4 text-muted-foreground">
+                      {t.common.noResults}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>

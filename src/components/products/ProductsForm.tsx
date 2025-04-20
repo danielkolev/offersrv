@@ -8,6 +8,7 @@ import ProductSelector from '../product-selector/ProductSelector';
 import { useProductForm } from '@/hooks/use-product-form';
 import ProductItem from './ProductItem';
 import BundleManagementDialog from './BundleManagementDialog';
+import { ProductsProvider } from '@/context/products/ProductsContext';
 
 const ProductsForm = () => {
   const { t } = useLanguage();
@@ -35,7 +36,9 @@ const ProductsForm = () => {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t.products.title}</CardTitle>
         <div className="flex gap-2">
-          <ProductSelector onSelectProduct={addExistingProduct} buttonText={t.products.selectExisting} />
+          <ProductsProvider products={products}>
+            <ProductSelector onAddProduct={addExistingProduct} />
+          </ProductsProvider>
           <Button onClick={() => handleAddProduct(true)} variant="outline" className="gap-2">
             <PackageOpen size={16} /> Add Bundle
           </Button>
