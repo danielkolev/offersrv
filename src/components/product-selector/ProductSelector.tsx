@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -69,7 +68,7 @@ const ProductSelector = ({ onAddProduct }: ProductSelectorProps) => {
         <DialogHeader>
           <DialogTitle>{t.products.selectProduct}</DialogTitle>
           <DialogDescription>
-            {t.common.selectAnOption}
+            {t.common.select}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
