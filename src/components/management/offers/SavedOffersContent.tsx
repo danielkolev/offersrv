@@ -11,11 +11,30 @@ import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { useOffer } from '@/context/offer/OfferContext';
 
+// Помощна функция за изчистване на offerNumber и стари данни при клониране на оферта като драфт
+function resetOfferForDraft(offerData: any) {
+  // Дълбоко копие и изчистване на нужните полета
+  const cleaned = JSON.parse(JSON.stringify(offerData));
+  // Изчистваме номера на офертата и датите, ако има такива
+  if (cleaned.details) {
+    cleaned.details.offerNumber = '';
+    cleaned.details.date = new Date().toISOString().slice(0,10);
+    cleaned.details.validUntil = '';
+    // Други специфични полета може да добавите тук, ако има такива
+  }
+  // Изчистваме темплейти и други ID-та, ако има
+  if (cleaned.templateId) cleaned.templateId = undefined;
+  if (cleaned.createdAt) cleaned.createdAt = undefined;
+  if (cleaned.lastEdited) cleaned.lastEdited = undefined;
+
+  return cleaned;
+}
+
 const SavedOffersContent: React.FC = () => {
   const { t, language, currency } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { setOffer } = useOffer();
+  const { setOffer, resetOffer } = useOffer();
   
   const [savedOffers, setSavedOffers] = useState<SavedOffer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,15 +71,20 @@ const SavedOffersContent: React.FC = () => {
   const handleCreateNew = () => {
     navigate('/new-offer');
   };
-  
+
+  // Зарежда оферта като драфт (копие) и пренасочва към редактора за редакция
   const handleLoadOffer = (offer: SavedOffer) => {
     if (offer.offer_data) {
-      setOffer(offer.offer_data);
-      toast({
-        title: t.common.success,
-        description: t.savedOffers.offerLoaded,
+      // Приемаме, че това е дълбоко копие на офертата – ще се третира като нова чернова
+      const newDraft = resetOfferForDraft(offer.offer_data);
+      resetOffer().then(() => {
+        setOffer(newDraft);
+        toast({
+          title: t.common.success,
+          description: t.savedOffers.offerLoaded,
+        });
+        navigate('/new-offer');
       });
-      navigate('/new-offer');
     } else {
       toast({
         title: t.common.error,
@@ -146,3 +170,4 @@ const SavedOffersContent: React.FC = () => {
 };
 
 export default SavedOffersContent;
+
