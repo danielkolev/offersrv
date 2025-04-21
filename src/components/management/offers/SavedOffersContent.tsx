@@ -77,14 +77,17 @@ const SavedOffersContent: React.FC = () => {
     if (offer.offer_data) {
       // Приемаме, че това е дълбоко копие на офертата – ще се третира като нова чернова
       const newDraft = resetOfferForDraft(offer.offer_data);
-      resetOffer().then(() => {
-        setOffer(newDraft);
-        toast({
-          title: t.common.success,
-          description: t.savedOffers.offerLoaded,
-        });
-        navigate('/new-offer');
+      
+      // First call resetOffer (which returns void), then proceed with setOffer
+      resetOffer();
+      setOffer(newDraft);
+      
+      toast({
+        title: t.common.success,
+        description: t.savedOffers.offerLoaded,
       });
+      
+      navigate('/new-offer');
     } else {
       toast({
         title: t.common.error,
@@ -170,4 +173,3 @@ const SavedOffersContent: React.FC = () => {
 };
 
 export default SavedOffersContent;
-
