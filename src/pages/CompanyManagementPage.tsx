@@ -10,9 +10,6 @@ import CompanyBankSettings from '@/components/settings/CompanyBankSettings';
 import BackButton from '@/components/navigation/BackButton';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
 
 const CompanyManagementPage = () => {
   const { t } = useLanguage();
@@ -102,23 +99,6 @@ const CompanyManagementPage = () => {
 
   return (
     <div className="flex-1 space-y-6 p-6">
-      <div className="container pt-0 pb-0">
-        <Breadcrumb className="mb-4">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/dashboard">{t.navigation.home}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>{t.navigation.companies}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <BackButton label={t.common.back} to="/" />

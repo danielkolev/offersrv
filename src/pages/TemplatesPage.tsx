@@ -23,12 +23,10 @@ import TemplatesList from '@/components/settings/offer-templates/TemplatesList';
 import CreateTemplateDialog from '@/components/settings/offer-templates/CreateTemplateDialog';
 import BackButton from '@/components/navigation/BackButton';
 import TemplatePreview from '@/components/settings/offer-templates/TemplatePreview';
+
 // Import or define necessary component/function
 import ColorPicker from '@/components/ui/ColorPicker';
 import FormSection from '@/components/ui/form-section';
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
 
 const TemplatesPage = () => {
   const { t } = useLanguage();
@@ -67,16 +65,20 @@ const TemplatesPage = () => {
     const template = userTemplates.find(t => t.id === templateId);
     if (template) {
       setSelectedTemplate(template);
+      
       // Set initial values from template
       if (template.settings?.appearance?.primaryColor) {
         setPrimaryColor(template.settings.appearance.primaryColor);
       }
+      
       if (template.settings?.appearance?.tableHeaderColor) {
         setTableHeaderColor(template.settings.appearance.tableHeaderColor);
       }
+      
       if (template.settings?.layout?.orientation) {
         setOrientation(template.settings.layout.orientation);
       }
+      
       setEditMode(true);
     }
   };
@@ -95,14 +97,17 @@ const TemplatesPage = () => {
           orientation
         }
       };
+      
       // Use the updateTemplate function from the hook to update the template's settings
       const updatedTemplate = {
         ...selectedTemplate,
         settings: updatedSettings
       };
+      
       try {
         // Update template with new settings - pass both template ID and the updated template data
         editTemplate(updatedTemplate.id, updatedTemplate);
+        
         // After successful update
         setEditMode(false);
         setSelectedTemplate(null);
@@ -123,23 +128,6 @@ const TemplatesPage = () => {
 
   return (
     <div className="container py-8">
-      <div className="mb-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/dashboard">{t.navigation.home}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>{t.navigation.templates}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <BackButton 
@@ -149,6 +137,7 @@ const TemplatesPage = () => {
           <h1 className="text-2xl font-bold">{t.settings.offerTemplates}</h1>
         </div>
       </div>
+      
       {editMode && selectedTemplate ? (
         <Card>
           <CardHeader>
@@ -254,6 +243,7 @@ const TemplatesPage = () => {
           </TabsContent>
         </Tabs>
       )}
+      
       <CreateTemplateDialog 
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
