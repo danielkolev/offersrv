@@ -31,6 +31,7 @@ export const useOfferSettingsForm = (
   });
   
   useEffect(() => {
+    console.log("initialData changed:", initialData);
     if (initialData) {
       form.reset({
         usePrefix: initialData.usePrefix || false,
@@ -41,6 +42,7 @@ export const useOfferSettingsForm = (
     } else {
       onLoadData().then(settings => {
         if (settings) {
+          console.log("Resetting form with settings:", settings);
           form.reset({
             usePrefix: settings.usePrefix || false,
             prefix: settings.prefix || '',
