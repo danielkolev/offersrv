@@ -1,15 +1,23 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, ChevronRight } from 'lucide-react';
 import SavedOffersList from './SavedOffersList';
 import { supabase } from '@/integrations/supabase/client';
 import { SavedOffer } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
 import { useOffer } from '@/context/offer/OfferContext';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 // Помощна функция за изчистване на offerNumber и стари данни при клониране на оферта като драфт
 function resetOfferForDraft(offerData: any) {
@@ -132,6 +140,23 @@ const SavedOffersContent: React.FC = () => {
   
   return (
     <div className="container py-6 flex-1">
+      {/* Breadcrumbs */}
+      <Breadcrumb className="mb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/dashboard">{t.navigation.home}</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRight className="h-4 w-4" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{t.navigation.savedOffers}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">{t.savedOffers.title}</h1>
         
