@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Google } from "lucide-react";
+import { google as Google } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const GoogleAuthButton: React.FC<{ text: string }> = ({ text }) => {
@@ -23,3 +23,4 @@ const GoogleAuthButton: React.FC<{ text: string }> = ({ text }) => {
 };
 
 export default GoogleAuthButton;
+
