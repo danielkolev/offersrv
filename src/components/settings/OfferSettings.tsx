@@ -5,11 +5,13 @@ import { useAuth } from '@/context/AuthContext';
 import { useUserSettings, OfferSettingsValues } from '@/hooks/use-user-settings';
 import { useOfferSettingsForm } from '@/hooks/use-offer-settings-form';
 import OfferSettingsForm from './offer-settings/OfferSettingsForm';
+import { useToast } from '@/hooks/use-toast';
 
 const OfferSettings = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { isLoading, loadSettings, saveSettings } = useUserSettings();
+  const { toast } = useToast();
   const [initialData, setInitialData] = React.useState<OfferSettingsValues | null>(null);
   const [fetchAttempted, setFetchAttempted] = React.useState(false);
   
@@ -17,7 +19,9 @@ const OfferSettings = () => {
     if (!user) return null;
     
     try {
+      console.log("Loading offer settings...");
       const settings = await loadSettings<OfferSettingsValues>('offer_settings');
+      console.log("Loaded settings:", settings);
       setInitialData(settings);
       return settings;
     } catch (error) {
@@ -45,7 +49,21 @@ const OfferSettings = () => {
   const form = useOfferSettingsForm(initialData, loadAndSetSettings);
   
   const onSubmit = async (values: OfferSettingsValues) => {
-    await saveSettings('offer_settings', values);
+    try {
+      console.log("Submitting values:", values);
+      await saveSettings('offer_settings', values);
+      toast({
+        title: t.common.success,
+        description: t.settings.settingsSaved,
+      });
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      toast({
+        title: t.common.error,
+        description: t.settings.errorSavingSettings,
+        variant: "destructive"
+      });
+    }
   };
 
   if (!initialData && isLoading) {

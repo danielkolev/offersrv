@@ -1,13 +1,12 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Printer, Copy, Save, FileDown } from 'lucide-react';
+import { Copy, Save, FileDown } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface ActionButtonsProps {
   onSave: () => void;
-  onPrint: () => void;
   onExportPDF: () => void;
   onCopy: () => void;
   mode?: 'edit' | 'view';
@@ -15,7 +14,6 @@ interface ActionButtonsProps {
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ 
   onSave, 
-  onPrint, 
   onExportPDF, 
   onCopy,
   mode = 'edit'
@@ -23,7 +21,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const { t } = useLanguage();
   const { toast } = useToast();
   
-  const handleActionInEditMode = (action: string) => {
+  const handleActionInEditMode = () => {
     if (mode === 'edit') {
       toast({
         title: t.common.info || "Info",
@@ -49,7 +47,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         variant="outline" 
         onClick={() => {
           if (mode === 'edit') {
-            handleActionInEditMode('export');
+            handleActionInEditMode();
           } else {
             onExportPDF();
           }
@@ -58,21 +56,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         disabled={mode === 'edit'}
       >
         <FileDown size={16} /> PDF
-      </Button>
-      
-      <Button 
-        variant="outline" 
-        onClick={() => {
-          if (mode === 'edit') {
-            handleActionInEditMode('print');
-          } else {
-            onPrint();
-          }
-        }} 
-        className="gap-2"
-        disabled={mode === 'edit'}
-      >
-        <Printer size={16} /> {t.common.print}
       </Button>
     </div>
   );

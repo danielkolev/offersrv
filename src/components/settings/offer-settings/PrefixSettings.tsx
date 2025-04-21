@@ -37,7 +37,9 @@ const PrefixSettings: React.FC<PrefixSettingsProps> = ({ form }) => {
               <Switch
                 checked={field.value}
                 onCheckedChange={(checked) => {
+                  console.log("Switch toggled to:", checked);
                   field.onChange(checked);
+                  
                   // If we're disabling the prefix, reset the prefix field
                   if (!checked) {
                     form.setValue('prefix', '', { shouldDirty: true });

@@ -9,12 +9,14 @@ import { useOfferInitialization } from '@/hooks/useOfferInitialization';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const NewOfferPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   // Проверяем, нужно ли загрузить черновик из состояния навигации
   const shouldLoadDraft = location.state?.loadDraft === true;

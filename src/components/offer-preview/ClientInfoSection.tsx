@@ -3,12 +3,13 @@ import React from 'react';
 import { ClientInfo } from '@/types/offer';
 import { cn } from '@/lib/utils';
 import { SupportedLanguage } from '@/types/language/base';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ClientInfoSectionProps {
   client: ClientInfo;
   settings?: any;
   displayLanguage?: SupportedLanguage;
-  attentionText?: string; // Added this prop
+  attentionText?: string;
 }
 
 const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({ 
@@ -17,6 +18,8 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
   displayLanguage = 'bg',
   attentionText
 }) => {
+  const isMobile = useIsMobile();
+  
   // Get correct language-specific texts
   const sectionTitle = displayLanguage === 'bg' ? 'Информация за клиента' : 'Client Information';
   const defaultAttentionText = displayLanguage === 'bg' ? 'на вниманието на' : 'attention to';
@@ -46,18 +49,18 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
       </h3>
       
       <div className="text-sm space-y-1">
-        <p className="font-semibold">{client.name}</p>
+        <p className="font-semibold break-words">{client.name}</p>
         
         {client.contactPerson && (
-          <p>
+          <p className="break-words">
             <span className="text-gray-600">{displayAttentionText}:</span> {client.contactPerson}
           </p>
         )}
         
-        {client.address && <p>{client.address}</p>}
+        {client.address && <p className="break-words">{client.address}</p>}
         
         {(client.city || client.country) && (
-          <p>
+          <p className="break-words">
             {client.city}
             {client.city && client.country && ', '}
             {client.country}
@@ -65,19 +68,32 @@ const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
         )}
         
         {client.vatNumber && (
-          <p>
+          <p className="break-words">
             <span className="text-gray-600">{vatLabel}:</span> {client.vatNumber}
           </p>
         )}
         
         {client.eikNumber && (
-          <p>
+          <p className="break-words">
             <span className="text-gray-600">{companyIdLabel}:</span> {client.eikNumber}
           </p>
         )}
         
-        {(client.phone || client.email) && (
-          <p>
+        {(client.phone || client.email) && isMobile ? (
+          <>
+            {client.phone && (
+              <p className="break-words">
+                <span className="text-gray-600">{phoneLabel}:</span> {client.phone}
+              </p>
+            )}
+            {client.email && (
+              <p className="break-words">
+                <span className="text-gray-600">Email:</span> {client.email}
+              </p>
+            )}
+          </>
+        ) : (client.phone || client.email) && (
+          <p className="break-words">
             {client.phone && (
               <span>
                 <span className="text-gray-600">{phoneLabel}:</span> {client.phone}

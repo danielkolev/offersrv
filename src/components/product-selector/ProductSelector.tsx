@@ -1,158 +1,121 @@
-
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle, 
-  SheetTrigger 
-} from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { Search, Plus, ChevronDown } from 'lucide-react';
+import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { fetchSavedProducts, convertToOfferProduct } from '@/components/management/products/productsService';
-import { SavedProduct } from '@/types/database';
+import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useProducts } from '@/context/products/ProductsContext';
 import { Product } from '@/types/offer';
-import { formatCurrency } from '@/lib/utils';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Search } from 'lucide-react';
 
 interface ProductSelectorProps {
-  onSelectProduct: (product: Omit<Product, 'id'>) => void;
-  buttonText?: string;
+  onAddProduct: (product: Product) => void;
 }
 
-const ProductSelector = ({ onSelectProduct, buttonText }: ProductSelectorProps) => {
-  const { t, language, currency } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
-  const [products, setProducts] = useState<SavedProduct[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState<'name' | 'partNumber'>('name');
-  const [isLoading, setIsLoading] = useState(false);
+const ProductSelector = ({ onAddProduct }: ProductSelectorProps) => {
+  const { t, language } = useLanguage();
+  const isMobile = useIsMobile();
+  const { products } = useProducts();
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      loadProducts();
-    }
-  }, [isOpen]);
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.partNumber?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const loadProducts = async () => {
-    setIsLoading(true);
-    try {
-      const userId = 'current-user'; // This will be replaced by the actual user ID in the service
-      const data = await fetchSavedProducts(userId);
-      setProducts(data);
-    } catch (error) {
-      console.error('Error loading products:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
   };
 
-  const handleSelectProduct = (savedProduct: SavedProduct) => {
-    const product = convertToOfferProduct(savedProduct);
-    onSelectProduct(product);
-    setIsOpen(false);
-  };
-
-  const filteredProducts = products.filter(product => {
-    if (searchType === 'name') {
-      return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    } else {
-      return product.part_number?.toLowerCase().includes(searchTerm.toLowerCase());
+  const onSelectProduct = () => {
+    if (selectedProduct) {
+      onAddProduct(selectedProduct);
     }
-  });
-
+  };
+  
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button 
           variant="outline" 
-          className="flex gap-2"
+          size={isMobile ? "sm" : "default"}
+          className={isMobile ? "text-xs px-2 py-1 h-auto w-full" : ""}
         >
-          <Plus size={16} />
-          {buttonText || t.products.selectExisting}
+          {language === 'bg' ? 'Избери продукт' : 'Select Product'}
         </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>{t.products.selectProduct}</SheetTitle>
-        </SheetHeader>
-        
-        <div className="py-4">
-          <div className="flex gap-2 mb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t.savedProducts.searchPlaceholder}
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <Button
-              variant={searchType === 'name' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSearchType('name')}
-              className="whitespace-nowrap"
-            >
-              {t.savedProducts.searchByName}
-            </Button>
-            <Button
-              variant={searchType === 'partNumber' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSearchType('partNumber')}
-              className="whitespace-nowrap"
-            >
-              {t.savedProducts.searchByPartNumber}
-            </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%]">
+        <DialogHeader>
+          <DialogTitle>{t.products.selectProduct}</DialogTitle>
+          <DialogDescription>
+            {t.common.select}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="relative">
+            <Input
+              id="search"
+              placeholder={t.common.search}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
           </div>
-          
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <p>{t.common.loading}</p>
-            </div>
-          ) : filteredProducts.length > 0 ? (
-            <>
-              <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 rounded-md shadow-inner bg-gray-50 p-2">
+          <div className="overflow-auto max-h-[400px]">
+            <Table>
+              <TableCaption>{t.products.title}</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">{t.products.name}</TableHead>
+                  <TableHead>{t.products.description}</TableHead>
+                  <TableHead className="text-right">{t.products.price}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="p-3 border rounded-md hover:bg-muted cursor-pointer bg-white"
-                    onClick={() => handleSelectProduct(product)}
-                  >
-                    <div className="font-medium">{product.name}</div>
-                    {product.part_number && (
-                      <div className="text-sm text-muted-foreground">
-                        {t.products.partNumber}: {product.part_number}
-                      </div>
-                    )}
-                    <div className="flex justify-between mt-1">
-                      <div className="text-sm text-muted-foreground">
-                        {product.description?.substring(0, 50)}{product.description?.length > 50 ? '...' : ''}
-                      </div>
-                      <div className="font-medium text-gray-800">
-                        {formatCurrency(product.unit_price, language, currency)}
-                      </div>
-                    </div>
-                  </div>
+                  <TableRow key={product.id} onClick={() => handleSelectProduct(product)} className={`cursor-pointer ${selectedProduct?.id === product.id ? 'bg-accent' : ''}`}>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell className="text-right">{product.unitPrice}</TableCell>
+                  </TableRow>
                 ))}
-              </div>
-              {filteredProducts.length > 5 && (
-                <div className="text-center mt-2 text-muted-foreground text-sm">
-                  <ChevronDown className="h-4 w-4 inline-block" /> Scroll for more products
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              {searchTerm 
-                ? t.savedProducts.noProductsFoundSearch 
-                : t.savedProducts.noProductsFound}
-            </div>
-          )}
+                {filteredProducts.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center py-4 text-muted-foreground">
+                      {t.common.noResults}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-      </SheetContent>
-    </Sheet>
+        <DialogFooter>
+          <Button type="submit" onClick={onSelectProduct} disabled={!selectedProduct}>{t.products.addProduct}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

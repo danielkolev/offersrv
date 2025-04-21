@@ -13,6 +13,7 @@ import { useSections } from './accordion/useSections';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SimpleOfferAccordionProps {
   isLoading: boolean;
@@ -32,6 +33,7 @@ const SimpleOfferAccordion: React.FC<SimpleOfferAccordionProps> = ({
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>("client");
   const [progress, setProgress] = useState(25); // 25% прогресс при начале с первой секции
+  const isMobile = useIsMobile();
   
   // Получаем секции
   const sections = useSections({
@@ -103,23 +105,22 @@ const SimpleOfferAccordion: React.FC<SimpleOfferAccordionProps> = ({
                 {expandAll ? t.offer.workflow.quickMode : t.offer.workflow.stepByStep}
               </h2>
               
-              <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  onClick={handleToggleAll}
-                  className="flex items-center gap-1"
-                >
-                  {expandAll ? (
-                    <>
-                      <ChevronUp size={16} /> {t.common.collapseAll}
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown size={16} /> {t.common.expandAll}
-                    </>
-                  )}
-                </Button>
-              </div>
+              <Button 
+                variant="outline" 
+                onClick={handleToggleAll}
+                className="flex items-center gap-1 w-full md:w-auto"
+                size={isMobile ? "sm" : "default"}
+              >
+                {expandAll ? (
+                  <>
+                    <ChevronUp size={16} /> {t.common.collapseAll}
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown size={16} /> {t.common.expandAll}
+                  </>
+                )}
+              </Button>
             </div>
             
             {!expandAll && (
