@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { google as Google } from 'lucide-react';
+import { LogoGoogle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const GoogleAuthButton: React.FC<{ text: string }> = ({ text }) => {
@@ -16,11 +16,10 @@ const GoogleAuthButton: React.FC<{ text: string }> = ({ text }) => {
       onClick={handleGoogleLogin}
       type="button"
     >
-      <Google size={18} className="text-red-500" />
+      <LogoGoogle size={18} className="text-red-500" />
       {text}
     </Button>
   );
 };
 
 export default GoogleAuthButton;
-
