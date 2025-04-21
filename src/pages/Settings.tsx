@@ -6,6 +6,9 @@ import OfferSettings from '@/components/settings/OfferSettings';
 import CustomUnitsSettings from '@/components/settings/CustomUnitsSettings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BackButton from '@/components/navigation/BackButton';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { Link } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 
 const Settings = () => {
   const { t } = useLanguage();
@@ -24,6 +27,23 @@ const Settings = () => {
 
   return (
     <div className="flex-1 space-y-6 p-6">
+      <div className="container pt-0 pb-0">
+        <Breadcrumb className="mb-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/dashboard">{t.navigation.home}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ChevronRight className="h-4 w-4" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>{t.navigation.settings}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <BackButton label={t.common.back} to="/" />
@@ -32,7 +52,6 @@ const Settings = () => {
           </h1>
         </div>
       </div>
-      
       <Card>
         <CardHeader>
           <CardTitle>{t.settings.subtitle}</CardTitle>
