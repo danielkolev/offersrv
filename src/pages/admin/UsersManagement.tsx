@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,7 +50,6 @@ const UsersManagement = () => {
       
       if (error) throw error;
       
-      // Convert role strings to UserRole type
       const typedData = data?.map(user => ({
         ...user,
         role: (user.role || 'user') as UserRole
