@@ -19,7 +19,7 @@ interface UserData {
   email: string;
   first_name?: string;
   last_name?: string;
-  role?: UserRole;
+  role?: UserRole;  // Ensure this is using the UserRole type
   created_at: string;
   avatar_url?: string;
 }
@@ -50,7 +50,13 @@ const UsersManagement = () => {
       
       if (error) throw error;
       
-      setUsers(data || []);
+      // Convert role strings to UserRole type
+      const typedData = data?.map(user => ({
+        ...user,
+        role: (user.role || 'user') as UserRole
+      })) || [];
+      
+      setUsers(typedData);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
