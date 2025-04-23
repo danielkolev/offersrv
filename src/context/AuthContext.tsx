@@ -30,16 +30,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .eq('id', userId)
         .single();
 
-      if (error) {
-        console.error('Error fetching user role:', error);
-        return;
-      }
+      if (error) throw error;
 
       const role = data?.role as UserRole || 'user';
       setUserRole(role);
       setIsAdmin(role === 'admin');
     } catch (error) {
-      console.error('Error in fetchUserRole:', error);
+      console.error('Error fetching user role:', error);
+      setUserRole('user');
+      setIsAdmin(false);
     }
   };
 
