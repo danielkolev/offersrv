@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,10 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { FileText, Search, Eye, X } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface OfferData {
   id: string;
@@ -37,7 +38,7 @@ const OffersManagement = () => {
     try {
       setLoading(true);
       
-      // Първо извличаме всички оферти
+      // Fetch all offers without user-specific filtering
       const { data: offersData, error: offersError } = await supabase
         .from('saved_offers')
         .select('*')
@@ -45,12 +46,7 @@ const OffersManagement = () => {
       
       if (offersError) throw offersError;
       
-      if (!offersData || offersData.length === 0) {
-        setOffers([]);
-        return;
-      }
-      
-      // Извличаме информация за потребителите
+      // Fetch user information for all offers
       const userIds = [...new Set(offersData.map(offer => offer.user_id))];
       const { data: usersData, error: usersError } = await supabase
         .from('profiles')
@@ -59,7 +55,7 @@ const OffersManagement = () => {
       
       if (usersError) throw usersError;
       
-      // Обединяваме информацията
+      // Combine offer and user information
       const offersWithUserInfo = offersData.map(offer => {
         const user = usersData?.find(u => u.id === offer.user_id);
         return {
