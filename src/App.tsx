@@ -19,8 +19,15 @@ import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import CompanyManagementPage from './pages/CompanyManagementPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import AdminProtectedRoute from './components/auth/AdminProtectedRoute';
 import MainSidebar from './components/navigation/MainSidebar';
 import LandingPage from './pages/LandingPage';
+
+// Административни страници
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UsersManagement from './pages/admin/UsersManagement';
+import OffersManagement from './pages/admin/OffersManagement';
 
 import './App.css';
 
@@ -71,6 +78,15 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/login" element={<Login />} />
+                  
+                  {/* Admin routes */}
+                  <Route path="/admin" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<UsersManagement />} />
+                    <Route path="offers" element={<OffersManagement />} />
+                    <Route path="clients" element={<div>Клиенти административна страница</div>} />
+                    <Route path="settings" element={<div>Настройки административна страница</div>} />
+                  </Route>
                   
                   {/* Protected routes with shared layout */}
                   <Route path="/dashboard" element={
