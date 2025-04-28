@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SavedOffer } from '@/types/database';
 import { Eye, FileEdit, Trash2 } from 'lucide-react';
@@ -97,7 +96,11 @@ const OfferTableRow: React.FC<OfferTableRowProps> = ({
         </div>
       </TableCell>
       <TableCell>
-        <OfferStatusBadge offer={offer} t={t} />
+        <OfferStatusBadge 
+          status={offer.status || 'saved'} 
+          t={t} 
+          isDraft={offer.is_draft} 
+        />
       </TableCell>
       <TableCell className="text-right">
         {formatCurrency(calculateOfferTotal(offer), typedLanguage, getOfferCurrency())}

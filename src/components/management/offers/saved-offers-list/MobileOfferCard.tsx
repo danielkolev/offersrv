@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Eye, FileUp, Trash } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Translations } from '@/types/language';
+import { calculateTotal } from '@/context/offer/calculations';
 import OfferStatusBadge from './OfferStatusBadge';
 
 interface MobileOfferCardProps {
@@ -39,7 +40,19 @@ const MobileOfferCard: React.FC<MobileOfferCardProps> = ({
   // Extract data from offer_data instead of directly from offer
   const offerNumber = offer.offer_data?.details?.offerNumber || '';
   const clientName = offer.offer_data?.client?.name || t.common.noName || '';
-  const totalAmount = offer.offer_data?.details?.totalAmount || 0;
+  
+  // Calculate the total amount from the offer data
+  const getTotalAmount = () => {
+    try {
+      if (!offer.offer_data) return 0;
+      return calculateTotal(offer.offer_data);
+    } catch (error) {
+      console.error("Error calculating offer total:", error, offer);
+      return 0;
+    }
+  };
+  
+  const totalAmount = getTotalAmount();
 
   return (
     <Card>
