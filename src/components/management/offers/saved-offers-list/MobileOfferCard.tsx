@@ -36,6 +36,11 @@ const MobileOfferCard: React.FC<MobileOfferCardProps> = ({
     }).format(date);
   };
 
+  // Extract data from offer_data instead of directly from offer
+  const offerNumber = offer.offer_data?.details?.offerNumber || '';
+  const clientName = offer.offer_data?.client?.name || t.common.noName || '';
+  const totalAmount = offer.offer_data?.details?.totalAmount || 0;
+
   return (
     <Card>
       <CardContent className="p-4">
@@ -43,25 +48,29 @@ const MobileOfferCard: React.FC<MobileOfferCardProps> = ({
           {/* Номер на оферта и статус */}
           <div className="flex justify-between items-start">
             <div>
-              <div className="font-medium">{offer.offer_number}</div>
+              <div className="font-medium">{offerNumber}</div>
               <div className="text-sm text-muted-foreground">
                 {formatDate(offer.created_at || '')}
               </div>
             </div>
-            <OfferStatusBadge status={offer.status} />
+            <OfferStatusBadge 
+              status={offer.status || 'saved'} 
+              t={t}
+              isDraft={offer.is_draft}
+            />
           </div>
           
           {/* Информация за клиента */}
           <div>
             <div className="text-sm font-medium">{t.savedOffers.client}:</div>
-            <div className="text-sm">{offer.client_name || t.common.unknown}</div>
+            <div className="text-sm">{clientName}</div>
           </div>
           
           {/* Сума */}
           <div>
             <div className="text-sm font-medium">{t.savedOffers.amount}:</div>
             <div className="text-base font-semibold">
-              {formatCurrency(offer.total_amount || 0, language, currency as any)}
+              {formatCurrency(totalAmount, language === 'bg' ? 'bg' : 'en', currency as any)}
             </div>
           </div>
           

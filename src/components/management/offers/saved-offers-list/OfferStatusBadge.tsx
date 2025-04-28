@@ -2,16 +2,16 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { FileEdit } from 'lucide-react';
-import { SavedOffer } from '@/types/database';
 import { Translations } from '@/types/language';
 
 interface OfferStatusBadgeProps {
-  offer: SavedOffer;
+  status: 'draft' | 'saved' | 'sent' | 'accepted' | 'rejected';
   t: Translations;
+  isDraft?: boolean;
 }
 
-const OfferStatusBadge: React.FC<OfferStatusBadgeProps> = ({ offer, t }) => {
-  if (offer.is_draft) {
+const OfferStatusBadge: React.FC<OfferStatusBadgeProps> = ({ status, t, isDraft = false }) => {
+  if (isDraft || status === 'draft') {
     return (
       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
         <FileEdit className="h-3 w-3 mr-1" />
@@ -20,7 +20,7 @@ const OfferStatusBadge: React.FC<OfferStatusBadgeProps> = ({ offer, t }) => {
     );
   }
   
-  switch (offer.status) {
+  switch (status) {
     case 'saved':
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">{t.offer.statuses.saved}</Badge>;
     case 'sent':
@@ -30,7 +30,7 @@ const OfferStatusBadge: React.FC<OfferStatusBadgeProps> = ({ offer, t }) => {
     case 'rejected':
       return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">{t.offer.statuses.rejected}</Badge>;
     default:
-      return null;
+      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">{t.offer.statuses.saved}</Badge>;
   }
 };
 
