@@ -13,13 +13,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { User, Search, Edit, Trash, X } from 'lucide-react';
 import { UserRole } from '@/types/user';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface UserData {
   id: string;
   email: string;
   first_name?: string;
   last_name?: string;
-  role?: UserRole;  // Ensure this is using the UserRole type
+  role?: UserRole;
   created_at: string;
   avatar_url?: string;
 }
@@ -30,6 +32,7 @@ const UsersManagement = () => {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const isMobile = useIsMobile();
   
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -118,7 +121,6 @@ const UsersManagement = () => {
     if (!selectedUser) return;
     
     try {
-      // Първо изтриваме профила
       const { error: profileError } = await supabase
         .from('profiles')
         .delete()
@@ -126,7 +128,6 @@ const UsersManagement = () => {
       
       if (profileError) throw profileError;
       
-      // След това изтриваме потребителя от Supabase Auth
       const { error: authError } = await supabase.auth.admin.deleteUser(selectedUser.id);
       
       if (authError) throw authError;
@@ -158,6 +159,46 @@ const UsersManagement = () => {
     
     return fullName.includes(term) || email.includes(term);
   });
+
+  // Рендериране на потребител като карта за мобилни устройства
+  const renderUserCard = (user: UserData) => (
+    <Card key={user.id} className="mb-4">
+      <CardContent className="p-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="font-medium">
+                {user.first_name && user.last_name ? 
+                  `${user.first_name} ${user.last_name}` : 
+                  'Няма име'}
+              </p>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
+            </div>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+              user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+            }`}>
+              {user.role === 'admin' ? 'Администратор' : 'Потребител'}
+            </span>
+          </div>
+          
+          <div className="text-sm text-muted-foreground">
+            Регистриран на: {new Date(user.created_at).toLocaleString()}
+          </div>
+          
+          <div className="flex gap-2 mt-2">
+            <Button variant="outline" size="sm" onClick={() => handleEditUser(user)}>
+              <Edit className="h-4 w-4 mr-1" />
+              Редактирай
+            </Button>
+            <Button variant="outline" size="sm" className="text-red-600" onClick={() => handleDeleteUser(user)}>
+              <Trash className="h-4 w-4 mr-1" />
+              Изтрий
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -197,49 +238,59 @@ const UsersManagement = () => {
           ) : (
             <>
               {filteredUsers.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Име</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Роля</TableHead>
-                        <TableHead>Регистриран на</TableHead>
-                        <TableHead className="text-right">Действия</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredUsers.map(user => (
-                        <TableRow key={user.id}>
-                          <TableCell>
-                            {user.first_name && user.last_name ? 
-                              `${user.first_name} ${user.last_name}` : 
-                              'Няма име'}
-                          </TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                            }`}>
-                              {user.role === 'admin' ? 'Администратор' : 'Потребител'}
-                            </span>
-                          </TableCell>
-                          <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="icon" onClick={() => handleEditUser(user)}>
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button variant="outline" size="icon" onClick={() => handleDeleteUser(user)}>
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                isMobile ? (
+                  // Мобилен изглед с карти вместо таблица
+                  <div className="space-y-4">
+                    {filteredUsers.map(renderUserCard)}
+                  </div>
+                ) : (
+                  // Таблица за десктоп с хоризонтално скролване
+                  <ScrollArea className="w-full">
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Име</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Роля</TableHead>
+                            <TableHead>Регистриран на</TableHead>
+                            <TableHead className="text-right">Действия</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredUsers.map(user => (
+                            <TableRow key={user.id}>
+                              <TableCell>
+                                {user.first_name && user.last_name ? 
+                                  `${user.first_name} ${user.last_name}` : 
+                                  'Няма име'}
+                              </TableCell>
+                              <TableCell>{user.email}</TableCell>
+                              <TableCell>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                                }`}>
+                                  {user.role === 'admin' ? 'Администратор' : 'Потребител'}
+                                </span>
+                              </TableCell>
+                              <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="outline" size="icon" onClick={() => handleEditUser(user)}>
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="outline" size="icon" onClick={() => handleDeleteUser(user)}>
+                                    <Trash className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </ScrollArea>
+                )
               ) : (
                 <div className="text-center py-8">
                   <User className="mx-auto h-12 w-12 text-muted-foreground opacity-20" />

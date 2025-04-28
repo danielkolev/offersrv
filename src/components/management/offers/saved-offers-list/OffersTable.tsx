@@ -5,6 +5,9 @@ import { Loader2 } from 'lucide-react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Translations } from '@/types/language';
 import OfferTableRow from './OfferTableRow';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import MobileOfferCard from './MobileOfferCard';
 
 interface OffersTableProps {
   savedOffers: SavedOffer[];
@@ -29,6 +32,8 @@ const OffersTable: React.FC<OffersTableProps> = ({
   currency,
   t
 }) => {
+  const isMobile = useIsMobile();
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-10">
@@ -50,21 +55,12 @@ const OffersTable: React.FC<OffersTableProps> = ({
     );
   }
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>{t.savedOffers.offerNumber}</TableHead>
-          <TableHead>{t.savedOffers.client}</TableHead>
-          <TableHead>{t.offer.status}</TableHead>
-          <TableHead className="text-right">{t.savedOffers.amount}</TableHead>
-          <TableHead>{t.savedOffers.date}</TableHead>
-          <TableHead className="text-right">{t.savedOffers.actions}</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+  // Мобилен изглед с карти
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
         {savedOffers.map((offer) => (
-          <OfferTableRow
+          <MobileOfferCard
             key={offer.id}
             offer={offer}
             onPreview={onPreview}
@@ -75,8 +71,40 @@ const OffersTable: React.FC<OffersTableProps> = ({
             t={t}
           />
         ))}
-      </TableBody>
-    </Table>
+      </div>
+    );
+  }
+
+  // Десктоп изглед с таблица и хоризонтален скрол
+  return (
+    <ScrollArea className="w-full">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t.savedOffers.offerNumber}</TableHead>
+            <TableHead>{t.savedOffers.client}</TableHead>
+            <TableHead>{t.offer.status}</TableHead>
+            <TableHead className="text-right">{t.savedOffers.amount}</TableHead>
+            <TableHead>{t.savedOffers.date}</TableHead>
+            <TableHead className="text-right">{t.savedOffers.actions}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {savedOffers.map((offer) => (
+            <OfferTableRow
+              key={offer.id}
+              offer={offer}
+              onPreview={onPreview}
+              onLoad={onLoad}
+              onDelete={onDelete}
+              language={language}
+              currency={currency}
+              t={t}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </ScrollArea>
   );
 };
 

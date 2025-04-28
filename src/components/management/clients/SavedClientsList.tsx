@@ -12,6 +12,9 @@ import {
 } from '@/components/ui/table';
 import SavedClientItem from './SavedClientItem';
 import { Translations } from '@/types/language';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import MobileSavedClientItem from './MobileSavedClientItem';
 
 export interface SavedClientsListProps {
   clients: Client[];
@@ -32,6 +35,8 @@ const SavedClientsList = ({
   editClient,
   t 
 }: SavedClientsListProps) => {
+  const isMobile = useIsMobile();
+  
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -48,20 +53,12 @@ const SavedClientsList = ({
     );
   }
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>{t.client.name}</TableHead>
-          <TableHead>{t.client.vatNumber}</TableHead>
-          <TableHead>{t.client.contactPerson}</TableHead>
-          <TableHead>{t.client.email}</TableHead>
-          <TableHead className="text-right">{t.common.actions}</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+  // Мобилен изглед с карти
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
         {filteredClients.map((client) => (
-          <SavedClientItem
+          <MobileSavedClientItem
             key={client.id}
             client={client}
             selectClient={selectClient}
@@ -70,8 +67,37 @@ const SavedClientsList = ({
             t={t}
           />
         ))}
-      </TableBody>
-    </Table>
+      </div>
+    );
+  }
+
+  // Настолен изглед с таблица и скрол ако е нужен
+  return (
+    <ScrollArea className="w-full">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t.client.name}</TableHead>
+            <TableHead>{t.client.vatNumber}</TableHead>
+            <TableHead>{t.client.contactPerson}</TableHead>
+            <TableHead>{t.client.email}</TableHead>
+            <TableHead className="text-right">{t.common.actions}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredClients.map((client) => (
+            <SavedClientItem
+              key={client.id}
+              client={client}
+              selectClient={selectClient}
+              deleteClient={deleteClient}
+              editClient={editClient}
+              t={t}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </ScrollArea>
   );
 };
 
